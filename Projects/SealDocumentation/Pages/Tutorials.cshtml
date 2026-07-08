@@ -9,7 +9,7 @@
         <!-- end section -->
         <div class="row">
             <div class="col-md-3">
-                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation" style="padding-left:0">
+                <nav class="docs-sidebar" role="navigation" style="padding-left:0">
                     <ul class="nav">
                         <li><a href="#lineTutorials_1">Report from a SQL Select</a></li>
                         <li><a href="#lineTutorials_2">First Data Source and Report</a></li>
@@ -25,7 +25,7 @@
                             </ul>
                         </li>
                     </ul>
-                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
                         <strong><a href="#feed">Feed the Seal ?</a></strong><br />
                         <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -212,32 +212,32 @@
                                 </li>
                                 <li>
                                     From the <b>Ubuntu Command Prompt</b>, install the following packages for Excel results (<b>EPPlus</b>):
-                                    <pre class="brush: bash">
+                                    <pre><code class="language-bash">
                                     sudo apt update
                                     sudo apt install libgdiplus
-                                    </pre>
+                                    </code></pre>
                                 </li>
                                 <li>
                                     From the <b>Ubuntu Command Prompt</b>, install the following packages for <b>ScottPlot</b> charts:
-                                    <pre class="brush: bash">
+                                    <pre><code class="language-bash">
                                     sudo apt update
                                     sudo apt install libgdiplus
                                     sudo apt install -y libfreetype6
                                     sudo apt install -y libfontconfig1
                                     sudo apt install -y fontconfig
                                     sudo apt install -y libnss3
-                                    </pre>
+                                    </code></pre>
                                 </li>
                                 <li>
                                     For <b>HTML to PDF</b> results (<b>Puppeteer</b>), follow the procedure:<br /><a href=https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#recommended-enable-user-namespace-cloning" target="_blank">Running Puppeteer on WSL (Windows subsystem for Linux)</a>
                                 </li>
                                 <li>
                                     From the <b>Ubuntu Command Prompt</b>, create the <i>/seal</i> installation folder:
-                                    <pre class="brush: bash">
+                                    <pre><code class="language-bash">
                                     cd /
                                     sudo mkdir seal
                                     sudo chmod ugo+rwx /seal
-                                    </pre>
+                                    </code></pre>
                                 </li>
                             </ol>
                             <h3><strong>Step 2:</strong> Deploy files to the Ubuntu Sub-System.</h3>
@@ -245,9 +245,9 @@
                                 <li>
                                     From your Windows computer, run the <b>Report Designer</b> and edit the report <i>System\500 Publication - Web Report Server</i><br />
                                     Modify the task script <code>'Publish Web Report Server'</code> to configure the Destination Directory to <i>'\\wsl$\Ubuntu\seal'</i>:
-                                    <pre class="brush: csharp">
+                                    <pre><code class="language-csharp">
                                         webServerDestination = @@"\\wsl$\Ubuntu\seal";
-                                    </pre>
+                                    </code></pre>
                                     Execute the report, check <strong>'Web Report Server Distribution'</strong> restriction, then re-execute the report to deploy the Web Report Server.<br />
                                     Files are copied from the installation directory <i>'\Web'</i> Sub-Folder to <i>'\\wsl$\Ubuntu\seal'</i> (<i>'/seal'</i> on Ubuntu).<br />
                                     Save the report for future publications (Note that this deployment could also be made manually using the Windows Explorer).
@@ -255,9 +255,9 @@
                                 <li>
                                     Using the <b>Report Designer</b>, open and edit the report <i>System\510 Publication - Repository</i><br />
                                     Modify the task script <code>'Publish Repository Files'</code> to configure the Destination Directory to <i>'\\wsl$\Ubuntu\seal\Repository'</i>:
-                                    <pre class="brush: csharp">
+                                    <pre><code class="language-csharp">
                                         repositoryDestination = @@"\\wsl$\Ubuntu\seal\Repository";
-                                    </pre>
+                                    </code></pre>
                                     Execute the report.<br />
                                     Check the restriction <strong>'Repository Source Folder'</strong>.<br />
                                     Re-execute the report.<br />
@@ -269,11 +269,11 @@
                             <ol class="sans">
                                 <li>
                                     From the <b>Ubuntu Command Prompt</b>, run the following commands:
-                                    <pre class="brush: bash">
+                                    <pre><code class="language-bash">
                                         sudo chown -R $USER:$USER /seal
                                         cd /seal
                                         dotnet /seal/SealWebServer.dll
-                                    </pre>
+                                    </code></pre>
                                     The <b>Web Report Server</b> should be listening at http://localhost:5000<br />
                                 </li>
                                 <li>
@@ -324,12 +324,12 @@
                                     <strong>For .Net, Linux</strong><br />
                                     <code>Instance name</code>: 'sealcore' (.azurewebsites.net)<br />
                                     <code>Publish</code>: 'Code'<br />
-                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .Net 8 (LTS))'<br />
+                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .NET 10)'<br />
                                     <code>Operating System</code>: 'Linux'<br /><br />
                                     <strong>For .Net, Windows</strong><br />
                                     <code>Instance name</code>: 'sealnet' (.azurewebsites.net)<br />
                                     <code>Publish</code>: 'Code'<br />
-                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .Net 8 (LTS))'<br />
+                                    <code>Runtime stack</code>: '.NET Version of the Seal Distribution (e.g. .NET 10)'<br />
                                     <code>Operating System</code>: 'Windows'<br />
                                     <br />
                                     Change Sku and Size if necessary<br />
@@ -347,14 +347,14 @@
                                 <li>
                                     From your Windows computer, run the <b>Report Designer</b> and edit the report <i>System\500 Publication - Web Report Server</i><br />
                                     Modify the task script <code>'Publish Web Report Server'</code> to configure the Destination Directory to <i>'/site/wwwroot/'</i>:
-                                    <pre class="brush: csharp">
+                                    <pre><code class="language-csharp">
                                         webServerDestination = @@"/site/wwwroot/";
-                                    </pre>
+                                    </code></pre>
                                     Modify the script to configure the FTP Client (Host Name, User Name, Password) using the information got in the previous step.
-                                    <pre class="brush: csharp">
+                                    <pre><code class="language-csharp">
                                         //e.g. for FTPS Endpoint: ftps://waws-prod-dm1-163.ftp.azurewebsites.windows.net/site/wwwroot    
                                         client = new FtpClient("waws-prod-dm1-163.ftp.azurewebsites.windows.net", @@"sealcore\$sealcore", "password got from the Azure portal"); 
-                                    </pre>
+                                    </code></pre>
                                     Execute the report.<br />
                                     Set the  <strong>'Web Report Server Distribution'</strong> restriction: Select <b>.NET</b> distribution.<br />
                                     Re-execute the report to deploy the Web Report Server.<br />
@@ -364,14 +364,14 @@
                                 <li>
                                     Edit the report <i>System\510 Publication - Repository</i><br />
                                     Modify the task script <code>'Publish Repository Files'</code> to configure the Destination Directory to <i>'/site/wwwroot/'</i>:
-                                    <pre class="brush: csharp">
+                                    <pre><code class="language-csharp">
                                         repositoryDestination = @@"/site/wwwroot/";
-                                    </pre>
+                                    </code></pre>
                                     Modify the script to configure the FTP Client (Host Name, User Name, Password) using the information got in the previous step.
-                                    <pre class="brush: csharp">
+                                    <pre><code class="language-csharp">
                                         //e.g. for FTPS Endpoint: ftps://waws-prod-dm1-163.ftp.azurewebsites.windows.net/site/wwwroot    
                                         client = new FtpClient("waws-prod-dm1-163.ftp.azurewebsites.windows.net", @@"sealcore\$sealcore", "password got from the Azure portal"); 
-                                    </pre>
+                                    </code></pre>
                                     Execute the report.<br />
                                     Set the restriction <strong>'Repository Source Folder'</strong> to <b>'Repository: Copy All Folders'</b>.<br />
                                     Re-execute the report.<br />
@@ -461,9 +461,9 @@
                                     Set <code>Database type</code> to 'MS SQLServer' and <code>Connection Type</code> to 'MS SQLServer'.<br />
                                     Edit the <code>MS SQLServer Connection String</code> and copy the connection string got in the previous step.<br />
                                     Remove the 'User Id' and 'Password' and set them in the related connection properties. The final connection string should be:<br />
-                                    <pre class="brush: sql">
+                                    <pre><code class="language-sql">
                                     Server=tcp:sealsqlserver.database.windows.net,1433;Initial Catalog=sealdb;Persist Security Info=False;MultipleActiveResultSets=False;Encrypt=True;TrustServerCertificate=False;Connection Timeout=30;'
-                                    </pre>
+                                    </code></pre>
 
                                     Click <b>F7 Check Connection</b> to test the connection.<br />
                                     <strong>If it fails because of the Azure Firewall</strong>:<br />
@@ -586,9 +586,9 @@
                                 </li>
                                 <li>
                                     From a Linux command prompt, run the <b>Seal Scheduler Worker</b> with the command:<br />
-                                    <pre class="brush: bash">
+                                    <pre><code class="language-bash">
                                     dotnet /seal/SealSchedulerWorker.dll
-                                    </pre>
+                                    </code></pre>
                                 </li>
                             </ol>
                         </div>
@@ -621,10 +621,3 @@
 </div>
 <!-- end wrapper -->
 
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $("#tutorials_nav").addClass("active");
-        });
-    </script>
-}

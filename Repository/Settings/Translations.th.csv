@@ -482,3 +482,5 @@ Report;Show Restrictions;แสดงข้อจำกัด
 Report;Hide Restrictions;ซ่อนข้อจำกัด
 Report;Show Guide;แสดงคู่มือ
 Report;Hide Guide;ซ่อนคู่มือ
+WebJS;Copy for Excel;คัดลอกสำหรับ Excel
+WebJS;Download CSV;ดาวน์โหลด CSV

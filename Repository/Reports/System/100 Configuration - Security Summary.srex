@@ -1252,6 +1252,12 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>1</SortOrder>
             </ReportView>
             <ReportView>
@@ -1307,6 +1313,12 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>2</SortOrder>
             </ReportView>
             <ReportView>
@@ -1362,6 +1374,12 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>3</SortOrder>
             </ReportView>
             <ReportView>
@@ -1417,6 +1435,12 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>4</SortOrder>
             </ReportView>
             <ReportView>
@@ -1472,6 +1496,12 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>5</SortOrder>
             </ReportView>
             <ReportView>
@@ -1527,6 +1557,12 @@
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>6</SortOrder>
             </ReportView>
           </Views>

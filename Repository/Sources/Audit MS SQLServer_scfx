@@ -206,6 +206,94 @@
             <DisplayName>Event week</DisplayName>
             <DisplayOrder>21</DisplayOrder>
           </MetaColumn>
+          <MetaColumn>
+            <GUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</GUID>
+            <Name>sr_audit.ai_agent</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI agent</DisplayName>
+            <DisplayOrder>23</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8403ec39-2c44-492b-843e-872cf6cb4e6a</GUID>
+            <Name>sr_audit.ai_provider</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI provider</DisplayName>
+            <DisplayOrder>24</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>aa8e3e36-d9a1-4ba3-b33b-72127fdd8fc5</GUID>
+            <Name>sr_audit.ai_model</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI model</DisplayName>
+            <DisplayOrder>25</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3accb676-4680-41ed-903d-af8d14cd2e9a</GUID>
+            <Name>sr_audit.ai_input_tokens</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI input tokens</DisplayName>
+            <DisplayOrder>26</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4da92514-cca7-4eab-9044-aad9ef70cca5</GUID>
+            <Name>sr_audit.ai_output_tokens</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI output tokens</DisplayName>
+            <DisplayOrder>27</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>fca46c23-2584-4cdf-ab1a-42b38aaeb1bc</GUID>
+            <Name>sr_audit.ai_input_tokens + sr_audit.ai_output_tokens</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI total tokens</DisplayName>
+            <DisplayOrder>28</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>935a98a6-ab56-4260-8e40-9d396f19c874</GUID>
+            <Name>sr_audit.ai_calls</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI calls</DisplayName>
+            <DisplayOrder>29</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>581c6d65-ecb7-4a74-badc-091a22e5113d</GUID>
+            <Name>sr_audit.ai_tool_calls</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI tool calls</DisplayName>
+            <DisplayOrder>30</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8fd152e4-e632-4db9-a45d-ed60459109ba</GUID>
+            <Name>sr_audit.ai_message_count</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI message count</DisplayName>
+            <DisplayOrder>31</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>08542fb1-ff0e-4d43-a205-76e344bb2523</GUID>
+            <Name>sr_audit.ai_cost</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI cost</DisplayName>
+            <DisplayOrder>32</DisplayOrder>
+            <NumericStandardFormat>Numeric4</NumericStandardFormat>
+            <Format>N4</Format>
+          </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
@@ -318,6 +406,14 @@ sr_audit.event_type, sr_audit.event_type
 FROM sr_audit 
 ORDER BY 1</Sql>
         <Values>
+          <MetaEV>
+            <Id>AIChat</Id>
+            <Val>AI Chat</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>AIChatError</Id>
+            <Val>AI Chat Error</Val>
+          </MetaEV>
           <MetaEV>
             <Id>EventError</Id>
             <Val>Event Error</Val>

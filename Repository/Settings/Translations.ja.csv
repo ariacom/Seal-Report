@@ -482,3 +482,5 @@ Report;Show Restrictions;制限を表示
 Report;Hide Restrictions;制限を非表示
 Report;Show Guide;ガイドを表示
 Report;Hide Guide;ガイドを非表示
+WebJS;Copy for Excel;Excel用にコピー
+WebJS;Download CSV;CSVをダウンロード

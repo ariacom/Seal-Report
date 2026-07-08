@@ -30,6 +30,11 @@
             sb.AppendLine($"## {ftp.Name} [type: ftp] (GUID: {ftp.GUID})");
             sb.AppendLine($"  - {ftp.Protocol} server: {ftp.HostName}{(ftp.PortNumber > 0 ? ":" + ftp.PortNumber : "")}");
         }
+        else if (device is OutputSharePointDevice sp)
+        {
+            sb.AppendLine($"## {sp.Name} [type: sharepoint] (GUID: {sp.GUID})");
+            sb.AppendLine($"  - SharePoint site: {sp.SiteUrl} (document library: {sp.LibraryName})");
+        }
         else if (device is OutputFolderDevice folder)
         {
             sb.AppendLine($"## {folder.Name} [type: folder] (GUID: {folder.GUID})");

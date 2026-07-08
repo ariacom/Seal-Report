@@ -482,3 +482,5 @@ Report;Show Restrictions;Kısıtlamaları Göster
 Report;Hide Restrictions;Kısıtlamaları Gizle
 Report;Show Guide;Kılavuzu Göster
 Report;Hide Guide;Kılavuzu Gizle
+WebJS;Copy for Excel;Excel için kopyala
+WebJS;Download CSV;CSV indir

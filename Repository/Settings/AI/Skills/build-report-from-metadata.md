@@ -92,7 +92,11 @@ AND [f3]</Restriction>
                                               Enumerated values → Equal (default; only Equal or NotEqual are allowed, never Contains/StartsWith/etc.)
                                               Numeric / Date    → Equal, Between, Greater, Smaller, etc.
                                               A column is "enumerated" when datasource_get_detail marks it `enumerated list: …`,
-                                              regardless of its name — not when the name merely looks like a fixed set. -->
+                                              regardless of its name — not when the name merely looks like a fixed set.
+                                              Empty/null checks → IsEmpty, IsNotEmpty (text only), IsNull, IsNotNull (any type).
+                                              These operators take NO value element. NEVER use Equal/NotEqual with an empty
+                                              <Value1> to test for empty or null: a restriction whose value is empty is
+                                              considered "not filled" and is SKIPPED at execution. -->
           <PlaceHolder>Type to filter</PlaceHolder>
           <Required>false</Required>  <!-- default false. "Prompted" does NOT mean "required" — keep false even when
                                             the restriction is prompted. Set true ONLY when the user explicitly says the
@@ -244,6 +248,7 @@ Always include a `<ShowTotal>` on every `Data` element. Choose by table shape:
 - `Prompt` → user is asked for a value at execution time. `None` → static filter, no interaction.
 - `Required` → **defaults to `false`; keep it `false`.** "Prompted" and "required" are independent. Set `Required=true` only when the user explicitly says the value is mandatory.
 - **Default operator by column type:** Text (free text) → `Contains`; Enumerated → `Equal` (only `Equal`/`NotEqual` allowed); Numeric/Date → `Equal`, `Between`, `Greater`, `Smaller`, etc.
+- **Empty / null checks** — to filter on a missing value, use the dedicated operators: `IsEmpty` / `IsNotEmpty` (text columns) or `IsNull` / `IsNotNull` (any type), with **no** value element. Never use `Equal` with an empty `<Value1>` — a restriction with no value is treated as "not filled" and is silently ignored at execution.
 - **A column is enumerated when `datasource_get_detail` marks it `enumerated list: …`** — judge by that marker, never by the column name.
 - **Enumerated restriction values** — always call `database_get_sample_values` first, then list all returned values as `<EnumValues><string>…</string></EnumValues>`. Never use `<Value1>` for enumerated columns.
 - **Date restrictions** — set `<Prompt>PromptTwoValues</Prompt>` so the user can adjust the range. For a concrete year/date, set literal `<Date1>`/`<Date2>`; never substitute a relative keyword.

@@ -482,3 +482,5 @@ Report;Show Restrictions;显示限制条件
 Report;Hide Restrictions;隐藏限制条件
 Report;Show Guide;显示指南
 Report;Hide Guide;隐藏指南
+WebJS;Copy for Excel;复制到 Excel
+WebJS;Download CSV;下载 CSV

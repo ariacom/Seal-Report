@@ -9,12 +9,13 @@
         <!-- end section -->
         <div class="row">
             <div class="col-md-3">
-                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                <nav class="docs-sidebar" role="navigation">
                     <ul class="nav">
                         <li><a href="#lineConnections">Connections</a></li>
                         <li>
                             <a href="#lineTables">Tables and Columns</a>
                             <ul class="nav">
+                                <li><a href="#lineTables_desc">Descriptions</a></li>
                                 <li><a href="#lineTables_pps">Pre and Post SQL</a></li>
                                 <li><a href="#lineTables_wc">WHERE Clause</a></li>
                                 <li><a href="#lineTables_cr">Common Restrictions</a></li>
@@ -42,8 +43,9 @@
                                 <li><a href="#lineNoSQL_mdb">Mongo DB Support</a></li>
                             </ul>
                         </li>
+                        <li><a href="#lineAI">AI Data Source Manager</a></li>
                     </ul>
-                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
                         <strong><a href="#feed">Feed the Seal ?</a></strong><br />
                         <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -78,7 +80,7 @@
                             <div class="caption">
                                 <b>Data Source Objects</b>
                             </div>
-                            <img src="images/CD-Data Source.png" alt="" class="img-thumbnail img-rounded">
+                            <img src="images/CD-DataSource.svg" alt="" class="img-thumbnail rounded">
                             <div>
                                 <ck>Check also <a href="~/Help/Index.html" target="_blank">Seal Report Library (Seal.Model namespace)</a> for more information</ck>.
                             </div>
@@ -100,7 +102,7 @@
                             <p>
                                 Setting up a connection is the first thing to do after creating a <strong>Data Source</strong>.<br />
 
-                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLEDB, ODBC, MS SQLServer, Mongo DB or MySQL Driver.<br />
+                                A <strong>Connection</strong> defines how to connect to the database to be queried by using an OLE DB, ODBC, MS SQL Server, Oracle, MySQL, SQLite, PostgreSQL or Mongo DB driver.<br />
                                 A <strong>Data Source</strong> can have one to many Connections (<eg>e.g. dev, test, production, etc.</eg>).
                             </p>
                             <div class="bs-callout bs-callout-danger">
@@ -136,6 +138,21 @@
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 Once columns are created, you can set the <code>Dynamic Columns</code> property to <b>false</b> to rework your column definitions.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div id="lineTables_desc" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Descriptions: the semantic layer</h4>
+                            <p>
+                                Connections, tables, columns, joins and enumerated lists have a <code>Description</code> property: a business description of the entity (<eg>e.g. what a table holds and its grain, what a column means, when a join applies</eg>).<br />
+                                Descriptions are displayed as help in the <b>Report Designer</b> and — most importantly — are <strong>read by the AI agents</strong> to understand your data model: well-described sources produce accurate AI-designed reports.<br />
+                                Descriptions can be translated per language in the repository translations file (contexts <code>ConnectionDescription</code>, <code>TableDescription</code>, <code>ElementDescription</code>, <code>JoinDescription</code>, <code>EnumDescription</code>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                Treat the descriptions as your <b>semantic layer</b>: a one-time investment when designing the source that pays off in every AI conversation and helps the report designers.
                             </div>
                         </div>
                         <!-- end col -->
@@ -183,13 +200,13 @@
                             <div class="bs-callout bs-callout-info">
                                 Note that the same Common Restriction or Value can be used several times.<br />
                                 e.g. the following SQL can be used to define a table or a SQL Model:
-                                <pre class="brush: sql;">
+                                <pre><code class="language-sql">
                                 SELECT 'Type1' type, sum(aColumn1) amount FROM aTableName1 WHERE subType in (3,4) and {CommonRestriction_Date}
                                 UNION
                                 SELECT 'Type2' type, sum(aColumn2) FROM aTableName2 WHERE {CommonRestriction_Date}
                                 UNION
                                 SELECT 'Type3' type, sum(aColumn3) FROM aTableName3 WHERE {CommonRestriction_Date}
-                            </pre>
+                            </code></pre>
                             </div>
                         </div>
                         <!-- end col -->
@@ -338,21 +355,21 @@
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Filter on the name of the product</h4>
-                                <pre class="brush: sql">
+                                <pre><code class="language-sql">
                                     SELECT DISTINCT ProductID, ProductName FROM Products 
                                     WHERE ProductName LIKE '%{EnumFilter}%' 
                                     ORDER BY 2
-                                </pre>
+                                </code></pre>
                             </div>
 
                             <div class="bs-callout bs-callout-demo">
                                 <h4>List of customers of selected countries</h4>
                                 Build the list of customers only when countries are selected first.<br>This works only if both Customers and Countries are restrictions in the report.
-                                <pre class="brush: sql">
+                                <pre><code class="language-sql">
                                 SELECT DISTINCT City FROM Customers
                                 WHERE Country in ({EnumValues_Country})
                                 ORDER BY 1
-                                </pre>
+                                </code></pre>
                             </div>
                         </div>
                         <!-- end col -->
@@ -427,10 +444,10 @@
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Join Script Sample</h4>
                                 Example of a <code>Join clause</code> between <b>Northwind</b> tables and an <b>Excel Sheet</b> table.
-                                <pre class="brush: csharp">new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
+                                <pre><code class="language-csharp">new {x1=Helper.ToString(Northwind["Employees.LastName"]), x2=((DateTime)Northwind["DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)"]).Year}
 equals 
 new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(ExcelEmployeeObjective["year"].ToString()) }
-                    </pre>
+                    </code></pre>
 
                             </div>
                             <div class="bs-callout bs-callout-demo">
@@ -441,7 +458,7 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
                                 This source contains several <b>No SQL Tables</b> based on the <b>Table Templates</b> available.<br /><br />
                                 The table <b>XML RSS News</b> shows how to read RSS BBC Feeds to fill the DataTable.<br />
                                 <code>Definition Script</code> property of the table.
-                                <pre class="brush: csharp">@@using System.Data
+                                <pre><code class="language-csharp">@@using System.Data
 @@{
     MetaTable metaTable = Model;
     DataTable table = new DataTable();
@@ -455,10 +472,10 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
 	table.Columns.Add(new DataColumn("TitleWithLink", typeof(string)));
 	metaTable.NoSQLTable = table;
 }
-</pre><br />
+</code></pre><br />
 
                                 <code>Load script</code> property of the table.
-                                <pre class="brush: csharp">@@using System.Data
+                                <pre><code class="language-csharp">@@using System.Data
 @@using System.Text
 @@using System.Collections
 @@using System.Web
@@ -487,7 +504,7 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
     }
     metaTable.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }
-                    </pre>
+                    </code></pre>
                             </div>
                         </div>
                         <!-- end col -->
@@ -522,8 +539,44 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
                                 The table <b>movies</b> defines the <b>sample_mflix.movies</b> collection of the database.<br />
                                 The related table <b>movies_cast</b> is defined to show the <b>cast</b> array of the collection.<br />
                                 A Join clause has been defined between the 2 tables:
-                                <pre class="brush: csharp">Helper.ToString(movies["_id"]) equals Helper.ToString(moviescasts["_id"])
-                    </pre>
+                                <pre><code class="language-csharp">Helper.ToString(movies["_id"]) equals Helper.ToString(moviescasts["_id"])
+                    </code></pre>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineAI" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">AI Data Source Manager <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                From the <b>Web Report Server</b> chat, the <strong>Data Source Manager</strong> AI agent helps administrators and data modelers shape the metadata model from natural-language requests: add tables and columns, define enumerated lists, create and fix joins, adjust column display and SQL, remove or refresh metadata.
+                            </p>
+                            <p>
+                                The agent works with safety rules built in:
+                            </p>
+                            <ul>
+                                <li>It reads the real schema first (sources, tables, columns, joins) — it never guesses identifiers.</li>
+                                <li><b>Destructive changes</b> (changing a column's SQL, replacing a join, removing a table, etc.) trigger an impact analysis: the agent shows the list of reports affected and asks for an explicit confirmation before applying the change.</li>
+                                <li>Every write is <b>backed up</b> automatically (a timestamped <i>.bak</i> file next to the source file).</li>
+                                <li>Editing requires the user's security group to have the <b>Edit</b> right on the source's folder (granted via <b>Repository Folders</b> in the security group).</li>
+                            </ul>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Sample prompts</h4>
+                                Try in the chat: <i>"Add a Yes/No enumerated list on Orders.Shipped"</i>, <i>"Which reports use Customers.Country?"</i> or <i>"Suggest the missing joins in the Northwind source"</i>.
+                            </div>
+                            <div class="bs-callout bs-callout-info">
+                                The descriptions defined in the source (<ck>check <a href="#lineTables_desc">Descriptions: the semantic layer</a></ck>) are used by the agent to understand your data model.<br />
+                                <ck>Check the <a href="~/AI">AI Agents</a> page for the providers configuration and the other agents</ck>.
                             </div>
                         </div>
                         <!-- end col -->
@@ -540,10 +593,3 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
 </div>
 <!-- end wrapper -->
 
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $("#sources_nav").addClass("active");
-        });
-    </script>
-}

@@ -21,6 +21,12 @@ namespace Seal.AI
         /// If the model produces a text reply the reply is appended to <paramref name="messages"/> and returned.
         /// </summary>
         string HandleChatWithTools(List<ChatMessage> messages, IList<AITool> tools, out IList<AIToolCall> toolCalls);
+
+        /// <summary>
+        /// Token usage of the last API call (input/output tokens, one call).
+        /// Zeroes when the API did not report usage information.
+        /// </summary>
+        AIUsage LastUsage { get; }
     }
 
     public abstract class AIProvider : IAIProvider
@@ -49,6 +55,17 @@ namespace Seal.AI
 
         /// <inheritdoc cref="IAIProvider.HandleChatWithTools"/>
         public abstract string HandleChatWithTools(List<ChatMessage> messages, IList<AITool> tools, out IList<AIToolCall> toolCalls);
+
+        /// <inheritdoc cref="IAIProvider.LastUsage"/>
+        public AIUsage LastUsage { get; protected set; } = new AIUsage();
+
+        /// <summary>
+        /// Records the token usage of the API call that just completed.
+        /// </summary>
+        protected void SetLastUsage(int inputTokens, int outputTokens)
+        {
+            LastUsage = new AIUsage { InputTokens = inputTokens, OutputTokens = outputTokens, Calls = 1 };
+        }
 
         /// <summary>
         /// Resolves a provider configuration by name, creates it, and returns it.

@@ -199,5 +199,12 @@
       <FileName>Model\OutputFolderDevice.cs</FileName>
     </TypeIdentifier>
   </Class>
+  <Class Name="Seal.Model.OutputSharePointDevice" Collapsed="true">
+    <Position X="10.5" Y="6.5" Width="2" />
+    <TypeIdentifier>
+      <HashCode>AAAAAAAgAACAAIAAAgAAAAAIAAAAAEAAAAAAAAAAAAA=</HashCode>
+      <FileName>Model\OutputSharePointDevice.cs</FileName>
+    </TypeIdentifier>
+  </Class>
   <Font Name="Segoe UI" Size="9" />
 </ClassDiagram>

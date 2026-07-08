@@ -38,6 +38,7 @@
             toolStripSeparator2 = new System.Windows.Forms.ToolStripSeparator();
             emailOutputDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             fileServerDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
+            sharePointDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openSourceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             openDeviceToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
             reloadToolStripMenuItem = new System.Windows.Forms.ToolStripMenuItem();
@@ -100,7 +101,7 @@
             // 
             // newToolStripMenuItem
             // 
-            newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { dataSourceToolStripMenuItem, noSQLdataSourceToolStripMenuItem, toolStripSeparator2, emailOutputDeviceToolStripMenuItem, fileServerDeviceToolStripMenuItem });
+            newToolStripMenuItem.DropDownItems.AddRange(new System.Windows.Forms.ToolStripItem[] { dataSourceToolStripMenuItem, noSQLdataSourceToolStripMenuItem, toolStripSeparator2, emailOutputDeviceToolStripMenuItem, fileServerDeviceToolStripMenuItem, sharePointDeviceToolStripMenuItem });
             newToolStripMenuItem.Image = (System.Drawing.Image)resources.GetObject("newToolStripMenuItem.Image");
             newToolStripMenuItem.ImageTransparentColor = System.Drawing.Color.Fuchsia;
             newToolStripMenuItem.Name = "newToolStripMenuItem";
@@ -143,7 +144,15 @@
             fileServerDeviceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
             fileServerDeviceToolStripMenuItem.Text = "File Server Output Device";
             fileServerDeviceToolStripMenuItem.Click += newToolStripMenuItem_Click;
-            // 
+            //
+            // sharePointDeviceToolStripMenuItem
+            //
+            sharePointDeviceToolStripMenuItem.Image = Properties.Resources.fileserver;
+            sharePointDeviceToolStripMenuItem.Name = "sharePointDeviceToolStripMenuItem";
+            sharePointDeviceToolStripMenuItem.Size = new System.Drawing.Size(206, 22);
+            sharePointDeviceToolStripMenuItem.Text = "SharePoint Output Device";
+            sharePointDeviceToolStripMenuItem.Click += newToolStripMenuItem_Click;
+            //
             // openSourceToolStripMenuItem
             // 
             openSourceToolStripMenuItem.Image = (System.Drawing.Image)resources.GetObject("openSourceToolStripMenuItem.Image");
@@ -509,6 +518,7 @@
         private System.Windows.Forms.ToolStripMenuItem sortColumnSQLOrderToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem noSQLdataSourceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem fileServerDeviceToolStripMenuItem;
+        private System.Windows.Forms.ToolStripMenuItem sharePointDeviceToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem reloadToolStripMenuItem;
         private System.Windows.Forms.ToolStripMenuItem resetDisplayOrderToolStripMenuItem;
         private System.Windows.Forms.TextBox treeViewFilter;

@@ -1,0 +1,70 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 720 420" width="720" height="420" role="img" aria-labelledby="cdsTitle">
+  <title id="cdsTitle">Data Source class diagram</title>
+  <style>
+    text { font-family: Lato, 'Segoe UI', Arial, sans-serif; fill: #242424; }
+    .cls { fill: #f4faff; stroke: #5aa7dd; stroke-width: 1.5; }
+    .name { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .base { font-size: 10px; font-style: italic; fill: #667; text-anchor: middle; }
+    .rel { font-size: 10.5px; font-style: italic; fill: #667; }
+    .arrow { stroke: #0E97EE; stroke-width: 1.5; fill: none; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E97EE"/>
+    </marker>
+  </defs>
+
+  <!-- MetaSource -->
+  <rect class="cls" x="40" y="40" width="170" height="52" rx="6"/>
+  <text class="name" x="125" y="62">MetaSource</text>
+  <text class="base" x="125" y="78">(Data Source, *.scfx)</text>
+
+  <!-- Connections -->
+  <line class="arrow" x1="210" y1="62" x2="298" y2="62" marker-end="url(#arr)"/>
+  <text class="rel" x="222" y="56">Connections</text>
+  <rect class="cls" x="300" y="40" width="160" height="44" rx="6"/>
+  <text class="name" x="380" y="58">MetaConnection</text>
+  <text class="base" x="380" y="74">(OLE DB, ODBC, ADO.NET…)</text>
+
+  <!-- MetaData -->
+  <path class="arrow" d="M125,92 V162 H298" marker-end="url(#arr)"/>
+  <text class="rel" x="180" y="156">MetaData</text>
+  <rect class="cls" x="300" y="140" width="160" height="44" rx="6"/>
+  <text class="name" x="380" y="158">MetaData</text>
+  <text class="base" x="380" y="174">(catalog description)</text>
+
+  <!-- Tables -->
+  <line class="arrow" x1="460" y1="152" x2="548" y2="134" marker-end="url(#arr)"/>
+  <text class="rel" x="482" y="136">Tables</text>
+  <rect class="cls" x="550" y="110" width="150" height="44" rx="6"/>
+  <text class="name" x="625" y="128">MetaTable</text>
+  <text class="base" x="625" y="144">(SQL or No SQL)</text>
+
+  <!-- Columns -->
+  <line class="arrow" x1="625" y1="110" x2="625" y2="86" marker-end="url(#arr)"/>
+  <text class="rel" x="633" y="102">Columns</text>
+  <rect class="cls" x="550" y="40" width="150" height="44" rx="6"/>
+  <text class="name" x="625" y="58">MetaColumn</text>
+  <text class="base" x="625" y="74">(name, type, enum…)</text>
+
+  <!-- TableLinks -->
+  <path class="arrow" d="M440,184 L548,212" marker-end="url(#arr)"/>
+  <text class="rel" x="462" y="204">TableLinks</text>
+  <rect class="cls" x="550" y="190" width="150" height="44" rx="6"/>
+  <text class="name" x="625" y="208">MetaTableLink</text>
+  <text class="base" x="625" y="224">(LINQ sources)</text>
+
+  <!-- Enums -->
+  <path class="arrow" d="M400,184 V282 H548" marker-end="url(#arr)"/>
+  <text class="rel" x="482" y="276">Enums</text>
+  <rect class="cls" x="550" y="260" width="150" height="44" rx="6"/>
+  <text class="name" x="625" y="278">MetaEnum</text>
+  <text class="base" x="625" y="294">(static or dynamic lists)</text>
+
+  <!-- Joins -->
+  <path class="arrow" d="M360,184 V352 H548" marker-end="url(#arr)"/>
+  <text class="rel" x="490" y="346">Joins</text>
+  <rect class="cls" x="550" y="330" width="150" height="44" rx="6"/>
+  <text class="name" x="625" y="348">MetaJoin</text>
+  <text class="base" x="625" y="364">(table relations)</text>
+</svg>

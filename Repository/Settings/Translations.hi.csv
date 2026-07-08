@@ -482,3 +482,5 @@ Report;Show Restrictions;प्रतिबंध दिखाएँ
 Report;Hide Restrictions;प्रतिबंध छिपाएँ
 Report;Show Guide;गाइड दिखाएँ
 Report;Hide Guide;गाइड छिपाएँ
+WebJS;Copy for Excel;Excel के लिए कॉपी करें
+WebJS;Download CSV;CSV डाउनलोड करें

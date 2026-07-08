@@ -10,7 +10,7 @@
         <!-- end section -->
         <div class="row">
             <div class="col-md-3">
-                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                <nav class="docs-sidebar" role="navigation">
                     <ul class="nav">
                         <li><a href="#lineRequirements">Requirements, License</a></li>
                         <li><a href="#lineCompilation">Installation, Compilation</a></li>
@@ -28,7 +28,7 @@
                         <li><a href="#lineSupport">Support and Sponsor</a></li>
                         <li><a href="#lineCredits">Credits</a></li>
                     </ul>
-                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
                         <strong><a href="#feed">Feed the Seal ?</a></strong><br />
                         <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -47,17 +47,30 @@
                                         <br>
                                         The product focuses on easy installation and report design: Once setup, reports can be built and published in a minute.
                                         <br><br>
-                                        <strong>Seal Report</strong> is an Open Source tool for the Microsoft .Net Framework entirely written in C#.
+                                        <strong>Seal Report</strong> is an Open Source tool for Microsoft .NET entirely written in C#, free for everyone under the <b>MIT License</b>.
                                     </p>
                                 </div>
                             </div>
                             <div class="row text-center">
                                 <div class="col-md-12">
-                                    <img src="Images/seal2.jpg" class="img-thumbnail img-rounded" />
+                                    <img src="Images/seal2.jpg" class="img-thumbnail rounded" />
                                 </div>
                             </div>
                             <div class="row">
                                 <div class="col-md-12 full">
+                                    <div class="bs-callout bs-callout-success">
+                                        <h4>New in Seal Report 10.0</h4>
+                                        <ul>
+                                            <li><b>MIT License</b>: The product is now free and open source for everyone.</li>
+                                            <li><b><a href="~/AI">AI Agents</a></b>: Chat with role-based AI agents to design reports, analyze data, manage data sources, schedule executions or administer the server — using your own provider (OpenAI, Azure OpenAI, Anthropic or Ollama, including local models). AI tasks can also be embedded in reports.</li>
+                                            <li><b>Apache ECharts</b>: New chart engine available in addition to ChartJS, Plotly, ScottPlot and Gauge.</li>
+                                            <li><b>Modern Web UI</b>: Migration to Bootstrap 5 and Font Awesome 6 for the Web Report Server and report rendering.</li>
+                                            <li><b>New Razor engine</b>: Migration to the maintained RazorEngineCore library with security hardening options.</li>
+                                            <li><b>Granular security</b>: New per-folder rights for report download and file upload, and publication of repository folders.</li>
+                                            <li><b>Fully Multilingual</b>: The Web Report Server and the report results are now translated in 28 languages (English, French, German, Spanish, Portuguese, Italian, Dutch, Polish, Russian, Ukrainian, Chinese, Japanese, Korean, Arabic and more).</li>
+                                            <li><b>.NET 10</b>: All components now target .NET 10.</li>
+                                        </ul>
+                                    </div>
                                     <h2>
                                         Main Features
                                     </h2>
@@ -72,7 +85,10 @@
                                             <b>Native Pivot Tables</b>: Simply drag and drop elements directly in a pivot table (Cross Tab) and display them in your report.
                                         </li>
                                         <li>
-                                            <b>HTML 5 and ScottPlot Charts</b>: Define and display Chart Series in two mouse clicks (Support of ChartJS, ECharts, Plotly, ScottPlot and Gauges libraries).
+                                            <b>HTML5 Charts</b>: Define and display Chart Series in two mouse clicks (Support of ChartJS, ECharts, Plotly, ScottPlot and Gauge libraries).
+                                        </li>
+                                        <li>
+                                            <b><a href="~/AI">AI Agents</a></b>: Chat with role-based AI agents to design reports, analyze data, manage data sources, schedule executions or administer the server — using your own provider (OpenAI, Azure OpenAI, Anthropic or Ollama, including local models). AI tasks can also be embedded in reports.
                                         </li>
                                         <li>
                                             <b>Fully Responsive and HTML Rendering using Razor engine</b>: Use the power of HTML5 in the report result (Bootstrap layout, Responsiveness, Tables sorting and filtering). Customize your report presentation in HTML with the Razor engine parsing.
@@ -84,16 +100,25 @@
                                             <b>KPI and Widget Views</b>: Create and display your Key Performance Indicators in a single report.
                                         </li>
                                         <li>
-                                            <b>Web Report Server</b>: Publish your reports on the web (Support of Windows and Linux OS with .NET Core).
+                                            <b>Web Report Server</b>: Publish your reports on the web (Support of Windows and Linux OS with .NET).
                                         </li>
                                         <li>
-                                            <b>Report scheduler</b>: Schedule your report executions and generate results in folders, FTP, SFTP server or send them by emails (integrated with the Windows Tasks Scheduler or available as a service).
+                                            <b>Fully Multilingual</b>: Display the web interface and your report results in the language of your users — translations are provided for 28 languages, and any string can be customized or completed in the repository translation files.
+                                        </li>
+                                        <li>
+                                            <b>Report scheduler</b>: Schedule your report executions and generate results in folders, FTP/SFTP servers or SharePoint document libraries, or send them by emails via SMTP, SendGrid or MS Graph (integrated with the Windows Tasks Scheduler or available as a service).
                                         </li>
                                         <li>
                                             <b>Drill Down navigation and Sub Reports</b>: Navigate in your report result to drill to a detail or to execute another report.
                                         </li>
                                         <li>
-                                            <b>Report Tasks</b>: Define tasks to perform your ETL or batch operations (data load, excel load, file download from FTP or SFTP, zip, backup, data processing, etc.) or to trigger procedures from external assemblies.
+                                            <b>Report Tasks & ETL</b>: Define tasks to perform your ETL or batch operations (data load, excel load, file download from FTP or SFTP, zip, backup, data processing, etc.) or to trigger procedures from external assemblies.
+                                        </li>
+                                        <li>
+                                            Native support of <b>Mongo DB</b>.
+                                        </li>
+                                        <li>
+                                            <b>NuGet packages</b> to ease integration into existing projects.
                                         </li>
                                         <li>
                                             <b>Low TCO (total cost of ownership)</b>: The product is designed for minimal ongoing maintenance.
@@ -102,10 +127,6 @@
                                     <div class="bs-callout bs-callout-danger">
                                         <h4>Live Demonstration</h4>
                                         A live demonstration of the <strong>Web Report Server</strong> is available at <a href="https://sealreport.org/demo" target="_blank">SealReport.org/demo</a>.<br />
-                                    </div>
-                                    <div class="bs-callout bs-callout-warning">
-                                        <h4>Seal Report Forum</h4>
-                                        Use the <a href="https://sealreport.org/forum" target="_blank">Seal Report Forum</a> to get free support, information and hints on the product, or read the Wiki for technical documentation.
                                     </div>
                                 </div>
                                 <!-- end row -->
@@ -124,20 +145,20 @@
                         <div class="col-md-12">
                             <strong>For use:</strong>
                             <ul>
-                                <li>Windows .Net 8.0 (Microsoft Windows Desktop Runtime 8)</li>
-                                <li>Database OLE DB, ODBC, MS SQLServer, Mongo DB, MySQL or PostgreSQL Drivers</li>
+                                <li>.NET 10.0 (Microsoft Windows Desktop Runtime 10)</li>
+                                <li>Database drivers: OLE DB, ODBC, MS SQL Server, Oracle, MySQL, SQLite, PostgreSQL, Mongo DB</li>
                                 <li>For the Report Designer: Microsoft Edge WebView2</li>
-                                <li>For the Web Report Server: ASP.Net Core Runtime 8 (Hosting Bundle) or greater</li>
+                                <li>For the Web Report Server: ASP.NET Core Runtime 10 (Hosting Bundle) or greater</li>
                             </ul>
                             <strong>For development:</strong>
                             <ul>
-                                <li>Visual Studio 2022 for .Net 8</li>
+                                <li>Visual Studio 2026</li>
                             </ul>
                             <p>
                                 <strong>License</strong><br/>
-                                Seal Report follows a <b>dual-licensing model</b> to ensure its maintenance, quality, and support.<br />
-                                Companies with an annual gross revenue exceeding $1 million USD are required to purchase a commercial license.<br />
-                                More information at <a href="https://sealreport.com" target="_blank">License description</a>.
+                                Seal Report is free and open source for everyone under the <b>MIT License</b>.<br />
+                                Third-party components are distributed under their own licenses, see <a href="https://github.com/ariacom/Seal-Report/blob/master/THIRD-PARTY-NOTICES.md" target="_blank">Third-Party Notices</a>.<br />
+                                Professional support and services are available at <a href="https://sealreport.com" target="_blank">Seal Report Services</a>.
                             </p>
                         </div>
                         <!-- end col -->
@@ -210,7 +231,7 @@
                         <div id="lineOverview_1" class="row" style="padding-top:35px">
                             <div class="col-md-12">
                                 <h4>Entities and components</h4>
-                                <img src="images/overViewSeal.png" alt="" class="img-thumbnail img-rounded">
+                                <img src="images/overviewSeal.svg" alt="Seal Report architecture overview" class="img-thumbnail rounded">
                             </div>
                             <!-- end col -->
                         </div>
@@ -232,30 +253,30 @@
                                     <tbody>
                                         <tr>
                                             <td><b>Windows</b></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
                                         </tr>
                                         <tr>
                                             <td><b>Linux</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
                                         </tr>
                                         <tr>
                                             <td><b>Azure (Windows)</b></td>
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span>&#10004;</span></td>
                                             <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span>&#10004;</span></td>
                                         </tr>
                                         <tr>
                                             <td><b>Azure (Linux)</b></td>
@@ -263,8 +284,8 @@
                                             <td></td>
                                             <td></td>
                                             <td></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
-                                            <td><span class="glyphicon glyphicon-ok"></td>
+                                            <td><span>&#10004;</span></td>
+                                            <td><span>&#10004;</span></td>
                                         </tr>
                                     </tbody>
                                 </table>
@@ -275,7 +296,7 @@
                         <div id="lineOverview_3" class="row" style="padding-top:35px">
                             <div class="col-md-12">
                                 <h4>Deployment and publication</h4>
-                                <img src="images/platforms.png" alt="" class="img-thumbnail img-rounded">
+                                <img src="images/platforms.svg" alt="" class="img-thumbnail rounded">
                             </div>
                             <!-- end col -->
                         </div>
@@ -377,7 +398,7 @@
                                     <strong>Databases:</strong> dedicated folder for local database files (e.g. an MS Access file, an Excel file).
                                 </li>
                                 <li>
-                                    <strong>Devices:</strong> the device configurations (*.scfx) used by the report output. 3 types of devices are available: Folder, File Server (FTP, SFTP), Email to send it to a user by SMTP.
+                                    <strong>Devices:</strong> the device configurations (*.scfx) used by the report output. 4 types of devices are available: Folder, File Server (FTP, SFTP), SharePoint (Microsoft Graph), Email to send it to a user by SMTP, SendGrid or MS Graph.
                                 </li>
                                 <li>
                                     <strong>Logs:</strong> the daily log files (*.txt). All events, executions and schedules messages are logged in a daily file (files are auto-purged).
@@ -390,6 +411,21 @@
                                 </li>
                                 <li>
                                     <strong>Settings:</strong> the Server configuration (Configuration.xml) and the translation files (*.xlsx or *.csv).
+                                </li>
+                                <li>
+                                    <strong>Settings\AI:</strong> the <a href="~/AI">AI Agents</a> configuration (AIConfiguration.xml) defining the AI providers and agents.
+                                </li>
+                                <li>
+                                    <strong>Settings\AI\Prompts:</strong> the system prompts (*.md) defining the role and the rules of each AI agent.
+                                </li>
+                                <li>
+                                    <strong>Settings\AI\Samples:</strong> the sample prompts (*.md) proposed to the user in the chat panel for each AI agent.
+                                </li>
+                                <li>
+                                    <strong>Settings\AI\Scripts:</strong> the Razor scripts (*.cshtml) implementing the tools available to the AI agents.
+                                </li>
+                                <li>
+                                    <strong>Settings\AI\Skills:</strong> the skills (*.md) describing how an AI agent performs a specific task (e.g. building a report from metadata, managing a data source).
                                 </li>
                                 <li>
                                     <strong>Sources:</strong> the data source files (*.scfx) available for the reports. These data sources are shared amongst all the reports.
@@ -439,9 +475,14 @@
                                 Feel free to post your questions, comments or answers...
                             </p>
                         </div>
+                        <div class="col-md-12 bs-callout bs-callout-success">
+                            <h4>Give a Star on GitHub</h4>
+                            It is free and takes one click: star the <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub repository</a> to increase the product visibility and help the community grow.<br />
+                            <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px" style="margin-top:8px;"></iframe>
+                        </div>
                         <div class="col-md-12 bs-callout bs-callout-warning">
-                            <h4>Buy a license</h4>
-                            The simpliest way to support the product is to buy a license at <a href="https://sealreport.com" target="_blank">Seal Report Licenses</a>.
+                            <h4>Subscribe to professional support</h4>
+                            The simplest way to support the product is to subscribe to professional support at <a href="https://sealreport.com" target="_blank">Seal Report Services</a>.
                         </div>
                         <div class="col-md-12 bs-callout bs-callout-info">
                             <h4>Consulting: Get State of the Art Help</h4>
@@ -469,8 +510,10 @@
                         <div class="col-md-12">
                             Here is the list of the major Open Source components (Thank you !) used in <strong>Seal Report</strong>:
                             <ul>
-                                <li> <a href="https://getbootstrap.com/docs/3.4/" target="_blank">Bootstrap 3</a> for the Web Report Server and report rendering</li>
-                                <li> <a href="https://github.com/Antaris/RazorEngine" target="_blank">Razor engine</a> for the rendering and dynamic options</li>
+                                <li> <a href="https://getbootstrap.com" target="_blank">Bootstrap 5</a> for the Web Report Server and report rendering</li>
+                                <li> <a href="https://fontawesome.com" target="_blank">Font Awesome 6</a> for the icons</li>
+                                <li> <a href="https://github.com/adoconnection/RazorEngineCore" target="_blank">RazorEngineCore</a> for the rendering and dynamic options</li>
+                                <li> <a href="https://github.com/openai/openai-dotnet" target="_blank">OpenAI .NET library</a> and <a href="https://github.com/Azure/azure-sdk-for-net" target="_blank">Azure.AI.OpenAI</a> for the AI providers</li>
                                 <li><a href="http://www.chartjs.org/" target="_blank">ChartJS</a> for the charts JS</li>
                                 <li><a href="https://chartjs-plugin-datalabels.netlify.app/" target="_blank">ChartJS Labels Plugin</a> for the charts JS Labels</li>
                                 <li><a href="https://echarts.apache.org/" target="_blank">Apache ECharts</a> for the ECharts charts</li>
@@ -482,16 +525,15 @@
                                 <li> <a href="http://www.codeproject.com/Articles/189521/Dynamic-Properties-for-PropertyGrid" target="_blank">Dynamic Properties</a> for PropertyGrid helpers</li>
                                 <li> <a href="https://mimekit.net/" target="_blank">MimeKit</a> for Email devices</li>
                                 <li> <a href="https://datatables.net" target="_blank">Data Tables</a> to enhance HTML tables</li>
-                                <li> <a href="https://github.com/Eonasdan/bootstrap-datetimepicker" target="_blank">Datetime Picker</a> component for the report restrictions</li>
+                                <li> <a href="https://flatpickr.js.org" target="_blank">Flatpickr</a> datetime picker component for the report restrictions</li>
                                 <li> <a href="https://github.com/silviomoreto/bootstrap-select" target="_blank">Multiple Select</a> component for the report restrictions</li>
                                 <li> <a href="https://github.com/robinrodricks/FluentFTP" target="_blank">Fluent FTP</a> library for Output File Server with the FTP protocol</li>
                                 <li> <a href="https://github.com/sshnet/SSH.NET/" target="_blank">SS.NET</a> library for Output File Server with the SFTP and SCP protocol</li>
                                 <li> <a href="https://github.com/icsharpcode/SharpZipLib" target="_blank">SharpZipLib</a> to Zip report result files</li>
-                                <li> <a href="https://github.com/JanKallman/EPPlus" target="_blank">EPPlus</a> to process Excel source files. <b>The version with the LGL license is used.</b></li>
+                                <li> <a href="https://github.com/JanKallman/EPPlus" target="_blank">EPPlus</a> to process Excel source files. <b>The version with the LGPL license is used.</b></li>
                                 <li> <a href="https://github.com/QuestPDF/QuestPDF" target="_blank">QuestPDF</a> to generate the PDF result. <b>Please check if your usage of QuestPDF requires a license</b>.</li>
                                 <li> <a href="https://github.com/hardkoded/puppeteer-sharp" target="_blank">Pupeteer-sharp</a> to generate the HTML to PDF result</li>
                                 <li> <a href="http://www.jrsoftware.org" target="_blank"> InnoSetup</a> for the setup</li>
-                                <li> <a href="http://yetanotherforum.net" target="_blank">Yet Another Forum</a> (YAF) for the forum</li>
                                 <li> <a href="https://github.com/EWSoftware/SHFB" target="_blank">Sand Castle Help File Builder</a> for the documentation generation</li>
                             </ul>
                         </div>
@@ -507,10 +549,3 @@
     <!-- // end container -->
 </div>
 <!-- end wrapper -->
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $("#default_nav").addClass("active");
-        });
-    </script>
-}

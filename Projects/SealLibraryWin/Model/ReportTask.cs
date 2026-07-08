@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Linq;
@@ -783,10 +783,10 @@ namespace Seal.Model
                         ((SqlConnection)connection).InfoMessage += new SqlInfoMessageEventHandler(MicrosoftSqlInfoMessage);
                         result = ((SqlConnection)connection).CreateCommand();
                     }
-                    else if (connection is MySql.Data.MySqlClient.MySqlConnection)
+                    else if (connection is MySqlConnector.MySqlConnection)
                     {
-                        ((MySql.Data.MySqlClient.MySqlConnection)connection).InfoMessage += new MySql.Data.MySqlClient.MySqlInfoMessageEventHandler(MySqlInfoMessage);
-                        result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                        ((MySqlConnector.MySqlConnection)connection).InfoMessage += new MySqlConnector.MySqlInfoMessageEventHandler(MySqlInfoMessage);
+                        result = ((MySqlConnector.MySqlConnection)connection).CreateCommand();
                     }
                     else if (connection is OracleConnection)
                     {
@@ -959,9 +959,9 @@ namespace Seal.Model
             DbInfoMessage.Append(e.Message);
         }
 
-        void MySqlInfoMessage(object sender, MySql.Data.MySqlClient.MySqlInfoMessageEventArgs e)
+        void MySqlInfoMessage(object sender, MySqlConnector.MySqlInfoMessageEventArgs e)
         {
-            DbInfoMessage.Append(e.errors);
+            foreach (var error in e.Errors) DbInfoMessage.AppendLine(error.Message);
         }
         void OracleInfoMessage(object sender, OracleInfoMessageEventArgs e)
         {

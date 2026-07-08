@@ -1,84 +1,46 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
     <meta charset="utf-8" />
     <title>Seal Report | @ViewData["Title"]</title>
 
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.4.1/css/bootstrap.min.css">
-
-    <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
     <meta name="description" content="">
     <meta name="author" content="">
     <meta name="keywords" content="">
     <link rel="shortcut icon" href="images/favicon.ico" type="image/x-icon">
-    <link rel="stylesheet" type="text/css" href="css/stroke.css">
-    <link rel="stylesheet" type="text/css" href="css/bootstrap.css">
-    <link rel="stylesheet" type="text/css" href="css/animate.css">
-    <link rel="stylesheet" type="text/css" href="css/style.css">
-    <link rel="stylesheet" type="text/css" href="scripts/syntax-highlighter/styles/shCore.css" media="all">
-    <link rel="stylesheet" type="text/css" href="scripts/syntax-highlighter/styles/shThemeRDark.css" media="all">
+    <link rel="stylesheet" type="text/css" href="~/lib/bootstrap/dist/css/bootstrap.min.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="~/lib/prism/prism-tomorrow.min.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="~/lib/prism/prism-line-highlight.min.css" asp-append-version="true">
+    <link rel="stylesheet" type="text/css" href="~/css/style.css" asp-append-version="true">
     <!-- CUSTOM -->
-    <link rel="stylesheet" type="text/css" href="css/custom.css">
-
-
-    <meta name="viewport" content="width=device-width" />
-
-    <style>
-        body {
-            position: relative;
-        }
-
-        ul.nav-pills {
-            top: 65px;
-            position: fixed;
-        }
-
-        div.col-sm-9 div {
-            height: 250px;
-            padding-top: 50px;
-        }
-
-
-        .back-to-top {
-            cursor: pointer;
-            position: fixed;
-            bottom: 0;
-            right: 20px;
-            display: none;
-        }
-    </style>
+    <link rel="stylesheet" type="text/css" href="~/css/custom.css" asp-append-version="true">
 </head>
 <body>
-    <nav id="bar_top" class='navbar navbar-default navbar-fixed-top navbar-inverse'>
+    <nav id="bar_top" class="navbar navbar-expand-lg navbar-dark navbar-doc fixed-top">
         <div class="container-fluid">
-            <div class="navbar-header">
-                <button type="button" data-target="#navbarCollapse" data-toggle="collapse" class="navbar-toggle">
-                    <span class="sr-only">Toggle navigation</span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                    <span class="icon-bar"></span>
-                </button>
-                <a id="nav_button" href="~/" class="navbar-brand">Seal Report</a>
-            </div>
+            <a id="nav_button" href="~/" class="navbar-brand">Seal Report</a>
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
             <div id="navbarCollapse" class="collapse navbar-collapse">
-                <ul class="nav navbar-nav navbar-right">
-                    <li id="default_nav"><a href="~/">Getting Started</a></li>
-                    <li id="sources_nav"><a href="~/Sources">Data Sources</a></li>
-                    <li id="reports_nav"><a href="~/Reports">Reports</a></li>
-                    <li id="server_nav"><a href="~/Server">Server</a></li>
-                    <li id="tutorials_nav"><a href="~/Tutorials">Tutorials</a></li>
-                    <li id="recipes_nav"><a href="~/Recipes">Recipes</a></li>
-                    <li><a href="~/Help/Index.html" target="_blank">Seal Library <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                    <li class="dropdown">
-                        <a href="#" class="dropdown-toggle" style="margin-right:25px" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Web Resources<span class="caret"></span></a>
-                        <ul class="dropdown-menu">
-                            <li><a href="https://sealreport.org/demo" target="_blank">Live Demo <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                            <li><a href="https://sealreport.org/forum" target="_blank">Seal Report Forum <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                            <li><a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub Repository <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                            <li><a href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">Seal Web Interface <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-                            <li><a href="https://sealreport.com" target="_blank">Seal Report License <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item"><a id="default_nav" class="nav-link" href="~/">Getting Started</a></li>
+                    <li class="nav-item"><a id="sources_nav" class="nav-link" href="~/Sources">Data Sources</a></li>
+                    <li class="nav-item"><a id="reports_nav" class="nav-link" href="~/Reports">Reports</a></li>
+                    <li class="nav-item"><a id="server_nav" class="nav-link" href="~/Server">Server</a></li>
+                    <li class="nav-item"><a id="ai_nav" class="nav-link" href="~/AI">AI Agents</a></li>
+                    <li class="nav-item"><a id="tutorials_nav" class="nav-link" href="~/Tutorials">Tutorials</a></li>
+                    <li class="nav-item"><a id="recipes_nav" class="nav-link" href="~/Recipes">Recipes</a></li>
+                    <li class="nav-item dropdown">
+                        <a href="#" class="nav-link dropdown-toggle" style="margin-right:25px" data-bs-toggle="dropdown" role="button" aria-expanded="false">Web Resources</a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item ext-link" href="https://sealreport.org/demo" target="_blank">Live Demonstration</a></li>
+                            <li><a class="dropdown-item ext-link" href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub Repository</a></li>
+                            <li><a class="dropdown-item ext-link" href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">Seal Web Interface</a></li>
+                            <li><a class="dropdown-item ext-link" href="~/Help/Index.html" target="_blank">Seal Library</a></li>
+                            <li><a class="dropdown-item ext-link" href="https://sealreport.com" target="_blank">Support &amp; Services</a></li>
                         </ul>
                     </li>
                 </ul>
@@ -104,16 +66,15 @@
                         <div class="col-md-3 left-align">
                         </div>
                         <div class="col-md-9">
+                            <div class="bs-callout bs-callout-success">
+                                <h4>Give a Star!</h4>
+                                You like <b>Seal Report</b>? The simplest contribution takes one click: star the project on <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a> to increase its visibility and help the community grow.<br />
+                                <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px" style="margin-top:8px;"></iframe>
+                            </div>
                             <div class="bs-callout bs-callout-danger">
                                 <h4>Enhance the documentation and samples</h4>
                                 Want to share your experience or to add a new topic ? Something is not clear in the documentation ? Do you have an interesting recipe ? <br />
                                 As the site for the documentation is part of the solution, <strong>you are welcome to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
-                            </div>
-                            <div class="bs-callout bs-callout-warning">
-                                <h4>Add translation files</h4>
-                                Do you have a translation file not yet supported by Seal Report ?<br />
-                                <ck>Check first the recipe <a href="Recipes.cshtml#lineTranslations">Adding translation files</a></ck>.<br />
-                                As the translations are part of the project, <strong>feel free to Pull a Request at <a href="https://github.com/ariacom/Seal-Report" target="_blank">GitHub</a>.</strong>
                             </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4 style="font-style:normal;font-size:21px;font-weight:normal">Sponsor the project</h4>
@@ -147,49 +108,19 @@
     </footer>
 
     <!--back to top-->
-    <a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="Back to top" data-toggle="tooltip" data-placement="top">
+    <a id="back-to-top" href="#" class="btn btn-warning btn-lg back-to-top" role="button" title="Back to top">
         <span>&#916;</span>
     </a>
 
-    <script src="scripts/jquery.min.js"></script>
-    <script src="scripts/bootstrap.min.js"></script>
-    <script src="scripts/retina.js"></script>
-    <script src="scripts/jquery.fitvids.js"></script>
-    <script src="scripts/wow.js"></script>
-    <!-- CUSTOM PLUGINS -->
-    <script src="scripts/custom.js"></script>
-    <script src="scripts/main.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shCore.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shBrushXml.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shBrushCss.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shBrushJScript.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shBrushCSharp.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shBrushSql.js"></script>
-    <script src="scripts/syntax-highlighter/scripts/shBrushBash.js"></script>
+    <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/lib/prism/prism.min.js" asp-append-version="true"></script>
+    <script src="~/lib/prism/prism-csharp.min.js" asp-append-version="true"></script>
+    <script src="~/lib/prism/prism-sql.min.js" asp-append-version="true"></script>
+    <script src="~/lib/prism/prism-bash.min.js" asp-append-version="true"></script>
+    <script src="~/lib/prism/prism-line-highlight.min.js" asp-append-version="true"></script>
+    <!-- CUSTOM -->
+    <script src="~/scripts/main.js" asp-append-version="true"></script>
 
     @RenderSection("Scripts", required: false)
-
-    <script>
-        //back to top
-        $(window).scroll(function () {
-            if ($(this).scrollTop() > 50) $('#back-to-top').fadeIn();
-            else $('#back-to-top').fadeOut();
-        });
-
-        $('#back-to-top').click(function () {
-            $('#back-to-top').tooltip('hide');
-            $('body,html').animate({
-                scrollTop: 0
-            }, 800);
-            return false;
-        });
-
-        //hack to remove container class on the syntax highlight
-        $(document).ready(function () {
-            setTimeout(function () {
-                $(".syntaxhighlighter table td.code .container").removeClass("container");
-            }, 1000);
-        });
-    </script>
 </body>
 </html>

@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -67,8 +67,9 @@ Designer and Tools Security
 - AI Tools Data Sources: a data source is allowed if it is listed in at least one group (union of all groups); if no group defines any restriction, all data sources are allowed
 
 - Default options (Edit Profile, Culture, Logo, Startup) are taken from the group having the highest weight.
-";
-            
+".Replace("\r\n", "\n").Replace("\n", "\r\n"); //TextBox only breaks on CRLF, source may be checked out with LF
+
+
             Visible = true;
             //Loose focus of the propertyGrid
             ActiveControl = mainStatusStrip;

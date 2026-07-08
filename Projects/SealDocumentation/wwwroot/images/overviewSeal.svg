@@ -1,0 +1,154 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 655" width="960" height="655" role="img" aria-labelledby="ovTitle">
+  <title id="ovTitle">Seal Report architecture overview</title>
+  <style>
+    text { font-family: Lato, 'Segoe UI', Arial, sans-serif; fill: #242424; }
+    .grp { fill: none; stroke: #999; stroke-width: 1.2; stroke-dasharray: 7 4; }
+    .grpt { font-size: 13px; font-style: italic; fill: #666; }
+    .name { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .desc { font-size: 10.5px; fill: #444; text-anchor: middle; }
+    .chipt { font-size: 9.5px; font-weight: 700; fill: #0E97EE; text-anchor: middle; }
+    .lbl { font-size: 11px; font-style: italic; fill: #667; }
+    .persont { font-size: 12px; font-style: italic; fill: #667; text-anchor: middle; }
+    .arrow { stroke: #0E97EE; stroke-width: 1.8; fill: none; }
+    .db { fill: #d9ecfb; stroke: #5aa7dd; stroke-width: 1.5; }
+    .doc { fill: #e9f6df; stroke: #7cc24c; stroke-width: 1.5; }
+    .card { fill: #fdf1e7; stroke: #e59a55; stroke-width: 1.5; }
+    .chip { fill: #eef7fd; stroke: #9fd1f5; stroke-width: 1; }
+    .out { fill: #fff8dd; stroke: #e6c229; stroke-width: 1.5; }
+    .person { fill: #d9d9d9; stroke: #9a9a9a; stroke-width: 1.5; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E97EE"/>
+    </marker>
+  </defs>
+
+  <!-- Data Sources group -->
+  <rect class="grp" x="20" y="15" width="300" height="150" rx="4"/>
+  <text class="grpt" x="35" y="38">Data Sources</text>
+  <path class="db" d="M48,68 v56 a52,11 0 0 0 104,0 v-56"/>
+  <ellipse class="db" cx="100" cy="68" rx="52" ry="11"/>
+  <text class="name" x="100" y="102" font-size="12">Databases</text>
+  <text class="desc" x="100" y="117" font-size="10">(SQL)</text>
+  <rect class="db" x="175" y="68" width="130" height="66" rx="8"/>
+  <text class="name" x="240" y="90" font-size="12">No SQL / LINQ</text>
+  <text class="desc" x="240" y="105" font-size="10">Excel, Mongo DB,</text>
+  <text class="desc" x="240" y="118" font-size="10">HTTP JSON, OLAP…</text>
+
+  <!-- Repository group -->
+  <rect class="grp" x="360" y="15" width="580" height="150" rx="4"/>
+  <text class="grpt" x="375" y="38">Repository (C:\ProgramData\Seal Report Repository)</text>
+  <g>
+    <rect class="doc" x="401" y="44" width="150" height="85" rx="6"/>
+    <rect class="doc" x="393" y="52" width="150" height="85" rx="6"/>
+    <rect class="doc" x="385" y="60" width="150" height="85" rx="6"/>
+    <text class="name" x="460" y="98" font-size="12">Report Definitions</text>
+    <text class="desc" x="460" y="115">(*.srex)</text>
+  </g>
+  <g>
+    <rect class="doc" x="591" y="44" width="150" height="85" rx="6"/>
+    <rect class="doc" x="583" y="52" width="150" height="85" rx="6"/>
+    <rect class="doc" x="575" y="60" width="150" height="85" rx="6"/>
+    <text class="name" x="650" y="98" font-size="12">Data Sources, Devices</text>
+    <text class="desc" x="650" y="115">(*.scfx)</text>
+  </g>
+  <g>
+    <rect class="doc" x="781" y="44" width="150" height="85" rx="6"/>
+    <rect class="doc" x="773" y="52" width="150" height="85" rx="6"/>
+    <rect class="doc" x="765" y="60" width="150" height="85" rx="6"/>
+    <text class="name" x="840" y="98" font-size="12">Settings, Security</text>
+    <text class="desc" x="840" y="115">&amp; AI configuration</text>
+  </g>
+
+  <!-- Arrows to components -->
+  <line class="arrow" x1="170" y1="167" x2="170" y2="223" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="183" y="190">Query the databases and</text>
+  <text class="lbl" x="183" y="204">build the report models</text>
+  <line class="arrow" x1="650" y1="167" x2="650" y2="223" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <text class="lbl" x="663" y="190">Load and edit the reports</text>
+  <text class="lbl" x="663" y="204">and configuration files</text>
+
+  <!-- Product components group -->
+  <rect class="grp" x="20" y="225" width="920" height="170" rx="4"/>
+  <text class="grpt" x="35" y="248">Product Components</text>
+
+  <!-- Web Report Server -->
+  <rect class="card" x="40" y="260" width="168" height="112" rx="10"/>
+  <text class="name" x="124" y="285">Web Report Server</text>
+  <text class="desc" x="124" y="308">Execute reports on the web,</text>
+  <text class="desc" x="124" y="321">chat with the AI Agents</text>
+  <text class="desc" x="124" y="334">(ASP.NET Core)</text>
+  <rect class="chip" x="72" y="344" width="104" height="17" rx="8.5"/>
+  <text class="chipt" x="124" y="356">Windows • Linux</text>
+
+  <!-- Scheduler Service & Worker -->
+  <rect class="card" x="224" y="260" width="168" height="112" rx="10"/>
+  <text class="name" x="308" y="285">Scheduler Service</text>
+  <text class="name" x="308" y="300">&amp; Worker</text>
+  <text class="desc" x="308" y="323">Execute the report</text>
+  <text class="desc" x="308" y="336">schedules</text>
+  <rect class="chip" x="256" y="344" width="104" height="17" rx="8.5"/>
+  <text class="chipt" x="308" y="356">Windows • Linux</text>
+
+  <!-- Task Scheduler -->
+  <rect class="card" x="408" y="260" width="168" height="112" rx="10"/>
+  <text class="name" x="492" y="285">Task Scheduler</text>
+  <text class="desc" x="492" y="308">Execute the report schedules</text>
+  <text class="desc" x="492" y="321">(integrated with the</text>
+  <text class="desc" x="492" y="334">Windows Tasks Scheduler)</text>
+  <rect class="chip" x="452" y="344" width="80" height="17" rx="8.5"/>
+  <text class="chipt" x="492" y="356">Windows</text>
+
+  <!-- Report Designer -->
+  <rect class="card" x="592" y="260" width="168" height="112" rx="10"/>
+  <text class="name" x="676" y="285">Report Designer</text>
+  <text class="desc" x="676" y="308">Create and edit</text>
+  <text class="desc" x="676" y="321">the reports (*.srex)</text>
+  <rect class="chip" x="636" y="344" width="80" height="17" rx="8.5"/>
+  <text class="chipt" x="676" y="356">Windows</text>
+
+  <!-- Server Manager -->
+  <rect class="card" x="776" y="260" width="168" height="112" rx="10"/>
+  <text class="name" x="860" y="285">Server Manager</text>
+  <text class="desc" x="860" y="308">Edit the data sources (*.scfx)</text>
+  <text class="desc" x="860" y="321">and the configuration</text>
+  <rect class="chip" x="820" y="344" width="80" height="17" rx="8.5"/>
+  <text class="chipt" x="860" y="356">Windows</text>
+
+  <!-- Web Browser -->
+  <line class="arrow" x1="124" y1="374" x2="124" y2="438" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <rect class="out" x="40" y="440" width="168" height="64" rx="8" style="fill:#fffdf5; stroke:#f0b429; stroke-width:2"/>
+  <text class="name" x="124" y="466">Web Browser</text>
+  <text class="desc" x="124" y="483">Edge, Chrome, Firefox, Safari</text>
+
+  <!-- Report results -->
+  <line class="arrow" x1="175" y1="506" x2="265" y2="538" marker-end="url(#arr)"/>
+  <rect class="out" x="240" y="540" width="185" height="58" rx="8"/>
+  <text class="name" x="332" y="564" font-size="12">Report Results</text>
+  <text class="desc" x="332" y="581">(.html, Excel, PDF, CSV…)</text>
+
+  <!-- Scheduled outputs -->
+  <line class="arrow" x1="308" y1="374" x2="400" y2="438" marker-end="url(#arr)"/>
+  <line class="arrow" x1="492" y1="374" x2="470" y2="438" marker-end="url(#arr)"/>
+  <rect class="out" x="330" y="440" width="230" height="64" rx="8"/>
+  <text class="name" x="445" y="466" font-size="12">Results to Folder, Email,</text>
+  <text class="name" x="445" y="481" font-size="12">FTP / SFTP, SharePoint</text>
+
+  <!-- Standard Users -->
+  <line class="arrow" x1="124" y1="506" x2="124" y2="548" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <circle class="person" cx="124" cy="568" r="13"/>
+  <rect class="person" x="102" y="586" width="44" height="24" rx="12"/>
+  <text class="persont" x="124" y="632">Standard Users</text>
+
+  <!-- Report Designers -->
+  <line class="arrow" x1="676" y1="374" x2="676" y2="458" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <circle class="person" cx="676" cy="478" r="13"/>
+  <rect class="person" x="654" y="496" width="44" height="24" rx="12"/>
+  <text class="persont" x="676" y="542">Report Designers</text>
+
+  <!-- Administrators -->
+  <line class="arrow" x1="860" y1="374" x2="860" y2="458" marker-start="url(#arr)" marker-end="url(#arr)"/>
+  <circle class="person" cx="860" cy="478" r="13"/>
+  <rect class="person" x="838" y="496" width="44" height="24" rx="12"/>
+  <text class="persont" x="860" y="542">Administrators</text>
+</svg>

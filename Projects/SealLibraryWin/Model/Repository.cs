@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -610,6 +610,17 @@ namespace Seal.Model
                         Helper.WriteLogException("Repository.Init: OutputFileServerDevice", ex);
                     }
                 }
+                foreach (var file in Directory.GetFiles(DevicesSharePointFolder, "*." + SealConfigurationFileExtension))
+                {
+                    try
+                    {
+                        Devices.Add(OutputSharePointDevice.LoadFromFile(file, true));
+                    }
+                    catch (Exception ex)
+                    {
+                        Helper.WriteLogException("Repository.Init: OutputSharePointDevice", ex);
+                    }
+                }
             }
 
             lock (PathLock)
@@ -761,6 +772,10 @@ namespace Seal.Model
             {
                 if (!Devices.Exists(i => i.FilePath == file)) return true;
             }
+            foreach (var file in Directory.GetFiles(DevicesSharePointFolder, "*." + SealConfigurationFileExtension))
+            {
+                if (!Devices.Exists(i => i.FilePath == file)) return true;
+            }
 
             return false;
         }
@@ -777,6 +792,7 @@ namespace Seal.Model
                 if (!Directory.Exists(DevicesFolder)) Directory.CreateDirectory(DevicesFolder);
                 if (!Directory.Exists(DevicesEmailFolder)) Directory.CreateDirectory(DevicesEmailFolder);
                 if (!Directory.Exists(DevicesFileServerFolder)) Directory.CreateDirectory(DevicesFileServerFolder);
+                if (!Directory.Exists(DevicesSharePointFolder)) Directory.CreateDirectory(DevicesSharePointFolder);
                 if (!Directory.Exists(ReportsFolder)) Directory.CreateDirectory(ReportsFolder);
                 if (!Directory.Exists(SettingsFolder)) Directory.CreateDirectory(SettingsFolder);
                 if (!Directory.Exists(SecurityFolder)) Directory.CreateDirectory(SecurityFolder);
@@ -853,6 +869,14 @@ namespace Seal.Model
         public string DevicesFileServerFolder
         {
             get { return Path.Combine(RepositoryPath, string.Format("Devices{0}FileServer", Path.DirectorySeparatorChar)); }
+        }
+
+        /// <summary>
+        /// Devices SharePoint folder
+        /// </summary>
+        public string DevicesSharePointFolder
+        {
+            get { return Path.Combine(RepositoryPath, string.Format("Devices{0}SharePoint", Path.DirectorySeparatorChar)); }
         }
 
         /// <summary>

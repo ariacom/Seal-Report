@@ -20,30 +20,30 @@
 
     <link href="~/img/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
 
-    <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" />
+    <link rel="stylesheet" href="~/lib/datatables/datatables.min.css" asp-append-version="true" />
     @foreach (var asset in Seal.Model.ClientAssets.FontAwesomeCss)
     {
-        <link rel="stylesheet" href="~/@asset.Path" />
+        <link rel="stylesheet" href="~/@asset.Path" asp-append-version="true" />
     }
-    <link rel="stylesheet" href="~/lib/bootstrap-select/bootstrap-select.min.css" />
+    <link rel="stylesheet" href="~/lib/bootstrap-select/bootstrap-select.min.css" asp-append-version="true" />
     @foreach (var asset in Seal.Model.ClientAssets.FlatpickrCss)
     {
-        <link rel="stylesheet" href="~/@asset.Path" />
+        <link rel="stylesheet" href="~/@asset.Path" asp-append-version="true" />
     }
     @foreach (var asset in Seal.Model.ClientAssets.BootstrapCss)
     {
-        <link rel="stylesheet" href="~/@asset.Path" />
+        <link rel="stylesheet" href="~/@asset.Path" asp-append-version="true" />
     }
-    <link rel="stylesheet" href="~/css/sealweb.css" />
+    <link rel="stylesheet" href="~/css/sealweb.css" asp-append-version="true" />
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebCssFiles))
     {
-        <link rel="stylesheet" href="~/css/@fileName" />
+        <link rel="stylesheet" href="~/css/@fileName" asp-append-version="true" />
     }
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.CssFiles))
     {
-        <link rel="stylesheet" href="~/css/@fileName" />
+        <link rel="stylesheet" href="~/css/@fileName" asp-append-version="true" />
     }
-    <link rel="stylesheet" href="~/css/seal.css" />
+    <link rel="stylesheet" href="~/css/seal.css" asp-append-version="true" />
 </head>
 <body>
     <!--disable autofill for Chrome-->
@@ -187,46 +187,46 @@
         </div>
     </div>
 
-    <script src="~/lib/datatables/datatables.min.js"></script>
+    <script src="~/lib/datatables/datatables.min.js" asp-append-version="true"></script>
     @foreach (var asset in Seal.Model.ClientAssets.BootstrapJs)
     {
-        <script src="~/@asset.Path"></script>
+        <script src="~/@asset.Path" asp-append-version="true"></script>
     }
-    <script src="~/lib/bootstrap-select/bootstrap-select.min.js"></script>
-    <script type="text/javascript" src="~/lib/moment/moment.min.js"></script>
+    <script src="~/lib/bootstrap-select/bootstrap-select.min.js" asp-append-version="true"></script>
+    <script type="text/javascript" src="~/lib/moment/moment.min.js" asp-append-version="true"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/lib/moment/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
-        <script src="~/lib/bootstrap-select/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")"></script>
+        <script src="~/lib/moment/@("i18n/moment." + repository.CultureInfo.TwoLetterISOLanguageName + ".js")" asp-append-version="true"></script>
+        <script src="~/lib/bootstrap-select/@("i18n/selectpicker." + repository.CultureInfo.TwoLetterISOLanguageName + ".min.js")" asp-append-version="true"></script>
     }
     @foreach (var asset in Seal.Model.ClientAssets.FlatpickrJs)
     {
-        <script src="~/@asset.Path"></script>
+        <script src="~/@asset.Path" asp-append-version="true"></script>
     }
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/@("lib/flatpickr/l10n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/@("lib/flatpickr/l10n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")" asp-append-version="true"></script>
     }
-    <script src="~/js/datetime-moment.js"></script>
+    <script src="~/js/datetime-moment.js" asp-append-version="true"></script>
 
     <!-- common libraries -->
-    <script src="~/js/helpers.js"></script>
-    <script src="~/js/common.js"></script>
-    <script src="~/lib/d3/d3.min.js"></script>
+    <script src="~/js/helpers.js" asp-append-version="true"></script>
+    <script src="~/js/common.js" asp-append-version="true"></script>
+    <script src="~/lib/d3/d3.min.js" asp-append-version="true"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/lib/d3/d3-time.v1.min.js"></script>
-        <script src="~/lib/d3/d3-time-format.v2.min.js"></script>
-        <script src="~/lib/d3/@("i18n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")"></script>
+        <script src="~/lib/d3/d3-time.v1.min.js" asp-append-version="true"></script>
+        <script src="~/lib/d3/d3-time-format.v2.min.js" asp-append-version="true"></script>
+        <script src="~/lib/d3/@("i18n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")" asp-append-version="true"></script>
     }
 
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebScriptFiles))
     {
-        <script type='text/javascript' src='~/js/@fileName'></script>
+        <script type='text/javascript' src='~/js/@fileName' asp-append-version="true"></script>
     }
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.ScriptFiles))
     {
-        <script type='text/javascript' src='~/js/@fileName'></script>
+        <script type='text/javascript' src='~/js/@fileName' asp-append-version="true"></script>
     }
 
     <script type="text/javascript">
@@ -307,17 +307,17 @@
        swi-*.min.js produced at build time by minify-swi.ps1 (uglify-js). *@
     @if (HostingEnv.IsDevelopment())
     {
-        <script src="~/js/swi-utils.js"></script>
-        <script src="~/js/swi-gateway.js"></script>
-        <script src="~/js/swi-main.js"></script>
-        <script src="~/js/swi-ai.js"></script>
+        <script src="~/js/swi-utils.js" asp-append-version="true"></script>
+        <script src="~/js/swi-gateway.js" asp-append-version="true"></script>
+        <script src="~/js/swi-main.js" asp-append-version="true"></script>
+        <script src="~/js/swi-ai.js" asp-append-version="true"></script>
     }
     else
     {
-        <script src="~/js/swi-utils.min.js"></script>
-        <script src="~/js/swi-gateway.min.js"></script>
-        <script src="~/js/swi-main.min.js"></script>
-        <script src="~/js/swi-ai.min.js"></script>
+        <script src="~/js/swi-utils.min.js" asp-append-version="true"></script>
+        <script src="~/js/swi-gateway.min.js" asp-append-version="true"></script>
+        <script src="~/js/swi-main.min.js" asp-append-version="true"></script>
+        <script src="~/js/swi-ai.min.js" asp-append-version="true"></script>
     }
 
     @Html.Raw(RazorHelper.CompileExecute(repository.Configuration.WebMainAdditionalScript, model))

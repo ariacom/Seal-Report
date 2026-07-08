@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -809,6 +809,10 @@ namespace Seal.Model
                 if (!_keyValues.Exists(i => i.Name == OutputFileServerDevice.PasswordKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = OutputFileServerDevice.PasswordKeyName, Value = OutputFileServerDevice.PasswordKeyValue });
+                }
+                if (!_keyValues.Exists(i => i.Name == OutputSharePointDevice.SecretKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = OutputSharePointDevice.SecretKeyName, Value = OutputSharePointDevice.SecretKeyValue });
                 }
                 if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
                 {

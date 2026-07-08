@@ -31,6 +31,12 @@
             If the model produces a text reply the reply is appended to <paramref name="messages"/> and returned.
             </summary>
         </member>
+        <member name="P:Seal.AI.IAIProvider.LastUsage">
+            <summary>
+            Token usage of the last API call (input/output tokens, one call).
+            Zeroes when the API did not report usage information.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIProvider.GUID">
             <summary>Unique identifier for this provider instance.</summary>
         </member>
@@ -48,6 +54,14 @@
         </member>
         <member name="M:Seal.AI.AIProvider.HandleChatWithTools(System.Collections.Generic.List{OpenAI.Chat.ChatMessage},System.Collections.Generic.IList{Seal.AI.AITool},System.Collections.Generic.IList{Seal.AI.AIToolCall}@)">
             <inheritdoc cref="M:Seal.AI.IAIProvider.HandleChatWithTools(System.Collections.Generic.List{OpenAI.Chat.ChatMessage},System.Collections.Generic.IList{Seal.AI.AITool},System.Collections.Generic.IList{Seal.AI.AIToolCall}@)"/>
+        </member>
+        <member name="P:Seal.AI.AIProvider.LastUsage">
+            <inheritdoc cref="P:Seal.AI.IAIProvider.LastUsage"/>
+        </member>
+        <member name="M:Seal.AI.AIProvider.SetLastUsage(System.Int32,System.Int32)">
+            <summary>
+            Records the token usage of the API call that just completed.
+            </summary>
         </member>
         <member name="M:Seal.AI.AIProvider.GetProvider(System.String)">
             <summary>
@@ -197,6 +211,22 @@
         <member name="P:Seal.AI.AIProviderConfiguration.EndPoint">
             <summary>
             The resource endpoint URL.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.InputTokenCost">
+            <summary>
+            Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking.
+            Cached input tokens are counted at the full input rate.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.OutputTokenCost">
+            <summary>
+            Cost per 1 million output (completion) tokens, in the currency you pay the provider in. 0 means no cost tracking.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProviderConfiguration.GetCost(Seal.AI.AIUsage)">
+            <summary>
+            Cost of a usage based on the configured token costs, or null when no cost is configured.
             </summary>
         </member>
         <member name="P:Seal.AI.AIProviderConfiguration.ProviderKey">
@@ -702,6 +732,29 @@
             Exposed so callers can inspect or serialise it.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIAgent.LastChatUsage">
+            <summary>
+            Token and call usage of the last <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> exchange
+            (summed over all model round-trips of the tool loop).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgent.TotalUsage">
+            <summary>
+            Cumulative token and call usage of the whole conversation,
+            including title generation. Reset by <see cref="M:Seal.AI.AIAgent.Clear"/>.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.Title">
+            <summary>
+            Title of the conversation (the saved chat session name).
+            Null until the chat is saved or loaded; see <see cref="P:Seal.AI.AIAgent.EffectiveTitle"/>.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgent.EffectiveTitle">
+            <summary>
+            <see cref="F:Seal.AI.AIAgent.Title"/> when set, otherwise the first user message truncated to 100 characters.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIAgent.#ctor(System.String)">
             <summary>
             Creates an <see cref="T:Seal.AI.AIAgent"/> from a named
@@ -724,6 +777,19 @@
         <member name="F:Seal.AI.AIAgent.LoadSkillToolName">
             <summary>
             Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.MaxToolResultLength">
+            <summary>
+            Hard ceiling (in characters) for a single tool result appended to the conversation.
+            A result larger than this (roughly 50k tokens) would risk exceeding the model's context
+            window — and since the history is resent on every turn, it would brick the whole session.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.TruncateToolResult(System.String)">
+            <summary>
+            Returns <paramref name="result"/> truncated to <see cref="F:Seal.AI.AIAgent.MaxToolResultLength"/> characters,
+            with an explicit marker so the model knows data is missing and can narrow its request.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})">
@@ -866,6 +932,44 @@
             </summary>
             <param name="path">Full file-system path to the file.</param>
             <returns>A tuple of the restored agent and the raw session file.</returns>
+        </member>
+        <member name="T:Seal.AI.AIUsage">
+            <summary>
+            Token and call usage of AI model invocations.
+            Providers publish the usage of their last API call (<see cref="P:Seal.AI.AIProvider.LastUsage"/>, one call);
+            <see cref="T:Seal.AI.AIAgent"/> accumulates it per chat exchange (<see cref="P:Seal.AI.AIAgent.LastChatUsage"/>)
+            and for the whole conversation (<see cref="P:Seal.AI.AIAgent.TotalUsage"/>).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIUsage.InputTokens">
+            <summary>
+            Input (prompt) tokens consumed, including cached tokens when the API reports them separately.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIUsage.OutputTokens">
+            <summary>
+            Output (completion) tokens generated.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIUsage.TotalTokens">
+            <summary>
+            Total tokens (input + output).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIUsage.Calls">
+            <summary>
+            Number of AI model API calls (LLM round-trips).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIUsage.ToolCalls">
+            <summary>
+            Number of tool calls executed (including skill loads). Only maintained at the agent level.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIUsage.Add(Seal.AI.AIUsage)">
+            <summary>
+            Accumulates another usage into this one.
+            </summary>
         </member>
         <member name="M:Seal.Helpers.ObjectShredder`1.Shred(System.Collections.Generic.IEnumerable{`0},System.Data.DataTable,System.Nullable{System.Data.LoadOption})">
             <summary>
@@ -1182,6 +1286,12 @@
             Class dedicated to log events for audit purpose
             </summary>
         </member>
+        <member name="F:Seal.Model.Audit.Duration">
+            <summary>
+            Duration in seconds for events without a Report (e.g. AI Chat exchanges).
+            When Report is set, the report execution duration is used instead.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.LogReportAudit(Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>
             Audit a report execution
@@ -1192,9 +1302,36 @@
             Audit an event
             </summary>
         </member>
+        <member name="M:Seal.Model.Audit.LogAIChatAudit(Seal.Model.SecurityUser,Seal.AI.AIAgent,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Audit an AI Chat exchange (one user message and its final reply).
+            Token usage is taken from the agent's last exchange, the detail is the chat title.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.LogAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>
             Execute the audit script for a given event
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.ExecuteAuditScript(Seal.Model.Audit)">
+            <summary>
+            Execute the audit for a record: the default database insertion when no custom script is
+            configured (no Razor compilation involved), otherwise the custom Audit Script.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.LogToDatabase">
+            <summary>
+            Default audit implementation: inserts the audit record into the 'sr_audit' table of the
+            data source having a name starting with 'Audit'. The table is created on first use and
+            upgraded automatically when new columns are introduced.
+            Called by the default Audit Script; a custom script can also call it (Model.LogToDatabase())
+            before or after its own processing.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.CheckAuditTable(System.Data.Common.DbCommand)">
+            <summary>
+            Creates the sr_audit table on first use, or adds the AI Chat columns when upgrading an
+            existing audit database. Executed once per process (see <see cref="F:Seal.Model.Audit.CheckTableCreation"/>).
             </summary>
         </member>
         <member name="T:Seal.Model.CategoryFolder">
@@ -3161,6 +3298,196 @@
         <member name="M:Seal.Model.OutputFolderDevice.Validate">
             <summary>
             Dummy function
+            </summary>
+        </member>
+        <member name="T:Seal.Model.OutputSharePointDevice">
+            <summary>
+            OutputSharePointDevice is an implementation of device that saves the report result to a SharePoint Online document library using the Microsoft Graph API.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputSharePointDevice.ProcessingScriptTemplate">
+            <summary>
+            Default processing script template
+            </summary>
+        </member>
+        <member name="F:Seal.Model.OutputSharePointDevice.LastModification">
+            <summary>
+            Last modification date time
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.Create">
+            <summary>
+            Create a basic OutputSharePointDevice
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.FullName">
+            <summary>
+            Full name
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.TenantId">
+            <summary>
+            The Microsoft Entra ID (Azure AD) tenant identifier (GUID or domain name)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.ClientId">
+            <summary>
+            The application (client) identifier of the Entra ID application registration
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.AuthenticationType">
+            <summary>
+            Authentication used to get the Microsoft Graph access token
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.ClientSecret">
+            <summary>
+            The client secret (encrypted)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.ClearClientSecret">
+            <summary>
+            The clear client secret of the application registration
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.CertificatePath">
+            <summary>
+            Path of the certificate file used for the Certificate authentication
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.CertificateThumbprint">
+            <summary>
+            Thumbprint of the certificate in the Windows certificate store
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.CertificatePassword">
+            <summary>
+            The certificate file password (encrypted)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.ClearCertificatePassword">
+            <summary>
+            The clear password of the certificate file
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.SiteUrl">
+            <summary>
+            URL of the SharePoint site
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.LibraryName">
+            <summary>
+            Name of the document library of the site
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.Directories">
+            <summary>
+            List of folders allowed in the document library. One per line or separated by semi-column.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.DirectoriesArray">
+            <summary>
+            Array of allowed directories.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.ConflictBehavior">
+            <summary>
+            Behavior when a file with the same name already exists in the destination folder
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.ProcessingScript">
+            <summary>
+            Script executed when the output is processed
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.LoginUrl">
+            <summary>
+            URL of the Microsoft login endpoint
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.GraphUrl">
+            <summary>
+            URL of the Microsoft Graph endpoint
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.GraphUrlNormalized">
+            <summary>
+            Microsoft Graph URL without trailing separator
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.Information">
+            <summary>
+            Last information message
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.Error">
+            <summary>
+            Last error message
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.GetAccessToken">
+            <summary>
+            Returns a Microsoft Graph access token using the device authentication configuration (client secret or certificate)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.GetClientAssertion(System.String)">
+            <summary>
+            Builds the JWT client assertion signed with the certificate for the Certificate authentication
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.LoadCertificate">
+            <summary>
+            Loads the certificate for the Certificate authentication, either from the certificate file or from the Windows certificate store
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.GetSiteId(System.Net.Http.HttpClient)">
+            <summary>
+            Resolves the Microsoft Graph site identifier from the Site URL. The HttpClient must have a valid Bearer token.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.GetDriveId(System.Net.Http.HttpClient)">
+            <summary>
+            Resolves the drive identifier of the document library. The HttpClient must have a valid Bearer token.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.EscapePath(System.String)">
+            <summary>
+            Escapes a document library path for its use in a Microsoft Graph URL (each segment is escaped, separators are kept)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.Process(Seal.Model.Report)">
+            <summary>
+            Process the report result for the output
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.LoadFromFile(System.String,System.Boolean)">
+            <summary>
+            Load an OutputSharePointDevice from a file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.SaveToFile">
+            <summary>
+            Save to current file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.SaveToFile(System.String)">
+            <summary>
+            Save to a file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.Validate">
+            <summary>
+            Validate the device
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputSharePointDevice.TestConnection">
+            <summary>
+            Helper to test the connection
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputSharePointDevice.HelperTestConnection">
+            <summary>
+            Editor Helper: Test the connection with the current configuration
             </summary>
         </member>
         <member name="T:Seal.Model.Parameter">
@@ -5334,6 +5661,14 @@
         <member name="P:Seal.Model.ReportModel.ResultTableTranslatedJson">
             <summary>
             Json string for the result table with an additional Json containing aggregation
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.GetResultTableTranslatedJson(System.Int32)">
+            <summary>
+            Json string for the result table with an additional Json containing aggregation.
+            When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
+            serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
+            result is sent to an AI model.
             </summary>
         </member>
         <member name="F:Seal.Model.ReportModel.Progression">
@@ -7809,6 +8144,11 @@
             Devices File Server folder
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.DevicesSharePointFolder">
+            <summary>
+            Devices SharePoint folder
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.SettingsFolder">
             <summary>
             Settings folder
@@ -9237,29 +9577,94 @@
             The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.EnableTwoFA">
+            <summary>
+            If true, the Two-Factor Authentication is enabled: after the login, a security code is sent to the user (by default by email using the notification email device) and checked in the login page.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealSecurity.TwoFAGenerationScript">
             <summary>
-            If not empty, the script is executed to generate and send the security code used for a Two-Factor Authentication.
+            If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to generate and send the security code (otherwise the default implementation is used: the code is sent by email using the notification email device).
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.TwoFACheckScript">
             <summary>
-            If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the a Two-Factor Authentication.
+            If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to check the security code and validate the Two-Factor Authentication (otherwise the default implementation is used).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.EnableResetPassword">
+            <summary>
+            If true, the Reset Password feature is enabled: a link to reset the password is displayed in the login page. The reset link is sent by email, so a notification email device must be configured.
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.ResetPasswordScript">
             <summary>
-            If not empty, the script is executed when a user request a password reset.
+            If the Reset Password feature is enabled and the script is not empty, the script is executed when a user requests a password reset (otherwise the default implementation is used: a reset link is sent by email using the notification email device).
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.ResetPasswordScript2">
             <summary>
-            If not empty, the script is executed to perform the password reset.
+            If the Reset Password feature is enabled and the script is not empty, the script is executed to perform the password reset (otherwise the default implementation is used).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.EnableChangePassword">
+            <summary>
+            If true, the Change Password feature is enabled for users having a login defined in the security file.
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.ChangePasswordScript">
             <summary>
-            If not empty, the script is executed when a user changes his password.
+            If the Change Password feature is enabled and the script is not empty, the script is executed when a user changes his password (otherwise the default implementation is used).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFAActive">
+            <summary>
+            True if the Two-Factor Authentication is enabled
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFAGenerationScriptEffective">
+            <summary>
+            Script executed to generate and send the security code: the custom script if defined, otherwise the default implementation
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFACheckScriptEffective">
+            <summary>
+            Script executed to check the security code: the custom script if defined, otherwise the default implementation
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.DefaultTwoFAGenerationScript">
+            <summary>
+            Default implementation used when TwoFAGenerationScript is empty: sends the security code by email using the notification email device
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.DefaultTwoFACheckScript">
+            <summary>
+            Default implementation used when TwoFACheckScript is empty: checks the security code (5 minutes validity, 3 tries)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ResetPasswordActive">
+            <summary>
+            True if the Reset Password feature is enabled
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ResetPasswordScriptEffective">
+            <summary>
+            Script executed when a user requests a password reset: the custom script if defined, otherwise the default implementation
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ResetPasswordScript2Effective">
+            <summary>
+            Script executed to perform the password reset: the custom script if defined, otherwise the default implementation
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.DefaultResetPasswordScript">
+            <summary>
+            Default implementation used when ResetPasswordScript is empty: sends a reset link by email using the notification email device
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.DefaultResetPasswordScript2">
+            <summary>
+            Default implementation used when ResetPasswordScript2 is empty: checks the token and changes the password of the login
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.Provider">

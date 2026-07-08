@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Diagnostics;
@@ -113,7 +113,9 @@ namespace SealWebServer.Controllers
         string getExceptionMessage(Exception ex)
         {
             var message = "";
-            if (WebUser != null && WebUser.ShowErrorDetail) message += string.Format("{0}<br>{1}<br>{2}", Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message, RequestUrl, ex.StackTrace);
+            //User-facing exceptions carry a controlled message (e.g. invalid login), show it even without ShowErrorDetail
+            if (ex is LoginException || ex is ValidationException || ex is SessionLostException) message += ex.Message;
+            else if (WebUser != null && WebUser.ShowErrorDetail) message += string.Format("{0}<br>{1}<br>{2}", Repository != null ? ex.Message.Replace(Repository.RepositoryPath, "") : ex.Message, RequestUrl, ex.StackTrace);
             else message += "Please consult log files on the server machine to have more information (Logs Repository folder and Windows Event Logs on Windows machine)...";
             return message;
         }
@@ -1020,22 +1022,31 @@ namespace SealWebServer.Controllers
         void fillShortcut(SWIFolder folder, string shortcutFullPath, SWIFile file)
         {
             file.isshortcut = true;
+            var resolved = false;
             try
             {
                 var shortcut = ReportShortcut.LoadFromFile(shortcutFullPath);
                 string targetPath = string.IsNullOrEmpty(shortcut.TargetPath) ? "" : FileHelper.ConvertOSFilePath(shortcut.TargetPath);
-                if (string.IsNullOrEmpty(targetPath) || FileHelper.IsShortcutFile(targetPath)) throw new Exception();
-
-                SWIFolder targetFolder = getFolder(SWIFolder.GetParentPath(targetPath));
-                string targetFullPath = getFullPath(targetPath);
-                if (targetFolder.right == 0 || !System.IO.File.Exists(targetFullPath)) throw new Exception();
-
-                file.targetpath = targetPath;
-                file.isreport = FileHelper.IsReportFile(targetPath);
-                file.right = Math.Min(folder.right, targetFolder.right);
-                file.name = !string.IsNullOrEmpty(shortcut.Name) ? shortcut.Name : Repository.TranslateFileName(targetFullPath) + (file.isreport ? "" : Path.GetExtension(targetFullPath));
+                if (!string.IsNullOrEmpty(targetPath) && !FileHelper.IsShortcutFile(targetPath))
+                {
+                    SWIFolder targetFolder = getFolder(SWIFolder.GetParentPath(targetPath));
+                    string targetFullPath = getFullPath(targetPath);
+                    if (targetFolder.right != 0 && System.IO.File.Exists(targetFullPath))
+                    {
+                        file.targetpath = targetPath;
+                        file.isreport = FileHelper.IsReportFile(targetPath);
+                        file.right = Math.Min(folder.right, targetFolder.right);
+                        file.name = !string.IsNullOrEmpty(shortcut.Name) ? shortcut.Name : Repository.TranslateFileName(targetFullPath) + (file.isreport ? "" : Path.GetExtension(targetFullPath));
+                        resolved = true;
+                    }
+                }
             }
             catch
+            {
+                //Unexpected error (e.g. invalid shortcut file): flag as broken below
+            }
+
+            if (!resolved)
             {
                 file.broken = true;
                 file.isreport = false;
@@ -1061,9 +1072,12 @@ namespace SealWebServer.Controllers
                     name = folder.fullname + (folder.fullname.EndsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()) + file.name,
                     last = file.last,
                     isreport = file.isreport,
+                    isfavorite = file.isfavorite,
                     isshortcut = file.isshortcut,
                     targetpath = file.targetpath,
                     broken = file.broken,
+                    istask = file.istask,
+                    isscheduled = file.isscheduled,
                     right = file.right
                 });
 

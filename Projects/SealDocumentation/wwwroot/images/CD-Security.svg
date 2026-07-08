@@ -1,0 +1,74 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 900 400" width="900" height="400" role="img" aria-labelledby="cdxTitle">
+  <title id="cdxTitle">Web security class diagram</title>
+  <style>
+    text { font-family: Lato, 'Segoe UI', Arial, sans-serif; fill: #242424; }
+    .cls { fill: #f4faff; stroke: #5aa7dd; stroke-width: 1.5; }
+    .name { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .base { font-size: 10px; font-style: italic; fill: #667; text-anchor: middle; }
+    .rel { font-size: 10.5px; font-style: italic; fill: #667; }
+    .note { fill: #fffdf0; stroke: #d5c15a; stroke-width: 1.2; }
+    .notet { font-size: 10.5px; fill: #444; }
+    .arrow { stroke: #0E97EE; stroke-width: 1.5; fill: none; }
+    .dash { stroke-dasharray: 5 3; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E97EE"/>
+    </marker>
+  </defs>
+
+  <!-- SealSecurity -->
+  <rect class="cls" x="40" y="40" width="180" height="52" rx="6"/>
+  <text class="name" x="130" y="62">SealSecurity</text>
+  <text class="base" x="130" y="78">(Security.xml)</text>
+
+  <!-- Groups -->
+  <line class="arrow" x1="220" y1="66" x2="328" y2="66" marker-end="url(#arr)"/>
+  <text class="rel" x="248" y="60">Groups</text>
+  <rect class="cls" x="330" y="40" width="180" height="52" rx="6"/>
+  <text class="name" x="420" y="62">SecurityGroup</text>
+  <text class="base" x="420" y="78">(rights of the group)</text>
+
+  <!-- Providers -->
+  <line class="arrow" x1="100" y1="92" x2="100" y2="168" marker-end="url(#arr)"/>
+  <text class="rel" x="108" y="136">Providers</text>
+  <rect class="cls" x="40" y="170" width="180" height="44" rx="6"/>
+  <text class="name" x="130" y="188">SecurityProvider</text>
+  <text class="base" x="130" y="204">(authentication, *.cshtml)</text>
+
+  <!-- Logins -->
+  <path class="arrow" d="M220,80 H248 V272 H224" marker-end="url(#arr)"/>
+  <text class="rel" x="256" y="180">Logins</text>
+  <rect class="cls" x="40" y="250" width="180" height="44" rx="6"/>
+  <text class="name" x="130" y="268">SecurityLogin</text>
+  <text class="base" x="130" y="284">(login records)</text>
+
+  <!-- SecurityUser -->
+  <rect class="cls" x="330" y="250" width="180" height="52" rx="6"/>
+  <text class="name" x="420" y="272">SecurityUser</text>
+  <text class="base" x="420" y="288">(logged user &amp; profile)</text>
+  <line class="arrow" x1="420" y1="250" x2="420" y2="94" marker-end="url(#arr)"/>
+  <text class="rel" x="428" y="180">SecurityGroups</text>
+
+  <!-- Folders -->
+  <line class="arrow" x1="510" y1="56" x2="618" y2="56" marker-end="url(#arr)"/>
+  <text class="rel" x="538" y="50">Folders</text>
+  <rect class="cls" x="620" y="34" width="240" height="44" rx="6"/>
+  <text class="name" x="740" y="52">SecurityFolder</text>
+  <text class="base" x="740" y="68">(rights on the published report folders)</text>
+
+  <!-- RepositoryFolders -->
+  <line class="arrow" x1="510" y1="80" x2="618" y2="118" marker-end="url(#arr)"/>
+  <text class="rel" x="522" y="106">RepositoryFolders</text>
+  <rect class="cls" x="620" y="104" width="240" height="44" rx="6"/>
+  <text class="name" x="740" y="122">SecurityRepositoryFolder</text>
+  <text class="base" x="740" y="138">(other repository folders published)</text>
+
+  <!-- GUID references note -->
+  <line class="arrow dash" x1="480" y1="92" x2="618" y2="196" marker-end="url(#arr)"/>
+  <rect class="note" x="620" y="180" width="240" height="92" rx="6"/>
+  <text class="notet" x="634" y="202" font-weight="700">References by GUID:</text>
+  <text class="notet" x="634" y="221">• Data Sources allowed</text>
+  <text class="notet" x="634" y="238">• Output Devices allowed</text>
+  <text class="notet" x="634" y="255">• AI Agents assigned to the group</text>
+</svg>

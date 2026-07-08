@@ -1,0 +1,117 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 690" width="960" height="690" role="img" aria-labelledby="cdrTitle">
+  <title id="cdrTitle">Report class diagram</title>
+  <style>
+    text { font-family: Lato, 'Segoe UI', Arial, sans-serif; fill: #242424; }
+    .cls { fill: #f4faff; stroke: #5aa7dd; stroke-width: 1.5; }
+    .abs { stroke-dasharray: 5 3; }
+    .name { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .base { font-size: 10px; font-style: italic; fill: #667; text-anchor: middle; }
+    .rel { font-size: 10.5px; font-style: italic; fill: #667; }
+    .arrow { stroke: #0E97EE; stroke-width: 1.5; fill: none; }
+    .inh { stroke: #888; stroke-width: 1.5; fill: none; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E97EE"/>
+    </marker>
+    <marker id="tri" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M1,1 L11,6 L1,11 z" fill="#fff" stroke="#888" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <!-- Report -->
+  <rect class="cls" x="30" y="270" width="140" height="52" rx="6"/>
+  <text class="name" x="100" y="292">Report</text>
+  <text class="base" x="100" y="308">(*.srex file)</text>
+
+  <!-- fan arrows -->
+  <line class="arrow" x1="170" y1="282" x2="298" y2="54" marker-end="url(#arr)"/>
+  <text class="rel" x="215" y="180">Sources</text>
+  <line class="arrow" x1="170" y1="288" x2="298" y2="134" marker-end="url(#arr)"/>
+  <text class="rel" x="228" y="223">Tasks</text>
+  <line class="arrow" x1="170" y1="293" x2="298" y2="214" marker-end="url(#arr)"/>
+  <text class="rel" x="230" y="262">Models</text>
+  <line class="arrow" x1="170" y1="297" x2="298" y2="294" marker-end="url(#arr)"/>
+  <text class="rel" x="230" y="291">Views</text>
+  <line class="arrow" x1="170" y1="302" x2="298" y2="424" marker-end="url(#arr)"/>
+  <text class="rel" x="222" y="366">Outputs</text>
+  <line class="arrow" x1="170" y1="307" x2="298" y2="504" marker-end="url(#arr)"/>
+  <text class="rel" x="200" y="404">Schedules</text>
+  <line class="arrow" x1="170" y1="312" x2="298" y2="577" marker-end="url(#arr)"/>
+  <text class="rel" x="178" y="440">InputValues</text>
+
+  <!-- ReportSource -->
+  <rect class="cls" x="300" y="30" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="50">ReportSource</text>
+  <text class="base" x="380" y="66">: MetaSource</text>
+  <line class="inh" x1="460" y1="54" x2="638" y2="54" marker-end="url(#tri)"/>
+  <rect class="cls" x="640" y="30" width="160" height="48" rx="6"/>
+  <text class="name" x="720" y="50">MetaSource</text>
+  <text class="base" x="720" y="66">(repository or embedded)</text>
+
+  <!-- ReportTask -->
+  <rect class="cls" x="300" y="110" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="130">ReportTask</text>
+  <text class="base" x="380" y="146">(script, AI, ETL…)</text>
+  <line class="arrow" x1="420" y1="110" x2="420" y2="80" marker-end="url(#arr)"/>
+  <text class="rel" x="428" y="98">Source</text>
+
+  <!-- ReportModel -->
+  <rect class="cls" x="300" y="190" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="210">ReportModel</text>
+  <text class="base" x="380" y="226">(SQL or LINQ)</text>
+  <path class="arrow" d="M460,214 H487 V70 H462" marker-end="url(#arr)"/>
+  <text class="rel" x="494" y="150">Source</text>
+
+  <!-- ReportView -->
+  <rect class="cls" x="300" y="270" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="290">ReportView</text>
+  <text class="base" x="380" y="306">(Razor rendering)</text>
+  <path class="arrow" d="M430,318 C430,352 350,352 350,320" marker-end="url(#arr)"/>
+  <text class="rel" x="368" y="364">Views</text>
+  <line class="arrow" x1="460" y1="286" x2="638" y2="270" marker-end="url(#arr)"/>
+  <text class="rel" x="520" y="272">Template</text>
+  <line class="arrow" x1="460" y1="300" x2="638" y2="340" marker-end="url(#arr)"/>
+  <text class="rel" x="512" y="330">Parameters</text>
+  <rect class="cls" x="640" y="246" width="160" height="44" rx="6"/>
+  <text class="name" x="720" y="264">ReportViewTemplate</text>
+  <text class="base" x="720" y="280">(*.cshtml)</text>
+  <rect class="cls" x="640" y="320" width="160" height="44" rx="6"/>
+  <text class="name" x="720" y="338">Parameter</text>
+  <text class="base" x="720" y="354">(view configuration)</text>
+
+  <!-- ReportOutput -->
+  <rect class="cls" x="300" y="400" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="420">ReportOutput</text>
+  <text class="base" x="380" y="436">(result publication)</text>
+  <line class="arrow" x1="460" y1="424" x2="558" y2="424" marker-end="url(#arr)"/>
+  <text class="rel" x="488" y="418">Device</text>
+  <rect class="cls abs" x="560" y="400" width="170" height="48" rx="6"/>
+  <text class="name" x="645" y="420" font-style="italic">OutputDevice</text>
+  <text class="base" x="645" y="436">(abstract, *.scfx)</text>
+  <rect class="cls" x="790" y="440" width="160" height="44" rx="6"/>
+  <text class="name" x="870" y="458">OutputFolderDevice</text>
+  <line class="inh" x1="790" y1="462" x2="733" y2="424" marker-end="url(#tri)"/>
+  <rect class="cls" x="790" y="500" width="160" height="44" rx="6"/>
+  <text class="name" x="870" y="518">OutputEmailDevice</text>
+  <text class="base" x="870" y="534">(SMTP, SendGrid, MS Graph)</text>
+  <line class="inh" x1="790" y1="522" x2="733" y2="431" marker-end="url(#tri)"/>
+  <rect class="cls" x="790" y="560" width="160" height="44" rx="6"/>
+  <text class="name" x="870" y="578">OutputFileServerDevice</text>
+  <text class="base" x="870" y="594">(FTP, SFTP, SCP)</text>
+  <line class="inh" x1="790" y1="582" x2="733" y2="438" marker-end="url(#tri)"/>
+  <rect class="cls" x="790" y="620" width="160" height="44" rx="6"/>
+  <text class="name" x="870" y="638">OutputSharePointDevice</text>
+  <text class="base" x="870" y="654">(Microsoft Graph)</text>
+  <line class="inh" x1="790" y1="642" x2="733" y2="445" marker-end="url(#tri)"/>
+
+  <!-- ReportSchedule -->
+  <rect class="cls" x="300" y="480" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="500">ReportSchedule</text>
+  <text class="base" x="380" y="516">(execution planning)</text>
+
+  <!-- InputValues -->
+  <rect class="cls" x="300" y="555" width="160" height="48" rx="6"/>
+  <text class="name" x="380" y="575">ReportRestriction</text>
+  <text class="base" x="380" y="591">(prompted input values)</text>
+</svg>

@@ -674,6 +674,178 @@ AND [ccf5db51-89b4-4366-8ffc-b6444c43e395]</Restriction>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
+    <ReportModel>
+      <GUID>cc3c58b2-bc0e-40d8-83ce-4fc759c8c5db</GUID>
+      <Name>AI tokens per day</Name>
+      <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>256cb6ac-22ab-48f9-9c5c-55a2ec73996d</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+          <Format>dd/MM</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>991625cf-8da7-4e43-923e-ddbf76c093e7</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>174539d4-6bfe-4cc0-a396-ba40d50a7a50</GUID>
+          <Name>sr_audit.ai_input_tokens + sr_audit.ai_output_tokens</Name>
+          <DisplayName />
+          <NumericStandardFormat>Numeric0</NumericStandardFormat>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>fca46c23-2584-4cdf-ab1a-42b38aaeb1bc</MetaColumnGUID>
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[ef0ef6e4-df44-44eb-8efa-ae753caf9538]
+AND [a94ba383-b513-4152-8d92-2263528e1ccc]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>ef0ef6e4-df44-44eb-8efa-ae753caf9538</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <EnumValues>
+            <string>AIChat</string>
+            <string>AIChatError</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>a94ba383-b513-4152-8d92-2263528e1ccc</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Date1Keyword>Today-20D</Date1Keyword>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>6ebe985a-7d47-43b5-879c-af6d1f896c05</GUID>
+      <Name>Last AI chats</Name>
+      <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>6894da34-a964-4122-95f3-a972f15ce22f</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>dc000095-2d6c-45ff-8dcd-e6e071fb72f7</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5debbb2b-d56d-4ff0-8c0e-f5ae9b6db69a</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d75ee2e8-4fae-407a-ba29-095c03993f87</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8b0229eb-895a-4431-91c6-137754b5d7cc</GUID>
+          <Name>sr_audit.ai_input_tokens + sr_audit.ai_output_tokens</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <MetaColumnGUID>fca46c23-2584-4cdf-ab1a-42b38aaeb1bc</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>699e80f3-f624-4ce3-990e-8f6ad579b3dc</GUID>
+          <Name>sr_audit.ai_cost</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <MetaColumnGUID>08542fb1-ff0e-4d43-a205-76e344bb2523</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3e39cd29-c32b-47fb-a6ee-bd0878366d56</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[ced87064-52dd-4d85-a3e4-8351b7fb6021]
+AND [0416b8e2-b450-4cda-bdbe-af8d75c85032]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>ced87064-52dd-4d85-a3e4-8351b7fb6021</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-7D</Date1Keyword>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>0416b8e2-b450-4cda-bdbe-af8d75c85032</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>AIChat</string>
+            <string>AIChatError</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
   </Models>
   <Tasks>
     <ReportTask>
@@ -1156,6 +1328,140 @@ glyphicon glyphicon-remove</Value>
           <SortOrder>4</SortOrder>
         </ReportView>
         <ReportView>
+          <GUID>8768678d-34f6-4a9f-994d-70de9a29c1be</GUID>
+          <Name>AI Chat Header</Name>
+          <TemplateName>Free</TemplateName>
+          <UseCustomTemplate>true</UseCustomTemplate>
+          <CustomTemplate>&lt;hr&gt;
+&lt;h2&gt;AI Chat&lt;/h2&gt;
+</CustomTemplate>
+          <SortOrder>5</SortOrder>
+        </ReportView>
+        <ReportView>
+          <GUID>c096c138-5791-4d15-ab3e-3a6758bf2a0d</GUID>
+          <Name>AI Container</Name>
+          <Views>
+            <ReportView>
+              <GUID>223835e0-087d-4356-8b25-54a74240a574</GUID>
+              <Name>AI Chats</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b3bae078-db36-42af-bcc4-5be6071fb5c3</GUID>
+                  <Name>AI tokens per day</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>7fae6097-b051-49c0-8c44-306fd26f3b59</GUID>
+                      <Name>Chart JS</Name>
+                      <TemplateName>Chart JS</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartjs_contheight</Name>
+                          <Value>300px</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartjs_bar_stacked</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartjs_unit</Name>
+                          <Value>day</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>cc3c58b2-bc0e-40d8-83ce-4fc759c8c5db</ModelGUID>
+                  <Parameters>
+                    <Parameter>
+                      <Name>show_data_tables</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_exec_report</Name>
+                  <Value>\System\260 Audit - AI Chat Activity.srex</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>fa-solid fa-robot</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>info</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_css</Name>
+                  <Value>page-break-inside:avoid;overflow:auto;height:450px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>80dfe9c6-daa8-4dcb-bbd1-ee7354de5061</GUID>
+              <Name>Last AI chats</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b3c7b069-3130-447a-a100-6031a1d3f3b2</GUID>
+                  <Name>Last AI chats</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>90005c1a-58f3-489d-ae28-0b946ea7d874</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>a1559bfe-8948-4386-91eb-754eadc23f89</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>6ebe985a-7d47-43b5-879c-af6d1f896c05</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_exec_report</Name>
+                  <Value>\System\260 Audit - AI Chat Activity.srex</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>fa-solid fa-comments</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>info</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_css</Name>
+                  <Value>page-break-inside:avoid;overflow:auto;height:450px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Container</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>grid_layout</Name>
+              <Value>col-sm-6;col-sm-6;</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>6</SortOrder>
+        </ReportView>
+        <ReportView>
           <GUID>14a4144b-537e-4507-a57a-79d2eacf594e</GUID>
           <Name>System Header</Name>
           <TemplateName>Free</TemplateName>
@@ -1163,7 +1469,7 @@ glyphicon glyphicon-remove</Value>
           <CustomTemplate>&lt;hr&gt;
 &lt;h2&gt;System&lt;/h2&gt;
 </CustomTemplate>
-          <SortOrder>5</SortOrder>
+          <SortOrder>7</SortOrder>
         </ReportView>
         <ReportView>
           <GUID>9912dc8e-67a3-4967-b07e-dfdf1636bb97</GUID>
@@ -1228,7 +1534,7 @@ glyphicon glyphicon-remove</Value>
               <Value>col-sm-6;col-sm-6;</Value>
             </Parameter>
           </Parameters>
-          <SortOrder>6</SortOrder>
+          <SortOrder>8</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

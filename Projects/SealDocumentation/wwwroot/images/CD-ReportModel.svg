@@ -1,0 +1,119 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 960 580" width="960" height="580" role="img" aria-labelledby="cdmTitle">
+  <title id="cdmTitle">Report Model class diagram</title>
+  <style>
+    text { font-family: Lato, 'Segoe UI', Arial, sans-serif; fill: #242424; }
+    .cls { fill: #f4faff; stroke: #5aa7dd; stroke-width: 1.5; }
+    .name { font-size: 13px; font-weight: 700; text-anchor: middle; }
+    .base { font-size: 10px; font-style: italic; fill: #667; text-anchor: middle; }
+    .rel { font-size: 10.5px; font-style: italic; fill: #667; }
+    .grpt { font-size: 12px; font-style: italic; fill: #666; }
+    .arrow { stroke: #0E97EE; stroke-width: 1.5; fill: none; }
+    .inh { stroke: #888; stroke-width: 1.5; fill: none; }
+    .sep { stroke: #aaa; stroke-width: 1; stroke-dasharray: 8 5; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="6.5" markerHeight="6.5" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E97EE"/>
+    </marker>
+    <marker id="tri" viewBox="0 0 12 12" refX="10" refY="6" markerWidth="10" markerHeight="10" orient="auto-start-reverse">
+      <path d="M1,1 L11,6 L1,11 z" fill="#fff" stroke="#888" stroke-width="1.2"/>
+    </marker>
+  </defs>
+
+  <!-- Report -->
+  <rect class="cls" x="30" y="64" width="130" height="48" rx="6"/>
+  <text class="name" x="95" y="84">Report</text>
+  <text class="base" x="95" y="100">(*.srex file)</text>
+  <line class="arrow" x1="160" y1="88" x2="248" y2="88" marker-end="url(#arr)"/>
+  <text class="rel" x="180" y="82">Models</text>
+
+  <!-- ReportModel -->
+  <rect class="cls" x="250" y="60" width="170" height="52" rx="6"/>
+  <text class="name" x="335" y="82">ReportModel</text>
+  <text class="base" x="335" y="98">(SQL or LINQ)</text>
+  <path class="arrow" d="M295,60 C295,28 375,28 375,58" marker-end="url(#arr)"/>
+  <text class="rel" x="392" y="30">LINQSubModels</text>
+
+  <!-- Source / Elements / Restrictions / LINQSubTables -->
+  <line class="arrow" x1="420" y1="72" x2="518" y2="42" marker-end="url(#arr)"/>
+  <text class="rel" x="448" y="48">Source</text>
+  <rect class="cls" x="520" y="20" width="160" height="44" rx="6"/>
+  <text class="name" x="600" y="38">ReportSource</text>
+  <text class="base" x="600" y="54">: MetaSource</text>
+
+  <line class="arrow" x1="420" y1="88" x2="518" y2="106" marker-end="url(#arr)"/>
+  <text class="rel" x="442" y="106">Elements</text>
+  <rect class="cls" x="520" y="84" width="160" height="44" rx="6"/>
+  <text class="name" x="600" y="102">ReportElement</text>
+  <text class="base" x="600" y="118">: MetaColumn</text>
+  <line class="inh" x1="680" y1="106" x2="758" y2="106" marker-end="url(#tri)"/>
+  <rect class="cls" x="760" y="84" width="160" height="44" rx="6"/>
+  <text class="name" x="840" y="102">MetaColumn</text>
+  <text class="base" x="840" y="118">(of the Data Source)</text>
+
+  <line class="arrow" x1="420" y1="100" x2="518" y2="170" marker-end="url(#arr)"/>
+  <text class="rel" x="426" y="138">Restrictions</text>
+  <text class="rel" x="426" y="151">(+ aggregate, common)</text>
+  <rect class="cls" x="520" y="148" width="160" height="44" rx="6"/>
+  <text class="name" x="600" y="166">ReportRestriction</text>
+  <text class="base" x="600" y="182">: ReportElement</text>
+  <path class="inh" d="M680,163 H710 V130" marker-end="url(#tri)"/>
+
+  <line class="arrow" x1="420" y1="108" x2="518" y2="234" marker-end="url(#arr)"/>
+  <text class="rel" x="418" y="204">LINQSubTables</text>
+  <rect class="cls" x="520" y="212" width="160" height="44" rx="6"/>
+  <text class="name" x="600" y="230">MetaTable</text>
+  <text class="base" x="600" y="246">(No SQL table)</text>
+
+  <!-- Execution results separator -->
+  <line class="sep" x1="30" y1="290" x2="930" y2="290"/>
+  <text class="grpt" x="30" y="282">Execution results (built by the Seal engine when the model is processed)</text>
+
+  <!-- DataTable -->
+  <path class="arrow" d="M270,112 V200 H135 V328" marker-end="url(#arr)"/>
+  <text class="rel" x="145" y="315">ResultTable</text>
+  <rect class="cls" x="60" y="330" width="150" height="44" rx="6"/>
+  <text class="name" x="135" y="348">DataTable</text>
+  <text class="base" x="135" y="364">(.NET, raw data)</text>
+
+  <!-- ResultPage -->
+  <line class="arrow" x1="395" y1="112" x2="395" y2="328" marker-end="url(#arr)"/>
+  <text class="rel" x="403" y="315">Pages</text>
+  <rect class="cls" x="320" y="330" width="150" height="44" rx="6"/>
+  <text class="name" x="395" y="348">ResultPage</text>
+  <text class="base" x="395" y="364">(one per page value)</text>
+
+  <!-- SummaryTable arrow -->
+  <path class="arrow" d="M305,112 V452 H318" marker-end="url(#arr)"/>
+  <text class="rel" x="228" y="440">SummaryTable</text>
+
+  <!-- ResultTable (Seal) -->
+  <rect class="cls" x="320" y="430" width="150" height="44" rx="6"/>
+  <text class="name" x="395" y="448">ResultTable</text>
+  <text class="base" x="395" y="464">(formatted cells)</text>
+  <line class="arrow" x1="395" y1="374" x2="395" y2="428" marker-end="url(#arr)"/>
+  <text class="rel" x="403" y="404">PageTable,</text>
+  <text class="rel" x="403" y="417">DataTable</text>
+
+  <!-- ResultSerie -->
+  <line class="arrow" x1="470" y1="352" x2="538" y2="352" marker-end="url(#arr)"/>
+  <text class="rel" x="484" y="346">Series</text>
+  <rect class="cls" x="540" y="330" width="150" height="44" rx="6"/>
+  <text class="name" x="615" y="348">ResultSerie</text>
+  <text class="base" x="615" y="364">(chart series)</text>
+
+  <!-- ResultCell -->
+  <line class="arrow" x1="470" y1="452" x2="538" y2="452" marker-end="url(#arr)"/>
+  <text class="rel" x="490" y="446">Lines</text>
+  <rect class="cls" x="540" y="430" width="150" height="44" rx="6"/>
+  <text class="name" x="615" y="448">ResultCell</text>
+  <text class="base" x="615" y="464">(value, CSS, navigation)</text>
+
+  <!-- ResultTotalCell -->
+  <path class="arrow" d="M395,474 V522 H538" marker-end="url(#arr)"/>
+  <text class="rel" x="420" y="516">TotalCells</text>
+  <rect class="cls" x="540" y="500" width="150" height="44" rx="6"/>
+  <text class="name" x="615" y="518">ResultTotalCell</text>
+  <text class="base" x="615" y="534">: ResultCell</text>
+  <line class="inh" x1="655" y1="500" x2="655" y2="476" marker-end="url(#tri)"/>
+</svg>

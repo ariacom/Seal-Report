@@ -29,6 +29,30 @@
     }
 
     // ── Response formatter ──────────────────────────────────────
+    function attr(s: string): string {
+        return (s || '').replace(/"/g, '&quot;');
+    }
+
+    // Markdown table helpers: a table is a |...| header row followed by a |---|---|
+    // separator row, then any number of |...| body rows.
+    function isTableRow(line: string): boolean {
+        const t = line.trim();
+        return t.length > 1 && t.charAt(0) === '|' && t.indexOf('|', 1) > 0;
+    }
+    function isTableSeparator(line: string): boolean {
+        return /^\|(\s*:?-+:?\s*\|)+\s*$/.test(line.trim());
+    }
+    function splitTableCells(line: string): string[] {
+        return line.trim().replace(/^\|/, '').replace(/\|$/, '').split('|')
+            .map(function (c) { return c.trim(); });
+    }
+    function tableCellAlign(sep: string): string {
+        const left = sep.charAt(0) === ':', right = sep.charAt(sep.length - 1) === ':';
+        if (left && right) return 'center';
+        if (right) return 'right';
+        return '';
+    }
+
     function formatResponse(text: string): string {
         if (!text) return '';
         // Escape HTML to prevent XSS
@@ -46,12 +70,48 @@
             return s;
         }
 
+        // Render a parsed markdown table with a hover toolbar (copy for Excel, download CSV).
+        function renderTable(header: string[], aligns: string[], body: string[][]): string {
+            const cell = function (tag: string, value: string, col: number): string {
+                const a = aligns[col] ? ' style="text-align:' + aligns[col] + '"' : '';
+                return '<' + tag + a + '>' + inline(value) + '</' + tag + '>';
+            };
+            let t = '<div class="ai-table-wrap">';
+            t += '<div class="ai-table-actions">';
+            t += '<button class="ai-bubble-action-btn ai-table-btn ai-table-copy" title="' + attr(SWIUtil.tr2('Copy for Excel')) + '"><i class="fa fa-copy"></i></button>';
+            t += '<button class="ai-bubble-action-btn ai-table-btn ai-table-csv" title="' + attr(SWIUtil.tr2('Download CSV')) + '"><i class="fa fa-download"></i></button>';
+            t += '</div>';
+            t += '<div class="ai-table-scroll"><table class="ai-table"><thead><tr>';
+            for (let c = 0; c < header.length; c++) t += cell('th', header[c], c);
+            t += '</tr></thead><tbody>';
+            for (const row of body) {
+                t += '<tr>';
+                for (let c = 0; c < header.length; c++) t += cell('td', row[c] || '', c);
+                t += '</tr>';
+            }
+            t += '</tbody></table></div></div>';
+            return t;
+        }
+
         const lines = text.split(/\r\n|\r|\n/);
         let html = '';
         let inList = false;
         const closeList = function () { if (inList) { html += '</ul>'; inList = false; } };
 
-        for (const line of lines) {
+        for (let i = 0; i < lines.length; i++) {
+            const line = lines[i];
+            // | header | row | followed by a |---|---| separator row
+            if (isTableRow(line) && i + 1 < lines.length && isTableSeparator(lines[i + 1])) {
+                closeList();
+                const header = splitTableCells(line);
+                const aligns = splitTableCells(lines[i + 1]).map(tableCellAlign);
+                const body: string[][] = [];
+                i += 2;
+                while (i < lines.length && isTableRow(lines[i])) { body.push(splitTableCells(lines[i])); i++; }
+                i--;
+                html += renderTable(header, aligns, body);
+                continue;
+            }
             // # .. ###### headings
             const h = /^(#{1,6})\s+(.*)$/.exec(line);
             if (h) {
@@ -129,6 +189,73 @@
             .replace(/\*\*([^*\r\n]+)\*\*/g, '$1') // strip bold markers
             .replace(/`([^`\r\n]+)`/g, '$1');      // strip inline-code markers
     }
+
+    // ── Table export (copy for Excel / download CSV) ────────────
+    // Reads back the rendered table so the export matches exactly what is displayed.
+    // '—'/'–' placeholders the model uses for missing values become empty cells.
+    function tableToRows($table: JQuery): string[][] {
+        const rows: string[][] = [];
+        $table.find('tr').each(function () {
+            const row: string[] = [];
+            $(this).children('th,td').each(function () {
+                let v = $(this).text().trim();
+                if (v === '—' || v === '–') v = '';
+                row.push(v);
+            });
+            rows.push(row);
+        });
+        return rows;
+    }
+
+    // Excel's own rule: locales using a decimal comma expect ';' as the CSV separator.
+    // The Seal profile language drives the choice, falling back to the browser locale.
+    function csvSeparator(): string {
+        const locale = (typeof languageName !== 'undefined' && languageName) ? languageName : (navigator.language || 'en');
+        try {
+            return new Intl.NumberFormat(locale).format(1.1).indexOf(',') >= 0 ? ';' : ',';
+        } catch (e) {
+            return ',';
+        }
+    }
+
+    function rowsToCsv(rows: string[][], sep: string): string {
+        return rows.map(function (r) {
+            return r.map(function (v) {
+                return (v.indexOf(sep) >= 0 || v.indexOf('"') >= 0 || /[\r\n]/.test(v)) ? '"' + v.replace(/"/g, '""') + '"' : v;
+            }).join(sep);
+        }).join('\r\n');
+    }
+
+    function rowsToTsv(rows: string[][]): string {
+        return rows.map(function (r) {
+            return r.map(function (v) { return v.replace(/[\t\r\n]+/g, ' '); }).join('\t');
+        }).join('\n');
+    }
+
+    function downloadCsv(csv: string, fileName: string): void {
+        // UTF-8 BOM so Excel opens accented characters correctly
+        const blob = new Blob(['\uFEFF' + csv], { type: 'text/csv;charset=utf-8' });
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(blob);
+        a.download = fileName;
+        document.body.appendChild(a);
+        a.click();
+        document.body.removeChild(a);
+        setTimeout(function () { URL.revokeObjectURL(a.href); }, 1000);
+    }
+
+    // Delegated so it also works for bubbles restored from a saved chat.
+    $messages.on('click', '.ai-table-btn', function (e: JQuery.ClickEvent) {
+        e.stopPropagation();
+        const $btn = $(this);
+        const rows = tableToRows($btn.closest('.ai-table-wrap').find('table.ai-table'));
+        if ($btn.hasClass('ai-table-copy')) {
+            copyToClipboard(rowsToTsv(rows));
+        }
+        else {
+            downloadCsv(rowsToCsv(rows, csvSeparator()), sanitizeFileName(SWIUtil.tr2('AI Agent')) + '.csv');
+        }
+    });
 
     // ── Bubble factories with hover action toolbars ─────────────
     function bubbleActionBtn(iconClass: string, title: string, handler: () => void): JQuery {
@@ -523,6 +650,14 @@
                     makeExecuteButton(action.path, action.name, action.outputGUID).appendTo($actions);
                 });
                 $messages.append($actions);
+            }
+            // Muted usage line under the answer: tokens and cost (cost only when configured on the provider)
+            if (data.tokens) {
+                let usageText = Number(data.tokens).toLocaleString() + ' ' + SWIUtil.tr2('tokens');
+                if (data.cost !== null && data.cost !== undefined) {
+                    usageText += ' · ' + SWIUtil.tr2('cost') + ' ' + Number(data.cost).toFixed(data.cost < 0.1 ? 4 : 2);
+                }
+                $messages.append($('<div>').addClass('ai-panel-usage').text(usageText));
             }
 
             $messages[0].scrollTop = $messages[0].scrollHeight;

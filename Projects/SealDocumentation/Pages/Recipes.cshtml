@@ -9,7 +9,7 @@
         <!-- end section -->
         <div class="row">
             <div class="col-md-3">
-                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation" style="padding-left:0">
+                <nav class="docs-sidebar" role="navigation" style="padding-left:0">
                     <ul class="nav">
                         <li><a href="#lineTranslations" style="padding:0px 2px">Adding translation files</a></li>
                         <li><a href="#lineLogo" style="padding:0px 2px">Changing Logo and Product Name</a></li>
@@ -26,7 +26,7 @@
                         <li><a href="#lineCopyingInputValue" style="padding:0px 2px">Copying input value with a task</a></li>
                         <li><a href="#lineDynamicChartTitle" style="padding:0px 2px">Dynamic report and chart title</a></li>
                     </ul>
-                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
                         <strong><a href="#feed">Feed the Seal ?</a></strong><br />
                         <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -41,7 +41,7 @@
                                 <div class="col-md-12 full">
                                     <div>
                                         <p>
-                                            This page is dedicated to list common questions, tricks and solutions (mainly got from the  <a href="https://sealreport.org/forum" target="_blank">Seal Report Forum</a> or from our experience on site).<br />
+                                            This page is dedicated to list common questions, tricks and solutions (mainly got from questions of the community or from our experience on site).<br />
                                         </p>
                                     </div>
                                     <div class="bs-callout bs-callout-danger">
@@ -197,7 +197,7 @@
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Example for Northwind:</h4>
                                 In the <strong>Northwind</strong> Data Source, select the <strong>Orders</strong> table, then use the following <code>Additional WHERE Clause</code>:
-                                <pre class="brush: csharp; highlight: [16]">
+                                <pre data-line="16"><code class="language-csharp">
 @@{
     MetaTable table = Model;
     string restriction = Environment.UserName; //This gives the windows user of the process running the engine
@@ -214,14 +214,14 @@
     string result = string.Format("Orders.EmployeeID in (SELECT EmployeeID FROM Employees WHERE LastName={0})", Helper.QuoteSingle(restriction));
     }
 @@Raw(result)
-                                </pre>
+                                </code></pre>
                                 In line 16, a dynamic restriction is set using the name of the user logged.<br />
                                 Thus, when the <strong>Orders</strong> table is involved in a model, the table will be automatically filtered with this restriction.
                             </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Defining security during the login process:</h4>
                                 Run the <b>Server Manager</b> and edit the Web Security (<srmenu>CTRL + W</srmenu>), then add the following code to the <code>Custom Security Script</code>:
-                                <pre class="brush: csharp;">
+                                <pre><code class="language-csharp">
 		var source = user.Security.Repository.Sources.FirstOrDefault(i => i.Name.StartsWith("Northwind"));
 		if (source != null)
 		{
@@ -232,7 +232,7 @@
                 }
             }        
 		}
-                                </pre>
+                                </code></pre>
                                 If the logged user belongs to the group named 'CustomerGroupName', a dynamic restriction will be added to the <b>Order</b> table.<br />
                                 Thus, when the user executes a report, he can only see the orders having his <b>ContactName</b>
                             </div>
@@ -294,7 +294,7 @@
                             <p>
                                 Note that you must have the <b>Repository Folders and Files</b> installed on the machine running the program.
                             </p>
-                            <pre class="brush: csharp; ">
+                            <pre><code class="language-csharp">
             //Repository.RepositoryConfigurationPath = @@"C:\ProgramData\Seal Report Repository"; //to specify an alternate Repository Path
             Repository repository = Repository.Create();
             Report report = Report.LoadFromFile(@@"C:\ProgramData\Seal Report Repository\Reports\Search - Orders.srex", repository);
@@ -307,11 +307,11 @@
             var p = new Process();
             p.StartInfo = new ProcessStartInfo(resultPath) { UseShellExecute = true }; //resultPath contains the file path of the HTML report result
             p.Start();
-                                </pre>
+                                </code></pre>
                             <p>
                                 The following code shows how to create a report having a restriction (also got from the <strong>TestAndSamples</strong> project of the solution).
                             </p>
-                            <pre class="brush: csharp; ">
+                            <pre><code class="language-csharp">
            var repository = Repository.Create();
             Report report = Report.Create(repository);
             report.DisplayName = "Sample Report";
@@ -362,13 +362,13 @@
             var p = new Process();
             p.StartInfo = new ProcessStartInfo(result) { UseShellExecute = true };
             p.Start();
-                            </pre>
+                            </code></pre>
                             <br />
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Generating report results on the fly...</h4>
                                 Check the interesting report <strong>102-Task Generate several Report Results</strong> in the <strong>/Reports/Samples/01-Tasks</strong> Repository sub-folder.<br />
                                 The reports has a task that generates a report result by country using the <strong>Search - Orders</strong> report.
-                                <pre class="brush: csharp; ">
+                                <pre><code class="language-csharp">
 @@using System.IO
 @@using System.Data
 @@{
@@ -416,7 +416,7 @@
 
 }
 @@Raw(result)
-                                </pre>
+                                </code></pre>
                             </div>
                         </div>
                     </div>
@@ -427,7 +427,7 @@
                                 You can also install a <b>Seal Web Server</b> and use the  <a href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">Seal Web Interface API</a> to execute reports from JavaScript.<br />
                                 Here is a sample got from the project <b>TestWebApplication</b> to execute a report in another window from a browser (requires JQuery):
                             </p>
-                            <pre class="brush: jscript; ">
+                            <pre><code class="language-javascript">
 $("#login_execute_button")
 .click(function () {
     $("#login_label").html("Connecting...<br>");
@@ -470,7 +470,7 @@ $("#login_execute_button")
             }
         })
     });
-                            </pre>
+                            </code></pre>
                         </div>
                         <!-- end col -->
                     </div>
@@ -500,7 +500,7 @@ $("#login_execute_button")
                                 <b>Add a task to copy the value during execution:</b><br />
                                 Create a report task with the following code:
                             </p>
-                            <pre class="brush: csharp;">
+                            <pre><code class="language-csharp">
 @@using System.Data
 @@{
      ReportTask task = Model;
@@ -520,7 +520,7 @@ $("#login_execute_button")
         }
     }
 }
-                                </pre>
+                                </code></pre>
                             <p>
                                 During the report execution, the task will copy the 2 values prompted to all Orders.OrderDate restrictions.<br />
                                 <br />
@@ -552,34 +552,34 @@ $("#login_execute_button")
                                 <b>To modify the report title:</b><br />
                                 Select the root <strong>General</strong>  node in the main Tree View and edit the <code>Display name</code> property.
                             </p>
-                            <pre class="brush: csharp; highlight: [4]">
+                            <pre data-line="4"><code class="language-csharp">
 @@using System.IO
 @@{
     Report report = Model;
     string result = Path.GetFileNameWithoutExtension(report.FilePath) + " " + report.Models[0].GetRestrictionByName("Order Year").DisplayValue1 + " " + DateTime.Now.ToShortDateString();
 }
 @@Raw(result)
-                                </pre>
+                                </code></pre>
                             <p>
                                 The report title will contain the restriction chosen by the user and the current date.
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 Note that you can also create a task to do the same with the following script:<br />
-                                <pre class="brush: csharp; highlight: [5]">
+                                <pre data-line="5"><code class="language-csharp">
 @@using System.IO
 @@{
     ReportTask task = Model;
     Report report = task.Report;
     report.DisplayName = Path.GetFileNameWithoutExtension(report.FilePath) + " " + report.Models[0].GetRestrictionByName("Order Year").DisplayValue1 + " " + DateTime.Now.ToShortDateString();
 }
-                                </pre>
+                                </code></pre>
                             </div>
                             <p>
                                 <br />
                                 <b>To modify the chart title:</b><br />
                                 Select the Chart JS View, then edit the <code>Custom template</code> property to change the code that defines the chart title (around the line number 70):
                             </p>
-                            <pre class="brush: csharp; highlight: [3]">
+                            <pre data-line="3"><code class="language-csharp">
                 title: {
                     display: true,
                     text: '@@Raw(Helper.ToJS("Sales for " + page.PageTable[1,0].DisplayValue))', //Value 1 of Page Table
@@ -587,7 +587,7 @@ $("#login_execute_button")
 //for Enum                      Raw(Helper.ToJS("Sales for " + reportModel.GetRestrictionByName("Category").EnumDisplayValue))', 
                     position: '@@view.GetValue("chartjs_title_position")'
                 },
-                                </pre>
+                                </code></pre>
                             <p>
                                 <b>page.PageTable[1,0].HTMLValue</b> returns the first value of your current page table, but you can use any relevant value from your model or report (<eg>e.g. <b>reportModel.GetRestrictionByName("Order Year").DisplayValue1</b> for a restriction value</eg>).
                             </p>
@@ -608,10 +608,3 @@ $("#login_execute_button")
 </div>
 <!-- end wrapper -->
 
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $("#recipes_nav").addClass("active");
-        });
-    </script>
-}

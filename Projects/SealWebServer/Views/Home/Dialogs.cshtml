@@ -31,7 +31,7 @@
                             <input type="password" class="form-control" id="password" placeholder="@repository.TranslateWeb("Enter password")" />
                         </div>
 
-                        <a id="login-password-reset" href="">@repository.TranslateWeb("Forget your password ?")</a>
+                        <a id="login-password-reset" href="" style="display:block;margin-bottom:1rem;">@repository.TranslateWeb("Forget your password ?")</a>
                     }
                     <button id="login-modal-submit" class="btn btn-secondary btn-success w-100"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
                 }
@@ -63,7 +63,7 @@
                     <label for="securitycode"><span class="fa-solid fa-lock"></span> @repository.TranslateWeb("Security code")</label>
                     <input type="text" class="form-control" id="securitycode" name="securitycode" placeholder="@repository.TranslateWeb("Enter your security code")" />
                 </div>
-                <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
+                <a class="security-back-to-login d-block mb-3" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 <button id="security-modal-submit" class="btn btn-secondary btn-success w-100"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
             </div>
             <div class="modal-footer" style="text-align:left">
@@ -79,14 +79,14 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header bg-warning" style="position:relative;color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;"></button>
-                <h4 style="color:white;"><span class="fa-solid fa-triangle-exclamation"></span> @repository.TranslateWeb("Reset your password")</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;font-size:1rem;"></button>
+                <h4 style="color:white;"><span class="fa-solid fa-key"></span> @repository.TranslateWeb("Reset your password")</h4>
             </div>
             <div class="modal-body">
                 <div class="mb-3">
                     <label for="password-reset-name"><span class="fa-solid fa-user"></span> @repository.TranslateWeb("Enter your user identifier or email")</label>
                     <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("User identifier or email")" />
-                    <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
+                    <a class="security-back-to-login d-block mt-2" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
                 <button id="password-reset-submit" class="btn btn-secondary btn-warning w-100"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Reset password")</button>
             </div>
@@ -100,10 +100,11 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header bg-warning" style="position:relative;color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;"></button>
-                <h4 style="color:white;"><span class="fa-solid fa-triangle-exclamation"></span> @repository.TranslateWeb("Re-init your password")</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;font-size:1rem;"></button>
+                <h4 style="color:white;"><span class="fa-solid fa-key"></span> @repository.TranslateWeb("Re-init your password")</h4>
             </div>
             <div class="modal-body">
+                <div id="password-reset-error2" class="alert alert-danger d-none" role="alert" style="font-size:14px;"></div>
                 <div class="mb-3">
                     <label for="password-reset1"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your new password")</label>
                     <input type="password" class="form-control" id="password-reset1" name="password-reset1" placeholder="@repository.TranslateWeb("New password")" />
@@ -124,10 +125,11 @@
         <!-- Modal content-->
         <div class="modal-content">
             <div class="modal-header bg-warning" style="position:relative;color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;"></button>
-                <h4 style="color:white;"><span class="fa-solid fa-triangle-exclamation"></span> @repository.TranslateWeb("Change your password")</h4>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;font-size:1rem;"></button>
+                <h4 style="color:white;"><span class="fa-solid fa-key"></span> @repository.TranslateWeb("Change your password")</h4>
             </div>
             <div class="modal-body">
+                <div id="change-password-error" class="alert alert-danger d-none" role="alert" style="font-size:14px;"></div>
                 <div class="mb-3">
                     <label for="password-change"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your current password")</label>
                     <input type="password" class="form-control" id="password-change" name="password-change" placeholder="@repository.TranslateWeb("Current password")" />
@@ -185,9 +187,9 @@
 <div class="modal" id="wait-dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" role="dialog">
     <div class="modal-dialog">
         <div class="modal-content">
-            <div class="modal-body" style="text-align:center">
-                <span class="spinner-border me-2 align-middle" role="status" aria-hidden="true" style="width:2rem;height:2rem;"></span>
-                <h3 style="display:inline">@repository.TranslateWeb("Please wait")...</h3>
+            <div class="modal-body">
+                <span class="spinner-border text-primary" role="status" aria-hidden="true"></span>
+                <span class="wait-dialog-label">@repository.TranslateWeb("Please wait")...</span>
             </div>
         </div>
     </div>

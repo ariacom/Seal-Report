@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 
 using System;
@@ -1040,7 +1040,17 @@ model.ResultTable = query2.CopyToDataTable2();
         [XmlIgnore]
         public (string, string) ResultTableTranslatedJson
         {
-            get
+            get { return GetResultTableTranslatedJson(); }
+        }
+
+        /// <summary>
+        /// Json string for the result table with an additional Json containing aggregation.
+        /// When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
+        /// serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
+        /// result is sent to an AI model.
+        /// </summary>
+        public (string, string) GetResultTableTranslatedJson(int maxRows = 0)
+        {
             {
                 var dt = ResultTableTranslated;
                 if (dt == null)
@@ -1124,15 +1134,32 @@ model.ResultTable = query2.CopyToDataTable2();
                                         new { table = tableAgg, columns = aggregates },
                                         Formatting.None);
 
-                var tableJson = JsonConvert.SerializeObject(new
-                {
-                    cols = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray(),
-                    rows = dt.AsEnumerable()
+                var cols = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray();
+                var rowsEnumerable = dt.AsEnumerable()
                              .Select(r => r.ItemArray
                                            .Select(v => v == DBNull.Value ? null : v)
-                                           .ToArray())
-                             .ToArray()
-                }, Formatting.None);
+                                           .ToArray());
+
+                string tableJson;
+                if (maxRows > 0 && dt.Rows.Count > maxRows)
+                {
+                    tableJson = JsonConvert.SerializeObject(new
+                    {
+                        cols,
+                        row_count = dt.Rows.Count,
+                        rows_shown = maxRows,
+                        note = $"Result truncated: showing the first {maxRows} of {dt.Rows.Count} rows. The aggregates cover all rows. Add restrictions to the report to reduce the result set.",
+                        rows = rowsEnumerable.Take(maxRows).ToArray()
+                    }, Formatting.None);
+                }
+                else
+                {
+                    tableJson = JsonConvert.SerializeObject(new
+                    {
+                        cols,
+                        rows = rowsEnumerable.ToArray()
+                    }, Formatting.None);
+                }
 
                 return (tableJson, aggJson);
             }
@@ -2059,11 +2086,11 @@ model.ResultTable = query2.CopyToDataTable2();
                         var topClause = (Connection.ConnectionType == ConnectionType.MSSQLServer && MaxNumberOfRecords > 0) ? $" TOP {MaxNumberOfRecords}" : "";
                         var distinctClause = (UseSelectDistinct && execGroupByClause.Length == 0) ? " DISTINCT" : "";
                         execSelect = $"SELECT{distinctClause}{topClause}\r\n";
-                        execSelect = !string.IsNullOrEmpty(SqlSelect) ? SqlSelect : execSelect;
-                        Sql = !string.IsNullOrEmpty(SqlCTE) ? SqlCTE : execCTEClause;
+                        execSelect = !string.IsNullOrEmpty(SqlSelect) ? withLineFeed(SqlSelect) : execSelect;
+                        Sql = !string.IsNullOrEmpty(SqlCTE) ? withLineFeed(SqlCTE) : execCTEClause;
                         Sql += execSelect;
                         Sql += string.Format("{0}\r\n", execSelectClause);
-                        Sql += !string.IsNullOrEmpty(SqlFrom) ? SqlFrom : string.Format("FROM {0}", execFromClause);
+                        Sql += !string.IsNullOrEmpty(SqlFrom) ? withLineFeed(SqlFrom) : string.Format("FROM {0}", execFromClause);
 
                         var whereClause = execWhereClause.ToString();
                         //Limit Max number of records for Oracle
@@ -2124,6 +2151,12 @@ model.ResultTable = query2.CopyToDataTable2();
             }
         }
 
+
+        //Ensure a clause overriding the generated SQL ends with a line feed, so the next SQL keyword is not glued to it
+        static string withLineFeed(string clause)
+        {
+            return clause.EndsWith("\n") ? clause : clause + "\r\n";
+        }
 
         bool buildFromClause()
         {
@@ -3244,7 +3277,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     {
                         if (connection is OdbcConnection) _command = ((OdbcConnection)connection).CreateCommand();
                         else if (connection is SqlConnection) _command = ((SqlConnection)connection).CreateCommand();
-                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) _command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                        else if (connection is MySqlConnector.MySqlConnection) _command = ((MySqlConnector.MySqlConnection)connection).CreateCommand();
                         else if (connection is OracleConnection) _command = ((OracleConnection)connection).CreateCommand();
                         else if (connection is NpgsqlConnection) _command = ((NpgsqlConnection)connection).CreateCommand();
                         else if (connection is SQLiteConnection) _command = ((SQLiteConnection)connection).CreateCommand();
@@ -3267,13 +3300,14 @@ model.ResultTable = query2.CopyToDataTable2();
                         DbDataAdapter adapter = null;
                         if (connection is OdbcConnection) adapter = new OdbcDataAdapter((OdbcCommand)_command);
                         else if (connection is SqlConnection) adapter = new SqlDataAdapter((SqlCommand)_command);
-                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter((MySql.Data.MySqlClient.MySqlCommand)_command);
+                        else if (connection is MySqlConnector.MySqlConnection) adapter = new MySqlConnector.MySqlDataAdapter((MySqlConnector.MySqlCommand)_command);
                         else if (connection is OracleConnection) adapter = new OracleDataAdapter((OracleCommand)_command);
                         else if (connection is NpgsqlConnection) adapter = new NpgsqlDataAdapter((NpgsqlCommand)_command);
                         else if (connection is SQLiteConnection) adapter = new SQLiteDataAdapter((SQLiteCommand)_command);
                         else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                         ResultTable = new DataTable();
                         adapter.Fill(ResultTable);
+                        handleDateOnlyColumns();
                         if (connection is SQLiteConnection && Elements.Exists(i => i.TypeEl == ColumnType.DateTime)) handleSQLLiteDateTime();
 
                         executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
@@ -3393,6 +3427,28 @@ model.ResultTable = query2.CopyToDataTable2();
 
             ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
             Progression = 70; //70% after getting result set
+        }
+
+        void handleDateOnlyColumns()
+        {
+            //Convert DateOnly and TimeOnly columns (e.g. returned by Npgsql for PostgreSQL date/time columns) to DateTime, the type expected by the engine (sort, charts, navigation)
+            var columns = ResultTable.Columns.Cast<DataColumn>().Where(i => i.DataType == typeof(DateOnly) || i.DataType == typeof(TimeOnly)).ToList();
+            foreach (var col in columns)
+            {
+                var newCol = new DataColumn(col.ColumnName + "_seal_tmp", typeof(DateTime));
+                ResultTable.Columns.Add(newCol);
+                foreach (DataRow row in ResultTable.Rows)
+                {
+                    var val = row[col];
+                    if (val is DateOnly d) row[newCol] = d.ToDateTime(TimeOnly.MinValue);
+                    else if (val is TimeOnly t) row[newCol] = new DateTime(1899, 12, 30).Add(t.ToTimeSpan()); //Day 0 of OLE Automation dates
+                }
+                var name = col.ColumnName;
+                var ordinal = col.Ordinal;
+                ResultTable.Columns.Remove(col);
+                newCol.ColumnName = name;
+                newCol.SetOrdinal(ordinal);
+            }
         }
 
         void handleSQLLiteDateTime()

@@ -482,3 +482,5 @@ Report;Show Restrictions;제한 표시
 Report;Hide Restrictions;제한 숨기기
 Report;Show Guide;가이드 표시
 Report;Hide Guide;가이드 숨기기
+WebJS;Copy for Excel;Excel용 복사
+WebJS;Download CSV;CSV 다운로드

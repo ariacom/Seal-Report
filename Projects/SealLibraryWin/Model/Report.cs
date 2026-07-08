@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -515,7 +515,7 @@ namespace Seal.Model
                 string fileName = DisplayNameEx.ToString();
                 if (ForOutput)
                 {
-                    if (OutputToExecute.Device is OutputFolderDevice || OutputToExecute.Device is OutputFileServerDevice)
+                    if (OutputToExecute.Device is OutputFolderDevice || OutputToExecute.Device is OutputFileServerDevice || OutputToExecute.Device is OutputSharePointDevice)
                     {
                         fileName = OutputToExecute.FileName.Replace(Repository.SealReportDisplayNameKeyword, FileHelper.CleanFilePath(DisplayNameEx));
                         try
@@ -1772,6 +1772,12 @@ namespace Seal.Model
             {
                 result.FolderPath = "/";
                 if (!string.IsNullOrEmpty(((OutputFileServerDevice)device).Directories)) result.FolderPath = ((OutputFileServerDevice)device).DirectoriesArray[0];
+                result.FileName = Repository.SealReportDisplayNameKeyword;
+            }
+            else if (device is OutputSharePointDevice)
+            {
+                result.FolderPath = "/";
+                if (!string.IsNullOrEmpty(((OutputSharePointDevice)device).Directories)) result.FolderPath = ((OutputSharePointDevice)device).DirectoriesArray[0];
                 result.FileName = Repository.SealReportDisplayNameKeyword;
             }
 

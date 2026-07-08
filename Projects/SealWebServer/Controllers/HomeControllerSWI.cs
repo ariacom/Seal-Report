@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.IO;
@@ -89,7 +89,7 @@ namespace SealWebServer.Controllers
             return new
             {
                 authenticated = false,
-                showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)
+                showresetpassword = Repository.Security.ResetPasswordActive
             };
         }
 
@@ -150,8 +150,8 @@ namespace SealWebServer.Controllers
                 executionmode = WebUser.Profile.ExecutionMode,
                 groupexecutionmode = defaultGroup.ExecutionMode,
                 sessionId = HttpContext.Session.GetString(SessionIdKey),
-                changepassword = !string.IsNullOrEmpty(Repository.Security.ChangePasswordScript),
-                showresetpassword = !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript) && !string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2),
+                changepassword = Repository.Security.EnableChangePassword && WebUser.Login != null,
+                showresetpassword = Repository.Security.ResetPasswordActive,
                 hasagent = WebUser.AgentConfiguration != null
             };
 
@@ -208,12 +208,10 @@ namespace SealWebServer.Controllers
             writeDebug("SWILogin");
             try
             {
-                bool newAuthentication = false;
                 if (WebUser == null || !WebUser.IsAuthenticated || (!string.IsNullOrEmpty(user) && WebUser.WebUserName != user) || (!string.IsNullOrEmpty(token) && WebUser.Token != token))
                 {
                     CreateRepository();
                     SetWebUser(user, password, token);
-                    newAuthentication = true;
                 }
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
@@ -248,10 +246,10 @@ namespace SealWebServer.Controllers
                     return Json(new { login = true });
                 }
 
-                if (string.IsNullOrEmpty(WebUser.Security.TwoFACheckScript)) throw new Exception(Translate("The 'Two-Factor Authentication Check Script' is not defined. Please check your configuration."));
+                if (!WebUser.Security.TwoFAActive) throw new Exception(Translate("The Two-Factor Authentication is not enabled. Please check your configuration."));
 
                 WebUser.WebSecurityCode = code;
-                RazorHelper.CompileExecute(WebUser.Security.TwoFACheckScript, WebUser);
+                RazorHelper.CompileExecute(WebUser.Security.TwoFACheckScriptEffective, WebUser);
 
                 if (WebUser.SecurityCodeTries == -1)
                 {
@@ -287,12 +285,12 @@ namespace SealWebServer.Controllers
                 if (WebUser == null) CreateWebUser();
 
                 if (string.IsNullOrEmpty(id)) throw new Exception("Invalid argument");
-                if (string.IsNullOrEmpty(WebUser.Security.ResetPasswordScript)) throw new Exception("The 'Reset Password Script' is not defined. Please check your configuration.");
+                if (!WebUser.Security.ResetPasswordActive) throw new Exception("The Reset Password feature is not enabled. Please check your configuration.");
 
                 WebUser.WebUserName = id;
                 WebUser.Request = Request;
 
-                RazorHelper.CompileExecute(WebUser.Security.ResetPasswordScript, WebUser);
+                RazorHelper.CompileExecute(WebUser.Security.ResetPasswordScriptEffective, WebUser);
 
                 //Log and Audit
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Reset password sent for '{id}'");
@@ -318,14 +316,14 @@ namespace SealWebServer.Controllers
             {
                 if (string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(token)) throw new Exception("Invalid arguments");
                 if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
-                if (string.IsNullOrEmpty(Repository.Security.ResetPasswordScript2)) throw new Exception("The 'Reset Password Script2' is not defined. Please check your configuration.");
+                if (!Repository.Security.ResetPasswordActive) throw new Exception("The Reset Password feature is not enabled. Please check your configuration.");
 
                 if (WebUser == null) CreateWebUser();
                 WebUser.WebUserName = guid; //Guid in web password
                 WebUser.WebPassword = password1; //Guid in web password
                 WebUser.Token = token;
 
-                RazorHelper.CompileExecute(WebUser.Security.ResetPasswordScript2, WebUser);
+                RazorHelper.CompileExecute(WebUser.Security.ResetPasswordScript2Effective, WebUser);
 
                 //Log and Audit
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Password reset for '{WebUser.WebUserName}'");
@@ -350,23 +348,33 @@ namespace SealWebServer.Controllers
                 checkSWIAuthentication();
                 var user = WebUser;
 
+                if (!user.Security.EnableChangePassword) throw new Exception("The Change Password feature is not enabled. Please check your configuration.");
                 if (user.Login == null) throw new Exception("No login for the user");
                 if (!user.Login.CheckPassword(password)) throw new Exception(Translate("Invalid password."));
                 if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
 
-                if (!Helper.IsPasswordComplex(password1)) throw new Exception(Translate("Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*)."));
-
-                user.Login.HashedPassword = password1;
-                user.Security.SaveToFile();
-
-                if (!string.IsNullOrEmpty(user.Login.Email))
+                if (!string.IsNullOrEmpty(user.Security.ChangePasswordScript))
                 {
-                    var message = Repository.TranslateWeb("Your password has been changed.") + $" ({user.Login.Id})";
-                    var from = ""; //Default of the device will be used
-                    var to = user.Login.Email;
-                    var subject = Repository.TranslateWeb("Seal Report Password Change");
-                    var body = $"{message}<br>";
-                    if (!Repository.SendNotificationEmail(from, to, subject, true, body)) throw new Exception("Unable to send email for Change Password.");
+                    //Custom implementation
+                    user.WebPassword = password1;
+                    RazorHelper.CompileExecute(user.Security.ChangePasswordScript, user);
+                }
+                else
+                {
+                    if (!Helper.IsPasswordComplex(password1)) throw new Exception(Translate("Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*)."));
+
+                    user.Login.HashedPassword = password1;
+                    user.Security.SaveToFile();
+
+                    if (!string.IsNullOrEmpty(user.Login.Email))
+                    {
+                        var message = Repository.TranslateWeb("Your password has been changed.") + $" ({user.Login.Id})";
+                        var from = ""; //Default of the device will be used
+                        var to = user.Login.Email;
+                        var subject = Repository.TranslateWeb("Seal Report Password Change");
+                        var body = $"{message}<br>";
+                        if (!Repository.SendNotificationEmail(from, to, subject, true, body)) throw new Exception("Unable to send email for Change Password.");
+                    }
                 }
 
                 //Log and Audit
@@ -1386,6 +1394,8 @@ namespace SealWebServer.Controllers
                 var fileName = Helper.CleanFileName(name) + AgentFolders.FileExt;
                 var filePath = Path.Combine(recentsFolder, fileName);
 
+                // The saved chat name becomes the conversation title used for auditing
+                agent.Title = name;
                 agent.SaveToFile(filePath, infos);
 
                 // Prune: keep only the most-recent maxRecents files
@@ -1535,6 +1545,7 @@ namespace SealWebServer.Controllers
                 if (agent != null)
                 {
                     agent.LoadFromSessionFile(session);
+                    agent.Title = session.GetInfo("Name") ?? name;
                 }
 
                 return Json(session);
@@ -1706,6 +1717,8 @@ namespace SealWebServer.Controllers
         public ActionResult SWIGetAIAgentResponse(string message, string sessionId)
         {
             writeDebug("SWIGetAIAgentResponse");
+            AIAgent agent = null;
+            var chatDuration = System.Diagnostics.Stopwatch.StartNew();
             try
             {
                 SetSessionId(sessionId);
@@ -1719,7 +1732,7 @@ namespace SealWebServer.Controllers
                     throw new Exception("No AI provider is defined. Please define an AI provider in the AI Configuration.");
 
                 // Retrieve or initialise the per-session agent
-                var agent = Agent;
+                agent = Agent;
 
                 // Register a fresh cancel flag so SWICancelAIAgentResponse can interrupt Chat()
                 var cancelOp = new CancellationFlagOperation();
@@ -1741,6 +1754,9 @@ namespace SealWebServer.Controllers
                     _aiCancelTokens.TryRemove(SessionKey, out _);
                     _aiProgress.TryRemove(SessionKey, out _);
                 }
+
+                // Audit the exchange (tokens, calls, duration); cancelled chats are included as tokens were spent
+                Audit.LogAIChatAudit(WebUser, agent, null, (int)chatDuration.Elapsed.TotalSeconds);
 
                 // Parse [EXECUTE_REPORT:path|name|outputGUID] tags out of the reply and
                 // return them as structured actions so the UI can render clickable Execute
@@ -1785,15 +1801,20 @@ namespace SealWebServer.Controllers
                         return string.Empty;
                     });
 
+                // Usage of the exchange for the chat panel display (cost is null when no cost is configured)
+                var usage = agent.LastChatUsage;
                 return Json(new
                 {
                     response = cleanedReply.Trim(),
-                    reportActions = reportActions.Count > 0 ? reportActions : null
+                    reportActions = reportActions.Count > 0 ? reportActions : null,
+                    tokens = usage?.TotalTokens,
+                    cost = agent.Configuration?.GetProviderConfiguration()?.GetCost(usage)
                 });
             }
             catch (Exception ex)
             {
                 WebHelper.WriteWebException(ex, "SWIGetAIAgentResponse");
+                Audit.LogAIChatAudit(WebUser, agent, ex.Message, (int)chatDuration.Elapsed.TotalSeconds);
                 // The chat bubble renders plain text (HTML is escaped), so return the plain
                 // exception message rather than getExceptionMessage()'s HTML (<br>, stack trace).
                 return Json(new { response = "Error: " + ex.Message });
@@ -1862,7 +1883,7 @@ namespace SealWebServer.Controllers
                 {
                     SRVersion = Repository.ProductVersion,
                     SRAdditionalVersion = Repository.ProductAdditionalInfo,
-                    Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "Free MIT Community License\r\nNon-profit usage or small businesses" : Repository.Instance.LicenseText
+                    Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "MIT License\r\nhttps://github.com/ariacom/Seal-Report" : Repository.Instance.LicenseText
                 });
             }
             catch (Exception ex)

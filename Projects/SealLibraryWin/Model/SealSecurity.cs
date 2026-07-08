@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -52,10 +52,13 @@ namespace Seal.Model
                 GetProperty("ProviderName").SetIsBrowsable(true);
                 GetProperty("UseCustomScript").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
+                GetProperty("EnableTwoFA").SetIsBrowsable(true);
                 GetProperty("TwoFAGenerationScript").SetIsBrowsable(true);
                 GetProperty("TwoFACheckScript").SetIsBrowsable(true);
+                GetProperty("EnableResetPassword").SetIsBrowsable(true);
                 GetProperty("ResetPasswordScript").SetIsBrowsable(true);
                 GetProperty("ResetPasswordScript2").SetIsBrowsable(true);
+                GetProperty("EnableChangePassword").SetIsBrowsable(true);
                 GetProperty("ChangePasswordScript").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
@@ -94,7 +97,7 @@ namespace Seal.Model
         /// The script executed to login and find the security group used to published reports
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Definition"), DisplayName("Provider Security Script"), Description("The script executed to login and find the security group used to published reports."), Id(3, 1)]
+        [Category("Security Provider Definition"), DisplayName("Provider Security Script"), Description("The script executed to login and find the security group used to published reports."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [XmlIgnore]
@@ -131,49 +134,268 @@ namespace Seal.Model
         public string Script { get; set; }
 
         /// <summary>
-        /// If not empty, the script is executed to generate and send the security code used for a Two-Factor Authentication.
+        /// If true, the Two-Factor Authentication is enabled: after the login, a security code is sent to the user (by default by email using the notification email device) and checked in the login page.
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Generation Script"), Description("If not empty, the script is executed to generate and send the security code used for a Two-Factor Authentication."), Id(4, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Enable Two-Factor Authentication"), Description("If true, the Two-Factor Authentication is enabled: after the login, a security code is sent to the user (by default by email using the notification email device) and checked in the login page."), Id(4, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool EnableTwoFA { get; set; } = false;
+
+        /// <summary>
+        /// If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to generate and send the security code (otherwise the default implementation is used: the code is sent by email using the notification email device).
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Generation Script"), Description("If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to generate and send the security code (otherwise the default implementation is used: the code is sent by email using the notification email device)."), Id(5, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string TwoFAGenerationScript { get; set; }
 
         /// <summary>
-        /// If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the a Two-Factor Authentication.
+        /// If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to check the security code and validate the Two-Factor Authentication (otherwise the default implementation is used).
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Check Script"), Description("If a 'Two-Factor Authentication Generation Script' is set, the script is executed to check the security code and validate the Two-Factor Authentication."), Id(5, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Check Script"), Description("If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to check the security code and validate the Two-Factor Authentication (otherwise the default implementation is used)."), Id(6, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string TwoFACheckScript { get; set; }
 
         /// <summary>
-        /// If not empty, the script is executed when a user request a password reset.
+        /// If true, the Reset Password feature is enabled: a link to reset the password is displayed in the login page. The reset link is sent by email, so a notification email device must be configured.
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Reset Password Script (Init Reset)"), Description("If not empty, the script is executed when a user request a password reset."), Id(5, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Enable Reset Password"), Description("If true, the Reset Password feature is enabled: a link to reset the password is displayed in the login page. The reset link is sent by email, so a notification email device must be configured."), Id(7, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool EnableResetPassword { get; set; } = false;
+
+        /// <summary>
+        /// If the Reset Password feature is enabled and the script is not empty, the script is executed when a user requests a password reset (otherwise the default implementation is used: a reset link is sent by email using the notification email device).
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Reset Password Script (Init Reset)"), Description("If the Reset Password feature is enabled and the script is not empty, the script is executed when a user requests a password reset (otherwise the default implementation is used: a reset link is sent by email using the notification email device)."), Id(8, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ResetPasswordScript { get; set; }
 
         /// <summary>
-        /// If not empty, the script is executed to perform the password reset.
+        /// If the Reset Password feature is enabled and the script is not empty, the script is executed to perform the password reset (otherwise the default implementation is used).
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Reset Password Script2 (Apply Reset)"), Description("If not empty, the script is executed to perform the password reset."), Id(6, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Reset Password Script2 (Apply Reset)"), Description("If the Reset Password feature is enabled and the script is not empty, the script is executed to perform the password reset (otherwise the default implementation is used)."), Id(9, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ResetPasswordScript2 { get; set; }
 
         /// <summary>
-        /// If not empty, the script is executed when a user changes his password.
+        /// If true, the Change Password feature is enabled for users having a login defined in the security file.
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Change Password Script"), Description("If not empty, the script is executed when a user changes his password."), Id(7, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Enable Change Password"), Description("If true, the Change Password feature is enabled for users having a login defined in the security file."), Id(10, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool EnableChangePassword { get; set; } = false;
+
+        /// <summary>
+        /// If the Change Password feature is enabled and the script is not empty, the script is executed when a user changes his password (otherwise the default implementation is used).
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Change Password Script"), Description("If the Change Password feature is enabled and the script is not empty, the script is executed when a user changes his password (otherwise the default implementation is used)."), Id(11, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ChangePasswordScript { get; set; }
+
+        /// <summary>
+        /// True if the Two-Factor Authentication is enabled
+        /// </summary>
+        [XmlIgnore]
+        public bool TwoFAActive
+        {
+            get { return EnableTwoFA; }
+        }
+
+        /// <summary>
+        /// Script executed to generate and send the security code: the custom script if defined, otherwise the default implementation
+        /// </summary>
+        [XmlIgnore]
+        public string TwoFAGenerationScriptEffective
+        {
+            get { return !string.IsNullOrEmpty(TwoFAGenerationScript) ? TwoFAGenerationScript : DefaultTwoFAGenerationScript; }
+        }
+
+        /// <summary>
+        /// Script executed to check the security code: the custom script if defined, otherwise the default implementation
+        /// </summary>
+        [XmlIgnore]
+        public string TwoFACheckScriptEffective
+        {
+            get { return !string.IsNullOrEmpty(TwoFACheckScript) ? TwoFACheckScript : DefaultTwoFACheckScript; }
+        }
+
+        /// <summary>
+        /// Default implementation used when TwoFAGenerationScript is empty: sends the security code by email using the notification email device
+        /// </summary>
+        public const string DefaultTwoFAGenerationScript = @"@{
+    SecurityUser user = Model;
+
+    //Generate the security code
+    Random rnd = new Random();
+    user.SecurityCode = rnd.Next(100000, 1000000).ToString();
+    user.SecurityCodeGeneration = DateTime.Now;
+
+    var message = user.Security.Repository.TranslateReport(""Please find your authentication code"");
+
+    var from = """"; //Default of the device will be used
+    var to = user.Login?.Email; //Destination email: could be got from database, LDAP, etc.
+    if (string.IsNullOrEmpty(to)) {
+        throw new Exception($""No Email Address for the user {user.WebUserName}."");
+    }
+
+    var subject = ""Seal Report"";
+    var body = $""{message}: <br><b>{user.SecurityCode}</b>"";
+    var isHtml = true;
+
+    if (!user.Security.Repository.SendNotificationEmail(from, to, subject, isHtml, body)) {
+        throw new Exception(""Unable to send email. Check that an Email Device is defined for notification. Restart the 'Server Manager' after changing the configuration."");
+    }
+
+    //Message displayed in the login page
+    user.SecurityCodeMessage = user.Security.Repository.TranslateReport(""A security code has been sent by Email at"") + $"": {Helper.MaskEmail(to)}"";
+}
+";
+
+        /// <summary>
+        /// Default implementation used when TwoFACheckScript is empty: checks the security code (5 minutes validity, 3 tries)
+        /// </summary>
+        public const string DefaultTwoFACheckScript = @"@{
+    SecurityUser user = Model;
+
+    //Check that the code has been generated in the previous 5 minutes
+    if (string.IsNullOrEmpty(user.SecurityCode) || user.SecurityCodeGeneration < DateTime.Now.AddMinutes(-5)) {
+        user.SecurityCodeTries = -1; //Set it to -1 to re-force a login
+    }
+    else {
+        user.SecurityCodeTries++;
+        if (user.SecurityCode != user.WebSecurityCode)
+        {
+            if (user.SecurityCodeTries >= 3) user.SecurityCodeTries = -1; //Set it to -1 to re-force a login
+            else throw new Exception(user.Security.Repository.TranslateWeb(""Invalid security code"")); //Allow a retry
+        }
+        else {
+            user.SecurityCode = """"; //Check is ok
+        }
+    }
+}
+";
+
+        /// <summary>
+        /// True if the Reset Password feature is enabled
+        /// </summary>
+        [XmlIgnore]
+        public bool ResetPasswordActive
+        {
+            get { return EnableResetPassword; }
+        }
+
+        /// <summary>
+        /// Script executed when a user requests a password reset: the custom script if defined, otherwise the default implementation
+        /// </summary>
+        [XmlIgnore]
+        public string ResetPasswordScriptEffective
+        {
+            get { return !string.IsNullOrEmpty(ResetPasswordScript) ? ResetPasswordScript : DefaultResetPasswordScript; }
+        }
+
+        /// <summary>
+        /// Script executed to perform the password reset: the custom script if defined, otherwise the default implementation
+        /// </summary>
+        [XmlIgnore]
+        public string ResetPasswordScript2Effective
+        {
+            get { return !string.IsNullOrEmpty(ResetPasswordScript2) ? ResetPasswordScript2 : DefaultResetPasswordScript2; }
+        }
+
+        /// <summary>
+        /// Default implementation used when ResetPasswordScript is empty: sends a reset link by email using the notification email device
+        /// </summary>
+        public const string DefaultResetPasswordScript = @"@using Newtonsoft.Json
+@using System.Web
+@{
+    SecurityUser user = Model;
+    var id = user.WebUserName;
+    var request = user.Request;
+    var repository = user.Security.Repository;
+    var security = user.Security;
+
+    //Implementation using Logins defined in the security
+    var login = security.Logins.FirstOrDefault(i => i.Id == id);
+    if (login == null && id.Contains(""@"")) login = security.Logins.FirstOrDefault(i => i.Email == id);
+
+    if (login == null) throw new Exception($""No login found for '{id}'"");
+    if (string.IsNullOrEmpty(login.Email)) throw new Exception($""No Email found for '{id}'"");
+
+    //Generate Token for reset
+    var guid = Guid.NewGuid().ToString();
+    var vals = new List<string>
+    {
+        id,
+        guid,
+        JsonConvert.SerializeObject(DateTime.Now)
+    };
+    var token = HttpUtility.UrlEncode(CryptoHelper.EncryptWithRSAContainer(string.Join(""\r"", vals), ""Reset"" + guid, false));
+
+    var url = $""{request.Scheme}://{request.Host}{request.PathBase}?guid={guid}&ptoken={token}"";
+    var message = repository.TranslateWeb(""Please find your link to reset your password (Note that this link is valid 10 minutes):"");
+    var from = """"; //Default of the device will be used
+    var to = login.Email;
+    var subject = ""Seal Report Password Reset"";
+    var linkLabel = repository.TranslateWeb(""Reset link"");
+    var body = $""{ message}: <br><b><a href='{url}'>{linkLabel}</a></b><br>"";
+
+    if (!repository.SendNotificationEmail(from, to, subject, true, body)) throw new Exception(""Unable to send email for Reset Password."");
+}
+";
+
+        /// <summary>
+        /// Default implementation used when ResetPasswordScript2 is empty: checks the token and changes the password of the login
+        /// </summary>
+        public const string DefaultResetPasswordScript2 = @"@using Newtonsoft.Json
+@{
+    SecurityUser user = Model;
+    var repository = user.Security.Repository;
+    var security = user.Security;
+    var guid = user.WebUserName;
+
+    //Implementation using Logins defined in the security
+    if (!Helper.IsPasswordComplex(user.WebPassword)) throw new Exception(repository.TranslateWeb(""Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*).""));
+
+    var vals = CryptoHelper.DecryptWithRSAContainer(user.Token, ""Reset"" + guid, false).Split(""\r"");
+    if (vals.Length != 3 || vals[1] != guid) throw new Exception(""Invalid token"");
+    var generationDate = JsonConvert.DeserializeObject<DateTime>(vals[2]);
+    //Check date
+    if (DateTime.Now > generationDate.AddMinutes(10)) throw new Exception(""The token is not valid anymore."");
+
+    var id = vals[0];
+    user.WebUserName = id;
+    var login = security.Logins.FirstOrDefault(i => i.Id == id);
+    if (login == null && id.Contains(""@"")) login = security.Logins.FirstOrDefault(i => i.Email == id);
+
+    if (login == null) throw new Exception(""Invalid login in token."");
+
+    login.HashedPassword = user.WebPassword;
+    security.SaveToFile();
+
+    if (!string.IsNullOrEmpty(login.Email))
+    {
+        var message = repository.TranslateWeb(""Your password has been changed after a Reset."");
+        var from = """"; //Default of the device will be used
+        var to = login.Email;
+        var subject = repository.TranslateWeb(""Seal Report Password Change"");
+        var body = $""{message}<br>"";
+        if (!repository.SendNotificationEmail(from, to, subject, true, body)) Audit.LogEventAudit(AuditType.EventError, ""Unable to send email for Change Password afer Reset."");
+    }
+}
+";
 
         /// <summary>
         /// Current SecurityProvider
@@ -220,7 +442,7 @@ namespace Seal.Model
         /// </summary>
 #if WINDOWS
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
-        [Category("Security Provider Configuration"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(9, 2)]
+        [Category("Security Provider Definition"), DisplayName("Parameters"), Description("Parameter values used in the script."), Id(3, 1)]
 #endif
         [XmlIgnore]
         public List<SecurityParameter> CurrentParameters

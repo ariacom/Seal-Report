@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using Seal.AI;
 using Seal.Helpers;
@@ -242,6 +242,8 @@ namespace Seal.Model
             //Personal
             if (PersonalFolderRight != PersonalFolderRight.None)
             {
+                //Ensure the recycle bin folder exists so it is always shown in the tree, even when empty
+                Security.Repository.GetRecycleBinFolder(this);
                 var personalFolder = GetFolder(SWIFolder.GetPersonalRoot());
                 FillFolder(personalFolder);
                 result.Add(personalFolder);
@@ -571,9 +573,9 @@ namespace Seal.Model
                 }
             }
 
-            if (string.IsNullOrEmpty(Error) && !string.IsNullOrEmpty(Security.TwoFAGenerationScript))
+            if (string.IsNullOrEmpty(Error) && Security.TwoFAActive)
             {
-                script = Security.TwoFAGenerationScript;
+                script = Security.TwoFAGenerationScriptEffective;
                 try
                 {
                     RazorHelper.CompileExecute(script, this);

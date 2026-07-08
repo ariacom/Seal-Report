@@ -167,28 +167,6 @@ p {
     padding: 0 0 5px 0;
 }
 
-.check li:before {
-    content: "\f00c";
-    font-family: "FontAwesome";
-    font-size: 16px;
-    left: 0;
-    color: #242424;
-    padding-right: 5px;
-    position: relative;
-    top: 2px;
-}
-
-.check li {
-    font-size: 14px;
-    list-style: none;
-    margin-bottom: 4px;
-}
-
-.check {
-    margin-left: 0;
-    padding-left: 0
-}
-
 .section {
     padding: 40px 0px 0px 0px;
     position: relative;
@@ -216,8 +194,8 @@ strong {
 }
 
 .dark-text {
-    font-size: 4.125rem;
-    line-height: 4.063rem;
+    font-size: 41px;
+    line-height: 41px;
     font-weight: 300;
 }
 
@@ -356,23 +334,35 @@ a:hover {
     border: 1px solid #545454;
 }
 
-.navbar-inverse .navbar-nav > .active > a,
-.navbar-inverse .navbar-nav > .active > a:hover,
-.navbar-inverse .navbar-nav > .active > a:focus {
-    background-color: #0E97EE;
-    color: #fff;
-}
-
-.navbar-inverse {
+.navbar-doc {
     background-color: #030303;
     border: 0;
 }
 
-.navbar-inverse li.btn {
-    border-radius: 0 !important;
-    padding: 0;
+.navbar-doc .navbar-nav .nav-link {
+    font-size: 14px;
 }
 
-.navbar-inverse li.btn a {
-    color: #ffffff !important;
+.navbar-doc .dropdown-menu .dropdown-item {
+    font-size: 14px;
+}
+
+.navbar-doc .navbar-nav .nav-link.active,
+.navbar-doc .navbar-nav .nav-link.active:hover,
+.navbar-doc .navbar-nav .nav-link.active:focus {
+    background-color: #0E97EE;
+    color: #fff;
+}
+
+/* On expanded navbar, move the vertical padding into the links so the active highlight fills the full bar height */
+@media (min-width: 992px) {
+    .navbar-doc {
+        padding-top: 0;
+        padding-bottom: 0;
+    }
+
+    .navbar-doc .navbar-nav .nav-link {
+        padding-top: 16px;
+        padding-bottom: 16px;
+    }
 }

@@ -164,10 +164,6 @@ var SWIUtil;
                 title += data.SRAdditionalVersion + "\n";
             $("#brand-id").attr("title", title);
             $("#footer-version").text(data.SWIVersion);
-            if (!data.Info.includes("Serial n")) {
-                $("#nav_cr").html(data.Info.replace("\r\n", "<br>"));
-                $("#nav_cr").show();
-            }
         });
     }
     SWIUtil.InitVersion = InitVersion;
@@ -374,14 +370,16 @@ var SWIUtil;
             if (profile.editprofile && profile.changepassword) {
                 $("#profile-change-password").unbind("click").on("click", function (e) {
                     SWIUtil.HideModal($("#profile-dialog"));
+                    $("#change-password-error").addClass("d-none").html("");
                     $("#change-password-submit").unbind("click").on("click", function () {
                         _gateway.ChangePassword($("#password-change").val(), $("#password-change1").val(), $("#password-change2").val(), function (data) {
-                            if (data.error)
-                                SWIUtil.ShowMessage("alert-danger", data.error, -1);
-                            else {
-                                SWIUtil.HideModal($("#change-password-modal"));
-                                SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
-                            }
+                            SWIUtil.HideModal($("#change-password-modal"));
+                            SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
+                        }, function (data) {
+                            //Error displayed inside the modal: the global alert would be hidden behind the dialog (z-index 25000)
+                            $("#change-password-error").removeClass("d-none").html(data.error);
+                            if (!data.authenticated)
+                                location.reload();
                         });
                     });
                     SWIUtil.ShowModal($("#change-password-modal"));

@@ -9,7 +9,7 @@
         <!-- end section -->
         <div class="row">
             <div class="col-md-3">
-                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                <nav class="docs-sidebar" role="navigation">
                     <ul class="nav">
                         <li><a href="#lineConfiguration">Server Configuration</a></li>
                         <li><a href="#lineTools">Server Tools</a></li>
@@ -18,13 +18,14 @@
                             <ul class="nav">
                                 <li><a href="#lineSecurity_provider">Providers</a></li>
                                 <li><a href="#lineSecurity_group">Groups</a></li>
+                                <li><a href="#lineSecurity_repo">Repository Folders</a></li>
                                 <li><a href="#lineSecurity_pub">Custom Publications</a></li>
                                 <li><a href="#lineSecurity_sta">Startup Report</a></li>
                             </ul>
                         </li>
                         <li><a href="#lineSWI">Seal Web Interface</a></li>
                     </ul>
-                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
                         <strong><a href="#feed">Feed the Seal ?</a></strong><br />
                         <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -89,7 +90,7 @@
                                 Share source code amongst your report scripts by saving .cs files in the repository folder <b>Assemblies\Dynamics</b>.<br />
                                 The file will be compiled into a .dll assembly that will be loaded automatically.<br />
                                 Sample of .cs source code:<br />
-                                <pre class="brush: csharp;">
+                                <pre><code class="language-csharp">
 using Seal;
 using Seal.Model;
 namespace MyNamespace
@@ -104,7 +105,7 @@ namespace MyNamespace
             report.LogMessage(message);  
         }
     }
-}                                </pre>
+}                                </code></pre>
                             </div>
                             <div class="bs-callout bs-callout-info">
                                 Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
@@ -119,7 +120,7 @@ namespace MyNamespace
                                     <li>In SQL Server - stored in database, in one table, shared between the nodes.</li>
                                 </ul>
                                 <div>To store the session in SQL Server, change the configuration in appsettings.json file:</div>
-                                <pre class="brush: csharp;">
+                                <pre><code class="language-csharp">
                                     "SealConfiguration": {
                                         "SessionProvider": {
                                             "SqlServer": {
@@ -129,24 +130,24 @@ namespace MyNamespace
                                             }
                                         }
                                     }
-                                </pre>
+                                </code></pre>
                                 <h5>SQL Server session storage</h5>
                                 <div>To use SQL Server option, besides the configuration, the session table has to be created in the database using the following the .net core tool:</div>
-                                <pre class="brush: bash;">
+                                <pre><code class="language-bash">
                                     dotnet  tool  install --global  dotnet-sql-cache
-                                </pre>
+                                </code></pre>
                                 <div>When the tool is installed, run the command according to the CLI:</div>
-                                <pre class="brush: bash;">
+                                <pre><code class="language-bash">
                                     Usage: dotnet sql-cache create [arguments] [options]
                                     Arguments:                                    
                                     [connectionString] The connection string to connect to the database.
                                     [schemaName] Name of the table schema.
                                     [tableName] Name of the table to be created.
-                                </pre>
+                                </code></pre>
 
 
                                 <div>Or create directly the table in the database:</div>
-                                <pre class="brush: sql;">
+                                <pre><code class="language-sql">
                                      SET ANSI_NULLS ON
                                     GO
                                     SET QUOTED_IDENTIFIER ON
@@ -167,7 +168,7 @@ namespace MyNamespace
 	                                    OPTIMIZE_FOR_SEQUENTIAL_KEY = OFF) ON [PRIMARY]
                                     ) ON [PRIMARY] TEXTIMAGE_ON [PRIMARY]
                                     GO
-                               </pre>
+                               </code></pre>
 
                             </div>
                         </div>
@@ -280,12 +281,23 @@ namespace MyNamespace
                             </div>
 
                             <p>
-                                Two scripts are also available to handle a <strong>Two-Factor Authentication</strong>:<br />One <code>Generation Script</code> to generate the code sent by Email or SMS, one <code>Check Script</code> to validate the code.
+                                Three optional features can be enabled in the security configuration (they are disabled by default):
                             </p>
+                            <ul>
+                                <li>
+                                    <strong>Two-Factor Authentication</strong> (<code>Enable Two-Factor Authentication</code>): requires two scripts, one <code>Generation Script</code> to generate the code sent by Email or SMS, one <code>Check Script</code> to validate the code.
+                                </li>
+                                <li>
+                                    <strong>Reset Password</strong> (<code>Enable Reset Password</code>): requires two scripts, one to initiate the reset (e.g. send an email with a reset link), one to apply the new password.
+                                </li>
+                                <li>
+                                    <strong>Change Password</strong> (<code>Enable Change Password</code>): allows users having a login defined in the security file to change their password. An optional <code>Change Password Script</code> may be defined to customize the behavior.
+                                </li>
+                            </ul>
 
                             <div class="bs-callout bs-callout-demo">
                                 Script sample for the Basic Authentication Provider:
-                                <pre class="brush: csharp;">
+                                <pre><code class="language-csharp">
 @@{
     SecurityUser user = Model;
 	//Basic authentication script: use the user name and password to authenticate the user and set his name and security groups...
@@ -307,7 +319,7 @@ namespace MyNamespace
             throw new Exception("Invalid user name or password");
         }
     }
-}                            </pre>
+}                            </code></pre>
                             </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Test your security provider</h4>
@@ -331,12 +343,26 @@ namespace MyNamespace
 
                                 A <strong>Security Group</strong> has a collection of repository <code>Folders</code>, each folder has a given relative path and right (from <b>No Right</b> to <b>Edit Reports</b>).
                             </p>
+                            <h5>Download and Upload rights</h5>
+                            <p>
+                                In addition to its right, each folder has two flags, both disabled by default:
+                            </p>
+                            <ul>
+                                <li><code>Allow Report Download</code>: the user can download the report files (*.srex) of the folder from the <b>Web Report Server</b>. Downloading a report is the only way to extract its definition from the web (<eg>e.g. to edit it with the Report Designer</eg>).</li>
+                                <li><code>Allow Upload</code>: the user can upload files to the folder.</li>
+                            </ul>
+                            <p>
+                                The same two flags exist on the <b>Security Group</b> for the user's <b>Personal folder</b>.
+                            </p>
                             <div class="bs-callout bs-callout-info">
                                 If a user belongs to several groups, the following rules are applied:<br /><br />
                                 For the <b>Reports</b> folders<br />
                                 <ul>
                                     <li>
                                         <b>Folders</b>: The highest right is used (No right, Execute reports / View files, Execute reports and outputs / View files, Edit schedules / View files, Edit reports / Manage files).
+                                    </li>
+                                    <li>
+                                        <b>Allow Report Download, Allow Upload</b>: Enabled if one group enables it.
                                     </li>
                                     <li>
                                         <b>Personal folder</b>: The highest right is used (No personal folder, Personal folder for files only, Personal folder for reports and files).
@@ -368,13 +394,26 @@ namespace MyNamespace
                         </div>
                         <!-- end col -->
                     </div>
+                    <div id="lineSecurity_repo" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Repository Folders</h4>
+                            <p>
+                                A <strong>Security Group</strong> can also publish <b>Repository Folders</b>: folders located anywhere under the repository root, outside the <b>Reports</b> tree (<eg>e.g. the /Databases folder to let users manage the local Excel files loaded by a data source</eg>).<br />
+                                Each <b>Repository Folder</b> is defined with a relative path, a right (<b>No right</b>, <b>Read only</b> to view and download files, <b>Read write</b> to manage files) and an <code>Allow Upload</code> flag.
+                            </p>
+                            <div class="bs-callout bs-callout-danger">
+                                Publishing repository folders exposes files outside the Reports tree: grant these rights carefully and prefer <b>Read only</b> whenever possible.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
                     <!-- end row -->
                     <div class="row">
                         <div class="col-md-12 text-center">
                             <div class="caption">
                                 <b>Security Objects</b>
                             </div>
-                            <img src="images/CD-Security.png" alt="" class="img-thumbnail img-rounded">
+                            <img src="images/CD-Security.svg" alt="" class="img-thumbnail rounded">
                             <div>
                                 <ck>Check also <a href="~/Help/Index.html" target="_blank">Seal Report Library (Seal.Model namespace)</a> for more information</ck>.
                             </div>
@@ -405,7 +444,7 @@ namespace MyNamespace
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <code>Folder Detail Script</code> sample to filter 'Charts' reports in the <b>/Samples</b> folder:
-                                <pre class="brush: csharp; highlight: [5]">
+                                <pre data-line="5"><code class="language-csharp">
 @@{
     SecurityUser user = Model;
      if (user.FolderDetail.folder.path == @@"\Samples") {
@@ -413,7 +452,7 @@ namespace MyNamespace
         user.FolderDetail.files = user.FolderDetail.files.Where(i => i.name.Contains("Charts")).ToList(); 
     }
 }
-                            </pre>
+                            </code></pre>
                             </div>
                         </div>
                         <!-- end col -->
@@ -479,10 +518,3 @@ namespace MyNamespace
 </div>
 <!-- end wrapper -->
 
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $("#server_nav").addClass("active");
-        });
-    </script>
-}

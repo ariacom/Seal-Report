@@ -5,142 +5,141 @@
     <AIToolConfiguration>
       <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
       <Name>database_execute_query</Name>
-      <ProgressLabel>Running a database query</ProgressLabel>
       <Description>Executes a SQL SELECT statement against a data source and returns up to 50 rows as a tab-separated table.
 Use it to validate generated SQL, check sample data, debug wrong results, or preview table contents.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ProgressLabel>Running a database query</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"sql":{"type":"string","description":"SQL SELECT statement to execute"},"datasource_guid":{"type":"string","description":"GUID of the data source to query, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["sql"]}</ParametersSchema>
       <ExecutionScriptFile>database_execute_query.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
       <Name>database_get_columns</Name>
-      <ProgressLabel>Getting columns of table {table}</ProgressLabel>
       <Description>Returns the column names and data types of a table.
 Use it to confirm column names before generating report elements, or to discover schema when scanning a data source.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ProgressLabel>Getting columns of table {table}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name, optionally schema-qualified (e.g. dbo.Orders)"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table"]}</ParametersSchema>
       <ExecutionScriptFile>database_get_columns.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
       <Name>database_get_sample_values</Name>
-      <ProgressLabel>Getting sample values of {table}.{column}</ProgressLabel>
       <Description>Returns up to 50 distinct non-null values from the given column.
 Use it to discover what enum or category values exist when building restriction filters or display labels.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ProgressLabel>Getting sample values of {table}.{column}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name"},"column":{"type":"string","description":"Column name"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table","column"]}</ParametersSchema>
       <ExecutionScriptFile>database_get_sample_values.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
       <Name>database_count_rows</Name>
-      <ProgressLabel>Counting rows of table {table}</ProgressLabel>
       <Description>Returns the row count of a table, optionally filtered by a WHERE clause.
 Use it to decide whether TopRecords makes sense or to check the cardinality of a filter before applying it.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
+      <ProgressLabel>Counting rows of table {table}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name"},"where":{"type":"string","description":"Optional SQL WHERE clause without the WHERE keyword (e.g. Country = 'France')"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table"]}</ParametersSchema>
       <ExecutionScriptFile>database_count_rows.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
       <Name>datasource_list</Name>
-      <ProgressLabel>Listing data sources</ProgressLabel>
       <Description>Lists all configured data sources with their GUID, database type, available connections (each with its GUID), and tables.
 Call this first to discover which sources, connections, and tables are available before querying or inspecting them.
 Use the returned GUIDs with datasource_guid and connection_guid parameters in database tools.</Description>
+      <ProgressLabel>Listing data sources</ProgressLabel>
       <ExecutionScriptFile>datasource_list.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
       <Name>datasource_get_detail</Name>
-      <ProgressLabel>Inspecting data source {name}</ProgressLabel>
       <Description>Returns a structured summary of a data source:
 connection info (no credentials), tables with their columns and types, and joins between tables.
 Use this to understand the schema and relationships before writing SQL.</Description>
+      <ProgressLabel>Inspecting data source {name}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Data source name"}},"required":["name"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_get_detail.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
       <Name>report_get_detail</Name>
-      <ProgressLabel>Reading report {path}</ProgressLabel>
       <Description>Returns full details of a report:
 display name, description, and for each model its source, elements (columns with pivot position and aggregate), and restrictions (with prompt and required flags).
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
+      <ProgressLabel>Reading report {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_get_detail.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
       <Name>report_get_xml</Name>
-      <ProgressLabel>Reading report definition {path}</ProgressLabel>
       <Description>Returns the raw XML content of a report file.
 Use this to inspect the full report definition or to obtain a template before modifying and saving it with report_create_from_sql.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
+      <ProgressLabel>Reading report definition {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_get_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
       <Name>report_check_model_type</Name>
-      <ProgressLabel>Analyzing the report request</ProgressLabel>
       <Description>Analyses a report request and returns whether it requires a SQL model (report_create_from_sql) or a metadata model (report_create_from_xml), with the reasoning.
 Always call this before creating any report.</Description>
+      <ProgressLabel>Analyzing the report request</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"request":{"type":"string","description":"The user's report request, exactly as stated."},"source_guid":{"type":"string","description":"GUID of the target data source, as returned by datasource_list. Pass it so a NoSQL source is detected and routed to report_create_from_xml. Omit to analyse the request text only."}},"required":["request"]}</ParametersSchema>
       <ExecutionScriptFile>report_check_model_type.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>aa2baa07-6828-4f6c-9640-466feb5e1b22</GUID>
       <Name>report_create_from_sql</Name>
-      <ProgressLabel>Creating report {display_name}</ProgressLabel>
       <Description>Creates a new report with a single SQL model using the Seal Report API.
 The SQL is executed at runtime against the chosen data source; columns are resolved dynamically so no metadata GUIDs are required.
 Use datasource_get_detail to obtain the correct table and column names before writing the SQL.</Description>
+      <ProgressLabel>Creating report {display_name}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\Sales\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"display_name":{"type":"string","description":"Report display name shown in results."},"sql":{"type":"string","description":"SELECT statement executed by the model."},"source_guid":{"type":"string","description":"GUID of the data source to use, as returned by datasource_list or datasource_get_detail. Omit to use the default source."},"model_name":{"type":"string","description":"Optional name for the model. Defaults to 'Model'."},"description":{"type":"string","description":"Optional report description stored in MetaInfo."},"keep_column_names":{"type":"boolean","description":"If true, SQL column aliases are used as-is for column headers. Default false."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file. Default false."}},"required":["path","display_name","sql"]}</ParametersSchema>
       <ExecutionScriptFile>report_create_from_sql.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
       <Name>report_create_from_xml</Name>
-      <ProgressLabel>Creating report {path}</ProgressLabel>
       <Description>Creates a new metadata report by writing a complete XML definition.
 Use for reports built on the data source's defined metadata columns (tabular, pivot, search reports).
 Before calling this tool, set &lt;MetaSourceGUID&gt; to the GUID from datasource_list and every &lt;MetaColumnGUID&gt; to the matching column GUID from datasource_get_detail.
 Internal cross-reference GUIDs (GUID, ViewGUID, SourceGUID, ModelGUID) are regenerated automatically; metadata reference GUIDs (MetaSourceGUID, MetaColumnGUID) are preserved exactly as supplied.
 For SQL-based reports use report_create_from_sql instead.</Description>
+      <ProgressLabel>Creating report {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\\\Sales\\\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"xml":{"type":"string","description":"Complete XML content of the report file (.srex). Retrieve a template via report_get_xml, replace MetaSourceGUID and MetaColumnGUID with values from datasource_list / datasource_get_detail, then pass the result here."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file at the destination path. Default false."}},"required":["path","xml"]}</ParametersSchema>
       <ExecutionScriptFile>report_create_from_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>e8f1a2b3-c4d5-4e6f-9a0b-1c2d3e4f5a6b</GUID>
       <Name>device_list</Name>
-      <ProgressLabel>Listing output devices</ProgressLabel>
-      <Description>Lists the output devices the current user is allowed to use, each with its name, type (email, ftp, or folder) and GUID.
+      <Description>Lists the output devices the current user is allowed to use, each with its name, type (email, ftp, sharepoint, or folder) and GUID.
 Call this before report_configure_output when several devices may exist or the user must choose where the output is delivered, then pass the chosen device_name (with a matching device_type) to report_configure_output.
 Read-only.</Description>
+      <ProgressLabel>Listing output devices</ProgressLabel>
       <ExecutionScriptFile>device_list.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
       <Name>report_configure_output</Name>
-      <ProgressLabel>Configuring output of report {path}</ProgressLabel>
       <Description>Configures or removes an output on an existing report.
 Use action=configure (default) to add or update a delivery output; device_type selects the delivery method:
-folder (default), email, or ftp.
+folder (default), email, ftp, or sharepoint.
 Use action=delete to remove outputs and all their associated schedules — never use file_manage for this.
 Pass output_guid to target a specific output for update or delete; for folder outputs without a GUID the first folder output is reused.
 For delete:
 pass output_guid or output_name to remove a specific output; omit both to delete all.
 Returns outputGUID in the result — store it to pass to report_configure_schedule.
 Always call this before report_configure_schedule.</Description>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp"],"description":"Delivery type: folder (default), email, or ftp."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific output device to use, as returned by device_list. Call device_list first when several devices may exist or the user must choose. Omit to use the first device of the requested device_type."},"folder_path":{"type":"string","description":"Required for device_type=folder; optional for device_type=ftp. For folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%. For ftp: the remote directory on the file server (default '/')."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
+      <ProgressLabel>Configuring output of report {path}</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp","sharepoint"],"description":"Delivery type: folder (default), email, ftp, or sharepoint."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific output device to use, as returned by device_list. Call device_list first when several devices may exist or the user must choose. Omit to use the first device of the requested device_type."},"folder_path":{"type":"string","description":"Required for device_type=folder; optional for device_type=ftp. For folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%. For ftp: the remote directory on the file server (default '/'). For sharepoint: the folder in the document library (default '/' for the library root)."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_output.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
       <Name>report_configure_schedule</Name>
-      <ProgressLabel>Configuring schedule of report {path}</ProgressLabel>
       <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's output.
 Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one.
 Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets.
@@ -150,36 +149,36 @@ Returns scheduleGUID in the result — store it to later modify or delete this s
 Schedule GUIDs can also be discovered via report_list.
 Use when the user wants automated execution:
 "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
+      <ProgressLabel>Configuring schedule of report {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule, or update an existing one when schedule_guid is provided. delete: remove the schedule identified by schedule_guid or schedule_name (does NOT delete the report file or its output)."},"schedule_guid":{"type":"string","description":"GUID of an existing schedule, as returned by a prior call or by report_list. Required to update a schedule; for delete, pass this (preferred) or schedule_name to target a specific schedule."},"output_guid":{"type":"string","description":"GUID of the output to attach this schedule to, as returned by report_configure_output. Omit to use the first folder output. Pass it to schedule a specific output such as an FTP or email output."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"For action=configure: display name for the schedule (auto-generated if omitted). For action=delete: name of the specific schedule to remove when schedule_guid is not provided."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_schedule.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
       <Name>report_execute_get_data</Name>
-      <ProgressLabel>Executing report {path}</ProgressLabel>
       <Description>Executes a report and returns its result tables as structured JSON data, followed by the execution messages.
 Use it to fetch the actual data produced by an existing report for analysis, answering data questions, generating a summary, or diagnosing execution issues.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex).
 Optionally pass model_name to restrict the output to a single model.</Description>
+      <ProgressLabel>Executing report {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex or Personal\\username\\monthly.srex)"},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_execute_get_data.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
       <Name>file_list</Name>
-      <ProgressLabel>Browsing files</ProgressLabel>
       <Description>Browses files in the folders the current user has access to, across the Reports and Personal roots.
 Returns relative paths in the same format file_manage expects (e.g. Reports\Sales\monthly.srex, Personal\user\notes.txt) together with size and last-modified date.
 Lists every file type, not only reports, and includes files-only folders.
 ALWAYS call this tool first to discover and confirm the exact path of a file before any file_manage operation (delete, rename, move, copy).
 Optionally filter by sub-folder name(s) via 'folders', or by file extension via 'extension'.</Description>
+      <ProgressLabel>Browsing files</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to restrict the scan. Omit or pass [] to scan everything accessible."},"extension":{"type":"string","description":"Optional file extension filter without the dot, e.g. 'srex' or 'txt'. Omit to list all files."}}}</ParametersSchema>
       <ExecutionScriptFile>file_list.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
       <Name>file_manage</Name>
-      <ProgressLabel>Managing file {path}</ProgressLabel>
       <Description>File-level operations on a file in the repository:
 delete, rename (new filename in the same folder), move (to a different folder or root), or copy (to a new path).
 Works on any repository file (reports .srex, etc.).
@@ -188,159 +187,160 @@ Roots are:
 Reports, Personal.
 Access is restricted to files within these roots and to folders the current user has rights on.
 Always call file_list first to discover and confirm the exact source path before performing any file_manage operation.</Description>
+      <ProgressLabel>Managing file {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"action":{"type":"string","enum":["delete","rename","move","copy"],"description":"Operation to perform"},"path":{"type":"string","description":"Relative path of the source report (e.g. Reports\\Sales\\monthly.srex)"},"destination":{"type":"string","description":"Target relative path for rename/move/copy (e.g. Reports\\Archive\\monthly.srex). Not used for delete."}},"required":["action","path"]}</ParametersSchema>
       <ExecutionScriptFile>file_manage.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
       <Name>report_list</Name>
-      <ProgressLabel>Listing reports</ProgressLabel>
       <Description>Lists reports accessible to the current web user.
 Only folders with access rights are browsed — hidden folders (right=0) and files-only folders are excluded — and Personal folders are included when the user has personal folder rights.
 Display paths use "Reports\..." or "Personal\username\..." format compatible with other report tools.
 Pass an optional list of sub-folder names to restrict the scan; omit or pass [] to scan all accessible folders.</Description>
+      <ProgressLabel>Listing reports</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to scan. Omit or pass [] to scan everything accessible."}}}</ParametersSchema>
       <ExecutionScriptFile>report_list.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
       <Name>get_current_folder</Name>
-      <ProgressLabel>Getting the current folder</ProgressLabel>
       <Description>Returns the user's current working folder — the folder the user is currently browsing in the web interface — in the display-path format used by report_list and the report creation tools (e.g. "Reports\Sales").
 Also lists all folders where the user has write access.
 Always call this tool fresh every time you need the current folder; never reuse a result from earlier in the conversation, as the user may have navigated to a different folder since then.</Description>
+      <ProgressLabel>Getting the current folder</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{}}</ParametersSchema>
       <ExecutionScriptFile>get_current_folder.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
       <Name>log_read</Name>
-      <ProgressLabel>Reading {type} logs</ProgressLabel>
       <Description>Reads Seal Report log files for the given date.
 Type must be one of:
 events (server start/stop, authentication, errors), executions (report execution traces), schedules (scheduler runs).
 Date defaults to today.
 Use keyword to filter lines containing a specific string.
 Returns up to max_lines lines (default 200).</Description>
+      <ProgressLabel>Reading {type} logs</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"type":{"type":"string","enum":["events","executions","schedules"],"description":"Log file type: events, executions or schedules"},"date":{"type":"string","description":"Date in YYYY-MM-DD format. Defaults to today."},"keyword":{"type":"string","description":"Optional string filter: only lines containing this keyword (case-insensitive) are returned."},"max_lines":{"type":"integer","description":"Maximum number of lines to return. Defaults to 200."}},"required":["type"]}</ParametersSchema>
       <ExecutionScriptFile>log_read.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
       <Name>view_get_parameters</Name>
-      <ProgressLabel>Reading view parameters of {path}</ProgressLabel>
       <Description>Lists the configurable rendering parameters of a report's view (e.g. the "Chart JS" view), with each parameter's type, current value, default, allowed values and description.
 Call with only 'path' to list every view in the report; then call again with view_name (e.g. "Chart JS") to see that view's parameters.
 Use this before report_configure_view to discover valid parameter names and values.
 Read-only.</Description>
+      <ProgressLabel>Reading view parameters of {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"view_name":{"type":"string","description":"Name of the view to inspect (e.g. 'Chart JS', 'Page Table'). Omit to list all views in the report."},"template_name":{"type":"string","description":"Optional template name filter (e.g. 'Chart JS') when several views share a name."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>view_get_parameters.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>2a3b4c5d-6e7f-4890-9a1b-2c3d4e5f6a7b</GUID>
       <Name>report_configure_view</Name>
-      <ProgressLabel>Configuring view of report {path}</ProgressLabel>
       <Description>Sets one or more rendering parameters on an existing report's view, in place, without rewriting the report.
 Use it to change how a view renders - for example to make a Chart JS view horizontal and stacked (chartjs_bar_horizontal=True, chartjs_bar_stacked=True), hide a legend, set a chart title, or switch a pie to a doughnut.
 Always call view_get_parameters first to discover valid parameter names and allowed values for the target view.
 Values are validated against each parameter's type and enumeration; parameters left at their default are not stored.
 For stacked bar charts the model must have a series Splitter (a Column element), otherwise there is a single series and nothing stacks.</Description>
+      <ProgressLabel>Configuring view of report {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"view_name":{"type":"string","description":"Name of the view to configure (e.g. 'Chart JS'). Required unless template_name is given."},"template_name":{"type":"string","description":"Template name of the view to configure (e.g. 'Chart JS'), used instead of or together with view_name to disambiguate."},"parameters":{"type":"object","description":"Object of parameter name/value pairs to set, e.g. {\"chartjs_bar_horizontal\":\"True\",\"chartjs_bar_stacked\":\"True\"}. Use view_get_parameters to discover valid names and values. Booleans are 'True'/'False'.","additionalProperties":{"type":"string"}}},"required":["path","parameters"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_view.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0001-1111-4aaa-bbbb-d5e000000001</GUID>
       <Name>datasource_find_usage</Name>
-      <ProgressLabel>Checking which reports use this column</ProgressLabel>
       <Description>Lists the reports that reference a given metadata column (or any column of a given table) of a data source.
 This is the safety primitive: ALWAYS call it before any destructive data-source change (datasource_set_column_sql, datasource_apply_join, datasource_remove, datasource_refresh_schema) and show the user the affected reports.
 Read-only. Provide column_guid (from datasource_get_detail) or table_name.</Description>
+      <ProgressLabel>Checking which reports use this column</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the metadata column to find usage for (from datasource_get_detail)."},"table_name":{"type":"string","description":"Name or alias of a table; finds reports using any of its columns. Provide column_guid or table_name."}},"required":[]}</ParametersSchema>
       <ExecutionScriptFile>datasource_find_usage.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0006-1111-4aaa-bbbb-d5e000000006</GUID>
       <Name>datasource_suggest_joins</Name>
-      <ProgressLabel>Suggesting joins between tables</ProgressLabel>
       <Description>Inspects the tables of a SQL data source and proposes joins based on shared key columns (names ending with id/code/key).
 Read-only: nothing is changed. Present the suggestions to the user, then apply the chosen one with datasource_apply_join.</Description>
+      <ProgressLabel>Suggesting joins between tables</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."}},"required":[]}</ParametersSchema>
       <ExecutionScriptFile>datasource_suggest_joins.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0002-1111-4aaa-bbbb-d5e000000002</GUID>
       <Name>datasource_add_table</Name>
-      <ProgressLabel>Adding table {table_name} to the data source</ProgressLabel>
       <Description>Adds a table to a SQL data source, with its columns. Additive — never breaks an existing report.
 Pass table_name for a database table (columns are read from the catalog), OR sql for a custom dynamic table defined by a SELECT.
 Use datasource_get_detail first to avoid duplicating an existing table.</Description>
+      <ProgressLabel>Adding table {table_name} to the data source</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Database table name, optionally schema-qualified (e.g. dbo.Orders). Use this OR sql."},"sql":{"type":"string","description":"A SELECT statement defining a custom (dynamic) table. Use this OR table_name."},"alias":{"type":"string","description":"Optional alias/display name for the table."},"connection_guid":{"type":"string","description":"GUID of the connection to read the schema from. Omit for the source default connection."}},"required":[]}</ParametersSchema>
       <ExecutionScriptFile>datasource_add_table.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0003-1111-4aaa-bbbb-d5e000000003</GUID>
       <Name>datasource_add_column</Name>
-      <ProgressLabel>Adding column {column_name}</ProgressLabel>
       <Description>Adds a derived/computed column to an existing table of a data source. Additive — never breaks an existing report.
 column_name is the SQL name or expression (e.g. Customers.FirstName + ' ' + Customers.LastName).</Description>
+      <ProgressLabel>Adding column {column_name}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Name or alias of the table to add the column to."},"column_name":{"type":"string","description":"SQL column name or expression for the new column."},"display_name":{"type":"string","description":"Friendly display name shown to end users."},"category":{"type":"string","description":"Optional category/group for the column."},"format":{"type":"string","description":"Optional .NET format (e.g. N0, N2, d)."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"Column data type."},"is_aggregate":{"type":"boolean","description":"True if the expression is itself an aggregate (e.g. SUM(...))."}},"required":["table_name","column_name"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_add_column.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0004-1111-4aaa-bbbb-d5e000000004</GUID>
       <Name>datasource_set_column</Name>
-      <ProgressLabel>Updating column display</ProgressLabel>
       <Description>Updates the display properties of an existing metadata column: display name, category, format, or type.
 Cosmetic — reports bind columns by GUID, so this never breaks references. Identify the column by column_guid (preferred) or table_name + column_name.</Description>
+      <ProgressLabel>Updating column display</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the column to update (from datasource_get_detail)."},"table_name":{"type":"string","description":"Table name/alias (used with column_name when column_guid is not given)."},"column_name":{"type":"string","description":"SQL column name (used with table_name when column_guid is not given)."},"display_name":{"type":"string","description":"New friendly display name."},"category":{"type":"string","description":"New category/group."},"format":{"type":"string","description":"New .NET format (e.g. N0, N2, d)."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"New column data type."}},"required":[]}</ParametersSchema>
       <ExecutionScriptFile>datasource_set_column.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0005-1111-4aaa-bbbb-d5e000000005</GUID>
       <Name>datasource_manage_enum</Name>
-      <ProgressLabel>Configuring enumerated list {name}</ProgressLabel>
       <Description>Creates an enumerated list (a set of allowed values) on a data source and optionally attaches it to a column.
 action=add creates a static list (optionally seeded with values); action=create_from_column builds a dynamic list from a column's distinct values.
 Use assign_to_column_guid to attach the enum to a column so its restrictions show a dropdown.</Description>
+      <ProgressLabel>Configuring enumerated list {name}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"action":{"type":"string","enum":["add","create_from_column"],"description":"add: static list. create_from_column: dynamic list from a column's distinct values."},"name":{"type":"string","description":"Display name of the enumerated list."},"column_guid":{"type":"string","description":"For create_from_column: the source column GUID (from datasource_get_detail)."},"values":{"type":"array","items":{"type":"string"},"description":"For action=add: optional initial values."},"assign_to_column_guid":{"type":"string","description":"Optional: column GUID to attach this enum to."}},"required":[]}</ParametersSchema>
       <ExecutionScriptFile>datasource_manage_enum.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0007-1111-4aaa-bbbb-d5e000000007</GUID>
       <Name>datasource_set_column_sql</Name>
-      <ProgressLabel>Changing the SQL of a column</ProgressLabel>
       <Description>Changes a column's underlying SQL expression, type, or aggregate flag.
 HIGH IMPACT: this changes results in EVERY report that uses the column. You MUST first call datasource_find_usage, show the affected reports to the user, get explicit approval, then call this with confirm=true.</Description>
+      <ProgressLabel>Changing the SQL of a column</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the column to change (from datasource_get_detail)."},"sql":{"type":"string","description":"New SQL name or expression for the column."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"New column data type."},"is_aggregate":{"type":"boolean","description":"Whether the expression is an aggregate."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the change shown by datasource_find_usage."}},"required":["column_guid","confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_set_column_sql.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0008-1111-4aaa-bbbb-d5e000000008</GUID>
       <Name>datasource_apply_join</Name>
-      <ProgressLabel>Applying a join</ProgressLabel>
       <Description>Adds or updates a join between two tables of a SQL data source.
 A wrong join skews results across reports — review it with the user first, then call with confirm=true.
 Pass join_guid to update an existing join; omit it to add a new one (both left_table and right_table required).</Description>
+      <ProgressLabel>Applying a join</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"left_table":{"type":"string","description":"Name or alias of the left table."},"right_table":{"type":"string","description":"Name or alias of the right table."},"clause":{"type":"string","description":"Join clause, e.g. Orders.CustomerID = Customers.CustomerID."},"join_type":{"type":"string","enum":["Inner","LeftOuter","RightOuter","Cross"],"description":"Join type. Default LeftOuter when omitted on a new join."},"is_bidirectional":{"type":"boolean","description":"Whether the join can be used in both directions. Default true."},"join_guid":{"type":"string","description":"GUID of an existing join to update. Omit to add a new join."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has reviewed the join."}},"required":["confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_apply_join.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a0009-1111-4aaa-bbbb-d5e000000009</GUID>
       <Name>datasource_remove</Name>
-      <ProgressLabel>Removing {object_type} from the data source</ProgressLabel>
       <Description>Removes a table, column, join, or enum from a data source.
 Can break reports that use the removed object. You MUST first call datasource_find_usage, show the affected reports, get explicit approval, then call this with confirm=true.
 Identify the object by guid (preferred) or name.</Description>
+      <ProgressLabel>Removing {object_type} from the data source</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"object_type":{"type":"string","enum":["table","column","join","enum"],"description":"Kind of object to remove."},"guid":{"type":"string","description":"GUID of the object to remove (from datasource_get_detail)."},"name":{"type":"string","description":"Name of the object to remove (used when guid is not given)."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the removal shown by datasource_find_usage."}},"required":["object_type","confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_remove.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>5e1a000a-1111-4aaa-bbbb-d5e00000000a</GUID>
       <Name>datasource_refresh_schema</Name>
-      <ProgressLabel>Refreshing the data source schema</ProgressLabel>
       <Description>Re-reads the database schema into the source's dynamic-column tables (adds new columns, updates types, DROPS columns no longer in the database).
 Standard (non-dynamic) tables are not affected. Can change reports — you MUST first call datasource_find_usage, get explicit approval, then call with confirm=true.
 Pass table_name to refresh a single table, or omit to refresh all dynamic tables.</Description>
+      <ProgressLabel>Refreshing the data source schema</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Optional: name/alias of a single dynamic table to refresh. Omit to refresh all dynamic tables."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the refresh."}},"required":["confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_refresh_schema.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
@@ -349,12 +349,12 @@ Pass table_name to refresh a single table, or omit to refresh all dynamic tables
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6072</GUID>
       <Name>build-report-from-metadata</Name>
-      <ProgressLabel>Preparing to build a report from metadata</ProgressLabel>
       <Description>Create a report using the data source's metadata columns (the default report type):
 lists, search reports, totals/counts/averages grouped by dimensions, date-filtered and pivot/cross-tab reports, with optional charts.
 Builds the report XML and creates it.
 Load this whenever the user asks to create, build, save, or generate a report and the query does NOT require raw SQL.
 For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
+      <ProgressLabel>Preparing to build a report from metadata</ProgressLabel>
       <InstructionsFile>build-report-from-metadata.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
@@ -369,11 +369,11 @@ For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6071</GUID>
       <Name>build-report-from-sql</Name>
-      <ProgressLabel>Preparing to build a report from SQL</ProgressLabel>
       <Description>Create a new report backed by a raw SQL query:
 explore the data source, confirm the schema, validate the SQL, then create the report.
 Load this only when the user supplies SQL or the query needs window functions, CTEs, subqueries, UNION, or joins not defined in the source metadata.
 For ordinary aggregation/grouping/filtering, use build-report-from-metadata instead.</Description>
+      <ProgressLabel>Preparing to build a report from SQL</ProgressLabel>
       <InstructionsFile>build-report-from-sql.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
@@ -388,11 +388,11 @@ For ordinary aggregation/grouping/filtering, use build-report-from-metadata inst
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6073</GUID>
       <Name>build-nosql-report</Name>
-      <ProgressLabel>Preparing to build a NoSQL report</ProgressLabel>
       <Description>Create a report on a NoSQL / MongoDB data source (one marked "/ NoSQL" by datasource_list).
 Covers the rules specific to NoSQL:
 never write SQL, inspect fields with database_get_columns/get_sample_values, always create via the metadata XML, and use the column's RAW field name (not Table.Column) for element and restriction names.
 Load this whenever the target source is NoSQL.</Description>
+      <ProgressLabel>Preparing to build a NoSQL report</ProgressLabel>
       <InstructionsFile>build-nosql-report.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
@@ -407,10 +407,10 @@ Load this whenever the target source is NoSQL.</Description>
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6074</GUID>
       <Name>style-report-view</Name>
-      <ProgressLabel>Preparing to style the report view</ProgressLabel>
       <Description>Change how an already-saved report renders, in place, without rewriting it:
 make a chart horizontal or stacked, hide the legend, set a chart title, switch a pie to a doughnut, or adjust any view parameter.
 Load this when the user asks to restyle or reconfigure the chart/view of an existing report.</Description>
+      <ProgressLabel>Preparing to style the report view</ProgressLabel>
       <InstructionsFile>style-report-view.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
@@ -421,10 +421,10 @@ Load this when the user asks to restyle or reconfigure the chart/view of an exis
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6075</GUID>
       <Name>schedule-report-delivery</Name>
-      <ProgressLabel>Preparing to schedule the report delivery</ProgressLabel>
       <Description>Configure delivery and automation for an existing report:
 add or remove folder, email, or FTP/SFTP outputs and set recurring or one-time schedules (daily, weekly, monthly, once).
 Load this when the user wants to save, email, upload, schedule, automate, or unschedule a report.</Description>
+      <ProgressLabel>Preparing to schedule the report delivery</ProgressLabel>
       <InstructionsFile>schedule-report-delivery.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
@@ -436,10 +436,10 @@ Load this when the user wants to save, email, upload, schedule, automate, or uns
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6076</GUID>
       <Name>analyze-report-data</Name>
-      <ProgressLabel>Preparing to analyze the report data</ProgressLabel>
       <Description>Answer a business data question from published reports:
 find the most relevant report, execute it, and summarize the live results in a clear, non-technical way.
 Load this when the user asks a data question ("what were the sales last quarter", "top customers", "summarize monthly orders") rather than to build or configure a report.</Description>
+      <ProgressLabel>Preparing to analyze the report data</ProgressLabel>
       <InstructionsFile>analyze-report-data.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
@@ -450,10 +450,10 @@ Load this when the user asks a data question ("what were the sales last quarter"
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6077</GUID>
       <Name>troubleshoot-with-logs</Name>
-      <ProgressLabel>Preparing to troubleshoot with the logs</ProgressLabel>
       <Description>Diagnose server and report problems using the event, execution, and schedule logs together with the System check reports:
 errors, failed logins, slow or failing executions, and scheduler issues.
 Load this when the user reports something broken, missing, or failing and wants to know why.</Description>
+      <ProgressLabel>Preparing to troubleshoot with the logs</ProgressLabel>
       <InstructionsFile>troubleshoot-with-logs.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
@@ -464,9 +464,9 @@ Load this when the user reports something broken, missing, or failing and wants 
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6078</GUID>
       <Name>audit-security-and-activity</Name>
-      <ProgressLabel>Preparing to audit security and activity</ProgressLabel>
       <Description>Answer questions about access rights, user activity, and security/audit events by running the built-in System reports (Security Summary, Audit - Search, Login Failures, Users Activity, Reports Inventory, etc.).
 Load this for "who can access what", "recent login failures", "user activity", and similar audit questions.</Description>
+      <ProgressLabel>Preparing to audit security and activity</ProgressLabel>
       <InstructionsFile>audit-security-and-activity.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
@@ -476,10 +476,10 @@ Load this for "who can access what", "recent login failures", "user activity", a
     <AISkillConfiguration>
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6079</GUID>
       <Name>manage-report-files</Name>
-      <ProgressLabel>Preparing to manage report files</ProgressLabel>
       <Description>Delete, rename, move, or copy a report file (or any repository file) safely:
 list files to confirm the exact path first, then perform the file operation.
 Load this when the user explicitly asks to delete, rename, move, or copy a report file — not to change its content, output, or schedule.</Description>
+      <ProgressLabel>Preparing to manage report files</ProgressLabel>
       <InstructionsFile>manage-report-files.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
@@ -489,11 +489,11 @@ Load this when the user explicitly asks to delete, rename, move, or copy a repor
     <AISkillConfiguration>
       <GUID>5e1a5c11-1111-4aaa-bbbb-d5e0000c5c11</GUID>
       <Name>manage-data-source</Name>
-      <ProgressLabel>Preparing to manage the data source</ProgressLabel>
       <Description>Edit the data source / metadata model itself (not a report):
 add a table or derived column, rename/reformat a column, build an enumerated list, create or fix a join, change a column's SQL, or remove/refresh metadata.
 Because a data source is shared by many reports, destructive changes first check report usage and require confirmation.
 Load this when the user asks to change the metadata model, add tables/columns, define enums, or set up joins.</Description>
+      <ProgressLabel>Preparing to manage the data source</ProgressLabel>
       <InstructionsFile>manage-data-source.md</InstructionsFile>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>

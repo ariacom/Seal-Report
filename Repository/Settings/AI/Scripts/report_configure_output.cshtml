@@ -159,6 +159,35 @@
             return;
         }
 
+        // ── SHAREPOINT branch ────────────────────────────────────────────────────
+        if (string.Equals(deviceType, "sharepoint", StringComparison.OrdinalIgnoreCase))
+        {
+            if (output == null)
+            {
+                var spDevice = string.IsNullOrEmpty(deviceName)
+                    ? tool.GetAvailableDevices().OfType<OutputSharePointDevice>().FirstOrDefault()
+                    : tool.GetAvailableDevices().OfType<OutputSharePointDevice>().FirstOrDefault(d => string.Equals(d.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+                if (spDevice == null)
+                    { tool.ExecResult = string.IsNullOrEmpty(deviceName) ? "Error: no SharePoint device available (none configured in the repository or allowed by your security)." : $"Error: no SharePoint device named '{deviceName}' available (not found or not allowed by your security)."; return; }
+                output = report.AddOutput(spDevice);
+            }
+
+            if (!string.IsNullOrEmpty(outputName)) output.Name = outputName;
+
+            // For a SharePoint output, folder_path is the folder in the document library (default '/').
+            if (!string.IsNullOrEmpty(folderPath)) output.FolderPath = folderPath;
+            else if (string.IsNullOrEmpty(output.FolderPath)) output.FolderPath = "/";
+
+            if (!string.IsNullOrEmpty(fileName)) output.FileName = fileName;
+
+            var paramSp = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
+            if (paramSp != null) { paramSp.Value = format; paramSp.CustomValue = true; }
+
+            report.SaveToFile();
+            tool.ExecResult = $"SharePoint output configured on '{path}': device='{output.Device?.Name}', libraryFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            return;
+        }
+
         // ── FOLDER branch (default) ───────────────────────────────────────────────
         if (string.IsNullOrEmpty(folderPath) && output == null)
             { tool.ExecResult = "Error: folder_path is required for device_type=folder."; return; }

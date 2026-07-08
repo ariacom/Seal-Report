@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -36,6 +36,7 @@ namespace Seal.Forms
         SealSecurity _security;
         OutputEmailDevice _emailDevice;
         OutputFileServerDevice _fileServerDevice;
+        OutputSharePointDevice _sharePointDevice;
         ReportModel _model;
         SealServerConfiguration _configuration;
 
@@ -53,6 +54,7 @@ namespace Seal.Forms
             _security = context.Instance as SealSecurity;
             _emailDevice = context.Instance as OutputEmailDevice;
             _fileServerDevice = context.Instance as OutputFileServerDevice;
+            _sharePointDevice = context.Instance as OutputSharePointDevice;
             _model = context.Instance as ReportModel;
             _configuration = context.Instance as SealServerConfiguration;
         }
@@ -105,6 +107,13 @@ namespace Seal.Forms
                     if (context.PropertyDescriptor.Name == "HelperTestConnection")
                     {
                         _fileServerDevice.TestConnection();
+                    }
+                }
+                else if (_sharePointDevice != null)
+                {
+                    if (context.PropertyDescriptor.Name == "HelperTestConnection")
+                    {
+                        _sharePointDevice.TestConnection();
                     }
                 }
                 else if (_metaConnection != null)
@@ -490,12 +499,10 @@ namespace Seal.Forms
                         user.WebPassword = _security.TestPassword;
                         if (_security.TestCurrentWindowsUser) user.WebPrincipal = new WindowsPrincipal(WindowsIdentity.GetCurrent());
                         user.Authenticate();
-                        if (!string.IsNullOrEmpty(user.SecurityCode) && string.IsNullOrEmpty(user.Security.TwoFACheckScript)) throw new Exception("The 'Two-Factor Authentication Check Script' is not defined.");
-
                         if (!string.IsNullOrEmpty(user.SecurityCode))
                         {
                             user.WebSecurityCode = user.SecurityCode;
-                            RazorHelper.CompileExecute(user.Security.TwoFACheckScript, user);
+                            RazorHelper.CompileExecute(user.Security.TwoFACheckScriptEffective, user);
                         }
 
                         try

@@ -420,10 +420,38 @@ a {
     z-index: 100000 !important;
 }
 
-@media (min-width: 768px) {
-    #wait-dialog > .modal-dialog {
-        width: 300px;
-    }
+#wait-dialog .modal-dialog {
+    width: fit-content;
+    max-width: calc(100% - 2rem);
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#wait-dialog .modal-content {
+    width: auto; /* .modal-content is width:100%, which collapses the fit-content dialog to 0 */
+    border: none;
+    border-radius: 50rem; /* pill */
+    box-shadow: 0 0.5rem 1.75rem rgba(0, 0, 0, 0.25);
+}
+
+#wait-dialog .modal-body {
+    display: flex;
+    align-items: center;
+    gap: 0.75rem;
+    padding: 0.75rem 1.75rem 0.75rem 1.25rem;
+    white-space: nowrap;
+}
+
+#wait-dialog .spinner-border {
+    width: 1.75rem;
+    height: 1.75rem;
+    border-width: 0.22em;
+    flex-shrink: 0;
+}
+
+#wait-dialog .wait-dialog-label {
+    font-size: 1.15rem;
+    font-weight: 600;
 }
 
 .properties-label {
@@ -1296,6 +1324,14 @@ body.ai-resizing #footer-div {
     border-left: 2px solid #eee;
 }
 
+/* Muted token/cost usage line under the answer */
+.ai-panel-usage {
+    align-self: flex-start;
+    margin: 2px 0 0;
+    font-size: 11px;
+    color: #aaa;
+}
+
 /* Cancelled message */
 .ai-panel-bubble.ai.cancelled {
     color: #bbb;
@@ -1333,6 +1369,49 @@ body.ai-resizing #footer-div {
     font-family: Consolas, "Courier New", monospace;
     color: #c0341d;
     word-break: break-all;
+}
+
+/* Markdown tables in AI responses, with hover export toolbar (copy for Excel / CSV) */
+.ai-table-wrap {
+    position: relative;
+    margin: 6px 0;
+}
+.ai-table-actions {
+    position: absolute;
+    top: -8px;
+    right: 0;
+    display: none;
+    gap: 1px;
+    padding: 1px 2px;
+    background: #fff;
+    border: 1px solid #e3e3e6;
+    border-radius: 6px;
+    box-shadow: 0 1px 4px rgba(0, 0, 0, 0.12);
+    white-space: nowrap;
+    z-index: 4;
+}
+.ai-table-wrap:hover .ai-table-actions { display: flex; }
+.ai-table-btn { font-size: 13px; padding: 4px 7px; }
+.ai-table-scroll { overflow-x: auto; }
+.ai-panel-bubble.ai .ai-table {
+    border-collapse: collapse;
+    font-size: 12px;
+    line-height: 1.4;
+}
+.ai-panel-bubble.ai .ai-table th,
+.ai-panel-bubble.ai .ai-table td {
+    border: 1px solid #e0e0e4;
+    padding: 3px 8px;
+    background: #fff;
+    text-align: left;
+    vertical-align: top;
+}
+.ai-panel-bubble.ai .ai-table th {
+    background: #ececf0;
+    font-weight: 600;
+}
+.ai-panel-bubble.ai .ai-table tbody tr:nth-child(even) td {
+    background: #fafafb;
 }
 
 /* Execute report actions — row of buttons below an AI bubble */

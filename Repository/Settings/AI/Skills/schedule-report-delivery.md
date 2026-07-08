@@ -1,8 +1,8 @@
 # Schedule report delivery (outputs & schedules)
 
 Load this skill when the user wants to configure how an **existing** report is
-delivered and when it runs — save to a folder, email it, upload it to FTP/SFTP,
-or run it on a recurring or one-time schedule. This skill only configures outputs
+delivered and when it runs — save to a folder, email it, upload it to FTP/SFTP
+or SharePoint, or run it on a recurring or one-time schedule. This skill only configures outputs
 and schedules; it never creates or edits report content.
 
 ## Trigger phrases
@@ -11,6 +11,7 @@ and schedules; it never creates or edits report content.
 | "save to a folder", "export to C:\…", "write to disk", "output as PDF/Excel" | `report_configure_output` with `device_type=folder` |
 | "email this report to…", "send by email", "email results to…" | `report_configure_output` with `device_type=email` |
 | "upload to FTP", "send to SFTP", "push to file server" | `report_configure_output` with `device_type=ftp` |
+| "upload to SharePoint", "put in the document library", "send to the SharePoint site" | `report_configure_output` with `device_type=sharepoint` |
 | "run every day", "schedule daily at 8am", "every Monday", "automate this report" | `report_configure_output` (if no output yet) then `report_configure_schedule` |
 | "run once on [date]", "execute tomorrow at 6am" | `report_configure_output` + `report_configure_schedule` with `type=once` |
 | "delete the output", "remove the output" | `report_configure_output` with `action=delete` |
@@ -44,7 +45,13 @@ and schedules; it never creates or edits report content.
    - `output_format` — format of the attached file (default `Excel`).
 
    **FTP output** (`device_type=ftp`):
-   - `ftp_folder_path` — remote directory (e.g. `/reports/daily`).
+   - `folder_path` — remote directory (e.g. `/reports/daily`, default `/`).
+   - `file_name` — same template rules, **no extension**.
+   - `output_format` — format of the uploaded file (default `Excel`).
+
+   **SharePoint output** (`device_type=sharepoint`):
+   - `folder_path` — folder in the document library (e.g. `/Monthly Reports`,
+     default `/` for the library root).
    - `file_name` — same template rules, **no extension**.
    - `output_format` — format of the uploaded file (default `Excel`).
 

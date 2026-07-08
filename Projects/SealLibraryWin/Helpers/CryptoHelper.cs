@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using Microsoft.AspNetCore.Cryptography.KeyDerivation;
 using QuestPDF.Infrastructure;
@@ -148,9 +148,24 @@ namespace Seal.Helpers
             if (useMachineKeyStore) csp.Flags = CspProviderFlags.UseMachineKeyStore;
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
             rsa.PersistKeyInCsp = true;
-            byte[] encryptedAsBytes = rsa.Encrypt(Encoding.UTF8.GetBytes(text), true);
-            string encryptedAsBase64 = Convert.ToBase64String(encryptedAsBytes);
-            return encryptedAsBase64;
+            //RSA-OAEP(SHA-1) can only encrypt KeySize/8 - 42 bytes at once: process by blocks
+            byte[] bytes = Encoding.UTF8.GetBytes(text);
+            int maxBlockSize = rsa.KeySize / 8 - 42;
+            using (var result = new MemoryStream())
+            {
+                int offset = 0;
+                do
+                {
+                    int count = Math.Min(maxBlockSize, bytes.Length - offset);
+                    byte[] block = new byte[count];
+                    Array.Copy(bytes, offset, block, 0, count);
+                    byte[] encryptedBlock = rsa.Encrypt(block, true);
+                    result.Write(encryptedBlock, 0, encryptedBlock.Length);
+                    offset += count;
+                }
+                while (offset < bytes.Length);
+                return Convert.ToBase64String(result.ToArray());
+            }
         }
 
         public static string DecryptWithRSAContainer(string text, string containerName, bool useMachineKeyStore)
@@ -162,9 +177,21 @@ namespace Seal.Helpers
             RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
             rsa.PersistKeyInCsp = true;
 
-            byte[] decryptBytes = rsa.Decrypt(Convert.FromBase64String(text), true);
-            string secretMessage = Encoding.Default.GetString(decryptBytes);
-            return secretMessage;
+            //Decrypt by blocks of KeySize/8 bytes (single block for values encrypted before the block support)
+            byte[] bytes = Convert.FromBase64String(text);
+            int blockSize = rsa.KeySize / 8;
+            using (var result = new MemoryStream())
+            {
+                for (int offset = 0; offset < bytes.Length; offset += blockSize)
+                {
+                    int count = Math.Min(blockSize, bytes.Length - offset);
+                    byte[] block = new byte[count];
+                    Array.Copy(bytes, offset, block, 0, count);
+                    byte[] decryptedBlock = rsa.Decrypt(block, true);
+                    result.Write(decryptedBlock, 0, decryptedBlock.Length);
+                }
+                return Encoding.UTF8.GetString(result.ToArray());
+            }
         }
 
 

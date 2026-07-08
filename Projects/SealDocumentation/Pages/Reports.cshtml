@@ -9,7 +9,7 @@
         <!-- end section -->
         <div class="row">
             <div class="col-md-3">
-                <nav class="docs-sidebar" data-spy="affix" data-offset-top="100" data-offset-bottom="200" role="navigation">
+                <nav class="docs-sidebar" role="navigation">
                     <ul class="nav">
                         <li>
                             <a href="#lineModels">Models</a>
@@ -42,7 +42,7 @@
                         <li><a href="#lineCopy">Smart Copy</a></li>
                         <li><a href="#lineExecution">Execution Steps</a></li>
                     </ul>
-                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail img-rounded" style="margin-left:20px;" />
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
                     <p style="margin-left:20px;">
                         <strong><a href="#feed">Feed the Seal ?</a></strong><br />
                         <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
@@ -75,7 +75,7 @@
                             <div class="caption">
                                 <b>Report Objects</b>
                             </div>
-                            <img src="images/CD-Report.png" alt="" class="img-thumbnail img-rounded">
+                            <img src="images/CD-Report.svg" alt="" class="img-thumbnail rounded">
                             <div>
                                 <ck>Check also <a href="~/Help/Index.html" target="_blank">Seal Report Library (Seal.Model namespace)</a> for more information</ck>.
                             </div>
@@ -112,7 +112,7 @@
                             <div class="caption">
                                 <b>Report Model Objects</b>
                             </div>
-                            <img src="images/CD-Report Model.png" alt="" class="img-thumbnail img-rounded">
+                            <img src="images/CD-ReportModel.svg" alt="" class="img-thumbnail rounded">
                             <div>
                                 <ck>Check also <a href="~/Help/Index.html" target="_blank">Seal Report Library (Seal.Model namespace)</a> for more information</ck>.
                             </div>
@@ -145,7 +145,7 @@
                                 <div class="caption">
                                     <b>Model components generated for a SQL Data Source</b>
                                 </div>
-                                <img src="images/model-sql.png" alt="" class="img-thumbnail img-rounded">
+                                <img src="images/model-sql.svg" alt="" class="img-thumbnail rounded">
                             </div>
                         </div>
                     </div>
@@ -231,12 +231,12 @@
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 In this sample the <b>Restrictions text</b> contains the restriction on Country and the <b>Aggregate Restrictions text</b> on Amount with the Sum aggregate.
-                                <pre class="brush: sql; highlight: [2,4]">
+                                <pre data-line="2,4"><code class="language-sql">
                                 SELECT Country,SUM(Amount) FROM Orders 
                                 WHERE Country='France' 
                                 GROUP BY Country 
                                 HAVING SUM(Amount)>10)
-                            </pre>
+                            </code></pre>
                             </div>
                             <p>
                                 A restriction inherits from an element, thus several properties are common: <code>Name</code>, <code>Data type</code>, <code>Custom SQL</code>, <code>Custom enumerated list</code>.<br />
@@ -267,6 +267,11 @@
                                 Another method to share restrictions is demontrated in the report:<br />
                                 <a class="btn btn-primary live-sample">Live Sample: 14-Sharing Models and Views properties</a><br />
                             </div>
+                            <p>
+                                <strong>Report Guide</strong><br />
+                                The report <code>Guide</code> property contains an optional HTML text displayed below the prompted restrictions when the report is executed in a browser (<eg>e.g. to explain what the report does and how to fill the input values</eg>).<br />
+                                If the text starts with '@@', it is parsed with Razor (the report being the model). A Razor error in the guide cannot break the report rendering (it is displayed as an alert).
+                            </p>
                             <p>
                                 <strong>Flags 'Value only'</strong><br />
                                 If the <code>Operator</code> is <b>'Value Only'</b>, the SQL generated for the restriction will not include the column name and operator and set only the value.<br />
@@ -381,7 +386,7 @@
                                 <div class="caption">
                                     <b>Model components generated for a LINQ Data Source</b>
                                 </div>
-                                <img src="images/model-linq.png" alt="" class="img-thumbnail img-rounded">
+                                <img src="images/model-linq.svg" alt="" class="img-thumbnail rounded">
                             </div>
                             <p>&nbsp;</p>
                             <p>
@@ -391,7 +396,7 @@
                                 <h4>LINQ Query Sample</h4>
                                 This script is generated for the <code>Excel Employees Objectives</code> model of the report:<br />
                                 <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/201-LINQ Samples CSV-Excel-JSON-XML</a><br />
-                                <pre class="brush: csharp">
+                                <pre><code class="language-csharp">
 @@using System.Data
 @@{
 ReportModel model = Model;
@@ -425,7 +430,7 @@ var query2 = query.Distinct();
 
 model.ResultTable = query2.CopyToDataTable2();
 }
-                    </pre>
+                    </code></pre>
 
                             </div>
                             <div class="bs-callout bs-callout-warning">
@@ -489,8 +494,8 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Report</b>: Root view containing all the code necessary for the report execution.</li>
                                 <li><b>Model</b>: Main view to display a model. Its children are dedicated to view each part of the model result: Page tables, Data tables, Charts, KPI.</li>
                                 <li><b>Model Detail</b>: Show a model as a detailed record. This view works for a model result having a single record.</li>
-                                <li><b>Container</b>: A Boostrap layout container (refer to Bootstrap 3 grid at <a href="https://getbootstrap.com/docs/3.4/css/#grid" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
-                                <li><b>Container Grid Flex</b>: A Grid or Flex layout container (refer to CSS references at <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Basic_concepts_of_grid_layout" target="_blank">https://getbootstrap.com/docs/3.4/css/#grid</a>). </li>
+                                <li><b>Container</b>: A Bootstrap layout container (refer to the Bootstrap grid at <a href="https://getbootstrap.com/docs/5.3/layout/grid/" target="_blank">https://getbootstrap.com/docs/5.3/layout/grid/</a>). </li>
+                                <li><b>Container Grid Flex</b>: A Grid or Flex layout container (refer to CSS references at <a href="https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Basic_concepts_of_grid_layout" target="_blank">https://developer.mozilla.org/en-US/docs/Web/CSS/CSS_grid_layout/Basic_concepts_of_grid_layout</a>). </li>
                                 <li><b>Card</b>: A view to display each model values in a single card.</li>
                                 <li><b>Widget</b>: A container to display a panel with a title, icon and color. A optional report can be executed from the title.</li>
                                 <li><b>Tab Control</b>: A Tab Control container. Only Tab Page children can be defined from this view.</li>
@@ -565,7 +570,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Excel</b>: Generate an XLSX file using the <strong>EPPLus</strong> library.</li>
                                 <li><b>HTML to PDF</b>: Generate a PDF from the HTML Print format using the <strong>PuppeteerSharp</strong> library.</li>
                                 <li><b>Json</b>: Generate a simple Json file.</li>
-                                <li><b>PDF</b>: Generate a PDF file using the <strong>PDFQuest</strong> library and <strong>PuppeteerSharp</strong> library if JavaScript Charts or Gauge are involved.</li>
+                                <li><b>PDF</b>: Generate a PDF file using the <strong>QuestPDF</strong> library and <strong>PuppeteerSharp</strong> library if JavaScript Charts or Gauge are involved.</li>
                                 <li><b>Text</b>: Generate a simple text file.</li>
                                 <li><b>XML</b>: Generate a simple XML file.</li>
                             </ul>
@@ -619,7 +624,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     <div class="row">
                         <div class="col-md-12">
                             <p>
-                                A <strong>Report Output</strong> defines how to generate the report result of a root <strong>View</strong> to an <strong>Output Device</strong> (Folder, File Server or Email).<br />
+                                A <strong>Report Output</strong> defines how to generate the report result of a root <strong>View</strong> to an <strong>Output Device</strong> (Folder, File Server, SharePoint or Email).<br />
                                 A report can have several outputs on different devices.<br>
                             </p>
                             <p>
@@ -661,9 +666,14 @@ model.ResultTable = query2.CopyToDataTable2();
                                     The following protocols are supported: FTP, FTPS, SFTP, SCP.
                                 </li>
                                 <li>
-                                    <b>Email</b>: To send the report result by email through a SMTP server.<br />
+                                    <b>SharePoint</b>: To generate the report result into a document library of a SharePoint Online site (using the Microsoft Graph API).<br />
+                                    SharePoint devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>\Devices\SharePoint</i> Repository sub-folder.<br />
+                                    The device requires a Microsoft Entra ID application registration granted with the <i>Sites.ReadWrite.All</i> or <i>Sites.Selected</i> Microsoft Graph application permission, and supports the authentication with a client secret or a certificate.
+                                </li>
+                                <li>
+                                    <b>Email</b>: To send the report result by email through a SMTP server, SendGrid or Microsoft Graph.<br />
                                     Email devices are edited and configured using the <b>Server Manager</b> and are stored in a file (*.scfx) in the <i>\Devices\EMail</i> Repository sub-folder.<br />
-                                    The configuration contains all parameters required to send an email through a SMTP server.
+                                    The configuration contains all parameters required to send an email with the chosen method (SMTP server, SendGrid API or Microsoft Graph).
                                 </li>
                             </ul>
                             <div class="bs-callout bs-callout-danger">
@@ -758,6 +768,19 @@ model.ResultTable = query2.CopyToDataTable2();
                                 By default use the <i>Default</i> template.<br />
                                 Just add your own template in this folder.
                             </div>
+                            <h4>AI Tasks</h4>
+                            <p>
+                                Dedicated task templates use an <b>AI provider</b> during the report execution:
+                            </p>
+                            <ul>
+                                <li><b>AI Agent</b>: Run an AI agent with its configured tools using a system and user prompt (the response is stored in a report parameter to be used in views or other tasks).</li>
+                                <li><b>AI Summary</b>: Generate a summary of the report data (<eg>e.g. to add an executive summary at the top of the report result</eg>).</li>
+                                <li><b>AI Modify HTML Table</b>: Modify a result table with a prompt (<eg>e.g. to translate, highlight or comment values</eg>).</li>
+                                <li><b>AI Cancel Output</b>: Cancel the report output based on a prompt evaluated against the data (<eg>e.g. do not send the email if the data shows no anomaly</eg>).</li>
+                            </ul>
+                            <p>
+                                <ck>Check the <a href="~/AI">AI Agents</a> page for the providers configuration</ck>. The samples are available in the <i>\Reports\Samples\07-AI Tasks</i> Repository sub-folder.
+                            </p>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Schedule your tasks</h4>
                                 As tasks are part of the report, they can be scheduled as a normal report, even if the model has no element.<br />
@@ -811,7 +834,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 Task script to display the report input values:
-                                <pre class="brush: csharp; highlight: [5,6,7]">
+                                <pre data-line="5,6,7"><code class="language-csharp">
 @@using Seal.Model
 @@{
     ReportTask task = Model;
@@ -820,7 +843,7 @@ model.ResultTable = query2.CopyToDataTable2();
         report.LogMessage("[{0}]={1} Value={2}", restr.DisplayNameEl, restr.DisplayText, restr.FirstValue); //You can use restr.Value1, restr.FinalDate1, restr.EnumValues[0], restr.EnumDisplayValue, restr.FirstStringValue, restr.FirstNumericValue, restr.FirstDateValue
     }
 }
-                                </pre>
+                                </code></pre>
                             </div>
                         </div>
                         <!-- end col -->
@@ -959,10 +982,3 @@ model.ResultTable = query2.CopyToDataTable2();
     <!-- // end container -->
 </div>
 <!-- end wrapper -->
-@section scripts {
-    <script>
-        $(document).ready(function () {
-            $("#reports_nav").addClass("active");
-        });
-    </script>
-}

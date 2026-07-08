@@ -482,3 +482,5 @@ Report;Show Restrictions;Einschränkungen einblenden
 Report;Hide Restrictions;Einschränkungen ausblenden
 Report;Show Guide;Anleitung einblenden
 Report;Hide Guide;Anleitung ausblenden
+WebJS;Copy for Excel;Für Excel kopieren
+WebJS;Download CSV;CSV herunterladen

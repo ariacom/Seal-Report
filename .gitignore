@@ -45,6 +45,7 @@ TestFiles/
 Repository/Databases/Audit.sqlite
 work/
 Repository/Sources/_*.scfx
+Repository/Sources/_*.xml
 Repository/Devices/Email/_*.scfx
 Repository/Devices/FileServer/_*.scfx
 [Pp]ackages/

@@ -157,7 +157,11 @@ function scrollMessages(printLayout) {
 
 function setMessageHeight() {
     setTimeout(function () {
-        var offset = $("#progress_panel").height() + $("#alert_status").height() + $("#restrictions_div").height() + 110;
+        //jQuery reports the would-be height of display:none elements, so only count elements actually shown
+        function visibleHeight(selector) { var $e = $(selector); return $e.is(":visible") ? $e.height() : 0; }
+        //in the left/right layout (#content_div present) the restrictions panel is a side column and does not reduce the vertical space
+        var restrictionsOffset = $("#content_div").length ? 0 : visibleHeight("#restrictions_div");
+        var offset = visibleHeight("#progress_panel") + visibleHeight("#alert_status") + restrictionsOffset + 110;
         var height = (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - offset);
         $("#execution_messages").css("height", height + "px");
     }, 100);

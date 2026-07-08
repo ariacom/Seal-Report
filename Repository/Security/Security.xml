@@ -34,6 +34,7 @@
 }</Script>
   <TwoFAGenerationScript />
   <TwoFACheckScript />
+  <EnableResetPassword>true</EnableResetPassword>
   <Groups>
     <SecurityGroup>
       <GUID>13d763a0d8514f9fbb18e4459694fedc</GUID>
@@ -86,7 +87,6 @@
         </SecurityFolder>
       </Folders>
       <Weight>1</Weight>
-      <EditProfile>false</EditProfile>
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
@@ -327,7 +327,7 @@
       <Id>ex</Id>
       <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
       <Name />
-      <Email />
+      <Email>ex@dummy.com</Email>
       <Phone />
       <GroupIds>
         <string>01cf571d32a84145adf20aaa28f40449</string>

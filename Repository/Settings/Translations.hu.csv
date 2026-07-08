@@ -482,3 +482,5 @@ Report;Show Restrictions;Korlátozások megjelenítése
 Report;Hide Restrictions;Korlátozások elrejtése
 Report;Show Guide;Útmutató megjelenítése
 Report;Hide Guide;Útmutató elrejtése
+WebJS;Copy for Excel;Másolás Excelbe
+WebJS;Download CSV;CSV letöltése

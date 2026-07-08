@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -41,9 +41,10 @@ namespace Seal.Model
                 GetProperty("PostScript").SetIsBrowsable(true);
                 GetProperty("ViewParameters").SetIsBrowsable(true);
                 
-                GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice);
+                GetProperty("FolderPath").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice || Device is OutputSharePointDevice);
                 if (Device is OutputFileServerDevice) GetProperty("FolderPath").SetDescription("Path of the folder used to generate the report result.");
-                GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice);
+                if (Device is OutputSharePointDevice) GetProperty("FolderPath").SetDescription("Path of the folder in the document library used to generate the report result.");
+                GetProperty("FileName").SetIsBrowsable(Device is OutputFolderDevice || Device is OutputFileServerDevice || Device is OutputSharePointDevice);
 
                 GetProperty("EmailSubject").SetIsBrowsable(Device is OutputEmailDevice);
                 GetProperty("EmailBody").SetIsBrowsable(Device is OutputEmailDevice);

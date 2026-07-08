@@ -1,0 +1,13 @@
+<?xml version="1.0"?>
+<OutputSharePointDevice xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>c7a90d3e-5f21-4b84-9a06-2e8d4b7c1f53</GUID>
+  <Name>SharePoint Device</Name>
+  <TenantId>00000000-0000-0000-0000-000000000000</TenantId>
+  <ClientId>00000000-0000-0000-0000-000000000000</ClientId>
+  <ClientSecret />
+  <SiteUrl>https://contoso.sharepoint.com/sites/Reports</SiteUrl>
+  <LibraryName>Documents</LibraryName>
+  <Directories>/
+/Monthly Reports</Directories>
+  <ProcessingScript />
+</OutputSharePointDevice>

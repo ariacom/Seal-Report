@@ -146,6 +146,70 @@
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>8457637b-d72b-48bf-8fb1-118adfeef0be</MetaColumnGUID>
         </ReportElement>
+        <ReportElement>
+          <GUID>85bc2dca-3616-4988-b882-139927c98fc5</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>46d8eac2-7e8a-483f-8f1b-155f7f4c102e</GUID>
+          <Name>sr_audit.ai_provider</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>8403ec39-2c44-492b-843e-872cf6cb4e6a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3e74fbca-c99a-42b5-b966-ededc625a59f</GUID>
+          <Name>sr_audit.ai_model</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>aa8e3e36-d9a1-4ba3-b33b-72127fdd8fc5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8b68ce37-1267-427b-b88f-3b1455284d67</GUID>
+          <Name>sr_audit.ai_input_tokens</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>3accb676-4680-41ed-903d-af8d14cd2e9a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8441ba40-2236-42c1-82b4-5534f3f5528b</GUID>
+          <Name>sr_audit.ai_output_tokens</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4da92514-cca7-4eab-9044-aad9ef70cca5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f8aeda94-1899-4469-afac-735b0f953b90</GUID>
+          <Name>sr_audit.ai_calls</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>935a98a6-ab56-4260-8e40-9d396f19c874</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f7f6b605-e27d-4d3f-9ea3-c224e7fac5cc</GUID>
+          <Name>sr_audit.ai_tool_calls</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>581c6d65-ecb7-4a74-badc-091a22e5113d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6c84321d-2ab1-493b-bca5-047c1332cef1</GUID>
+          <Name>sr_audit.ai_message_count</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8fd152e4-e632-4db9-a45d-ed60459109ba</MetaColumnGUID>
+        </ReportElement>
       </Elements>
       <Restriction>[70e1c29d-741a-4cdf-9846-a061c9ba3078]
 AND [806a8575-2465-4066-96a0-0e8085daf99b]

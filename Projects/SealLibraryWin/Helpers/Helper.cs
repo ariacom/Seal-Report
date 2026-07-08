@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -1031,12 +1031,12 @@ namespace Seal.Helpers
                 command.CommandText = sql;
                 adapter = new SqlDataAdapter(command);
             }
-            else if (connection is MySql.Data.MySqlClient.MySqlConnection)
+            else if (connection is MySqlConnector.MySqlConnection)
             {
-                MySql.Data.MySqlClient.MySqlCommand command = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+                MySqlConnector.MySqlCommand command = ((MySqlConnector.MySqlConnection)connection).CreateCommand();
                 command.CommandTimeout = 0;
                 command.CommandText = sql;
-                adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(command);
+                adapter = new MySqlConnector.MySqlDataAdapter(command);
             }
             else if (connection is OracleConnection)
             {
@@ -1121,7 +1121,7 @@ namespace Seal.Helpers
             }
             else if (connectionType == ConnectionType.MySQL)
             {
-                connection = new MySql.Data.MySqlClient.MySqlConnection(connectionString);
+                connection = new MySqlConnector.MySqlConnection(connectionString);
             }
             else if (connectionType == ConnectionType.Oracle)
             {

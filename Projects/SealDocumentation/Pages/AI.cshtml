@@ -1,0 +1,252 @@
+﻿@page
+@{
+    ViewData["Title"] = "AI Agents";
+}
+
+<div id="wrapper">
+    <div class="container">
+        <section id="top" class="section docs-heading"></section>
+        <!-- end section -->
+        <div class="row">
+            <div class="col-md-3">
+                <nav class="docs-sidebar" role="navigation">
+                    <ul class="nav">
+                        <li><a href="#lineProviders">AI Providers</a></li>
+                        <li><a href="#lineAgents">The Agents</a></li>
+                        <li><a href="#lineSecurity">Security</a></li>
+                        <li><a href="#lineSemantic">The Semantic Layer</a></li>
+                        <li><a href="#lineTasks">AI Tasks in Reports</a></li>
+                        <li><a href="#lineCustom">Customization</a></li>
+                    </ul>
+                    <img src="Images/Seal-Report-Logo.png" class="img-thumbnail rounded" style="margin-left:20px;" />
+                    <p style="margin-left:20px;">
+                        <strong><a href="#feed">Feed the Seal ?</a></strong><br />
+                        <iframe src="https://ghbtns.com/github-btn.html?user=ariacom&repo=Seal-Report&type=star&count=true&size=large" frameborder="0" scrolling="0" width="160px" height="30px"></iframe>
+                    </p>
+                </nav>
+            </div>
+            <div class="col-md-9">
+                <section class="welcome">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">AI Agents<hr></h2>
+                            <div class="row">
+                                <div class="col-md-12 full">
+                                    <div>
+                                        <p>
+                                            The <b>Web Report Server</b> embeds an <strong>AI chat panel</strong>: users talk to <strong>role-based AI agents</strong> in their own language.<br />
+                                            The agents call real tools against the repository (list data sources, create and execute reports, read logs, edit metadata, etc.) and show their progress steps live in the chat.
+                                        </p>
+                                    </div>
+                                    <div class="bs-callout bs-callout-danger">
+                                        The AI agents use <b>your own AI provider</b>: no provider or key is bundled with the product.<br />
+                                        With <b>Ollama</b>, a fully local model can be used: no data leaves your server.
+                                    </div>
+                                </div>
+                            </div>
+                            <!-- end row -->
+                        </div>
+                    </div>
+                </section>
+                <section id="lineProviders" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">AI Providers <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Run the <b>Server Manager</b> and select the menu <srmenu>Configuration->Configure AI...</srmenu> to configure the AI Providers, Tools and Agents.<br /><br />
+                                An <strong>AI Provider</strong> is defined with its <code>Type</code>, its <code>Endpoint</code>, an <code>API Key</code>, a <code>Model</code> name and optional generation parameters (temperature, max tokens).<br />
+                                Four provider types are supported:
+                            </p>
+                            <ul>
+                                <li><b>OpenAI</b>: OpenAI API or any OpenAI-compatible endpoint.</li>
+                                <li><b>Azure</b>: Azure OpenAI deployments.</li>
+                                <li><b>Anthropic</b>: Claude models.</li>
+                                <li><b>Ollama</b>: local models running on your own hardware (offline).</li>
+                            </ul>
+                            <p>
+                                The AI configuration is stored in the <i>/Settings/AI</i> Repository sub-folder.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                Several providers can be configured (<eg>e.g. a hosted model for the report designers, a local model for the analysts</eg>).
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineAgents" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">The Agents <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                Each agent is dedicated to a role, with its own system prompt and tool set:
+                            </p>
+                            <table class="table table-striped">
+                                <thead>
+                                    <tr>
+                                        <th>Agent</th>
+                                        <th>For</th>
+                                        <th>What it does</th>
+                                        <th>Sample prompts</th>
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    <tr>
+                                        <td><b>Report Designer</b></td>
+                                        <td>Report authors</td>
+                                        <td>Designs and builds reports from natural-language requests: from the metadata model, from a SQL statement or on NoSQL/LINQ sources. Styles the report views.</td>
+                                        <td><i>"Create a report showing sales by country with a bar chart"</i>, <i>"What columns are in the Orders table?"</i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Data Analyst</b></td>
+                                        <td>End users</td>
+                                        <td>Answers data questions by running existing reports and exploring data sources <b>read-only</b>.</td>
+                                        <td><i>"What were total sales last month?"</i>, <i>"Show me the top 10 customers by revenue"</i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Schedule &amp; Output</b></td>
+                                        <td>Power users</td>
+                                        <td>Configures report delivery and automation: outputs, devices and schedules.</td>
+                                        <td><i>"Create an Excel output for this report saved in my Personal folder"</i>, <i>"Email this report every Monday at 8am"</i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>System Admin</b></td>
+                                        <td>Administrators</td>
+                                        <td>Handles administration and troubleshooting: event logs, security and activity audit, file management.</td>
+                                        <td><i>"Show errors in today's event log"</i>, <i>"Which schedules failed this week?"</i></td>
+                                    </tr>
+                                    <tr>
+                                        <td><b>Data Source Manager</b></td>
+                                        <td>Data modelers</td>
+                                        <td>Manages the data source metadata model: adds tables, columns, enumerated lists and joins, edits or removes metadata, checks which reports are impacted before any change.</td>
+                                        <td><i>"Add a Yes/No enumerated list on Orders.Shipped"</i>, <i>"Which reports use Customers.Country?"</i></td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                            <div class="bs-callout bs-callout-info">
+                                <ck>Check <a href="~/Sources#lineAI">AI Data Source Manager</a> for the details of the metadata edition</ck>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineSecurity" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Security <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <ul>
+                                <li>The agents act <b>as the logged-in user</b>: they can only see and edit what the user's <b>Security Groups</b> allow (folder rights, personal folder, source folder <b>Edit</b> right for metadata changes).</li>
+                                <li>Action tools are gated behind <b>skills</b> that the agent must explicitly load: reads are cheap, writes are deliberate.</li>
+                                <li><b>Destructive operations</b> require an explicit user confirmation, and every metadata write is backed up automatically.</li>
+                            </ul>
+                            <div class="bs-callout bs-callout-warning">
+                                <ck>Check <a href="~/Server#lineSecurity_group">Security Groups</a> for the rights configuration</ck>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineSemantic" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">The Semantic Layer <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The quality of the AI answers depends directly on the quality of your metadata model.<br />
+                                Fill the <code>Description</code> properties of your connections, tables, columns, joins and enumerated lists: the agents read them to understand your data model.
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                <ck>Check <a href="~/Sources#lineTables_desc">Descriptions: the semantic layer</a> for more information</ck>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineTasks" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">AI Tasks in Reports <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                AI can also be used <b>inside a report execution</b> with the dedicated <b>Task Templates</b>: <i>AI Agent, AI Summary, AI Modify HTML Table, AI Cancel Output</i> (<eg>e.g. adding an executive summary generated from the data at the top of a scheduled report</eg>).
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                <ck>Check <a href="~/Reports#lineTasks">Tasks &amp; ETL</a> for more information</ck>. The samples are available in the <i>\Reports\Samples\07-AI Tasks</i> Repository sub-folder.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineCustom" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">Customization <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The AI configuration is fully customizable in the <i>/Settings/AI</i> Repository sub-folder:
+                            </p>
+                            <ul>
+                                <li><b>Prompts/*.md</b>: the system prompt of each agent. Edit them to add company-specific rules and vocabulary.</li>
+                                <li><b>Samples/*.md</b>: the sample prompts proposed to the users in the chat panel (one prompt per line).</li>
+                                <li><b>AIConfiguration.xml</b>: the agents, tools and skills definitions (advanced).</li>
+                            </ul>
+                            <p>
+                                The agent names, descriptions and tool progress labels displayed in the chat are translated in the user locale via the repository translations.
+                            </p>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+
+            </div>
+            <!-- // end .col -->
+        </div>
+    </div>
+    <!-- // end container -->
+</div>
+<!-- end wrapper -->
+

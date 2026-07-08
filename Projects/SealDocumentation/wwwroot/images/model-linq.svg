@@ -1,0 +1,109 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 660 750" width="660" height="750" role="img" aria-labelledby="mlqTitle">
+  <title id="mlqTitle">LINQ model processing</title>
+  <style>
+    text { font-family: Lato, 'Segoe UI', Arial, sans-serif; fill: #242424; }
+    .start { fill: #fdf1e7; stroke: #e59a55; stroke-width: 1.5; }
+    .startt { font-size: 12px; font-weight: 700; text-anchor: middle; }
+    .proc { fill: #fff; stroke: #888; stroke-width: 1.2; stroke-dasharray: 6 3; }
+    .proct { font-size: 11px; text-anchor: middle; fill: #333; }
+    .tbl { fill: #fff8dd; stroke: #e6c229; stroke-width: 1.5; }
+    .tblh { fill: #f5dd86; stroke: #e6c229; stroke-width: 1.5; }
+    .tblt { font-size: 11px; font-weight: 700; text-anchor: middle; }
+    .arrow { stroke: #0E97EE; stroke-width: 1.6; fill: none; }
+  </style>
+  <defs>
+    <marker id="arr" viewBox="0 0 10 10" refX="8" refY="5" markerWidth="7" markerHeight="7" orient="auto-start-reverse">
+      <path d="M0,0 L10,5 L0,10 z" fill="#0E97EE"/>
+    </marker>
+  </defs>
+
+  <ellipse class="start" cx="330" cy="46" rx="130" ry="32"/>
+  <text class="startt" x="330" y="42">Model definition:</text>
+  <text class="startt" x="330" y="58">Elements and Restrictions</text>
+
+  <line class="arrow" x1="330" y1="78" x2="330" y2="106" marker-end="url(#arr)"/>
+  <rect class="proc" x="70" y="108" width="540" height="46" rx="4"/>
+  <text class="proct" x="340" y="127">Generate 0 to N Sub-Models (one per SQL Data Source)</text>
+  <text class="proct" x="340" y="142">and 0 to N Sub-Tables (one per No SQL table)</text>
+
+  <!-- branches -->
+  <path class="arrow" d="M170,154 V196" marker-end="url(#arr)"/>
+  <path class="arrow" d="M330,154 V196" marker-end="url(#arr)"/>
+  <path class="arrow" d="M490,154 V196" marker-end="url(#arr)"/>
+  <path class="arrow" d="M590,154 V196" marker-end="url(#arr)"/>
+
+  <ellipse class="start" cx="167" cy="230" rx="78" ry="32"/>
+  <text class="startt" x="167" y="226">Sub-Model 1</text>
+  <text class="startt" x="167" y="242">(Data Source 1)</text>
+  <ellipse class="start" cx="333" cy="230" rx="78" ry="32"/>
+  <text class="startt" x="333" y="226">Sub-Model 2</text>
+  <text class="startt" x="333" y="242">(Data Source 2)</text>
+  <rect class="proc" x="430" y="200" width="120" height="60" rx="4"/>
+  <text class="proct" x="490" y="222">Execute scripts</text>
+  <text class="proct" x="490" y="237">to load</text>
+  <text class="proct" x="490" y="252">No SQL Table 1</text>
+  <rect class="proc" x="560" y="200" width="90" height="60" rx="4" transform="translate(0,0)"/>
+  <text class="proct" x="605" y="222">Execute scripts</text>
+  <text class="proct" x="605" y="237">to load No SQL</text>
+  <text class="proct" x="605" y="252">Table 2</text>
+
+  <line class="arrow" x1="170" y1="262" x2="170" y2="292" marker-end="url(#arr)"/>
+  <line class="arrow" x1="330" y1="262" x2="330" y2="292" marker-end="url(#arr)"/>
+  <rect class="proc" x="100" y="294" width="140" height="44" rx="4"/>
+  <text class="proct" x="170" y="312">Generate SQL and</text>
+  <text class="proct" x="170" y="327">query the database</text>
+  <rect class="proc" x="260" y="294" width="140" height="44" rx="4"/>
+  <text class="proct" x="330" y="312">Generate SQL and</text>
+  <text class="proct" x="330" y="327">query the database</text>
+
+  <line class="arrow" x1="170" y1="338" x2="170" y2="368" marker-end="url(#arr)"/>
+  <line class="arrow" x1="330" y1="338" x2="330" y2="368" marker-end="url(#arr)"/>
+  <line class="arrow" x1="490" y1="260" x2="490" y2="368" marker-end="url(#arr)"/>
+  <line class="arrow" x1="605" y1="260" x2="605" y2="368" marker-end="url(#arr)"/>
+
+  <g>
+    <rect class="tbl" x="105" y="370" width="130" height="52" rx="4"/>
+    <rect class="tblh" x="105" y="370" width="130" height="12" rx="4"/>
+    <text class="tblt" x="170" y="398">Result Table</text>
+    <text class="tblt" x="170" y="412">for Sub-Model 1</text>
+  </g>
+  <g>
+    <rect class="tbl" x="265" y="370" width="130" height="52" rx="4"/>
+    <rect class="tblh" x="265" y="370" width="130" height="12" rx="4"/>
+    <text class="tblt" x="330" y="398">Result Table</text>
+    <text class="tblt" x="330" y="412">for Sub-Model 2</text>
+  </g>
+  <g>
+    <rect class="tbl" x="425" y="370" width="130" height="52" rx="4"/>
+    <rect class="tblh" x="425" y="370" width="130" height="12" rx="4"/>
+    <text class="tblt" x="490" y="398">Result Table for</text>
+    <text class="tblt" x="490" y="412">No SQL Table 1</text>
+  </g>
+  <g>
+    <rect class="tbl" x="565" y="370" width="90" height="52" rx="4"/>
+    <rect class="tblh" x="565" y="370" width="90" height="12" rx="4"/>
+    <text class="tblt" x="610" y="398">Result Table</text>
+    <text class="tblt" x="610" y="412">No SQL 2</text>
+  </g>
+
+  <path class="arrow" d="M170,422 V466" marker-end="url(#arr)"/>
+  <path class="arrow" d="M330,422 V466" marker-end="url(#arr)"/>
+  <path class="arrow" d="M490,422 V466" marker-end="url(#arr)"/>
+  <path class="arrow" d="M610,422 V466" marker-end="url(#arr)"/>
+  <rect class="proc" x="90" y="468" width="540" height="40" rx="4"/>
+  <text class="proct" x="360" y="492">Generate and execute the LINQ query joining all the Result Tables</text>
+
+  <line class="arrow" x1="360" y1="508" x2="360" y2="538" marker-end="url(#arr)"/>
+  <g>
+    <rect class="tbl" x="280" y="540" width="160" height="54" rx="4"/>
+    <rect class="tblh" x="280" y="540" width="160" height="13" rx="4"/>
+    <text class="tblt" x="360" y="568" font-size="12">Result Table</text>
+    <text class="tblt" x="360" y="583" font-size="12">for the model</text>
+  </g>
+
+  <line class="arrow" x1="360" y1="594" x2="360" y2="624" marker-end="url(#arr)"/>
+  <rect class="proc" x="150" y="626" width="420" height="58" rx="4"/>
+  <text class="proct" x="360" y="645">Generate the report result components:</text>
+  <text class="proct" x="360" y="660">1 Summary Table, 1 to N Pages containing</text>
+  <text class="proct" x="360" y="675">1 Page Table, 1 Data Table and Series</text>
+</svg>

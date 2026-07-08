@@ -1,42 +1,26 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Model;
 using System;
 using System.Diagnostics;
 using System.Media;
 using System.Reflection;
-using System.Runtime.InteropServices;
 using System.Windows.Forms;
 
 namespace Seal.Forms
 {
     public partial class AboutBoxForm : Form
     {
-        bool _startup = false;
-
-        // Constants for window styles
-        private const int GWL_STYLE = -16;
-        private const int WS_SYSMENU = 0x80000;
-
-        // Import the Windows API functions
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int GetWindowLong(IntPtr hWnd, int nIndex);
-
-        [DllImport("user32.dll", SetLastError = true)]
-        private static extern int SetWindowLong(IntPtr hWnd, int nIndex, int dwNewLong);
-
-        public AboutBoxForm(bool startup = false)
+        public AboutBoxForm()
         {
-            _startup = startup;
-
             InitializeComponent();
             this.Text = String.Format("About {0}", AssemblyTitle.Replace(" Library", ""));
             this.labelProductName.Text = AssemblyProduct;
             this.labelVersion.Text = String.Format("Version {0}", AssemblyVersion);
             linkLabel.Text = "Get the last version and free support at https://sealreport.org";
-            linkLicense.Text = "Licensing information at https://sealreport.com";
+            linkLicense.Text = "Services and support at https://sealreport.com";
             ShowIcon = true;
             Icon = Repository.ProductIcon;
         }
@@ -130,50 +114,22 @@ namespace Seal.Forms
 
         private void AboutBoxForm_Shown(object sender, EventArgs e)
         {
-            var defaultText = "\r\nYou are using Seal Report under the MIT Community License:\r\n\r\nThis license is for non-profit usage or small businesses.\r\n\r\nIf you are using Seal Report in a production environment, please ensure that you are eligible to use this free license !\r\n\r\nSeal Report follows a dual-licensing model to ensure its maintenance, quality, and support.\r\n";
-            if (!_startup)
-            {
-                defaultText = "\r\nA genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n";
-            }
-            else
-            {
-                okButton.Visible = false;
-                int style = GetWindowLong(this.Handle, GWL_STYLE);
-                SetWindowLong(this.Handle, GWL_STYLE, style & ~WS_SYSMENU); 
-
-                var timer = new Timer();
-                timer.Interval = 7500;
-                timer.Start();
-                timer.Tick += Timer_Tick;
-            }
-
             try
             {
+                //Show the license information if a license file is installed (e.g. rebranded products), otherwise the default text
                 string text = Repository.Instance.LicenseText;
                 if (string.IsNullOrWhiteSpace(text))
                 {
-                    this.textBoxDescription.Text = defaultText;
-                    if (!_startup)
-                    {
-                        SoundPlayer simpleSound = new SoundPlayer(Properties.Resources.seal_barking);
-                        simpleSound.Play();
-                    }
+                    this.textBoxDescription.Text = "\r\nA genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n";
+                    SoundPlayer simpleSound = new SoundPlayer(Properties.Resources.seal_barking);
+                    simpleSound.Play();
                 }
                 else
                 {
-                    linkLabel.Text = "https://sealreport.org";
                     this.textBoxDescription.Text = text;
                 }
             }
             catch { }
-        }
-
-        private void Timer_Tick(object sender, EventArgs e)
-        {
-            okButton.Visible = true;
-            int style = GetWindowLong(this.Handle, GWL_STYLE);
-            SetWindowLong(this.Handle, GWL_STYLE, style | WS_SYSMENU); // Enable the system menu (which includes the close button)
-
         }
     }
 }

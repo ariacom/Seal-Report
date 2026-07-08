@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -22,7 +22,6 @@ using OfficeOpenXml.FormulaParsing.Excel.Functions.Math;
 using System.Threading;
 using ScintillaNET;
 using DocumentFormat.OpenXml.InkML;
-using Mysqlx.Notice;
 using Seal.Renderer;
 
 namespace Seal
@@ -186,9 +185,6 @@ namespace Seal
                 MessageBox.Show("No repository has been defined or found for this installation. Reports will not be rendered. Please modify the .config file to set a RepositoryPath containing at least a Views subfolder", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
-            _ = Repository.Instance.LicenseText;
-
-
             FormHelper.RestoreForm(this, Properties.Settings.Default.FormSize, Properties.Settings.Default.FormLocation, Properties.Settings.Default.FormState);
             //Viewer form
             ReportViewerForm.LastLocation = Properties.Settings.Default.ViewerFormLocation;
@@ -197,12 +193,6 @@ namespace Seal
 
             BringToFront();
             Activate();
-
-            if (Repository.Instance.LicenseInvalid || string.IsNullOrWhiteSpace(Repository.Instance.LicenseText))
-            {
-                AboutBoxForm frm = new AboutBoxForm(true);
-                frm.ShowDialog(this);
-            }
         }
 
         //EntityHandlerInterface
@@ -392,11 +382,6 @@ namespace Seal
             {
                 if (_report.SchedulesModified) _isModified = true;
                 Text = Path.GetFileNameWithoutExtension(_report.FilePath) + (IsModified ? "*" : "") + " - " + Text;
-            }
-
-            if (string.IsNullOrEmpty(Repository.Instance.LicenseText))
-            {
-                Text += " - Free MIT Community License (For non-profit usage or small businesses)";
             }
 
             saveToolStripMenuItem.Enabled = (_report != null);

@@ -136,7 +136,15 @@ namespace Seal.AI
                 var content = response.Content.ReadAsStringAsync().Result;
 
                 if (response.IsSuccessStatusCode)
-                    return JsonSerializer.Deserialize<AnthropicResponse>(content);
+                {
+                    var result = JsonSerializer.Deserialize<AnthropicResponse>(content);
+                    // input_tokens excludes cached tokens, which are reported separately
+                    var usage = result?.Usage;
+                    SetLastUsage(
+                        (usage?.InputTokens ?? 0) + (usage?.CacheCreationInputTokens ?? 0) + (usage?.CacheReadInputTokens ?? 0),
+                        usage?.OutputTokens ?? 0);
+                    return result;
+                }
 
                 // Retry on rate limit (429) and overload (529), honoring Retry-After.
                 bool retryable = (int)response.StatusCode == 429 || (int)response.StatusCode == 529;
@@ -249,6 +257,24 @@ namespace Seal.AI
 
             [JsonPropertyName("content")]
             public ContentBlock[] Content { get; set; }
+
+            [JsonPropertyName("usage")]
+            public UsageInfo Usage { get; set; }
+
+            public class UsageInfo
+            {
+                [JsonPropertyName("input_tokens")]
+                public int InputTokens { get; set; }
+
+                [JsonPropertyName("output_tokens")]
+                public int OutputTokens { get; set; }
+
+                [JsonPropertyName("cache_creation_input_tokens")]
+                public int CacheCreationInputTokens { get; set; }
+
+                [JsonPropertyName("cache_read_input_tokens")]
+                public int CacheReadInputTokens { get; set; }
+            }
 
             public class ContentBlock
             {

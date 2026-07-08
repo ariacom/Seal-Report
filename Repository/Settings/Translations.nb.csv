@@ -482,3 +482,5 @@ Report;Show Restrictions;Vis begrensninger
 Report;Hide Restrictions;Skjul begrensninger
 Report;Show Guide;Vis veiledning
 Report;Hide Guide;Skjul veiledning
+WebJS;Copy for Excel;Kopier til Excel
+WebJS;Download CSV;Last ned CSV

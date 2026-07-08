@@ -1,0 +1,587 @@
+<?xml version="1.0"?>
+<MetaSource xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>3d80412e-03a4-4a96-818a-a2aecef4c813</GUID>
+  <Name>Audit PostgreSQL</Name>
+  <Connections>
+    <MetaConnection>
+      <GUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</GUID>
+      <Name>Audit PostgreSQL</Name>
+      <DatabaseType>PostgreSQL</DatabaseType>
+      <ConnectionType>PostgreSQL</ConnectionType>
+      <PostgreSQLConnectionString>Server=localhost;Port=5432;Database=Audit;</PostgreSQLConnectionString>
+    </MetaConnection>
+  </Connections>
+  <Description>Audit database</Description>
+  <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
+  <MetaData>
+    <Tables>
+      <MetaTable>
+        <GUID>36ffc9d2-1a1b-4357-8c46-24331e961794</GUID>
+        <Name>sr_audit</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>5dd58e57-2737-42a7-820d-47373b21984a</GUID>
+            <Name>sr_audit.event_date</Name>
+            <Type>DateTime</Type>
+            <Category>Audit</Category>
+            <DisplayName>Date time</DisplayName>
+            <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
+            <Format>G</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</GUID>
+            <Name>sr_audit.event_type</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Type</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <EnumGUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2e05ad38-4028-4c66-858f-396d466443cf</GUID>
+            <Name>sr_audit.user_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>User</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>963c0203-23ea-4558-be75-ffa167656cab</GUID>
+            <Name>sr_audit.user_groups</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>User groups</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</GUID>
+            <Name>sr_audit.execution_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution name</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</GUID>
+            <Name>sr_audit.event_path</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Path</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>a390f265-6761-41ac-b323-56f3ceb45b83</GUID>
+            <Name>sr_audit.execution_view</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution view</DisplayName>
+            <DisplayOrder>12</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</GUID>
+            <Name>sr_audit.execution_duration</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution duration</DisplayName>
+            <DisplayOrder>13</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>b7995c78-1815-4985-9df9-399438ce4f68</GUID>
+            <Name>sr_audit.event_error</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Error</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</GUID>
+            <Name>sr_audit.output_type</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Output type</DisplayName>
+            <DisplayOrder>14</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>db1a144e-d051-486c-a668-9926a38b7f73</GUID>
+            <Name>sr_audit.output_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Output name</DisplayName>
+            <DisplayOrder>15</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8457637b-d72b-48bf-8fb1-118adfeef0be</GUID>
+            <Name>sr_audit.schedule_name</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Schedule name</DisplayName>
+            <DisplayOrder>17</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>db93240e-46a2-43a2-8b0a-079915daee93</GUID>
+            <Name>sr_audit.output_information</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Output information</DisplayName>
+            <DisplayOrder>16</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</GUID>
+            <Name>sr_audit.execution_context</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Execution context</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+            <EnumGUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>c53bdc07-c591-43e8-9f61-e0ce41709800</GUID>
+            <Name>to_char(sr_audit.event_date, 'YYYY')</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event year</DisplayName>
+            <DisplayOrder>19</DisplayOrder>
+            <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>58078fce-3cac-4279-b274-2f760caa4247</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>58078fce-3cac-4279-b274-2f760caa4247</GUID>
+            <Name>to_char(sr_audit.event_date, 'YYYY-MM')</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event month</DisplayName>
+            <DisplayOrder>20</DisplayOrder>
+            <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+            <DrillChildren>
+              <string>f55cc735-d7e2-4724-9f1a-8c484b6ba251</string>
+            </DrillChildren>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</GUID>
+            <Name>date_trunc('day', sr_audit.event_date)</Name>
+            <Type>DateTime</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event day</DisplayName>
+            <DisplayOrder>22</DisplayOrder>
+            <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
+            <Format>d</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>54acc367-0703-48c9-ad29-f1914dbfa994</GUID>
+            <Name>sr_audit.event_detail</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Detail</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</GUID>
+            <Name>sr_audit.user_session</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>User session</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</GUID>
+            <Name>(case when sr_audit.event_detail ~ '^[0-9]+$' then cast(sr_audit.event_detail as integer) end)</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>Detail Numeric</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>04457a7a-d910-40dc-b344-a9b801b18c54</GUID>
+            <Name>to_char(sr_audit.event_date, 'IYYY-IW')</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>Event week</DisplayName>
+            <DisplayOrder>21</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</GUID>
+            <Name>sr_audit.ai_agent</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI agent</DisplayName>
+            <DisplayOrder>23</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8403ec39-2c44-492b-843e-872cf6cb4e6a</GUID>
+            <Name>sr_audit.ai_provider</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI provider</DisplayName>
+            <DisplayOrder>24</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>aa8e3e36-d9a1-4ba3-b33b-72127fdd8fc5</GUID>
+            <Name>sr_audit.ai_model</Name>
+            <Type>Text</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI model</DisplayName>
+            <DisplayOrder>25</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3accb676-4680-41ed-903d-af8d14cd2e9a</GUID>
+            <Name>sr_audit.ai_input_tokens</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI input tokens</DisplayName>
+            <DisplayOrder>26</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4da92514-cca7-4eab-9044-aad9ef70cca5</GUID>
+            <Name>sr_audit.ai_output_tokens</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI output tokens</DisplayName>
+            <DisplayOrder>27</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>fca46c23-2584-4cdf-ab1a-42b38aaeb1bc</GUID>
+            <Name>sr_audit.ai_input_tokens + sr_audit.ai_output_tokens</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI total tokens</DisplayName>
+            <DisplayOrder>28</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>935a98a6-ab56-4260-8e40-9d396f19c874</GUID>
+            <Name>sr_audit.ai_calls</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI calls</DisplayName>
+            <DisplayOrder>29</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>581c6d65-ecb7-4a74-badc-091a22e5113d</GUID>
+            <Name>sr_audit.ai_tool_calls</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI tool calls</DisplayName>
+            <DisplayOrder>30</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>8fd152e4-e632-4db9-a45d-ed60459109ba</GUID>
+            <Name>sr_audit.ai_message_count</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI message count</DisplayName>
+            <DisplayOrder>31</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>08542fb1-ff0e-4d43-a205-76e344bb2523</GUID>
+            <Name>sr_audit.ai_cost</Name>
+            <Type>Numeric</Type>
+            <Category>Audit</Category>
+            <DisplayName>AI cost</DisplayName>
+            <DisplayOrder>32</DisplayOrder>
+            <NumericStandardFormat>Numeric4</NumericStandardFormat>
+            <Format>N4</Format>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+      <MetaTable>
+        <GUID>7e57ab1e-0000-4000-8000-000000000001</GUID>
+        <Name>sr_test_results</Name>
+        <Type>TABLE</Type>
+        <Columns>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000102</GUID>
+            <Name>sr_test_results.run_date</Name>
+            <Type>DateTime</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Run date</DisplayName>
+            <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
+            <Format>G</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000101</GUID>
+            <Name>sr_test_results.run_id</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Run id</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+            <EnumGUID>f1ac144f-dc41-49d0-b673-3776b14fd75a</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000104</GUID>
+            <Name>sr_test_results.report_name</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Report</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000103</GUID>
+            <Name>sr_test_results.report_path</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Path</DisplayName>
+            <DisplayOrder>4</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000105</GUID>
+            <Name>sr_test_results.status</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Status</DisplayName>
+            <DisplayOrder>5</DisplayOrder>
+            <EnumGUID>7e57ab1e-0000-4000-8000-000000000201</EnumGUID>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000106</GUID>
+            <Name>sr_test_results.duration_seconds</Name>
+            <Type>Numeric</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Duration</DisplayName>
+            <DisplayOrder>6</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000107</GUID>
+            <Name>sr_test_results.error</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Error</DisplayName>
+            <DisplayOrder>7</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000108</GUID>
+            <Name>sr_test_results.messages_file</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Messages file</DisplayName>
+            <DisplayOrder>8</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000109</GUID>
+            <Name>sr_test_results.provider_name</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Provider</DisplayName>
+            <DisplayOrder>9</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000110</GUID>
+            <Name>sr_test_results.match_rate</Name>
+            <Type>Numeric</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Match rate</DisplayName>
+            <DisplayOrder>10</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>7e57ab1e-0000-4000-8000-000000000111</GUID>
+            <Name>sr_test_results.warnings</Name>
+            <Type>Text</Type>
+            <Category>Test Results</Category>
+            <DisplayName>Warnings</DisplayName>
+            <DisplayOrder>11</DisplayOrder>
+          </MetaColumn>
+        </Columns>
+      </MetaTable>
+    </Tables>
+    <Enums>
+      <MetaEnum>
+        <GUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</GUID>
+        <Name>Event type</Name>
+        <Sql>SELECT DISTINCT 
+sr_audit.event_type, sr_audit.event_type
+FROM sr_audit 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>AIChat</Id>
+            <Val>AI Chat</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>AIChatError</Id>
+            <Val>AI Chat Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>EventError</Id>
+            <Val>Event Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>EventLoggedUsers</Id>
+            <Val>Event Logged Users</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>EventServer</Id>
+            <Val>Event Server</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FileCopy</Id>
+            <Val>File Copy</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FileDelete</Id>
+            <Val>File Delete</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FileMove</Id>
+            <Val>File Move</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FolderCreate</Id>
+            <Val>Folder Create</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FolderDelete</Id>
+            <Val>Folder Delete</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>FolderRename</Id>
+            <Val>Folder Rename</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Login</Id>
+            <Val>Login</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>LoginFailure</Id>
+            <Val>Login Failure</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Logout</Id>
+            <Val>Logout</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportExecution</Id>
+            <Val>Report Execution</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportExecutionError</Id>
+            <Val>Report Execution Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportSave</Id>
+            <Val>Report Save</Val>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</GUID>
+        <Name>Execution context</Name>
+        <Sql>SELECT DISTINCT 
+sr_audit.execution_context 
+FROM sr_audit 
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>DesignerOutput</Id>
+            <Val>Designer (Output)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>DesignerReport</Id>
+            <Val>Designer (Report)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>TaskScheduler</Id>
+            <Val>Scheduler</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>WebOutput</Id>
+            <Val>Web (Output)</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>WebReport</Id>
+            <Val>Web (Report)</Val>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>7e57ab1e-0000-4000-8000-000000000201</GUID>
+        <Name>Test status</Name>
+        <Sql>SELECT DISTINCT
+sr_test_results.status, sr_test_results.status
+FROM sr_test_results
+ORDER BY 1</Sql>
+        <Values>
+          <MetaEV>
+            <Id>Success</Id>
+            <Val>Success</Val>
+            <Class>success</Class>
+          </MetaEV>
+          <MetaEV>
+            <Id>Error</Id>
+            <Val>Error</Val>
+            <Class>danger</Class>
+          </MetaEV>
+          <MetaEV>
+            <Id>Warning</Id>
+            <Val>Warning</Val>
+            <Class>warning</Class>
+          </MetaEV>
+          <MetaEV>
+            <Id>LoadError</Id>
+            <Val>Load Error</Val>
+            <Class>warning</Class>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>f1ac144f-dc41-49d0-b673-3776b14fd75a</GUID>
+        <Name>Test run</Name>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <Sql>SELECT
+run_id,
+to_char(MIN(run_date), 'YYYY-MM-DD HH24:MI:SS')
+FROM sr_test_results
+GROUP BY run_id
+ORDER BY 2 DESC
+LIMIT 20</Sql>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>aab33159-0000-4000-8000-000000000010</GUID>
+        <Name>AI Providers</Name>
+        <IsDynamic>true</IsDynamic>
+        <IsDbRefresh>true</IsDbRefresh>
+        <Script>@using Seal.Model
+@using Seal.AI
+@using System.Linq
+@{
+    MetaEnum enumList = Model;
+    enumList.Values.Clear();
+    foreach (var provider in Repository.Instance.AIConfiguration.AIProviders.Where(p =&gt; p.IsEnabled).OrderBy(p =&gt; p.Name))
+    {
+        enumList.Values.Add(new MetaEV() { Id = provider.GUID, Val = provider.Name });
+    }
+}
+</Script>
+      </MetaEnum>
+      <MetaEnum>
+        <GUID>aab33159-0000-4000-8000-000000000011</GUID>
+        <Name>Test log levels</Name>
+        <Values>
+          <MetaEV>
+            <Id>Minimum</Id>
+            <Val>Minimum</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>Chat</Id>
+            <Val>Chat Logs</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ChatAndTools</Id>
+            <Val>Chat and Tools Logs</Val>
+          </MetaEV>
+        </Values>
+      </MetaEnum>
+    </Enums>
+  </MetaData>
+</MetaSource>

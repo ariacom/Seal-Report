@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System.ComponentModel;
 
@@ -562,6 +562,8 @@ namespace Seal.Model
         EventError,
         EventServer,
         EventLoggedUsers,
+        AIChat,
+        AIChatError,
     }
 
     public enum TriggerType
@@ -584,6 +586,24 @@ namespace Seal.Model
         SFTP,
         [Description("SCP")]
         SCP,
+    }
+
+    public enum SharePointAuthenticationType
+    {
+        [Description("Client Secret")]
+        ClientSecret,
+        [Description("Certificate")]
+        Certificate,
+    }
+
+    public enum SharePointConflictBehavior
+    {
+        [Description("Replace the existing file")]
+        Replace,
+        [Description("Rename the new file")]
+        Rename,
+        [Description("Fail the upload")]
+        Fail,
     }
 
     public enum ModelBuildStep

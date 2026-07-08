@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -308,7 +308,7 @@ namespace Seal.Forms
 
     //Generate the security code
     Random rnd = new Random();
-    user.SecurityCode = rnd.Next(1, 999999).ToString();     
+    user.SecurityCode = rnd.Next(100000, 1000000).ToString();
     user.SecurityCodeGeneration = DateTime.Now;     
 
     var message = user.Security.Repository.TranslateReport(""Please find your authentication code"");
@@ -361,102 +361,13 @@ namespace Seal.Forms
 
 ";
 
-        const string razorTwoFACheckScriptTemplate = @"@{
-    SecurityUser user = Model;
-    
-    //Check if the code has been generated in the previous 5 minutes
-    if (string.IsNullOrEmpty(user.SecurityCode) || user.SecurityCodeGeneration > DateTime.Now.AddMinutes(5)) {
-        user.SecurityCodeTries = -1; //Set it to -1 to re-force a login
-    }
-    else {
-        user.SecurityCodeTries++;
-        if (user.SecurityCode != user.WebSecurityCode)
-        {
-            if (user.SecurityCodeTries == 3) user.SecurityCodeTries = -1; //Set it to -1 to re-force a login
-            else throw new Exception(user.Security.Repository.TranslateWeb(""Invalid security code"")); //Allow a retry 
-        }
-        else {
-            user.SecurityCode = """"; //Check is ok
-        }
-    }
-}
-";
+        //Default implementation shared with the runtime (used when the script is empty)
+        const string razorTwoFACheckScriptTemplate = SealSecurity.DefaultTwoFACheckScript;
 
-        const string razorResetPasswordScriptTemplate = @"@using Newtonsoft.Json
-@using System.Web
-@{
-    SecurityUser user = Model;
-    var id = user.WebUserName;
-    var request = user.Request;
-    var repository = user.Security.Repository;
-    var security = user.Security;
+        //Default implementations are shared with the runtime (used when the script is empty)
+        const string razorResetPasswordScriptTemplate = SealSecurity.DefaultResetPasswordScript;
 
-    //Implementation using Logins defined in the security
-    var login = security.Logins.FirstOrDefault(i => i.Id == id);
-    if (login == null && id.Contains(""@"")) login = security.Logins.FirstOrDefault(i => i.Email == id);
-
-    if (login == null) throw new Exception($""No login found for '{id}'"");
-    if (string.IsNullOrEmpty(login.Email)) throw new Exception($""No Email found for '{id}'"");
-
-    //Generate Token for reset
-    var guid = Guid.NewGuid().ToString();
-    var vals = new List<string>
-    {
-        id,
-        guid,
-        JsonConvert.SerializeObject(DateTime.Now)
-    };
-    var token = HttpUtility.UrlEncode(CryptoHelper.EncryptWithRSAContainer(string.Join(""\r"", vals), ""Reset"" + guid, false));
-
-    var url = $""{request.Scheme}://{request.Host}{request.PathBase}?guid={guid}&ptoken={token}"";
-    var message = repository.TranslateWeb(""Please find your link to reset your password (Note that this link is valid 10 minutes):"");
-    var from = """"; //Default of the device will be used
-    var to = login.Email;
-    var subject = ""Seal Report Password Reset"";
-    var linkLabel = repository.TranslateWeb(""Reset link"");
-    var body = $""{ message}: <br><b><a href='{url}'>{linkLabel}</a></b><br>"";
-
-    if (!repository.SendNotificationEmail(from, to, subject, true, body)) throw new Exception(""Unable to send email for Reset Password."");
-}
-";
-
-        const string razorResetPasswordScript2Template = @"@using Newtonsoft.Json
-@{
-    SecurityUser user = Model;
-    var repository = user.Security.Repository;
-    var security = user.Security;
-    var guid = user.WebUserName;
-
-    //Implementation using Logins defined in the security
-    if (!Helper.IsPasswordComplex(user.WebPassword)) throw new Exception(repository.TranslateWeb(""Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*).""));
-
-    var vals = CryptoHelper.DecryptWithRSAContainer(user.Token, ""Reset"" + guid, false).Split(""\r"");
-    if (vals.Length != 3 || vals[1] != guid) throw new Exception(""Invalid token"");
-    var generationDate = JsonConvert.DeserializeObject<DateTime>(vals[2]);
-    //Check date
-    if (DateTime.Now > generationDate.AddMinutes(10)) throw new Exception(""The token is not valid anymore."");
-
-    var id = vals[0];
-    user.WebUserName = id;
-    var login = security.Logins.FirstOrDefault(i => i.Id == id);
-    if (login == null && id.Contains(""@"")) login = security.Logins.FirstOrDefault(i => i.Email == id);
-
-    if (login == null) throw new Exception(""Invalid login in token."");
-
-    login.HashedPassword = user.WebPassword;
-    security.SaveToFile();
-
-    if (!string.IsNullOrEmpty(login.Email))
-    {
-        var message = repository.TranslateWeb(""Your password has been changed after a Reset."");
-        var from = """"; //Default of the device will be used
-        var to = login.Email;
-        var subject = repository.TranslateWeb(""Seal Report Password Change"");
-        var body = $""{message}<br>"";
-        if (!repository.SendNotificationEmail(from, to, subject, true, body)) Audit.LogEventAudit(AuditType.EventError, ""Unable to send email for Change Password afer Reset."");
-    }
-}
-";
+        const string razorResetPasswordScript2Template = SealSecurity.DefaultResetPasswordScript2;
         const string razorChangePasswordScriptTemplate = @"@{
     SecurityUser user = Model;
     var repository = user.Security.Repository;

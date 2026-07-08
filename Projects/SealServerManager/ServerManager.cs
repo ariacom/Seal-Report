@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.ComponentModel;
@@ -198,6 +198,7 @@ namespace Seal
             return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower()
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower()
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesFileServerFolder.ToLower()
+                || Path.GetDirectoryName(path).ToLower() == _repository.DevicesSharePointFolder.ToLower()
                 );
         }
 
@@ -349,6 +350,7 @@ namespace Seal
             buildOpenMenu(_repository.SourcesFolder, openSourceToolStripMenuItem, global::Seal.Properties.Resources.database);
             buildOpenMenu(_repository.DevicesEmailFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.device);
             buildOpenMenu(_repository.DevicesFileServerFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
+            buildOpenMenu(_repository.DevicesSharePointFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
         }
 
         void init(object entityToSelect = null)
@@ -409,11 +411,6 @@ namespace Seal
                 }
             }
 
-            if (string.IsNullOrEmpty(Repository.Instance.LicenseText))
-            {
-                Text += " - Free MIT Community License (For non-profit usage or small businesses)";
-            }
-
             saveToolStripMenuItem.Enabled = HasEntity;
             saveToolStripButton.Enabled = HasEntity;
             saveAsToolStripMenuItem.Enabled = HasEntity;
@@ -449,6 +446,7 @@ namespace Seal
                 if (_source != null) return _repository.SourcesFolder;
                 if (_device != null && _device is OutputEmailDevice) return _repository.DevicesEmailFolder;
                 if (_device != null && _device is OutputFileServerDevice) return _repository.DevicesFileServerFolder;
+                if (_device != null && _device is OutputSharePointDevice) return _repository.DevicesSharePointFolder;
                 return "";
             }
         }
@@ -485,17 +483,9 @@ namespace Seal
 
             _isInitialized = true;
 
-            _ = Repository.Instance.LicenseText;
-
             FormHelper.RestoreForm(this, Properties.Settings.Default.FormSize, Properties.Settings.Default.FormLocation, Properties.Settings.Default.FormState);
             BringToFront();
             Activate();
-
-            if (Repository.Instance.LicenseInvalid || string.IsNullOrWhiteSpace(Repository.Instance.LicenseText))
-            {
-                AboutBoxForm frm = new AboutBoxForm(true);
-                frm.ShowDialog(this);
-            }
         }
 
         private void exitToolStripMenuItem_Click(object sender, EventArgs e)
@@ -545,6 +535,11 @@ namespace Seal
                     _source = null;
                     _device = OutputFileServerDevice.LoadFromFile(path, false);
                 }
+                else if (Path.GetDirectoryName(path).ToLower() == _repository.DevicesSharePointFolder.ToLower())
+                {
+                    _source = null;
+                    _device = OutputSharePointDevice.LoadFromFile(path, false);
+                }
                 else
                 {
                     openOK = false;
@@ -592,6 +587,10 @@ namespace Seal
             else if (sender == fileServerDeviceToolStripMenuItem)
             {
                 _device = OutputFileServerDevice.Create();
+            }
+            else if (sender == sharePointDeviceToolStripMenuItem)
+            {
+                _device = OutputSharePointDevice.Create();
             }
             IsModified = true;
             init(entityToSelect);

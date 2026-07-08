@@ -19,37 +19,9 @@
     padding: 30px 0;
 }
 
-.affix {
-    position: static;
-}
-
-@media (min-width: 992px) {
-    .affix,
-    .affix-bottom {
-        width: 213px
-    }
-
-    .affix {
-        position: fixed;
-        top: 20px
-    }
-
-    .affix-bottom {
-        position: absolute
-    }
-
-        .affix .bs-docs-sidenav,
-        .affix-bottom .bs-docs-sidenav {
-            margin-top: 0;
-            margin-bottom: 0
-        }
-}
-
-@media (min-width: 1200px) {
-    .affix,
-    .affix-bottom {
-        width: 263px
-    }
+html {
+    scroll-behavior: smooth;
+    scroll-padding-top: 70px;
 }
 
 /* SIDEBAR */
@@ -59,6 +31,19 @@
         padding-top: 40px;
         padding-left: 20px
     }
+}
+
+@media (min-width: 992px) {
+    .docs-sidebar {
+        position: sticky;
+        top: 70px;
+        max-height: calc(100vh - 90px);
+        overflow-y: auto;
+    }
+}
+
+.docs-sidebar .nav {
+    flex-direction: column;
 }
 
 /* all links */
@@ -119,89 +104,44 @@
         display: block
     }
 }
-/*Syntax Highlighter : Sublime Theme */
+/* Code blocks (Prism, Tomorrow Night theme) */
 
-.syntaxhighlighter {
-    background-color: #2b303b !important;
-    padding: 15px 0;
-    margin: 5px 0px !important;
+pre[class*="language-"] {
+    background-color: #2b303b;
+    margin: 5px 0;
+    font-size: 13px;
+    line-height: 1.5;
 }
 
-    .syntaxhighlighter a,
-    .syntaxhighlighter div,
-    .syntaxhighlighter code,
-    .syntaxhighlighter table,
-    .syntaxhighlighter table td,
-    .syntaxhighlighter table tr,
-    .syntaxhighlighter table tbody,
-    .syntaxhighlighter table thead,
-    .syntaxhighlighter table caption,
-    .syntaxhighlighter textarea {
-        line-height: 1.3em !important;
-    }
+.line-highlight {
+    background: rgba(255, 255, 255, 0.09);
+}
 
-    .syntaxhighlighter .line.alt1 {
-        background-color: #2b303b !important;
-    }
+/* External link indicator */
 
-    .syntaxhighlighter .line.alt2 {
-        background-color: #2b303b !important;
-    }
+.ext-link::after {
+    content: "";
+    display: inline-block;
+    width: .7em;
+    height: .7em;
+    margin-left: .35em;
+    background-color: currentColor;
+    -webkit-mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E") no-repeat center / contain;
+    mask: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 16 16'%3E%3Cpath d='M8.636 3.5a.5.5 0 0 0-.5-.5H1.5A1.5 1.5 0 0 0 0 4.5v10A1.5 1.5 0 0 0 1.5 16h10a1.5 1.5 0 0 0 1.5-1.5V7.864a.5.5 0 0 0-1 0V14.5a.5.5 0 0 1-.5.5h-10a.5.5 0 0 1-.5-.5v-10a.5.5 0 0 1 .5-.5h6.636a.5.5 0 0 0 .5-.5z'/%3E%3Cpath d='M16 .5a.5.5 0 0 0-.5-.5h-5a.5.5 0 0 0 0 1h3.793L6.146 9.146a.5.5 0 1 0 .708.708L15 1.707V5.5a.5.5 0 0 0 1 0v-5z'/%3E%3C/svg%3E") no-repeat center / contain;
+}
 
-    .syntaxhighlighter .string,
-    .syntaxhighlighter .string a {
-        color: #90be8c !important;
-    }
+/* Back to top button */
 
-    .syntaxhighlighter .color1,
-    .syntaxhighlighter .color1 a {
-        color: #d08770 !important;
-    }
+.back-to-top {
+    cursor: pointer;
+    position: fixed;
+    bottom: 0;
+    right: 20px;
+    display: none;
+}
 
-    .syntaxhighlighter .plain,
-    .syntaxhighlighter .plain a {
-        color: #c0c5ce !important;
-    }
-
-    .syntaxhighlighter .keyword {
-        color: #bf616a !important;
-    }
-
-    .syntaxhighlighter .gutter {
-        color: #757a84 !important;
-    }
-
-    .syntaxhighlighter .line.highlighted.alt1,
-    .syntaxhighlighter .line.highlighted.alt2 {
-        background-color: #333E49 !important;
-    }
-
-    .syntaxhighlighter .gutter .line.highlighted {
-        background-color: #343d46 !important;
-        color: #757a84 !important;
-    }
-
-    .syntaxhighlighter .value {
-        color: #96b5b4 !important;
-    }
-    /*css*/
-    /* .syntaxhighlighter .css.plain,
-.syntaxhighlighter .css.plain a {
-    color: #d08770 !important;
-} 
-
-.syntaxhighlighter .css.keyword {
-    color: #c0c5ce !important;
-}*/
-
-    .syntaxhighlighter .color3,
-    .syntaxhighlighter .color3 a {
-        color: #b48ead !important;
-    }
-    /*js*/
-
-    .syntaxhighlighter .js.keyword {
-        color: #b48ead !important;
+    .back-to-top.show {
+        display: block;
     }
 
 

@@ -71,7 +71,8 @@
     var sb = new System.Text.StringBuilder();
     foreach (var model in models)
     {
-        var (tableJson, aggJson) = model.ResultTableTranslatedJson;
+        // Cap the rows sent to the AI: a full result table can exceed the model's context window.
+        var (tableJson, aggJson) = model.GetResultTableTranslatedJson(100);
         sb.AppendLine($"=== Model: {model.Name} ===");
         sb.AppendLine("PRE-AGGREGATED METRICS:");
         sb.AppendLine(aggJson);

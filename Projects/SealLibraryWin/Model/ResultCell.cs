@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -241,9 +241,9 @@ namespace Seal.Model
                     else enumValue = Element.MetaEnumValuesEL.FirstOrDefault(i => i.DisplayValue == result);
                     if (enumValue != null) result = enumValue.Id;
                 }
-                else if (Element.IsDateTime && Value is DateTime)
+                else if (Element.IsDateTime && DateTimeValue != null)
                 {
-                    result = ((DateTime)Value).ToOADate().ToString(CultureInfo.InvariantCulture);
+                    result = DateTimeValue.Value.ToOADate().ToString(CultureInfo.InvariantCulture);
                 }
                 return result;
             }
@@ -261,8 +261,12 @@ namespace Seal.Model
         {
             get
             {
-                if (Value == null || string.IsNullOrEmpty(Value.ToString()) || !(Value is DateTime)) return null;
-                return (DateTime)Value;
+                if (Value == null || string.IsNullOrEmpty(Value.ToString())) return null;
+                if (Value is DateTime dt) return dt;
+                //DateOnly and TimeOnly may come from database drivers (e.g. Npgsql for PostgreSQL date/time columns)
+                if (Value is DateOnly d) return d.ToDateTime(TimeOnly.MinValue);
+                if (Value is TimeOnly t) return new DateTime(1899, 12, 30).Add(t.ToTimeSpan()); //Day 0 of OLE Automation dates
+                return null;
             }
         }
 
@@ -273,8 +277,7 @@ namespace Seal.Model
         {
             get
             {
-                if (Value == null || string.IsNullOrEmpty(Value.ToString()) || !(Value is DateTime)) return null;
-                return ((DateTime)Value).ToOADate();
+                return DateTimeValue?.ToOADate();
             }
         }
 

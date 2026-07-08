@@ -114,8 +114,10 @@ namespace Seal.AI
             );
             var response = _httpClient.PostAsync(_endpoint + path, content).Result;
             response.EnsureSuccessStatusCode();
-            return JsonSerializer.Deserialize<OllamaResponse>(
+            var result = JsonSerializer.Deserialize<OllamaResponse>(
                 response.Content.ReadAsStringAsync().Result);
+            SetLastUsage(result?.PromptEvalCount ?? 0, result?.EvalCount ?? 0);
+            return result;
         }
 
         private Dictionary<string, object> BuildOptions()
@@ -175,6 +177,12 @@ namespace Seal.AI
         {
             [JsonPropertyName("message")]
             public OllamaMessage Message { get; set; }
+
+            [JsonPropertyName("prompt_eval_count")]
+            public int PromptEvalCount { get; set; }
+
+            [JsonPropertyName("eval_count")]
+            public int EvalCount { get; set; }
 
             public class OllamaMessage
             {

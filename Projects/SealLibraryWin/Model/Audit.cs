@@ -1,9 +1,14 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Helpers;
 using System;
+using System.Collections.Generic;
+using System.Data;
+using System.Data.Common;
+using System.Data.Odbc;
+using System.Data.OleDb;
 using System.Data.SQLite;
 using System.Diagnostics;
 using System.Linq;
@@ -46,92 +51,13 @@ namespace Seal.Model
     /// </summary>
     public class Audit
     {
-        public const string AuditScriptTemplate = @"@using System.Data
-@using System.Data.Common
-@using System.Data.OleDb
-@using System.Data.Odbc
-
-@{
+        public const string AuditScriptTemplate = @"@{
     Audit audit = Model;
-    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith(""Audit""));  
-    if (auditSource != null) {
-        var helper = new TaskDatabaseHelper();
-        var connection = auditSource.Connection.GetOpenConnection();
-        try {
-            var command = helper.GetDbCommand(connection);
-
-            //Create audit table if necessary
-            checkTableCreation(command);
-            command.CommandText = @""insert into sr_audit(event_date,event_type,event_path,event_detail,event_error,user_name,user_groups,user_session,execution_name,execution_context,execution_view,execution_duration,output_type,output_name,output_information,schedule_name)"";
-            if (command is OleDbCommand || command is OdbcCommand) {
-                command.CommandText += "" values(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)"";
-            }
-            else {
-                command.CommandText += "" values(@p1,@p2,@p3,@p4,@p5,@p6,@p7,@p8,@p9,@p10,@p11,@p12,@p13,@p14,@p15,@p16)"";
-            }
-        
-            var date = DateTime.Now;
-            date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
-            int index=1;
-            addParameter(command, index++, DbType.DateTime, date); //event_date,
-            addParameter(command, index++, DbType.AnsiString, audit.Type.ToString()); //event_type,
-            addParameter(command, index++, DbType.AnsiString, audit.Path); //event_path,
-            addParameter(command, index++, DbType.AnsiString, audit.Detail); //event_detail,
-            addParameter(command, index++, DbType.AnsiString, audit.Error); //event_error,
-            addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.Name : null); //user_name,
-            addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SecurityGroupsDisplay : null); //user_groups,
-            addParameter(command, index++, DbType.AnsiString, audit.User != null ? audit.User.SessionID : null); //user_session,
-            addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionName : null); //execution_name,
-            addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionContext.ToString() : null); //execution_context,
-            addParameter(command, index++, DbType.AnsiString, audit.Report != null ? audit.Report.ExecutionView.Name : null); //execution_view,
-            addParameter(command, index++, DbType.Int32, audit.Report != null ? Convert.ToInt32(audit.Report.ExecutionFullDuration.TotalSeconds) : (object) DBNull.Value); //execution_duration,
-            addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.DeviceName : null); //output_type,
-            addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Name : null);//output_name,
-            addParameter(command, index++, DbType.AnsiString, audit.Report != null && audit.Report.OutputToExecute != null ? audit.Report.OutputToExecute.Information : null);//output_information,
-            addParameter(command, index++, DbType.AnsiString, audit.Schedule != null ? audit.Schedule.Name : null);//schedule_name
-            command.ExecuteNonQuery();
-        }
-        finally {
-            connection.Close();
-        }
-    }
-
-}
-
-@functions {
-    void checkTableCreation(DbCommand command)
-    {
-        if (Audit.CheckTableCreation)
-        {
-            //Check table creation
-            Audit.CheckTableCreation = false;
-            try
-            {
-                command.CommandText = ""select 1 from sr_audit where 1=0"";
-                command.ExecuteNonQuery();
-            }
-            catch
-            {
-                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
-                command.CommandText = @""create table sr_audit (
-                        event_date datetime,event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255)
-                    )"";
-                command.ExecuteNonQuery();
-            }
-        }
-    }
-
-    void addParameter(DbCommand command, int index, DbType type, Object value)
-    {
-        var parameter = command.CreateParameter();
-        parameter.ParameterName = ""@p"" + index.ToString();
-        parameter.DbType = type;
-        if (value == null) value = (object) DBNull.Value;
-
-        if (value is string && ((string)value).Length >= 255) parameter.Value = ((string)value).Substring(0, 254);
-        else parameter.Value = value;
-        command.Parameters.Add(parameter);
-    }
+    //Default implementation: insert the audit record into the 'sr_audit' table of the data source
+    //having a name starting with 'Audit'. The table (and new columns after an upgrade) is created automatically.
+    //Customize this script to filter events or route them elsewhere, e.g.
+    //if (audit.Type == AuditType.AIChat) { /* custom processing using audit properties */ }
+    audit.LogToDatabase();
 }
 ";
 
@@ -144,6 +70,23 @@ namespace Seal.Model
         public SecurityUser User;
         public Report Report;
         public ReportSchedule Schedule;
+
+        /// <summary>
+        /// Duration in seconds for events without a Report (e.g. AI Chat exchanges).
+        /// When Report is set, the report execution duration is used instead.
+        /// </summary>
+        public int? Duration;
+
+        //AI Chat events
+        public string AIAgentName;
+        public string AIProvider;
+        public string AIModel;
+        public int? AIInputTokens;
+        public int? AIOutputTokens;
+        public int? AICalls;
+        public int? AIToolCalls;
+        public int? AIMessageCount;
+        public double? AICost;
 
         static string Key = Guid.NewGuid().ToString();
 
@@ -164,6 +107,43 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Audit an AI Chat exchange (one user message and its final reply).
+        /// Token usage is taken from the agent's last exchange, the detail is the chat title.
+        /// </summary>
+        public static void LogAIChatAudit(SecurityUser user, Seal.AI.AIAgent agent, string error = null, int? durationSeconds = null)
+        {
+            try
+            {
+                if (agent == null || !Repository.Instance.Configuration.AuditEnabled) return;
+
+                var providerConfiguration = agent.Configuration?.GetProviderConfiguration();
+                var usage = agent.LastChatUsage;
+                var audit = new Audit()
+                {
+                    Type = string.IsNullOrEmpty(error) ? AuditType.AIChat : AuditType.AIChatError,
+                    User = user,
+                    Detail = agent.EffectiveTitle,
+                    Error = error,
+                    Duration = durationSeconds,
+                    AIAgentName = agent.Configuration?.Name,
+                    AIProvider = providerConfiguration?.Name,
+                    AIModel = providerConfiguration?.Model,
+                    AIInputTokens = usage?.InputTokens,
+                    AIOutputTokens = usage?.OutputTokens,
+                    AICalls = usage?.Calls,
+                    AIToolCalls = usage?.ToolCalls,
+                    AIMessageCount = agent.MessageCount,
+                    AICost = providerConfiguration?.GetCost(usage)
+                };
+                ExecuteAuditScript(audit);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Execute the audit script for a given event
         /// </summary>
         public static void LogAudit(AuditType type, SecurityUser user, string path = null, string detail = null, string error = null, Report report = null, ReportSchedule schedule = null)
@@ -174,29 +154,169 @@ namespace Seal.Model
 
                 if (Repository.Instance.Configuration.AuditEnabled)
                 {
-                    var script = Repository.Instance.Configuration.AuditScript;
-                    if (string.IsNullOrEmpty(script)) script = AuditScriptTemplate;
-
                     var audit = new Audit() { Type = type, User = user, Path = path, Detail = detail, Error = error, Report = report, Schedule = schedule };
-                    var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
-                    bool lockDatabase = (auditSource != null && auditSource.Connection.ConnectionType == ConnectionType.SQLite);
-
-                    if (lockDatabase)
-                    {
-                        lock (Key)
-                        {
-                            ExecuteWithRetry(() => RazorHelper.CompileExecute(script, audit, Key));
-                        }
-                    }
-                    else
-                    {
-                        RazorHelper.CompileExecute(script, audit, Key);
-                    }
+                    ExecuteAuditScript(audit);
                 }
             }
             catch (Exception ex)
             {
                 Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Execute the audit for a record: the default database insertion when no custom script is
+        /// configured (no Razor compilation involved), otherwise the custom Audit Script.
+        /// </summary>
+        static void ExecuteAuditScript(Audit audit)
+        {
+            var script = Repository.Instance.Configuration.AuditScript;
+            Action executeAudit = string.IsNullOrEmpty(script)
+                ? audit.LogToDatabase
+                : () => RazorHelper.CompileExecute(script, audit, Key);
+
+            var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
+            bool lockDatabase = (auditSource != null && auditSource.Connection.ConnectionType == ConnectionType.SQLite);
+
+            if (lockDatabase)
+            {
+                lock (Key)
+                {
+                    ExecuteWithRetry(executeAudit);
+                }
+            }
+            else
+            {
+                executeAudit();
+            }
+        }
+
+        /// <summary>
+        /// Default audit implementation: inserts the audit record into the 'sr_audit' table of the
+        /// data source having a name starting with 'Audit'. The table is created on first use and
+        /// upgraded automatically when new columns are introduced.
+        /// Called by the default Audit Script; a custom script can also call it (Model.LogToDatabase())
+        /// before or after its own processing.
+        /// </summary>
+        public void LogToDatabase()
+        {
+            var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
+            if (auditSource == null) return;
+
+            var connection = auditSource.Connection.GetOpenConnection();
+            try
+            {
+                var command = new TaskDatabaseHelper().GetDbCommand(connection);
+                CheckAuditTable(command);
+
+                var date = DateTime.Now;
+                date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+
+                var values = new List<Tuple<string, DbType, object>>
+                {
+                    Tuple.Create("event_date", DbType.DateTime, (object)date),
+                    Tuple.Create("event_type", DbType.AnsiString, (object)Type.ToString()),
+                    Tuple.Create("event_path", DbType.AnsiString, (object)Path),
+                    Tuple.Create("event_detail", DbType.AnsiString, (object)Detail),
+                    Tuple.Create("event_error", DbType.AnsiString, (object)Error),
+                    Tuple.Create("user_name", DbType.AnsiString, (object)User?.Name),
+                    Tuple.Create("user_groups", DbType.AnsiString, (object)User?.SecurityGroupsDisplay),
+                    Tuple.Create("user_session", DbType.AnsiString, (object)User?.SessionID),
+                    Tuple.Create("execution_name", DbType.AnsiString, (object)Report?.ExecutionName),
+                    Tuple.Create("execution_context", DbType.AnsiString, (object)Report?.ExecutionContext.ToString()),
+                    Tuple.Create("execution_view", DbType.AnsiString, (object)Report?.ExecutionView.Name),
+                    Tuple.Create("execution_duration", DbType.Int32, Report != null ? (object)Convert.ToInt32(Report.ExecutionFullDuration.TotalSeconds) : (object)Duration),
+                    Tuple.Create("output_type", DbType.AnsiString, (object)Report?.OutputToExecute?.DeviceName),
+                    Tuple.Create("output_name", DbType.AnsiString, (object)Report?.OutputToExecute?.Name),
+                    Tuple.Create("output_information", DbType.AnsiString, (object)Report?.OutputToExecute?.Information),
+                    Tuple.Create("schedule_name", DbType.AnsiString, (object)Schedule?.Name),
+                    Tuple.Create("ai_agent", DbType.AnsiString, (object)AIAgentName),
+                    Tuple.Create("ai_provider", DbType.AnsiString, (object)AIProvider),
+                    Tuple.Create("ai_model", DbType.AnsiString, (object)AIModel),
+                    Tuple.Create("ai_input_tokens", DbType.Int32, (object)AIInputTokens),
+                    Tuple.Create("ai_output_tokens", DbType.Int32, (object)AIOutputTokens),
+                    Tuple.Create("ai_calls", DbType.Int32, (object)AICalls),
+                    Tuple.Create("ai_tool_calls", DbType.Int32, (object)AIToolCalls),
+                    Tuple.Create("ai_message_count", DbType.Int32, (object)AIMessageCount),
+                    Tuple.Create("ai_cost", DbType.Double, (object)AICost)
+                };
+
+                // OleDb/Odbc are positional ('?'), Oracle uses ':pN', others '@pN'
+                bool positional = command is OleDbCommand || command is OdbcCommand;
+                var oracleCommand = command as Oracle.ManagedDataAccess.Client.OracleCommand;
+                if (oracleCommand != null) oracleCommand.BindByName = true;
+                var placeholderPrefix = oracleCommand != null ? ":" : "@";
+
+                command.CommandText = string.Format("insert into sr_audit({0}) values({1})",
+                    string.Join(",", values.Select(v => v.Item1)),
+                    positional ? string.Join(",", values.Select(v => "?"))
+                               : string.Join(",", values.Select((v, i) => placeholderPrefix + "p" + (i + 1))));
+
+                for (int i = 0; i < values.Count; i++)
+                {
+                    var parameter = command.CreateParameter();
+                    parameter.ParameterName = placeholderPrefix + "p" + (i + 1);
+                    parameter.DbType = values[i].Item2;
+                    var value = values[i].Item3 ?? DBNull.Value;
+                    if (value is string stringValue && stringValue.Length >= 255) value = stringValue.Substring(0, 254);
+                    parameter.Value = value;
+                    command.Parameters.Add(parameter);
+                }
+                command.ExecuteNonQuery();
+            }
+            finally
+            {
+                connection.Close();
+            }
+        }
+
+        /// <summary>
+        /// Creates the sr_audit table on first use, or adds the AI Chat columns when upgrading an
+        /// existing audit database. Executed once per process (see <see cref="CheckTableCreation"/>).
+        /// </summary>
+        static void CheckAuditTable(DbCommand command)
+        {
+            if (!CheckTableCreation) return;
+            CheckTableCreation = false;
+            try
+            {
+                command.CommandText = "select 1 from sr_audit where 1=0";
+                command.ExecuteNonQuery();
+
+                //Table exists: add the AI Chat columns when upgrading from a version without them
+                try
+                {
+                    command.CommandText = "select ai_input_tokens from sr_audit where 1=0";
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    foreach (var columnDef in new string[] { "ai_agent varchar(255)", "ai_provider varchar(255)", "ai_model varchar(255)", "ai_input_tokens int null", "ai_output_tokens int null", "ai_calls int null", "ai_tool_calls int null", "ai_message_count int null" })
+                    {
+                        command.CommandText = "alter table sr_audit add " + columnDef;
+                        command.ExecuteNonQuery();
+                    }
+                }
+
+                //Add the AI cost column when upgrading from a version having the AI Chat columns but not ai_cost
+                try
+                {
+                    command.CommandText = "select ai_cost from sr_audit where 1=0";
+                    command.ExecuteNonQuery();
+                }
+                catch
+                {
+                    command.CommandText = "alter table sr_audit add ai_cost float null";
+                    command.ExecuteNonQuery();
+                }
+            }
+            catch
+            {
+                //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
+                command.CommandText = @"create table sr_audit (
+                        event_date datetime,event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255),ai_agent varchar(255),ai_provider varchar(255),ai_model varchar(255),ai_input_tokens int null,ai_output_tokens int null,ai_calls int null,ai_tool_calls int null,ai_message_count int null,ai_cost float null
+                    )";
+                command.ExecuteNonQuery();
             }
         }
 

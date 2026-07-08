@@ -1,0 +1,5 @@
+@* Only the Link/Script tag helpers are registered (for asp-append-version cache busting):
+   registering all Mvc.TagHelpers would activate FormTagHelper and inject antiforgery tokens
+   into the existing plain <form> elements. *@
+@addTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.LinkTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers
+@addTagHelper Microsoft.AspNetCore.Mvc.TagHelpers.ScriptTagHelper, Microsoft.AspNetCore.Mvc.TagHelpers

@@ -89,16 +89,12 @@ class SWIMain {
             SWIUtil.HideModal($waitDialog);
             $("#password-reset-submit2").unbind("click").on("click", function () {
                 _gateway.ResetPassword2(guid, token, $("#password-reset1").val(), $("#password-reset2").val(), function (data) {
-                    if (data.error)
-                        SWIUtil.ShowMessage("alert-danger", data.error, -1);
-                    else {
-                        SWIUtil.HideModal($passwordResetModal2);
-                        SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
-                        _main.showLogin();
-                    }
+                    SWIUtil.HideModal($passwordResetModal2);
+                    SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);
+                    _main.showLogin();
                 }, function (data) {
-                    if (data.error)
-                        SWIUtil.ShowMessage("alert-danger", data.error, -1);
+                    //Error displayed inside the modal: the global alert would be hidden behind the dialog (z-index 25000)
+                    $("#password-reset-error2").removeClass("d-none").html(data.error);
                 });
             });
             SWIUtil.ShowModal($passwordResetModal2);

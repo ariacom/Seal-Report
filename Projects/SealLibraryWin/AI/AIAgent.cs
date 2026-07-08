@@ -31,6 +31,40 @@ namespace Seal.AI
         /// </summary>
         public List<ChatMessage> Messages { get; } = new List<ChatMessage>();
 
+        /// <summary>
+        /// Token and call usage of the last <see cref="Chat"/> exchange
+        /// (summed over all model round-trips of the tool loop).
+        /// </summary>
+        public AIUsage LastChatUsage { get; private set; } = new AIUsage();
+
+        /// <summary>
+        /// Cumulative token and call usage of the whole conversation,
+        /// including title generation. Reset by <see cref="Clear"/>.
+        /// </summary>
+        public AIUsage TotalUsage { get; private set; } = new AIUsage();
+
+        /// <summary>
+        /// Title of the conversation (the saved chat session name).
+        /// Null until the chat is saved or loaded; see <see cref="EffectiveTitle"/>.
+        /// </summary>
+        public string Title;
+
+        /// <summary>
+        /// <see cref="Title"/> when set, otherwise the first user message truncated to 100 characters.
+        /// </summary>
+        public string EffectiveTitle
+        {
+            get
+            {
+                if (!string.IsNullOrWhiteSpace(Title)) return Title;
+                var first = Messages.OfType<UserChatMessage>().FirstOrDefault();
+                var text = first != null && first.Content.Count > 0 ? first.Content[0].Text : null;
+                if (string.IsNullOrWhiteSpace(text)) return null;
+                text = text.Trim().Replace("\r", " ").Replace("\n", " ");
+                return text.Length > 100 ? text.Substring(0, 100) : text;
+            }
+        }
+
         // ----------------------------------------------------------------
         //  Construction
         // ----------------------------------------------------------------
@@ -104,6 +138,24 @@ namespace Seal.AI
         internal const string LoadSkillToolName = "load_skill";
 
         /// <summary>
+        /// Hard ceiling (in characters) for a single tool result appended to the conversation.
+        /// A result larger than this (roughly 50k tokens) would risk exceeding the model's context
+        /// window — and since the history is resent on every turn, it would brick the whole session.
+        /// </summary>
+        public const int MaxToolResultLength = 200000;
+
+        /// <summary>
+        /// Returns <paramref name="result"/> truncated to <see cref="MaxToolResultLength"/> characters,
+        /// with an explicit marker so the model knows data is missing and can narrow its request.
+        /// </summary>
+        internal static string TruncateToolResult(string result)
+        {
+            if (result == null || result.Length <= MaxToolResultLength) return result;
+            return result.Substring(0, MaxToolResultLength) +
+                $"\r\n[Result truncated: {result.Length - MaxToolResultLength} characters removed — the tool returned too much data for the conversation. Retry with a more specific request (filters, restrictions, fewer columns).]";
+        }
+
+        /// <summary>
         /// Appends a user message to the conversation history, calls the AI using
         /// the tools scoped to this agent (via <see cref="AIAgentConfiguration.GetToolConfigurations"/>)
         /// plus a built-in <c>load_skill</c> tool when the agent has skills
@@ -121,6 +173,12 @@ namespace Seal.AI
         public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10, Action<string> progress = null)
         {
             var messageCountBefore = Messages.Count;
+            LastChatUsage = new AIUsage();
+            void addUsage()
+            {
+                LastChatUsage.Add(_provider.LastUsage);
+                TotalUsage.Add(_provider.LastUsage);
+            }
             Messages.Add(new UserChatMessage(userMessage));
 
             var toolConfigs = Configuration.GetToolConfigurations();
@@ -135,7 +193,11 @@ namespace Seal.AI
 
             // No tools and no skills — plain chat, no tool loop.
             if (toolConfigs.Count == 0 && skillConfigs.Count == 0)
-                return _provider.HandleChat(Messages);
+            {
+                var plainReply = _provider.HandleChat(Messages);
+                addUsage();
+                return plainReply;
+            }
 
             // Tools currently callable, keyed by name. Starts with the agent's base tools and grows as
             // skills are loaded. Pre-activate the tools of any skill already loaded earlier in this
@@ -164,6 +226,12 @@ namespace Seal.AI
                 if (cancelOperation?.Cancel == true) break;
 
                 var reply = _provider.HandleChatWithTools(Messages, tools, out var toolCalls);
+                addUsage();
+                if (toolCalls != null)
+                {
+                    LastChatUsage.ToolCalls += toolCalls.Count;
+                    TotalUsage.ToolCalls += toolCalls.Count;
+                }
                 if (log != null) log.LogMessage($"****** Chat Reply {i}:\r\n{reply}");
 
                 // AI returned a text response — loop is complete
@@ -198,9 +266,27 @@ namespace Seal.AI
                     // The tool is not active yet. It almost always belongs to a skill that has not been
                     // loaded: returning an empty result silently misleads the model (it reads it as "no
                     // data" and answers wrong). Return an actionable error so it loads the skill and retries.
-                    var result = toolConfig != null
-                        ? (toolConfig.Execute(toolCall) ?? string.Empty)
-                        : $"Error: tool '{toolCall.Name}' is not available. If it belongs to a skill, call '{LoadSkillToolName}' to load that skill first, then retry.";
+                    string result;
+                    if (toolConfig != null)
+                    {
+                        try
+                        {
+                            result = TruncateToolResult(toolConfig.Execute(toolCall) ?? string.Empty);
+                        }
+                        catch (Exception ex)
+                        {
+                            // Tool scripts are user-editable Razor: a crash there (e.g. GetProperty on a
+                            // missing JSON argument) must become a tool error the model can recover from,
+                            // not abort the whole chat exchange.
+                            var hint = ex is KeyNotFoundException ? " A required argument is probably missing: check the call arguments against the tool's parameters schema and retry." : "";
+                            result = $"Error: tool '{toolCall.Name}' failed: {ex.Message}{hint}";
+                            if (log != null) log.LogMessage($"****** Tool Call Error {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\n{ex}");
+                        }
+                    }
+                    else
+                    {
+                        result = $"Error: tool '{toolCall.Name}' is not available. If it belongs to a skill, call '{LoadSkillToolName}' to load that skill first, then retry.";
+                    }
                     if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result}");
                     Messages.Add(new ToolChatMessage(toolCall.Id, result));
                 }
@@ -217,7 +303,9 @@ namespace Seal.AI
                 Messages.RemoveRange(messageCountBefore, Messages.Count - messageCountBefore);
                 return "";
             }
-            return _provider.HandleChat(Messages);
+            var finalReply = _provider.HandleChat(Messages);
+            addUsage();
+            return finalReply;
         }
 
         /// <summary>
@@ -349,7 +437,11 @@ namespace Seal.AI
         public string ChatSimple(string userMessage)
         {
             Messages.Add(new UserChatMessage(userMessage));
-            return _provider.HandleChat(Messages);
+            LastChatUsage = new AIUsage();
+            var reply = _provider.HandleChat(Messages);
+            LastChatUsage.Add(_provider.LastUsage);
+            TotalUsage.Add(_provider.LastUsage);
+            return reply;
         }
 
         /// <summary>
@@ -375,6 +467,7 @@ namespace Seal.AI
                 };
 
                 var title = _provider.HandleChat(temp);
+                TotalUsage.Add(_provider.LastUsage);
                 if (string.IsNullOrWhiteSpace(title)) return null;
 
                 // Keep the first line only and strip surrounding quotes.
@@ -446,6 +539,9 @@ namespace Seal.AI
         public void Clear()
         {
             Messages.Clear();
+            Title = null;
+            LastChatUsage = new AIUsage();
+            TotalUsage = new AIUsage();
             if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
                 Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
         }

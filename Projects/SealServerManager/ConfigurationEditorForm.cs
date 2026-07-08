@@ -1,6 +1,6 @@
 ﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
 using System.Collections.Generic;
@@ -76,21 +76,21 @@ Read access to the repository directory ({0}).
 Rights to connect to the databases defined in the Data Sources.
 
 Note that publishing will stop the current Web Server instance.
-", _configuration.Repository.RepositoryPath);
+".Replace("\r\n", "\n").Replace("\n", "\r\n"), _configuration.Repository.RepositoryPath); //TextBox only breaks on CRLF, source may be checked out with LF
                 }
                 else
                 {
                     infoTextBox.Text = @"No Internet Information Server detected on this machine.
 Please install IIS first with the following feature: 
 ASP.Net Core Runtime 8 (Hosting Bundle).
-";
+".Replace("\r\n", "\n").Replace("\n", "\r\n");
                 }
             }
             else
             {
                 infoTextBox.Text = @"This editor allows to configure your server parameters.
 
-New parameter values may require a restart of the Report Designer or the Web Server.";
+New parameter values may require a restart of the Report Designer or the Web Server.".Replace("\r\n", "\n").Replace("\n", "\r\n");
             }
             Visible = true;
             //Loose focus of the propertyGrid

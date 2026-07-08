@@ -482,3 +482,5 @@ Report;Show Restrictions;إظهار القيود
 Report;Hide Restrictions;إخفاء القيود
 Report;Show Guide;إظهار الدليل
 Report;Hide Guide;إخفاء الدليل
+WebJS;Copy for Excel;نسخ إلى Excel
+WebJS;Download CSV;تنزيل CSV

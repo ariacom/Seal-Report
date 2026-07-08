@@ -47,6 +47,8 @@ namespace Seal.AI
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("EndPoint").SetIsBrowsable(true);
                 GetProperty("ClearProviderKey").SetIsBrowsable(true);
+                GetProperty("InputTokenCost").SetIsBrowsable(true);
+                GetProperty("OutputTokenCost").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -105,6 +107,34 @@ namespace Seal.AI
         [Category("Definition"), DisplayName("Provider End Point"), Description("The resource endpoint to use (e.g. https://api.anthropic.com/v1/messages or https://<resource>.openai.azure.com/)"), Id(4, 1)]
 #endif
         public string EndPoint { get; set; }
+
+        /// <summary>
+        /// Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking.
+        /// Cached input tokens are counted at the full input rate.
+        /// </summary>
+#if WINDOWS
+        [Category("Costs"), DisplayName("\tCost per 1M input tokens"), Description("Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking. Note that cached input tokens are counted at the full input rate."), Id(1, 2)]
+        [DefaultValue(0d)]
+#endif
+        public double InputTokenCost { get; set; } = 0;
+
+        /// <summary>
+        /// Cost per 1 million output (completion) tokens, in the currency you pay the provider in. 0 means no cost tracking.
+        /// </summary>
+#if WINDOWS
+        [Category("Costs"), DisplayName("Cost per 1M output tokens"), Description("Cost per 1 million output (completion) tokens, in the currency you pay the provider in. 0 means no cost tracking."), Id(2, 2)]
+        [DefaultValue(0d)]
+#endif
+        public double OutputTokenCost { get; set; } = 0;
+
+        /// <summary>
+        /// Cost of a usage based on the configured token costs, or null when no cost is configured.
+        /// </summary>
+        public double? GetCost(AIUsage usage)
+        {
+            if (usage == null || (InputTokenCost == 0 && OutputTokenCost == 0)) return null;
+            return (usage.InputTokens * InputTokenCost + usage.OutputTokens * OutputTokenCost) / 1000000d;
+        }
 
         /// <summary>
         /// Encrypted API Key.

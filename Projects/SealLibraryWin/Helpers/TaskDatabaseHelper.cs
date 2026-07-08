@@ -1,6 +1,6 @@
 //
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
-// Licensed under the Seal Report Dual-License version 1.0; you may not use this file except in compliance with the License described at https://github.com/ariacom/Seal-Report.
+// Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using Seal.Model;
 using System;
@@ -14,7 +14,6 @@ using Microsoft.Data.SqlClient;
 using OfficeOpenXml;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
-using MySqlX.XDevAPI.Common;
 using Npgsql;
 using System.Transactions;
 using System.Globalization;
@@ -164,7 +163,7 @@ namespace Seal.Helpers
                         DbDataAdapter adapter = null;
                         if (connection is OdbcConnection) adapter = new OdbcDataAdapter(sql, (OdbcConnection)connection);
                         else if (connection is SqlConnection) adapter = new SqlDataAdapter(sql, (SqlConnection)connection);
-                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) adapter = new MySql.Data.MySqlClient.MySqlDataAdapter(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
+                        else if (connection is MySqlConnector.MySqlConnection) adapter = new MySqlConnector.MySqlDataAdapter(sql, (MySqlConnector.MySqlConnection)connection);
                         else if (connection is OracleConnection) adapter = new OracleDataAdapter(sql, (OracleConnection)connection);
                         else if (connection is NpgsqlConnection) adapter = new NpgsqlDataAdapter(sql, (NpgsqlConnection)connection);
                         else if (connection is SQLiteConnection) adapter = new SQLiteDataAdapter(sql, (SQLiteConnection)connection);
@@ -177,7 +176,7 @@ namespace Seal.Helpers
                         DbCommand cmd = null;
                         if (connection is OdbcConnection) cmd = new OdbcCommand(sql, (OdbcConnection)connection);
                         else if (connection is SqlConnection) cmd = new SqlCommand(sql, (SqlConnection)connection);
-                        else if (connection is MySql.Data.MySqlClient.MySqlConnection) cmd = new MySql.Data.MySqlClient.MySqlCommand(sql, (MySql.Data.MySqlClient.MySqlConnection)connection);
+                        else if (connection is MySqlConnector.MySqlConnection) cmd = new MySqlConnector.MySqlCommand(sql, (MySqlConnector.MySqlConnection)connection);
                         else if (connection is OracleConnection) cmd = new OracleCommand(sql, (OracleConnection)connection);
                         else if (connection is NpgsqlConnection) cmd = new NpgsqlCommand(sql, (NpgsqlConnection)connection);
                         else if (connection is SQLiteConnection) cmd = new SQLiteCommand(sql, (SQLiteConnection)connection);
@@ -473,7 +472,7 @@ namespace Seal.Helpers
             if (connection is OdbcConnection) result = ((OdbcConnection)connection).CreateCommand();
             else if (connection is SqlConnection) result = ((SqlConnection)connection).CreateCommand();
             else if (connection is SqlConnection) result = ((SqlConnection)connection).CreateCommand();
-            else if (connection is MySql.Data.MySqlClient.MySqlConnection) result = ((MySql.Data.MySqlClient.MySqlConnection)connection).CreateCommand();
+            else if (connection is MySqlConnector.MySqlConnection) result = ((MySqlConnector.MySqlConnection)connection).CreateCommand();
             else if (connection is OracleConnection) result = ((OracleConnection)connection).CreateCommand();
             else if (connection is NpgsqlConnection) result = ((NpgsqlConnection)connection).CreateCommand();
             else if (connection is SQLiteConnection) result = ((SQLiteConnection)connection).CreateCommand();

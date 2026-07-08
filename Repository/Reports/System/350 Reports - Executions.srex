@@ -571,6 +571,12 @@ AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>1</SortOrder>
             </ReportView>
             <ReportView>
@@ -626,6 +632,12 @@ AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>2</SortOrder>
             </ReportView>
             <ReportView>
@@ -681,6 +693,12 @@ AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>3</SortOrder>
             </ReportView>
             <ReportView>
@@ -742,6 +760,12 @@ AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
                 </ReportView>
               </Views>
               <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
               <SortOrder>4</SortOrder>
             </ReportView>
           </Views>
