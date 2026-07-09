@@ -136,16 +136,16 @@
             if (menum == null) continue;
 
             var restName = rest.Element("Name") != null && !string.IsNullOrEmpty(rest.Element("Name").Value) ? rest.Element("Name").Value.Trim() : rcol.Name;
-            var op       = rest.Element("Operator") != null ? rest.Element("Operator").Value.Trim() : "Equal";
+            var restOp   = rest.Element("Operator") != null ? rest.Element("Operator").Value.Trim() : "Equal";
             var enumEls  = rest.Element("EnumValues") == null ? new System.Collections.Generic.List<XElement>() : rest.Element("EnumValues").Elements("string").ToList();
             var hasVal1  = rest.Element("Value1") != null && !string.IsNullOrEmpty(rest.Element("Value1").Value);
             var prompted = rest.Element("Prompt") != null && rest.Element("Prompt").Value.Trim() != "None";
 
-            if (valueLessOperators.Contains(op)) continue;
+            if (valueLessOperators.Contains(restOp)) continue;
 
-            if (op != "Equal" && op != "NotEqual")
+            if (restOp != "Equal" && restOp != "NotEqual")
             {
-                restrictionErrors.Add($"'{restName}': operator '{op}' is invalid on an enumerated column (only Equal or NotEqual are supported)");
+                restrictionErrors.Add($"'{restName}': operator '{restOp}' is invalid on an enumerated column (only Equal or NotEqual are supported)");
                 continue;
             }
             if (hasVal1 && enumEls.Count == 0)
