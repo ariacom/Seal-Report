@@ -210,7 +210,9 @@ namespace Seal.Model
                 CheckAuditTable(command);
 
                 var date = DateTime.Now;
-                date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second);
+                //Keep the Local kind: with a DateTimeKind=Utc connection (Audit SQLite source), an Unspecified
+                //kind gets stored with a 'Z' suffix, shifting values read back from SQL aggregates (e.g. max) by the UTC offset
+                date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Kind);
 
                 var values = new List<Tuple<string, DbType, object>>
                 {

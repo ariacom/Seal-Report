@@ -72,7 +72,12 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13) _main.checkSecurityCode();
         });
 
-        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
+        //Mobile mode: collapse the expanded navbar menu after an action in it
+        $("#navbar").on("click", "a.nav-link:not(.dropdown-toggle), .dropdown-item, #search-nav-item", function () {
+            SWIUtil.CollapseNavbar();
+        });
+
+        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
         $("#login-modal-submit").unbind("click").on("click", function () {
             _main.login();
         });
@@ -234,6 +239,7 @@ class SWIMain {
         _main._searchMode = false;
         _main._clipboard = [];
         _main._clipboardCut = false;
+        _main._lastReport = new Object();
         _main.clearFilesTable();
         _main._newWindow = (_main._profile.executionmode === 1 || (_main._profile.executionmode === 0 && _main._profile.groupexecutionmode === 1));
         _main._reportIcon = (_main._newWindow ? "fa-solid fa-right-to-bracket" : "fa-solid fa-up-right-from-square");
@@ -365,7 +371,7 @@ class SWIMain {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
                 if (window.aiPanel) window.aiPanel.reset();
                 _main.showLogin();
             });

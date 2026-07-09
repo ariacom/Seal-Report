@@ -11,13 +11,14 @@
       <PostgreSQLConnectionString>Server=localhost;Port=5432;Database=Audit;</PostgreSQLConnectionString>
     </MetaConnection>
   </Connections>
-  <Description>Audit database</Description>
+  <Description>Audit database of the Seal Report server: audited events (logins, report executions, AI chats, file operations) and regression test results.</Description>
   <ConnectionGUID>5ee183e6-830b-400f-b3db-bf5f59a1c01f</ConnectionGUID>
   <MetaData>
     <Tables>
       <MetaTable>
         <GUID>36ffc9d2-1a1b-4357-8c46-24331e961794</GUID>
         <Name>sr_audit</Name>
+        <Description>One row per audited server event: logins/logouts, report executions and saves, file/folder operations, AI chat exchanges. Columns are filled according to the event type (execution/output columns for reports, AI columns for chats).</Description>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -33,6 +34,7 @@
             <GUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</GUID>
             <Name>sr_audit.event_type</Name>
             <Type>Text</Type>
+            <Description>Kind of audited event. Failures are distinct types (Login Failure, Report Execution Error, AI Chat Error).</Description>
             <Category>Audit</Category>
             <DisplayName>Type</DisplayName>
             <DisplayOrder>2</DisplayOrder>
@@ -66,6 +68,7 @@
             <GUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</GUID>
             <Name>sr_audit.event_path</Name>
             <Type>Text</Type>
+            <Description>File or folder path related to the event (e.g. report path for executions).</Description>
             <Category>Audit</Category>
             <DisplayName>Path</DisplayName>
             <DisplayOrder>3</DisplayOrder>
@@ -82,6 +85,7 @@
             <GUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</GUID>
             <Name>sr_audit.execution_duration</Name>
             <Type>Numeric</Type>
+            <Description>Duration in seconds (report execution, or exchange duration for AI Chat events).</Description>
             <Category>Audit</Category>
             <DisplayName>Execution duration</DisplayName>
             <DisplayOrder>13</DisplayOrder>
@@ -99,6 +103,7 @@
             <GUID>2bdb4e06-891a-46c8-9b46-8bac603bea56</GUID>
             <Name>sr_audit.output_type</Name>
             <Type>Text</Type>
+            <Description>Device type of the report output (Folder, Email, FTP, SharePoint...).</Description>
             <Category>Audit</Category>
             <DisplayName>Output type</DisplayName>
             <DisplayOrder>14</DisplayOrder>
@@ -115,6 +120,7 @@
             <GUID>8457637b-d72b-48bf-8fb1-118adfeef0be</GUID>
             <Name>sr_audit.schedule_name</Name>
             <Type>Text</Type>
+            <Description>Set when the execution was triggered by the scheduler.</Description>
             <Category>Audit</Category>
             <DisplayName>Schedule name</DisplayName>
             <DisplayOrder>17</DisplayOrder>
@@ -123,6 +129,7 @@
             <GUID>db93240e-46a2-43a2-8b0a-079915daee93</GUID>
             <Name>sr_audit.output_information</Name>
             <Type>Text</Type>
+            <Description>Information message returned by the output device.</Description>
             <Category>Audit</Category>
             <DisplayName>Output information</DisplayName>
             <DisplayOrder>16</DisplayOrder>
@@ -131,6 +138,7 @@
             <GUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</GUID>
             <Name>sr_audit.execution_context</Name>
             <Type>Text</Type>
+            <Description>Where the report was executed from (Web, Designer or Scheduler).</Description>
             <Category>Audit</Category>
             <DisplayName>Execution context</DisplayName>
             <DisplayOrder>11</DisplayOrder>
@@ -174,6 +182,7 @@
             <GUID>54acc367-0703-48c9-ad29-f1914dbfa994</GUID>
             <Name>sr_audit.event_detail</Name>
             <Type>Text</Type>
+            <Description>Free-text detail depending on the event type: chat title for AI Chat, number of logged users for Event Logged Users, destination path for file operations.</Description>
             <Category>Audit</Category>
             <DisplayName>Detail</DisplayName>
             <DisplayOrder>4</DisplayOrder>
@@ -182,6 +191,7 @@
             <GUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</GUID>
             <Name>sr_audit.user_session</Name>
             <Type>Text</Type>
+            <Description>Web session identifier, to correlate or count the events of one browser session.</Description>
             <Category>Audit</Category>
             <DisplayName>User session</DisplayName>
             <DisplayOrder>9</DisplayOrder>
@@ -190,6 +200,7 @@
             <GUID>8f4337f8-57f0-4d68-91cb-c1b797fbbd81</GUID>
             <Name>(case when sr_audit.event_detail ~ '^[0-9]+$' then cast(sr_audit.event_detail as integer) end)</Name>
             <Type>Numeric</Type>
+            <Description>Detail converted to a number (0 when not numeric), e.g. to aggregate logged user counts.</Description>
             <Category>Audit</Category>
             <DisplayName>Detail Numeric</DisplayName>
             <DisplayOrder>5</DisplayOrder>
@@ -207,6 +218,7 @@
             <GUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</GUID>
             <Name>sr_audit.ai_agent</Name>
             <Type>Text</Type>
+            <Description>Name of the AI agent used for the chat exchange.</Description>
             <Category>Audit</Category>
             <DisplayName>AI agent</DisplayName>
             <DisplayOrder>23</DisplayOrder>
@@ -231,6 +243,7 @@
             <GUID>3accb676-4680-41ed-903d-af8d14cd2e9a</GUID>
             <Name>sr_audit.ai_input_tokens</Name>
             <Type>Numeric</Type>
+            <Description>Input tokens consumed by the exchange (one user message and its final reply), all intermediate calls included.</Description>
             <Category>Audit</Category>
             <DisplayName>AI input tokens</DisplayName>
             <DisplayOrder>26</DisplayOrder>
@@ -240,6 +253,7 @@
             <GUID>4da92514-cca7-4eab-9044-aad9ef70cca5</GUID>
             <Name>sr_audit.ai_output_tokens</Name>
             <Type>Numeric</Type>
+            <Description>Output tokens generated during the exchange, all intermediate calls included.</Description>
             <Category>Audit</Category>
             <DisplayName>AI output tokens</DisplayName>
             <DisplayOrder>27</DisplayOrder>
@@ -258,6 +272,7 @@
             <GUID>935a98a6-ab56-4260-8e40-9d396f19c874</GUID>
             <Name>sr_audit.ai_calls</Name>
             <Type>Numeric</Type>
+            <Description>Number of LLM API calls made during the exchange (initial call plus one per tool round-trip).</Description>
             <Category>Audit</Category>
             <DisplayName>AI calls</DisplayName>
             <DisplayOrder>29</DisplayOrder>
@@ -267,6 +282,7 @@
             <GUID>581c6d65-ecb7-4a74-badc-091a22e5113d</GUID>
             <Name>sr_audit.ai_tool_calls</Name>
             <Type>Numeric</Type>
+            <Description>Number of tools executed during the exchange.</Description>
             <Category>Audit</Category>
             <DisplayName>AI tool calls</DisplayName>
             <DisplayOrder>30</DisplayOrder>
@@ -276,6 +292,7 @@
             <GUID>8fd152e4-e632-4db9-a45d-ed60459109ba</GUID>
             <Name>sr_audit.ai_message_count</Name>
             <Type>Numeric</Type>
+            <Description>Size of the conversation (number of messages) after the exchange.</Description>
             <Category>Audit</Category>
             <DisplayName>AI message count</DisplayName>
             <DisplayOrder>31</DisplayOrder>
@@ -285,6 +302,7 @@
             <GUID>08542fb1-ff0e-4d43-a205-76e344bb2523</GUID>
             <Name>sr_audit.ai_cost</Name>
             <Type>Numeric</Type>
+            <Description>Estimated cost of the exchange, computed from the input/output token costs (per 1M tokens) configured on the AI provider.</Description>
             <Category>Audit</Category>
             <DisplayName>AI cost</DisplayName>
             <DisplayOrder>32</DisplayOrder>
@@ -296,6 +314,7 @@
       <MetaTable>
         <GUID>7e57ab1e-0000-4000-8000-000000000001</GUID>
         <Name>sr_test_results</Name>
+        <Description>One row per test report executed by the '900 Tests - Run Tests and Audit' report. A run id groups all the reports tested in one execution, optionally repeated per AI provider.</Description>
         <Type>TABLE</Type>
         <Columns>
           <MetaColumn>
@@ -311,6 +330,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000101</GUID>
             <Name>sr_test_results.run_id</Name>
             <Type>Text</Type>
+            <Description>Identifier grouping all the test results of a single test run.</Description>
             <Category>Test Results</Category>
             <DisplayName>Run id</DisplayName>
             <DisplayOrder>2</DisplayOrder>
@@ -336,6 +356,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000105</GUID>
             <Name>sr_test_results.status</Name>
             <Type>Text</Type>
+            <Description>Test outcome. Load Error means the report file itself could not be loaded.</Description>
             <Category>Test Results</Category>
             <DisplayName>Status</DisplayName>
             <DisplayOrder>5</DisplayOrder>
@@ -345,6 +366,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000106</GUID>
             <Name>sr_test_results.duration_seconds</Name>
             <Type>Numeric</Type>
+            <Description>Test execution duration in seconds.</Description>
             <Category>Test Results</Category>
             <DisplayName>Duration</DisplayName>
             <DisplayOrder>6</DisplayOrder>
@@ -362,6 +384,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000108</GUID>
             <Name>sr_test_results.messages_file</Name>
             <Type>Text</Type>
+            <Description>Path of the file containing the execution and chat log messages of the test.</Description>
             <Category>Test Results</Category>
             <DisplayName>Messages file</DisplayName>
             <DisplayOrder>8</DisplayOrder>
@@ -370,6 +393,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000109</GUID>
             <Name>sr_test_results.provider_name</Name>
             <Type>Text</Type>
+            <Description>AI provider used for the run (AI test reports only).</Description>
             <Category>Test Results</Category>
             <DisplayName>Provider</DisplayName>
             <DisplayOrder>9</DisplayOrder>
@@ -378,6 +402,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000110</GUID>
             <Name>sr_test_results.match_rate</Name>
             <Type>Numeric</Type>
+            <Description>Similarity percentage (0-100) between the generated result and the report's reference Pattern.</Description>
             <Category>Test Results</Category>
             <DisplayName>Match rate</DisplayName>
             <DisplayOrder>10</DisplayOrder>
@@ -387,6 +412,7 @@
             <GUID>7e57ab1e-0000-4000-8000-000000000111</GUID>
             <Name>sr_test_results.warnings</Name>
             <Type>Text</Type>
+            <Description>Warning messages raised during the test (passed with reservations).</Description>
             <Category>Test Results</Category>
             <DisplayName>Warnings</DisplayName>
             <DisplayOrder>11</DisplayOrder>

@@ -892,10 +892,24 @@
         // Close panel, clear conversation, reset filename and favorite star.
         // Call this on logout so the panel is fully reset for the next user.
         reset: function () {
+            // Abort the in-flight request state: stop the progress polling and running
+            // animation, re-enable the input (the session is already cleared server-side,
+            // so no server cancel call here).
+            stopProgressPolling();
+            if ($currentTyping) {
+                $currentTyping.remove();
+                $currentTyping = null;
+            }
+            _thinkingSteps = [];
+            _requesting = false;
+            setSendMode();
             closePanel();
             clearConversation();
             _panelChatFileName = '';
             setFavorite(false);
+            // Force a refetch on next open: the next login may be a different user
+            // with different agent rights.
+            _agentsLoaded = false;
         },
         // Populate the two lists from menu data objects: [{name, path, ...}]
         setFavorites: function (items) {

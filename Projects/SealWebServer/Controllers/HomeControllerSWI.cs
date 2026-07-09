@@ -222,7 +222,7 @@ namespace SealWebServer.Controllers
 
                 //Audit
                 Audit.LogAudit(AuditType.Login, WebUser);
-                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.AuthenticatedLoggedUserCount.ToString());
 
                 return Json(getUserProfile());
             }
@@ -263,7 +263,7 @@ namespace SealWebServer.Controllers
                 //Log and Audit
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.SuccessAudit, WebUser.AuthenticationSummary);
                 Audit.LogAudit(AuditType.Login, WebUser);
-                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.AuthenticatedLoggedUserCount.ToString());
 
                 return Json(getUserProfile());
             }
@@ -745,7 +745,8 @@ namespace SealWebServer.Controllers
                 string destinationPath = getFullPath(destination);
                 if (!System.IO.File.Exists(sourcePath)) throw new Exception("Error: source path is incorrect");
                 if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(destinationPath))) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
-                if (folderDest.files && (FileHelper.IsReportFile(sourcePath) || (file.isshortcut && file.isreport))) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
+                //Repository folders accept report files as plain files, other files-only folders reject them
+                if (folderDest.files && !folderDest.IsRepository && (FileHelper.IsReportFile(sourcePath) || (file.isshortcut && file.isreport))) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy" + Path.GetExtension(destinationPath), Path.GetExtension(destinationPath));
 
                 bool hasSchedule = (FileHelper.IsReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
@@ -776,6 +777,12 @@ namespace SealWebServer.Controllers
                 {
                     //Simple file move/copy
                     FileHelper.MoveFile(sourcePath, destinationPath, copy);
+                    if (!copy && hasSchedule)
+                    {
+                        //A report moved as a plain file (e.g. from a repository folder): re-init its schedules
+                        var report = Report.LoadFromFile(destinationPath, Repository, false);
+                        report.SynchronizeTasks();
+                    }
                 }
 
                 if (copy) Audit.LogAudit(AuditType.FileCopy, WebUser, sourcePath, string.Format("Copy to '{0}'", destinationPath));
@@ -1090,7 +1097,7 @@ namespace SealWebServer.Controllers
                 if (WebUser != null) WebUser.Logout();
                 //Audit
                 Audit.LogAudit(AuditType.Logout, WebUser);
-                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.LoggedUsers.Count(i => i.IsAuthenticated).ToString());
+                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.AuthenticatedLoggedUserCount.ToString());
                 //Clear session
                 NavigationContext.Navigations.Clear();
                 setSessionValue(SessionUser, null);

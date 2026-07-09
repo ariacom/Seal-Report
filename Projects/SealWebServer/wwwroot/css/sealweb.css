@@ -988,6 +988,33 @@ table.dataTable {
 }
 
 /* ============================================================
+   Portal navbar — mobile mode (menu collapsed below the bar)
+   ============================================================ */
+@media (max-width: 767.98px) {
+    /* Expanded menu: each group keeps a horizontal row layout with spaced items
+       (Bootstrap zeroes the nav-link paddings below the expand breakpoint) */
+    #navbar .navbar-nav {
+        flex-direction: row !important;
+        flex-wrap: wrap;
+        align-items: center;
+        padding: 0.25rem 0;
+    }
+
+    #navbar .navbar-nav .nav-link {
+        padding: 0.375rem 0.75rem;
+    }
+
+    /* Keep dropdowns (e.g. the Results formats) floating above the menu instead of
+       expanding it inline (Bootstrap makes them "position: static" below the breakpoint),
+       and anchor them left so they stay inside the screen */
+    #navbar .dropdown-menu {
+        position: absolute;
+        left: 0;
+        right: auto;
+    }
+}
+
+/* ============================================================
    AI Chat Panel — collapsible left drawer
    ============================================================ */
 
@@ -1000,7 +1027,8 @@ table.dataTable {
     position: fixed;
     top: 51px;                        /* sits just below the fixed navbar */
     left: 0;
-    width: var(--ai-panel-width);
+    /* never wider than the viewport, whatever width was saved by the drag resizer */
+    width: min(var(--ai-panel-width), 100vw);
     height: calc(100vh - 51px);
     background: #fff;
     border-right: 1px solid #e0e0e0;
@@ -1044,7 +1072,8 @@ table.dataTable {
 }
 
 #ai-panel-toggle.ai-panel-open {
-    left: var(--ai-panel-width);
+    /* keep the collapse tab reachable: glued to the panel edge but never off-screen */
+    left: min(var(--ai-panel-width), calc(100vw - 26px));
 }
 
 /* Drag handle to resize the panel — pinned to the right edge */
@@ -1742,11 +1771,34 @@ body.ai-resizing #footer-div {
 
 body.ai-panel-visible #main-container,
 body.ai-panel-visible #report-body {
-    margin-left: var(--ai-panel-width);
-    width: calc(100% - var(--ai-panel-width));
+    margin-left: min(var(--ai-panel-width), 100vw);
+    width: calc(100% - min(var(--ai-panel-width), 100vw));
 }
 
 body.ai-panel-visible #footer-div {
-    left: var(--ai-panel-width);
-    width: calc(100% - var(--ai-panel-width));
+    left: min(var(--ai-panel-width), 100vw);
+    width: calc(100% - min(var(--ai-panel-width), 100vw));
+}
+
+/* Mobile: the drawer takes the whole viewport, the content behind is fully covered
+   (no need to shift it) and the drag resizer is pointless */
+@media (max-width: 575.98px) {
+    #ai-chat-panel {
+        width: 100%;
+    }
+
+    .ai-panel-resizer {
+        display: none;
+    }
+
+    body.ai-panel-visible #main-container,
+    body.ai-panel-visible #report-body {
+        margin-left: 0;
+        width: 100%;
+    }
+
+    body.ai-panel-visible #footer-div {
+        left: 0;
+        width: 100%;
+    }
 }

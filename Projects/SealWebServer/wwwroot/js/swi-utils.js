@@ -36,6 +36,13 @@ var SWIUtil;
         $els.each(function () { bs().Alert.getOrCreateInstance(this).close(); });
     }
     SWIUtil.CloseAlerts = CloseAlerts;
+    // Collapse the navbar menu if it is expanded (mobile mode)
+    function CollapseNavbar() {
+        var el = document.getElementById('navbar');
+        if (el && el.classList.contains('show'))
+            bs().Collapse.getOrCreateInstance(el).hide();
+    }
+    SWIUtil.CollapseNavbar = CollapseNavbar;
     function tr(reference) {
         var result = tra[reference];
         if (!result || result == "")

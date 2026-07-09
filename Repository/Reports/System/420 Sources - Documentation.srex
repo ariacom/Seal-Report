@@ -135,6 +135,14 @@
                 <DisplayOrder>12</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
+                <GUID>2e44ce22-3ef7-42a0-ab18-e86988ebc0d0</GUID>
+                <Name>Description</Name>
+                <Type>Text</Type>
+                <Category>MetaColumns</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>23</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
                 <GUID>7048cbf2-7566-408f-827b-82c9e8500250</GUID>
                 <Name>DisplayName</Name>
                 <Type>Text</Type>
@@ -283,6 +291,7 @@
 	metaTable.NoSQLTable = new DataTable();
 	metaTable.NoSQLTable.Columns.Add(new DataColumn("source", typeof(string)));
 	metaTable.NoSQLTable.Columns.Add(new DataColumn("enum_name", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("enum_description", typeof(string)));
 	metaTable.NoSQLTable.Columns.Add(new DataColumn("id", typeof(string)));
 	metaTable.NoSQLTable.Columns.Add(new DataColumn("value", typeof(string)));
 
@@ -303,7 +312,7 @@
         {
             foreach (var v in en.Values)
             {
-                table.Rows.Add(metaSource.Name, en.Name, v.Id, v.Val);
+                table.Rows.Add(metaSource.Name, en.Name, en.Description ?? "", v.Id, v.Val);
             }
         }
     }
@@ -320,6 +329,14 @@
                 <Category>EnumValues</Category>
                 <DisplayName>Enum Name</DisplayName>
                 <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c5b55639-990e-43e8-930e-e619cc67ebe1</GUID>
+                <Name>enum_description</Name>
+                <Type>Text</Type>
+                <Category>EnumValues</Category>
+                <DisplayName>Enum Description</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>42301c22-a26c-40d3-86da-ec36b0ba4db1</GUID>
@@ -344,6 +361,286 @@
                 <Category>EnumValues</Category>
                 <DisplayName>Source Name</DisplayName>
                 <EnumGUID>ac31b1af-3a6c-44f5-856a-4cafa1450f0a</EnumGUID>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>801da9b9-8d41-44bd-b44a-773f5220b13d</GUID>
+            <Name>Sources</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("source", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("source_description", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("connection_name", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("connection_type", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("database_type", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("connection_description", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	ReportModel reportModel = metaTable.NoSQLModel;
+
+	foreach (var metaSource in Repository.Instance.Sources)
+    {
+        if (metaSource.Connections.Count == 0)
+        {
+            table.Rows.Add(metaSource.Name, metaSource.Description ?? "", "", "", "", "");
+        }
+        foreach (var connection in metaSource.Connections)
+        {
+            table.Rows.Add(metaSource.Name, metaSource.Description ?? "", connection.Name, connection.ConnectionType.ToString(), connection.DatabaseType.ToString(), connection.Description ?? "");
+        }
+    }
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>dd98b402-a3f9-4a50-a228-5c5f92e9d69e</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Sources</Category>
+                <DisplayName>Source Name</DisplayName>
+                <EnumGUID>ac31b1af-3a6c-44f5-856a-4cafa1450f0a</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>199d9490-e044-451d-ba39-805ea980f724</GUID>
+                <Name>source_description</Name>
+                <Type>Text</Type>
+                <Category>Sources</Category>
+                <DisplayName>Source Description</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>056f5721-2a9d-4222-8219-e07d2b75dfc5</GUID>
+                <Name>connection_name</Name>
+                <Type>Text</Type>
+                <Category>Sources</Category>
+                <DisplayName>Connection Name</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>6598f0e4-2721-481e-b601-6d5b3dd59535</GUID>
+                <Name>connection_type</Name>
+                <Type>Text</Type>
+                <Category>Sources</Category>
+                <DisplayName>Connection Type</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>3b3b915c-d821-4d33-baac-c6b1559204d9</GUID>
+                <Name>database_type</Name>
+                <Type>Text</Type>
+                <Category>Sources</Category>
+                <DisplayName>Database Type</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>919fb6d8-72b0-4e53-a868-53efa983e109</GUID>
+                <Name>connection_description</Name>
+                <Type>Text</Type>
+                <Category>Sources</Category>
+                <DisplayName>Connection Description</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>466065b8-79e7-42a7-922e-d0c1266e30fc</GUID>
+            <Name>Tables</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("source", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("table_name", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("alias", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("table_type", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("column_count", typeof(int)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	ReportModel reportModel = metaTable.NoSQLModel;
+
+	foreach (var metaSource in Repository.Instance.Sources)
+    {
+        foreach (var aTable in metaSource.MetaData.Tables)
+        {
+            table.Rows.Add(metaSource.Name, aTable.Name ?? "", aTable.Alias ?? "", aTable.IsSQL ? "SQL" : "No SQL", aTable.Columns.Count, aTable.Description ?? "");
+        }
+    }
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>4faa8c7e-dd74-432b-bc62-cd2f477e7012</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Tables</Category>
+                <DisplayName>Source Name</DisplayName>
+                <EnumGUID>ac31b1af-3a6c-44f5-856a-4cafa1450f0a</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7bb4bcc5-8eb1-426a-98c0-5fe8d4003efc</GUID>
+                <Name>table_name</Name>
+                <Type>Text</Type>
+                <Category>Tables</Category>
+                <DisplayName>Table Name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>4d438091-f579-4a52-8ad0-40854599f728</GUID>
+                <Name>alias</Name>
+                <Type>Text</Type>
+                <Category>Tables</Category>
+                <DisplayName>Alias</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>37828186-ed15-44fb-bf08-bab6b4b90e7a</GUID>
+                <Name>table_type</Name>
+                <Type>Text</Type>
+                <Category>Tables</Category>
+                <DisplayName>Table Type</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>843dc354-d7e3-4d33-a79e-c8c992c0b2a4</GUID>
+                <Name>column_count</Name>
+                <Type>Numeric</Type>
+                <Category>Tables</Category>
+                <DisplayName>Column Count</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>babc1bea-9026-459d-ba39-3bd5cb245f7d</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>Tables</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>604220ca-bd7c-4f31-9c5a-056eed1f194f</GUID>
+            <Name>Joins</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("source", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("join_name", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("left_table", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("right_table", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("join_type", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("clause", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	ReportModel reportModel = metaTable.NoSQLModel;
+
+	foreach (var metaSource in Repository.Instance.Sources)
+    {
+        foreach (var join in metaSource.MetaData.Joins)
+        {
+            table.Rows.Add(metaSource.Name, join.Name ?? "", join.LeftTable != null ? join.LeftTable.AliasName : "", join.RightTable != null ? join.RightTable.AliasName : "", join.JoinType.ToString(), join.Clause, join.Description ?? "");
+        }
+    }
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>92b4266e-c31c-4dc6-80bd-be229a4597e1</GUID>
+                <Name>source</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Source Name</DisplayName>
+                <EnumGUID>ac31b1af-3a6c-44f5-856a-4cafa1450f0a</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5fab8006-d5ed-49c7-ae80-5bcc5b1026b7</GUID>
+                <Name>join_name</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Join Name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>1d408fb6-6312-4526-8e74-adfd5a7511c4</GUID>
+                <Name>left_table</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Left Table</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a68a8ef9-68d2-4f58-9f93-a28e587d3fc1</GUID>
+                <Name>right_table</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Right Table</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>60677485-620e-4cc9-9d06-906faa0338e4</GUID>
+                <Name>join_type</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Join Type</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>2261d16e-0cce-4526-a416-d506045cf62e</GUID>
+                <Name>clause</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Join Clause</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b1c2f356-53b0-4ace-8de4-238b6f040a0a</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>Joins</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
               </MetaColumn>
             </Columns>
           </MetaTable>
@@ -418,6 +715,14 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>7048cbf2-7566-408f-827b-82c9e8500250</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>72b2893c-dc69-4b3c-b291-998261cc6633</GUID>
+          <Name>Description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2e44ce22-3ef7-42a0-ab18-e86988ebc0d0</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
           <GUID>9b72f91b-5e5e-433f-acf6-4d6e863b8870</GUID>
@@ -534,6 +839,14 @@
           <MetaColumnGUID>657efb1d-aa41-438b-ae1f-eb81ed599b9b</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
+          <GUID>e95abc6d-c384-44fb-901d-dc3c3f337ac0</GUID>
+          <Name>enum_description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>c5b55639-990e-43e8-930e-e619cc67ebe1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
           <GUID>0d53105d-4bad-4e89-83d0-c3ac62fd4afa</GUID>
           <Name>id</Name>
           <DisplayName />
@@ -559,6 +872,235 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>bab9116a-c6df-49c3-9817-2a0bb13c4618</MetaColumnGUID>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>6a260a0e-e9f5-436a-a1a3-de571684e3ef</GUID>
+      <Name>Sources</Name>
+      <SourceGUID>fa7f2efd-0ba6-4091-9c42-b14799c8c321</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>801da9b9-8d41-44bd-b44a-773f5220b13d</GUID>
+          <Name>Sources</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>27dcc937-caeb-4f8c-a218-837f59cd7403</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>dd98b402-a3f9-4a50-a228-5c5f92e9d69e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e954bb89-fa13-43de-aca7-23eec09ca8aa</GUID>
+          <Name>source_description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>199d9490-e044-451d-ba39-805ea980f724</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0a4d51a1-1de8-4bd7-976c-96142d5512e8</GUID>
+          <Name>connection_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>056f5721-2a9d-4222-8219-e07d2b75dfc5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>202e8a51-c867-4a8a-9729-af7342adfbc8</GUID>
+          <Name>connection_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>6598f0e4-2721-481e-b601-6d5b3dd59535</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d671ccc8-1ee8-4897-b848-c58f4262449e</GUID>
+          <Name>database_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>3b3b915c-d821-4d33-baac-c6b1559204d9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a24c0d5b-bef5-41c8-9a50-a6b88ada96ed</GUID>
+          <Name>connection_description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>919fb6d8-72b0-4e53-a868-53efa983e109</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[f08b1fa2-4346-422e-b27f-f3b460041518]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>f08b1fa2-4346-422e-b27f-f3b460041518</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>dd98b402-a3f9-4a50-a228-5c5f92e9d69e</MetaColumnGUID>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>0a23c395-d499-451d-a607-294fd560dbb3</GUID>
+      <Name>Tables</Name>
+      <SourceGUID>fa7f2efd-0ba6-4091-9c42-b14799c8c321</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>466065b8-79e7-42a7-922e-d0c1266e30fc</GUID>
+          <Name>Tables</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>a0968412-69dd-4ee0-92f6-430f508f507f</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4faa8c7e-dd74-432b-bc62-cd2f477e7012</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>97e16147-c17f-4e6e-afb2-7f3686a5ba94</GUID>
+          <Name>table_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>7bb4bcc5-8eb1-426a-98c0-5fe8d4003efc</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c5a76cb0-ee00-405b-9536-10ddd3dacf24</GUID>
+          <Name>alias</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4d438091-f579-4a52-8ad0-40854599f728</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b3b7f533-100a-4717-93de-ea32748ff7f4</GUID>
+          <Name>table_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>37828186-ed15-44fb-bf08-bab6b4b90e7a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>384e4bc4-8e82-4f6d-9af2-7c0ab2419c10</GUID>
+          <Name>column_count</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>843dc354-d7e3-4d33-a79e-c8c992c0b2a4</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cb97ae6f-17bd-4a12-98ac-7983d9987b07</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>babc1bea-9026-459d-ba39-3bd5cb245f7d</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[0f45e2d2-1085-4b2a-819b-89b38aca7094]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>0f45e2d2-1085-4b2a-819b-89b38aca7094</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>4faa8c7e-dd74-432b-bc62-cd2f477e7012</MetaColumnGUID>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b8b8a9ef-1263-4fb6-b7c4-d03cf3a612dc</GUID>
+      <Name>Joins</Name>
+      <SourceGUID>fa7f2efd-0ba6-4091-9c42-b14799c8c321</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>604220ca-bd7c-4f31-9c5a-056eed1f194f</GUID>
+          <Name>Joins</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>22b51eba-3dc1-4889-a3f3-43fe19394fc5</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>92b4266e-c31c-4dc6-80bd-be229a4597e1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7f748d7e-75f6-4128-af75-7507dc7c4810</GUID>
+          <Name>join_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5fab8006-d5ed-49c7-ae80-5bcc5b1026b7</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6fc49ecd-7fdb-471a-8a05-c2f8d4553679</GUID>
+          <Name>left_table</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>1d408fb6-6312-4526-8e74-adfd5a7511c4</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>52990625-5ce9-4d04-8beb-79ad150d586c</GUID>
+          <Name>right_table</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>a68a8ef9-68d2-4f58-9f93-a28e587d3fc1</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>50d374a6-3d35-44a3-b7e9-ec0bf4432348</GUID>
+          <Name>join_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>60677485-620e-4cc9-9d06-906faa0338e4</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cdc241ea-3f61-4a42-a6ac-4817552f53f2</GUID>
+          <Name>clause</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2261d16e-0cce-4526-a416-d506045cf62e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ea422264-693a-44ec-8b94-84d9f338560f</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b1c2f356-53b0-4ace-8de4-238b6f040a0a</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[8e57a8ec-03bf-46b4-85d9-c50691552eec]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>8e57a8ec-03bf-46b4-85d9-c50691552eec</GUID>
+          <Name>source</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>92b4266e-c31c-4dc6-80bd-be229a4597e1</MetaColumnGUID>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
@@ -597,6 +1139,92 @@
           <GUID>37f0c17a-5e68-464b-ae9b-7d2c9317692e</GUID>
           <Name>Tab Control</Name>
           <Views>
+            <ReportView>
+              <GUID>dde9228f-b43b-4f48-8a3e-3c2d81d6f7f2</GUID>
+              <Name>Sources</Name>
+              <Views>
+                <ReportView>
+                  <GUID>bbf6b8f0-fff2-4e9f-921a-6b7b6faf164d</GUID>
+                  <Name>Sources</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>2b73cb30-6ae5-4929-8d29-b3d56f4ea940</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>f878a7c1-64ec-469d-89e1-4695a74fe1c7</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>e96b0b4b-3f61-497a-b0dd-26e9bb1ba581</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>6a260a0e-e9f5-436a-a1a3-de571684e3ef</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>d546a1ed-b956-48a2-8526-d4138ff0d2ca</GUID>
+              <Name>Tables</Name>
+              <Views>
+                <ReportView>
+                  <GUID>7c0561e9-9728-44bf-9a5a-87b9b8a097bb</GUID>
+                  <Name>Tables</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>cfe1a900-3297-4310-8c57-dca06dbb0998</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b9413f35-06bd-4d9a-bc21-c9f570931753</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>32f4ea3f-fdbe-4c17-a50f-4370a15505ef</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>0a23c395-d499-451d-a607-294fd560dbb3</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
             <ReportView>
               <GUID>f08a40c0-3269-4206-8b65-eba447597c9c</GUID>
               <Name>Columns</Name>
@@ -662,7 +1290,50 @@
                   <Value>True</Value>
                 </Parameter>
               </Parameters>
-              <SortOrder>1</SortOrder>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>4476bb06-5c36-4480-a917-8d2f487be2a0</GUID>
+              <Name>Joins</Name>
+              <Views>
+                <ReportView>
+                  <GUID>e12b38ed-ef71-4dd0-93b8-0cfb6dbf86f7</GUID>
+                  <Name>Joins</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>099319ac-854a-4e91-bd31-7fff16a5881a</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b61a0015-e864-4206-a6b2-c404eb35c919</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>40d3e24a-8a55-4d95-90a9-571c4f5404d4</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b8b8a9ef-1263-4fb6-b7c4-d03cf3a612dc</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
             </ReportView>
             <ReportView>
               <GUID>d7e66c95-9b3c-4581-bc54-1f70cc17af0c</GUID>
@@ -729,7 +1400,7 @@
                   <Value>True</Value>
                 </Parameter>
               </Parameters>
-              <SortOrder>2</SortOrder>
+              <SortOrder>5</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>

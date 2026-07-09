@@ -126,7 +126,7 @@ namespace Seal.Model
             {
                 //Repository folder (Danger Zone): published anywhere under the repository root, outside the Reports tree
                 result.type = "repository";
-                result.files = true; //repository folders manage files only (no report execution)
+                result.files = true; //repository folders manage files only (report files are listed as plain files, no execution)
                 var leaf = Path.GetFileName(result.FinalPath.TrimEnd(Path.DirectorySeparatorChar));
                 result.name = string.IsNullOrEmpty(leaf) ? Security.Repository.TranslateWeb("Repository") : leaf;
                 result.fullname = Security.Repository.TranslateWeb("Repository") + result.FinalPath;
@@ -139,7 +139,7 @@ namespace Seal.Model
                     result.expand = false;
                     //Map the simple repository right to the internal FolderRight used by the web file management
                     result.right = (int)(repoFolder.FolderRight == RepositoryFolderRight.ReadWrite ? FolderRight.Edit : FolderRight.Execute);
-                    //Repository folders never show reports, so only upload is configurable; files are always downloadable
+                    //Repository folders show reports as plain files, so only upload is configurable; files are always downloadable
                     result.upload = repoFolder.AllowUpload;
                     if (!string.IsNullOrEmpty(repoFolder.Icon)) result.icon = Parameter.GetFontAwesomeIcon(repoFolder.Icon);
                 }

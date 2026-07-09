@@ -9810,6 +9810,11 @@
             Remove a logged user
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.AuthenticatedLoggedUserCount">
+            <summary>
+            Number of authenticated logged users
+            </summary>
+        </member>
         <member name="T:Seal.Model.SealServerConfiguration">
             <summary>
             Main configuration of the Seal Server

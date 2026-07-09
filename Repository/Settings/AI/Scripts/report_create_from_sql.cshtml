@@ -8,7 +8,7 @@
     var repo            = Repository.Instance;
     var securityContext = tool.CurrentToolCall.SecurityContext;
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
-    if (!securityContext.SqlModel) { tool.ExecResult = "Error: you are not allowed to create reports from raw SQL (SQL Models are disabled for your security group)."; return; }
+    if (!securityContext.SqlModel) { tool.ExecResult = "Error: you are not allowed to create reports from raw SQL (SQL Models are disabled for your security group). Use the metadata route (report_create_from_xml) instead if it can express the request; otherwise tell the user in one sentence that an administrator can enable 'SQL models' for their security group."; return; }
 
     var args             = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path             = args.GetProperty("path").GetString();

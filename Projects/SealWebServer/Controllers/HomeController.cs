@@ -926,19 +926,21 @@ namespace SealWebServer.Controllers
             {
                 foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
                 {
+                    //Repository folders list report and shortcut files as plain files (download/manage only, no execution through a repository path)
+                    bool isReport = !folder.IsRepository && FileHelper.IsReportFile(newPath);
                     //check right on files only
-                    if (folder.files && FileHelper.IsReportFile(newPath)) continue;
+                    if (folder.files && isReport) continue;
                     if (folder.IsPersonal && newPath.ToLower() == WebUser.ProfilePath.ToLower()) continue;
 
                     var file = new SWIFile()
                     {
                         path = FileHelper.ConvertOSFilePath(folder.Combine(Path.GetFileName(newPath))),
-                        name = Repository.TranslateFileName(newPath) + (FileHelper.IsReportFile(newPath) ? "" : Path.GetExtension(newPath)),
+                        name = Repository.TranslateFileName(newPath) + (isReport ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
-                        isreport = FileHelper.IsReportFile(newPath),
+                        isreport = isReport,
                         right = folder.right
                     };
-                    if (FileHelper.IsShortcutFile(newPath))
+                    if (!folder.IsRepository && FileHelper.IsShortcutFile(newPath))
                     {
                         fillShortcut(folder, newPath, file);
                         //a files only folder does not list shortcuts resolving to a report

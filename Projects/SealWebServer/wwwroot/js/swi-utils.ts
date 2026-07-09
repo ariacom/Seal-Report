@@ -33,6 +33,12 @@ namespace SWIUtil {
         $els.each(function () { bs().Alert.getOrCreateInstance(this).close(); });
     }
 
+    // Collapse the navbar menu if it is expanded (mobile mode)
+    export function CollapseNavbar() {
+        var el = document.getElementById('navbar');
+        if (el && el.classList.contains('show')) bs().Collapse.getOrCreateInstance(el).hide();
+    }
+
     export function tr(reference: string): string {
         var result : string = tra[reference];
         if (!result || result == "") result = reference;

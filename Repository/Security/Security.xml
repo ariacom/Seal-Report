@@ -60,6 +60,10 @@
           <Path>\Sources</Path>
           <FolderRight>ReadOnly</FolderRight>
         </SecurityRepositoryFolder>
+        <SecurityRepositoryFolder>
+          <Path>\SpecialFolders</Path>
+          <FolderRight>ReadOnly</FolderRight>
+        </SecurityRepositoryFolder>
       </RepositoryFolders>
       <PersFolderRight>Reports</PersFolderRight>
       <FoldersScript />

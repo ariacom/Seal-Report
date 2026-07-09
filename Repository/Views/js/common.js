@@ -348,6 +348,12 @@ function requestEnumData(filter, forceNoMessage) {
 }
 
 
+// Collapse the navbar menu (mobile mode)
+function collapseNavbar() {
+    const navbarCollapse = document.getElementById('navbarCollapse');
+    if (navbarCollapse && navbarCollapse.classList.contains('show')) bootstrap.Collapse.getOrCreateInstance(navbarCollapse).hide();
+}
+
 // Show Hide Navbar
 function showHideNavbar() {
     const currentScrollPos = window.pageYOffset;
@@ -526,7 +532,7 @@ function mainInit() {
 
     $("#execute_button").unbind("click").on("click", function () {
         //Collapse navbar
-        if ($('.navbar-toggle').css('display') !== 'none') $('.navbar-toggle').click();
+        collapseNavbar();
         _inExecution = false;
         executeReport();
     });
@@ -615,7 +621,7 @@ function mainInit() {
         redrawDataTables();
 
         //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        collapseNavbar();
     });
 
     //highlight the tab whose pane is shown on initial render (report generated, not only on click)
@@ -630,7 +636,7 @@ function mainInit() {
         form.attr("action", _urlPrefix + $(this).attr("id") + "?format=" + $(this).attr("format"));
         form.submit();
         //Collapse navbar
-        if ($('.navbar-toggle').css('display') != 'none') $('.navbar-toggle').click();
+        collapseNavbar();
 
         $("#view_result_message").removeClass('d-none');
         setTimeout(function () { $("#view_result_message").addClass('d-none'); }, 4000)

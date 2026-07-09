@@ -29,25 +29,28 @@
     }
 </style>
 
-<nav id="bar_top" class="navbar navbar-expand navbar-dark bg-dark fixed-top" style="transition:top 0.3s;">
+<nav id="bar_top" class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" style="transition:top 0.3s;">
     <div class="container-fluid">
-        <a id="brand-id" class="navbar-brand d-none d-sm-block" href="#">@repository.Configuration.WebProductName</a>
-        <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="@repository.TranslateWeb("Toggle navigation")">
-            <span class="navbar-toggler-icon"></span>
-        </button>
-        <div id="navbar" class="collapse navbar-collapse">
-            <!-- LEFT: reports menu + contextual breadcrumb; me-auto pushes everything else to the right -->
-            <ul class="navbar-nav me-auto align-items-center">
+        <!-- LEFT (always visible, also in mobile mode): brand, reports menu + contextual breadcrumb.
+             flex:1 1 0 + flex-nowrap: the group shrinks (name truncates) instead of wrapping the bar
+             to a second row on small screens -->
+        <div class="d-flex flex-nowrap align-items-center" style="flex:1 1 0; min-width:0;">
+            <a id="brand-id" class="navbar-brand d-none d-sm-block" href="#">@repository.Configuration.WebProductName</a>
+            <ul class="navbar-nav flex-row align-items-center" style="min-width:0;">
                 <li class="nav-item dropdown">
                     <a id="menu-main-button" href="#" class="nav-link p-0" data-bs-toggle="dropdown" title="@repository.TranslateWeb("Reports menu")">
                         <span class="btn btn-sm btn-primary"><span class="fa-solid fa-bars" aria-hidden="true"></span></span>
                     </a>
-                    <ul id="menu-main" class="dropdown-menu">
+                    <ul id="menu-main" class="dropdown-menu position-absolute">
                     </ul>
                 </li>
-                <li class="nav-item"><a id="nav_button" href="#" class="nav-link"></a></li>
+                <li class="nav-item" style="min-width:0;"><a id="nav_button" href="#" class="nav-link text-truncate"></a></li>
                 <li class="nav-item d-flex align-items-center"><span id="nav_badge" class="badge d-none">@repository.TranslateReport("Nav")</span></li>
             </ul>
+        </div>
+        <!-- Collapsible on mobile (order-last drops the expanded menu below the bar;
+             on desktop it sits between the report name and the action buttons) -->
+        <div id="navbar" class="collapse navbar-collapse order-last order-md-1 justify-content-md-end">
             <!-- CONTEXT (folder view): refresh / manage folders, then search -->
             <ul class="navbar-nav navbar-right align-items-center">
                 <li class="nav-item folderview"><a id="refresh-nav-item" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
@@ -71,7 +74,7 @@
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
                         @repository.TranslateReport("Results")
                     </a>
-                    <ul class="dropdown-menu">
+                    <ul class="dropdown-menu dropdown-menu-end">
                         <li><a id="ResultOptions" class="dropdown-item" href="#">@repository.TranslateReport("Options")...</a></li>
                         <li><hr class="dropdown-divider"></li>
                         @foreach (var format in repository.ResultAllowedFormats)
@@ -81,17 +84,9 @@
                     </ul>
                 </li>
             </ul>
-            <!-- CONTEXT (report view): report actions — after the tabs, ordered restrictions, Execute, reload -->
-            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Show Restrictions")" data-show-title="@repository.TranslateReport("Show Restrictions")" data-hide-title="@repository.TranslateReport("Hide Restrictions")">
-                <span class="fa-solid fa-filter"></span>
-            </button>
-            <button id="execute_button" class="btn btn-success reportview navbar-right me-2">@repository.TranslateReport("Execute")</button>
-            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-2" title="@repository.TranslateWeb("Reload and execute")">
-                <span class="fa-solid fa-play"></span>
-            </button>
-            <!-- FAR RIGHT: account / utility cluster (with a divider) -->
+            <!-- Account / utility cluster (with a divider) -->
             <ul id="navbar-right-menu" class="navbar-nav navbar-right align-items-center">
-                <li class="nav-item d-flex align-items-center"><div class="vr mx-2" style="min-height:24px;opacity:.4;"></div></li>
+                <li class="nav-item d-none d-md-flex align-items-center"><div class="vr mx-2" style="min-height:24px;opacity:.4;"></div></li>
                 <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {
@@ -100,5 +95,19 @@
                 <li class="nav-item"><a id="disconnect-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
             </ul>
         </div><!--/.nav-collapse -->
+        <!-- RIGHT (always visible, also in mobile mode): report actions (report view) + menu toggler -->
+        <div class="d-flex flex-nowrap align-items-center order-md-2">
+            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Show Restrictions")" data-show-title="@repository.TranslateReport("Show Restrictions")" data-hide-title="@repository.TranslateReport("Hide Restrictions")">
+                <span class="fa-solid fa-filter"></span>
+            </button>
+            <button id="execute_button" class="btn btn-success reportview navbar-right me-2">@repository.TranslateReport("Execute")</button>
+            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-2" title="@repository.TranslateWeb("Reload and execute")">
+                <span class="fa-solid fa-play"></span>
+            </button>
+            <!-- Toggler for the collapsible menu (mobile mode only) -->
+            <button type="button" class="navbar-toggler" data-bs-toggle="collapse" data-bs-target="#navbar" aria-expanded="false" aria-controls="navbar" aria-label="@repository.TranslateWeb("Toggle navigation")">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+        </div>
     </div><!--/.container-fluid -->
 </nav>

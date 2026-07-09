@@ -112,6 +112,99 @@
             return;
         }
 
+        // --- Validate restrictions (guard against definitions the engine silently ignores) ---
+        // An enumerated restriction is applied only when its operator is Equal/NotEqual and
+        // <EnumValues> is filled: a <Value1> or a text operator (Contains, StartsWith...) makes
+        // the engine treat it as "not filled" and skip it, so the report runs UNFILTERED with
+        // no error. Reject such definitions so the caller can fix the XML.
+        var colByGuid = new System.Collections.Generic.Dictionary<string, MetaColumn>(StringComparer.OrdinalIgnoreCase);
+        foreach (var table in metaSource.MetaData.Tables)
+            foreach (var col in table.Columns)
+                colByGuid[col.GUID] = col;
+
+        var restrictionErrors   = new System.Collections.Generic.List<string>();
+        var restrictionWarnings = new System.Collections.Generic.List<string>();
+        var valueLessOperators  = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
+            { "IsNull", "IsNotNull", "IsEmpty", "IsNotEmpty" };
+
+        foreach (var rest in doc.Descendants("ReportRestriction"))
+        {
+            var colGuid = rest.Element("MetaColumnGUID") == null ? null : rest.Element("MetaColumnGUID").Value.Trim();
+            MetaColumn rcol = null;
+            if (colGuid == null || !colByGuid.TryGetValue(colGuid, out rcol)) continue;
+            var menum = string.IsNullOrEmpty(rcol.EnumGUID) ? null : metaSource.MetaData.Enums.FirstOrDefault(e => e.GUID == rcol.EnumGUID);
+            if (menum == null) continue;
+
+            var restName = rest.Element("Name") != null && !string.IsNullOrEmpty(rest.Element("Name").Value) ? rest.Element("Name").Value.Trim() : rcol.Name;
+            var op       = rest.Element("Operator") != null ? rest.Element("Operator").Value.Trim() : "Equal";
+            var enumEls  = rest.Element("EnumValues") == null ? new System.Collections.Generic.List<XElement>() : rest.Element("EnumValues").Elements("string").ToList();
+            var hasVal1  = rest.Element("Value1") != null && !string.IsNullOrEmpty(rest.Element("Value1").Value);
+            var prompted = rest.Element("Prompt") != null && rest.Element("Prompt").Value.Trim() != "None";
+
+            if (valueLessOperators.Contains(op)) continue;
+
+            if (op != "Equal" && op != "NotEqual")
+            {
+                restrictionErrors.Add($"'{restName}': operator '{op}' is invalid on an enumerated column (only Equal or NotEqual are supported)");
+                continue;
+            }
+            if (hasVal1 && enumEls.Count == 0)
+            {
+                restrictionErrors.Add($"'{restName}': <Value1> is ignored on an enumerated column, list the values as <EnumValues><string>value</string></EnumValues>");
+                continue;
+            }
+            if (enumEls.Count == 0 && !prompted)
+            {
+                restrictionErrors.Add($"'{restName}': static (not prompted) restriction has no <EnumValues>, it would be skipped at execution");
+                continue;
+            }
+
+            // EnumValues must contain the enum value ids: map display labels back to their id,
+            // and warn about values unknown to the enumerated list (dynamic lists may be stale,
+            // so an unknown value is not a hard error).
+            if (enumEls.Count > 0 && menum.Values.Count > 0)
+            {
+                foreach (var vEl in enumEls)
+                {
+                    var v = vEl.Value;
+                    if (menum.Values.Any(ev => ev.Id == v)) continue;
+                    var byLabel = menum.Values.FirstOrDefault(ev => (!string.IsNullOrEmpty(ev.Val) && ev.Val == v) || ev.DisplayValue == v);
+                    if (byLabel != null)
+                    {
+                        tool.CurrentToolCall.LogMessage($"Restriction '{restName}': mapped enum label '{v}' -> id '{byLabel.Id}'");
+                        vEl.Value = byLabel.Id;
+                    }
+                    else restrictionWarnings.Add($"'{restName}': value '{v}' is not in the enumerated list '{menum.Name}' (the filter may match nothing)");
+                }
+            }
+        }
+
+        // A restriction defined in <Restrictions>/<AggregateRestrictions> but not referenced in
+        // the model's <Restriction>/<AggregateRestriction> expression is silently inactive.
+        foreach (var model in doc.Descendants("ReportModel"))
+        {
+            foreach (var pair in new[] { new[] { "Restriction", "Restrictions" }, new[] { "AggregateRestriction", "AggregateRestrictions" } })
+            {
+                var exprText = model.Element(pair[0]) == null ? "" : model.Element(pair[0]).Value;
+                var defs     = model.Element(pair[1]) == null ? new System.Collections.Generic.List<XElement>() : model.Element(pair[1]).Elements("ReportRestriction").ToList();
+                foreach (var rest in defs)
+                {
+                    var g = rest.Element("GUID") == null ? null : rest.Element("GUID").Value.Trim();
+                    if (string.IsNullOrEmpty(g) || exprText.Contains("[" + g + "]")) continue;
+                    var n = rest.Element("Name") != null ? rest.Element("Name").Value.Trim() : g;
+                    restrictionErrors.Add($"'{n}': defined in <{pair[1]}> but not referenced in the <{pair[0]}> expression, it would be inactive - add [{g}] to the expression or remove the restriction");
+                }
+            }
+        }
+
+        if (restrictionErrors.Count > 0)
+        {
+            tool.ExecResult = "Error: invalid restriction definition(s): " + string.Join("; ", restrictionErrors) +
+                ". Enumerated columns accept only Equal/NotEqual with <EnumValues><string>value</string></EnumValues>" +
+                " (a <Value1> or another operator is silently ignored at execution). Fix the XML and call report_create_from_xml again.";
+            return;
+        }
+
         // Only regenerate internal cross-reference GUIDs.
         // MetaSourceGUID and MetaColumnGUID must be preserved — they reference
         // actual repository metadata objects and must be supplied correctly by the caller.
@@ -166,6 +259,9 @@
         File.WriteAllText(fullPath, sb.ToString(), System.Text.Encoding.UTF8);
 
         tool.ExecResult = $"Created: {path}";
+        if (restrictionWarnings.Count > 0)
+            tool.ExecResult += "\r\nWarning: " + string.Join("; ", restrictionWarnings) +
+                ". Verify the values with database_get_sample_values and recreate the report with overwrite=true if they are wrong.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");

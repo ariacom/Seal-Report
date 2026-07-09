@@ -7,7 +7,7 @@
     var configuration = repository.Configuration;
 }
 
-<nav id="bar_top" class='navbar navbar-expand navbar-light bg-light fixed-top' style='transition:top 0.3s;'>
+<nav id="bar_top" class='navbar navbar-expand-md navbar-light bg-light fixed-top' style='transition:top 0.3s;'>
     <div class="container@(view.GetBoolValue("container_fluid") ? "-fluid" : "")">
         @if (configuration.HasLogo)
         {
@@ -16,8 +16,29 @@
                 <img src="@report.AttachImageFile(configuration.LogoName)" @Raw(attr)>
             </a>
         }
-        <a id="nav_button" href="#" class="navbar-brand" style="cursor: default">@report.ExecutionName</a>
+        <a id="nav_button" href="#" class="navbar-brand text-truncate" style="cursor: default; min-width: 0; flex-shrink: 1;">@report.ExecutionName</a>
         <span id="nav_badge" class="badge d-none">@report.Translate("Nav")</span>
+        <div class="d-flex align-items-center ms-auto order-md-last">
+            @if (report.GenerateHTMLDisplay)
+            {
+                if (!string.IsNullOrEmpty(report.Guide))
+                {
+                    <button id="guide_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Guide")" data-show-title="@report.Translate("Show Guide")" data-hide-title="@report.Translate("Hide Guide")">
+                        <span class="fa-solid fa-book-open"></span>
+                    </button>
+                }
+                <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Restrictions")" data-show-title="@report.Translate("Show Restrictions")" data-hide-title="@report.Translate("Hide Restrictions")">
+                    <span class="fa-solid fa-filter"></span>
+                </button>
+                <button id="execute_button" class="btn btn-success">@report.Translate("Execute")</button>
+            }
+            @if (report.GenerateHTMLDisplay || !report.PrintLayout)
+            {
+                <button class="navbar-toggler ms-2" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+            }
+        </div>
         <div id="navbarCollapse" class="collapse navbar-collapse">
             @if (report.GenerateHTMLDisplay || !report.PrintLayout)
             {
@@ -39,19 +60,6 @@
                         </ul>
                     </li>
                 </ul>
-            }
-            @if (report.GenerateHTMLDisplay)
-            {
-                if (!string.IsNullOrEmpty(report.Guide))
-                {
-                    <button id="guide_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Guide")" data-show-title="@report.Translate("Show Guide")" data-hide-title="@report.Translate("Hide Guide")">
-                        <span class="fa-solid fa-book-open"></span>
-                    </button>
-                }
-                <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Restrictions")" data-show-title="@report.Translate("Show Restrictions")" data-hide-title="@report.Translate("Hide Restrictions")">
-                    <span class="fa-solid fa-filter"></span>
-                </button>
-                <button id="execute_button" class="btn btn-success">@report.Translate("Execute")</button>
             }
         </div>
     </div>

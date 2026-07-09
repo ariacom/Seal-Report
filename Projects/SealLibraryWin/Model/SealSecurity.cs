@@ -825,5 +825,19 @@ namespace Seal.Model
                 if (LoggedUsers.Contains(user)) LoggedUsers.Remove(user);
             }
         }
+
+        /// <summary>
+        /// Number of authenticated logged users
+        /// </summary>
+        static public int AuthenticatedLoggedUserCount
+        {
+            get
+            {
+                lock (LoggedUsers)
+                {
+                    return LoggedUsers.Count(i => i.IsAuthenticated);
+                }
+            }
+        }
     }
 }
