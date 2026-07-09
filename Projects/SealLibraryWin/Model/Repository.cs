@@ -320,20 +320,25 @@ namespace Seal.Model
         }
 
         Seal.AI.AIServerConfiguration _aiConfiguration = null;
+        readonly object _aiConfigurationLock = new object();
         /// <summary>
-        /// Current AI configuration (providers, tools, agents)
+        /// Current AI configuration (providers, tools, agents). Automatically reloaded if the configuration file is modified (no web server recycle required).
         /// </summary>
         public Seal.AI.AIServerConfiguration AIConfiguration
         {
             get
             {
-                if (_aiConfiguration == null)
+                lock (_aiConfigurationLock)
                 {
-                    _aiConfiguration = Seal.AI.AIServerConfiguration.LoadFromFile(AIConfigurationPath, true);
-                    if (_aiConfiguration == null) _aiConfiguration = new Seal.AI.AIServerConfiguration();
-                    _aiConfiguration.Repository = this;
+                    if (_aiConfiguration != null && _aiConfiguration.MustReload(AIConfigurationPath)) _aiConfiguration = null;
+                    if (_aiConfiguration == null)
+                    {
+                        _aiConfiguration = Seal.AI.AIServerConfiguration.LoadFromFile(AIConfigurationPath, true);
+                        if (_aiConfiguration == null) _aiConfiguration = new Seal.AI.AIServerConfiguration();
+                        _aiConfiguration.Repository = this;
+                    }
+                    return _aiConfiguration;
                 }
-                return _aiConfiguration;
             }
             set { _aiConfiguration = value; }
         }

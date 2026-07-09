@@ -37,7 +37,7 @@ namespace Seal.Model
                 GetProperty("Email").SetIsBrowsable(true);
                 GetProperty("Phone").SetIsBrowsable(true);
                 GetProperty("HashedPassword").SetIsBrowsable(true);
-                GetProperty("GroupNames").SetIsBrowsable(true);
+                GetProperty("GroupIds").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
         }
@@ -115,6 +115,10 @@ namespace Seal.Model
 #endif
         public string Phone { get; set; }
 
+        //Deprecated: group names are converted into GroupIds when the security is loaded
+        public List<string> GroupNames { get; set; } = new List<string>();
+        public bool ShouldSerializeGroupNames() { return GroupNames.Count > 0; }
+
         /// <summary>
         /// The security group GUIDs of the user.
         /// </summary>
@@ -122,9 +126,6 @@ namespace Seal.Model
         [Category("Security Groups"), DisplayName("Groups"), Description("The security groups of the user."), Id(1, 2)]
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
-        //Deprecated
-        public List<string> GroupNames { get; set; } = new List<string>();
-        public bool ShouldSerializeGroupNames() { return GroupNames.Count > 0; }
         public List<string> GroupIds { get; set; } = new List<string>();
         public bool ShouldSerializeGroupIds() { return GroupIds.Count > 0; }
     }

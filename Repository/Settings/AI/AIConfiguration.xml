@@ -512,6 +512,23 @@ Load this when the user asks to change the metadata model, add tables/columns, d
         <GUID>5e1a000a-1111-4aaa-bbbb-d5e00000000a</GUID>
       </ToolGUIDs>
     </AISkillConfiguration>
+    <AISkillConfiguration>
+      <GUID>5e1aface-1111-4aaa-bbbb-d5e000face01</GUID>
+      <Name>prospection-face</Name>
+      <Description>Rechercher dans la base FACE des entreprises suisses (hub Zefix, registre genevois REG_GE, grille d'emploi STATENT) pour constituer des listes de prospects :
+cibler les entreprises par localisation, activité NOGA, taille, date d'inscription, capital ou signaux comme « sans site web », en comptant d'abord puis en présentant une liste exploitable.
+Charger ce skill dès que l'utilisateur demande de trouver, cibler, compter ou lister des entreprises pour de la prospection.</Description>
+      <ProgressLabel>Préparation de la recherche de prospects</ProgressLabel>
+      <InstructionsFile>prospection-face.md</InstructionsFile>
+      <ToolGUIDs>
+        <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
+        <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
+        <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
+        <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
+        <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
+        <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
+      </ToolGUIDs>
+    </AISkillConfiguration>
   </AISkills>
   <DefaultProviderGUID />
   <DefaultAgentGUID />
@@ -519,8 +536,7 @@ Load this when the user asks to change the metadata model, add tables/columns, d
     <AIAgentConfiguration>
       <GUID>a1b2c3d4-e5f6-4a7b-8c9d-0e1f2a3b4c5d</GUID>
       <Name>Report Designer</Name>
-      <Description>Designs and builds reports from natural-language requests:
-explores data sources, validates SQL, and creates SQL-based or metadata-based reports.</Description>
+      <Description>Designs and builds reports from natural-language requests: explores data sources, validates SQL, and creates SQL-based or metadata-based reports.</Description>
       <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
@@ -549,8 +565,7 @@ explores data sources, validates SQL, and creates SQL-based or metadata-based re
     <AIAgentConfiguration>
       <GUID>b2c3d4e5-f6a7-4b8c-9d0e-1f2a3b4c5d6e</GUID>
       <Name>Schedule &amp; Output</Name>
-      <Description>Configures report delivery and automation:
-sets up folder, email, and FTP outputs and manages recurring or one-time execution schedules.</Description>
+      <Description>Configures report delivery and automation: sets up folder, email, and FTP outputs and manages recurring or one-time execution schedules.</Description>
       <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
@@ -567,8 +582,7 @@ sets up folder, email, and FTP outputs and manages recurring or one-time executi
     <AIAgentConfiguration>
       <GUID>c3d4e5f6-a7b8-4c9d-0e1f-2a3b4c5d6e7f</GUID>
       <Name>Data Analyst</Name>
-      <Description>Answers data questions by running existing reports and exploring data sources read-only,
-summarizing results without modifying any report.</Description>
+      <Description>Answers data questions by running existing reports and exploring data sources read-only, summarizing results without modifying any report.</Description>
       <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
@@ -584,8 +598,7 @@ summarizing results without modifying any report.</Description>
     <AIAgentConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f81</GUID>
       <Name>System Admin</Name>
-      <Description>Handles administration and troubleshooting:
-reads event, execution, and schedule logs, inspects reports and sources, and manages repository files.</Description>
+      <Description>Handles administration and troubleshooting: reads event, execution, and schedule logs, inspects reports and sources, and manages repository files.</Description>
       <ProviderGUID>1</ProviderGUID>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>

@@ -107,7 +107,7 @@ AND [77cf9e58-0b71-448f-bbc6-5da7e340518e]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -117,7 +117,7 @@ AND [77cf9e58-0b71-448f-bbc6-5da7e340518e]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <ChartJSSerie>Bar</ChartJSSerie>
           <MetaColumnGUID>fca46c23-2584-4cdf-ab1a-42b38aaeb1bc</MetaColumnGUID>
           <SetNullToZero>true</SetNullToZero>
@@ -128,7 +128,7 @@ AND [77cf9e58-0b71-448f-bbc6-5da7e340518e]</Restriction>
           <DisplayName />
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>08542fb1-ff0e-4d43-a205-76e344bb2523</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -138,7 +138,7 @@ AND [77cf9e58-0b71-448f-bbc6-5da7e340518e]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>581c6d65-ecb7-4a74-badc-091a22e5113d</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -222,7 +222,7 @@ AND [1922f5a3-f246-4758-b02f-ad20c3a28d3d]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -232,7 +232,7 @@ AND [1922f5a3-f246-4758-b02f-ad20c3a28d3d]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>3accb676-4680-41ed-903d-af8d14cd2e9a</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -242,7 +242,7 @@ AND [1922f5a3-f246-4758-b02f-ad20c3a28d3d]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>4da92514-cca7-4eab-9044-aad9ef70cca5</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -252,7 +252,7 @@ AND [1922f5a3-f246-4758-b02f-ad20c3a28d3d]</Restriction>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>fca46c23-2584-4cdf-ab1a-42b38aaeb1bc</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
@@ -261,7 +261,7 @@ AND [1922f5a3-f246-4758-b02f-ad20c3a28d3d]</Restriction>
           <DisplayName />
           <PivotPosition>Data</PivotPosition>
           <AggregateFunction>Sum</AggregateFunction>
-          <ShowTotal>Row</ShowTotal>
+          <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>08542fb1-ff0e-4d43-a205-76e344bb2523</MetaColumnGUID>
         </ReportElement>
       </Elements>

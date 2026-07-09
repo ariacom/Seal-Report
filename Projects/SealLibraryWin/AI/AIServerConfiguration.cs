@@ -44,6 +44,12 @@ namespace Seal.AI
         [XmlIgnore]
         public DateTime LastModification;
 
+        /// <summary>
+        /// Last modification date time of the dedicated AI Providers file (if ExternalAIProviders is set)
+        /// </summary>
+        [XmlIgnore]
+        public DateTime LastProvidersModification;
+
 #if WINDOWS
         #region Editor
 
@@ -211,6 +217,7 @@ namespace Seal.AI
                         {
                             result.AIProviders = (List<AIProviderConfiguration>)providersSerializer.Deserialize(xr);
                         }
+                        result.LastProvidersModification = File.GetLastWriteTime(providersPath);
                     }
                 }
             }
@@ -219,6 +226,24 @@ namespace Seal.AI
                 if (!ignoreException) throw new Exception(string.Format("Unable to read the AI configuration file '{0}'.\r\n{1}", path, ex.Message));
             }
             return result;
+        }
+
+        /// <summary>
+        /// True if the configuration file (or the dedicated AI Providers file) has been modified or created since the load
+        /// </summary>
+        public bool MustReload(string path)
+        {
+            //Default configuration built in memory: reload as soon as the file exists
+            if (FilePath == null) return File.Exists(path);
+            //File deleted: keep the current configuration
+            if (!File.Exists(FilePath)) return false;
+            if (File.GetLastWriteTime(FilePath) != LastModification) return true;
+            if (ExternalAIProviders)
+            {
+                var providersPath = GetAIProvidersFilePath(FilePath);
+                if (File.Exists(providersPath) && File.GetLastWriteTime(providersPath) != LastProvidersModification) return true;
+            }
+            return false;
         }
 
         /// <summary>
@@ -258,7 +283,11 @@ namespace Seal.AI
             LastModification = File.GetLastWriteTime(path);
 
             var providersPath = GetAIProvidersFilePath(path);
-            if (ExternalAIProviders) Helper.Serialize(providersPath, AIProviders);
+            if (ExternalAIProviders)
+            {
+                Helper.Serialize(providersPath, AIProviders);
+                LastProvidersModification = File.GetLastWriteTime(providersPath);
+            }
             else if (File.Exists(providersPath)) File.Delete(providersPath);
         }
     }

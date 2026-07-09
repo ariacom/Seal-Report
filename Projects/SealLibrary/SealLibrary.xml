@@ -103,6 +103,11 @@
             Last modification date time
             </summary>
         </member>
+        <member name="F:Seal.AI.AIServerConfiguration.LastProvidersModification">
+            <summary>
+            Last modification date time of the dedicated AI Providers file (if ExternalAIProviders is set)
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIServerConfiguration.GetAIProvidersFilePath(System.String)">
             <summary>
             Returns the path of the dedicated AI Providers file beside the AIConfiguration.xml file
@@ -153,6 +158,11 @@
         <member name="M:Seal.AI.AIServerConfiguration.LoadFromFile(System.String,System.Boolean)">
             <summary>
             Load AI configuration from a file
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIServerConfiguration.MustReload(System.String)">
+            <summary>
+            True if the configuration file (or the dedicated AI Providers file) has been modified or created since the load
             </summary>
         </member>
         <member name="M:Seal.AI.AIServerConfiguration.SaveToFile">
@@ -8040,7 +8050,7 @@
         </member>
         <member name="P:Seal.Model.Repository.AIConfiguration">
             <summary>
-            Current AI configuration (providers, tools, agents)
+            Current AI configuration (providers, tools, agents). Automatically reloaded if the configuration file is modified (no web server recycle required).
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.ReloadAIConfiguration">
@@ -10431,7 +10441,7 @@
             The login phone number, may be used for a Two-Factor Authentication
             </summary>
         </member>
-        <member name="P:Seal.Model.SecurityLogin.GroupNames">
+        <member name="P:Seal.Model.SecurityLogin.GroupIds">
             <summary>
             The security group GUIDs of the user.
             </summary>

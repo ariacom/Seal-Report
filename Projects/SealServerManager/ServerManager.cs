@@ -246,11 +246,12 @@ namespace Seal
 
         void configureAIClick(object sender, EventArgs e)
         {
-            var frm = new AIConfigurationEditorForm(_repository.AIConfiguration);
+            var aiConfiguration = _repository.AIConfiguration;
+            var frm = new AIConfigurationEditorForm(aiConfiguration);
             if (frm.ShowDialog() == DialogResult.OK)
             {
-                if (string.IsNullOrEmpty(_repository.AIConfiguration.FilePath)) _repository.AIConfiguration.FilePath = _repository.AIConfigurationPath;
-                _repository.AIConfiguration.SaveToFile();
+                if (string.IsNullOrEmpty(aiConfiguration.FilePath)) aiConfiguration.FilePath = _repository.AIConfigurationPath;
+                aiConfiguration.SaveToFile();
             }
             else
             {

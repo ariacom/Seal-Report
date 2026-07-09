@@ -35,6 +35,7 @@
   <TwoFAGenerationScript />
   <TwoFACheckScript />
   <EnableResetPassword>true</EnableResetPassword>
+  <EnableChangePassword>true</EnableChangePassword>
   <Groups>
     <SecurityGroup>
       <GUID>13d763a0d8514f9fbb18e4459694fedc</GUID>
@@ -325,7 +326,7 @@
     <SecurityLogin>
       <GUID>a24f9727f9d944e6b1947cc59079cd49</GUID>
       <Id>ex</Id>
-      <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
+      <Password>CDzLzNOOMcNdlPyp00PfH1H1uydpG4c5xzFRbkg3e4o=</Password>
       <Name />
       <Email>ex@dummy.com</Email>
       <Phone />
