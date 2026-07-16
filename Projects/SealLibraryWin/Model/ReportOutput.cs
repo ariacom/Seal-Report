@@ -195,6 +195,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<OutputParameter> ViewParameters { get; set; } = new List<OutputParameter>();
+        /// <summary>
+        /// Serialize ViewParameters only if not empty
+        /// </summary>
         public bool ShouldSerializeViewParameters() { return ViewParameters.Count > 0; }
 
 
@@ -208,7 +211,10 @@ namespace Seal.Model
         public string FolderPath { get; set; }
 
 
-        public string FileServerFolderWithSeparators { 
+        /// <summary>
+        /// Folder path of the file server with leading and trailing '/' separators
+        /// </summary>
+        public string FileServerFolderWithSeparators {
             get
             {
                 if (string.IsNullOrEmpty(FolderPath) || FolderPath == "/" || FolderPath == "\\") return "/";
@@ -558,6 +564,9 @@ namespace Seal.Model
             }
             set { _restrictions = value; }
         }
+        /// <summary>
+        /// Serialize Restrictions only if not empty
+        /// </summary>
         public bool ShouldSerializeRestrictions() { return _restrictions.Count > 0; }
 
         #region Helpers

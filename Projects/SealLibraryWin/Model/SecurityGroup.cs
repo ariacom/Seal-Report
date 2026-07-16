@@ -90,6 +90,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityFolder> Folders { get; set; } = new List<SecurityFolder>();
+        /// <summary>
+        /// Serialize Folders only if not empty
+        /// </summary>
         public bool ShouldSerializeFolders() { return Folders.Count > 0; }
 
         /// <summary>
@@ -101,6 +104,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityRepositoryFolder> RepositoryFolders { get; set; } = new List<SecurityRepositoryFolder>();
+        /// <summary>
+        /// Serialize RepositoryFolders only if not empty
+        /// </summary>
         public bool ShouldSerializeRepositoryFolders() { return RepositoryFolders.Count > 0; }
 
         /// <summary>
@@ -121,6 +127,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool PersonalFolderReportDownload { get; set; } = false;
+        /// <summary>
+        /// Serialize PersonalFolderReportDownload only if not the default value
+        /// </summary>
         public bool ShouldSerializePersonalFolderReportDownload() { return PersonalFolderReportDownload; }
 
         /// <summary>
@@ -131,6 +140,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool PersonalFolderUpload { get; set; } = false;
+        /// <summary>
+        /// Serialize PersonalFolderUpload only if not the default value
+        /// </summary>
         public bool ShouldSerializePersonalFolderUpload() { return PersonalFolderUpload; }
 
         /// <summary>
@@ -195,6 +207,9 @@ namespace Seal.Model
         [Editor(typeof(SecurityDataSourcesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> DataSourceGUIDs { get; set; } = new List<string>();
+        /// <summary>
+        /// Serialize DataSourceGUIDs only if not empty
+        /// </summary>
         public bool ShouldSerializeDataSourceGUIDs() { return DataSourceGUIDs.Count > 0; }
 
         /// <summary>
@@ -205,6 +220,9 @@ namespace Seal.Model
         [Editor(typeof(SecurityDevicesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> OutputDeviceGUIDs { get; set; } = new List<string>();
+        /// <summary>
+        /// Serialize OutputDeviceGUIDs only if not empty
+        /// </summary>
         public bool ShouldSerializeOutputDeviceGUIDs() { return OutputDeviceGUIDs.Count > 0; }
 
         /// <summary>
@@ -241,6 +259,9 @@ namespace Seal.Model
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> AgentGUIDs { get; set; } = new List<string>();
+        /// <summary>
+        /// Serialize AgentGUIDs only if not empty
+        /// </summary>
         public bool ShouldSerializeAgentGUIDs() { return AgentGUIDs.Count > 0; }
 
         /// <summary>

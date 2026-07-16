@@ -14,9 +14,18 @@ namespace Seal.Model
     public class MetaTableLink
     {
 
+        /// <summary>
+        /// GUID of the MetaSource containing the linked table
+        /// </summary>
         public string SourceGUID { get ; set; }
+        /// <summary>
+        /// GUID of the linked MetaTable
+        /// </summary>
         public string TableGUID { get; set; }
 
+        /// <summary>
+        /// Current MetaSource
+        /// </summary>
         protected MetaSource _source;
         /// <summary>
         /// Current MetaSource

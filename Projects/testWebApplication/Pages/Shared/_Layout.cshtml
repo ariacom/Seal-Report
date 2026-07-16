@@ -1,36 +1,47 @@
-﻿<!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
 <head>
-    <!-- Required meta tags always come first -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link href="https://sealreport.org/demo/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="~/favicon.ico" rel="shortcut icon" type="image/x-icon" />
     <title>Seal Web Interface Samples</title>
 
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <link rel="stylesheet" href="~/lib/bootstrap/dist/css/bootstrap.min.css" />
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
-
-    <!-- jQuery first, then Bootstrap JS. -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <!-- jQuery in the head so page inline scripts can use $(document).ready() -->
+    <script src="~/lib/jquery/dist/jquery.min.js"></script>
 
     <style>
         body {
-            padding-top: 60px;
+            padding-top: 70px;
         }
 
         .table td, .table th {
             padding: 5px;
         }
 
+        /* The action column keeps a comfortable fixed width */
+        .table td:first-child {
+            width: 40%;
+            min-width: 300px;
+        }
+
+        /* Long JSON results wrap instead of squeezing the action column */
         label {
             font-weight: normal;
+            overflow-wrap: anywhere;
+        }
+
+        button.btn {
+            display: block;
+            width: 100%;
+            max-width: 420px;
+            margin-top: 4px;
+        }
+
+        /* Make the disabled state clearly distinct from the enabled one */
+        button.btn:disabled {
+            opacity: .3;
         }
     </style>
 </head>
@@ -42,10 +53,6 @@
         </main>
     </div>
 
-    <footer class="border-top footer text-muted">
-    </footer>
-
-    <script src="~/lib/jquery/dist/jquery.min.js"></script>
     <script src="~/lib/bootstrap/dist/js/bootstrap.bundle.min.js"></script>
     <script src="~/js/site.js" asp-append-version="true"></script>
 

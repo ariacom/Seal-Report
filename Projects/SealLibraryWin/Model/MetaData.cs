@@ -19,6 +19,9 @@ namespace Seal.Model
         /// </summary>
         [Browsable(false)]
         public List<MetaTable> Tables { get; set; } = new List<MetaTable>();
+        /// <summary>
+        /// Serialize Tables only if not empty
+        /// </summary>
         public bool ShouldSerializeTables() { return Tables.Count > 0; }
 
         /// <summary>
@@ -26,6 +29,9 @@ namespace Seal.Model
         /// </summary>
         [Browsable(false)]
         public List<MetaTableLink> TableLinks { get; set; } = new List<MetaTableLink>();
+        /// <summary>
+        /// Serialize TableLinks only if not empty
+        /// </summary>
         public bool ShouldSerializeTableLinks() { return TableLinks.Count > 0; }
 
         /// <summary>
@@ -33,6 +39,9 @@ namespace Seal.Model
         /// </summary>
         [Browsable(false)]
         public List<MetaJoin> Joins { get; set; } = new List<MetaJoin>();
+        /// <summary>
+        /// Serialize Joins only if not empty
+        /// </summary>
         public bool ShouldSerializeJoins() { return Joins.Count > 0; }
 
         /// <summary>
@@ -40,6 +49,9 @@ namespace Seal.Model
         /// </summary>
         [Browsable(false)]
         public List<MetaEnum> Enums { get; set; } = new List<MetaEnum>();
+        /// <summary>
+        /// Serialize Enums only if not empty
+        /// </summary>
         public bool ShouldSerializeEnums() { return Enums.Count > 0; }
 
 

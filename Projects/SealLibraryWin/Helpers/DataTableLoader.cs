@@ -14,6 +14,9 @@ namespace Seal.Helpers
     /// </summary>   
     public class DataTableLoader
     {
+        /// <summary>
+        /// Separator used to build column names from nested Mongo DB documents
+        /// </summary>
         public const string MongoSeparator = ".";
 
         /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 

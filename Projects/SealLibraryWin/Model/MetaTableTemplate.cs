@@ -16,7 +16,13 @@ namespace Seal.Model
     /// </summary>
     public class MetaTableTemplate
     {
+        /// <summary>
+        /// Name of the default table template
+        /// </summary>
         public const string DefaultName = "Default";
+        /// <summary>
+        /// Name of the Mongo DB table template
+        /// </summary>
         public const string MongoDBName = "Mongo DB";
 
         /// <summary>
@@ -79,6 +85,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Parse the template configuration to initialize the table
+        /// </summary>
         public void ParseConfiguration(MetaTable table)
         {
             //Parse the file to init the template
@@ -110,6 +119,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default definition init script defined by the template
+        /// </summary>
         public string DefaultDefinitionInitScript
         {
             get
@@ -120,6 +132,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default definition script defined by the template
+        /// </summary>
         public string DefaultDefinitionScript
         {
             get
@@ -130,6 +145,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default load script defined by the template
+        /// </summary>
         public string DefaultLoadScript
         {
             get
@@ -140,6 +158,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default parameters defined by the template
+        /// </summary>
         public List<Parameter> DefaultParameters
         {
             get
@@ -149,6 +170,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Last error message got when parsing the template
+        /// </summary>
         public string Error
         {
             get

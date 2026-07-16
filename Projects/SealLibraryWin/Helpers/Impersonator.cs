@@ -13,9 +13,18 @@ namespace Seal.Helpers
     /// </summary>
     public class Impersonator : IDisposable
     {
+        /// <summary>
+        /// Default logon provider for the LogonUser Windows API
+        /// </summary>
         protected const int LOGON32_PROVIDER_DEFAULT = 0;
+        /// <summary>
+        /// Interactive logon type for the LogonUser Windows API
+        /// </summary>
         protected const int LOGON32_LOGON_INTERACTIVE = 2;
 
+        /// <summary>
+        /// Windows identity of the impersonated user
+        /// </summary>
         public WindowsIdentity Identity = null;
         private IntPtr m_accessToken;
 
@@ -27,18 +36,27 @@ namespace Seal.Helpers
         [DllImport("kernel32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
         private extern static bool CloseHandle(IntPtr handle);
 
+        /// <summary>
+        /// Constructor using the identity of the current user
+        /// </summary>
         public Impersonator()
         {
             this.Identity = WindowsIdentity.GetCurrent();
         }
 
 
+        /// <summary>
+        /// Constructor performing a Windows logon with the given credentials
+        /// </summary>
         public Impersonator(string username, string domain, string password)
         {
             Login(username, domain, password);
         }
 
 
+        /// <summary>
+        /// Perform a Windows logon with the given credentials and set the Identity. An exception is thrown if the logon fails.
+        /// </summary>
         public void Login(string username, string domain, string password)
         {
             if (this.Identity != null)
@@ -77,6 +95,9 @@ namespace Seal.Helpers
         } // End Sub Login 
 
 
+        /// <summary>
+        /// Close the logon token and dispose the current identity
+        /// </summary>
         public void Logout()
         {
             if (this.m_accessToken != System.IntPtr.Zero)
@@ -98,6 +119,9 @@ namespace Seal.Helpers
             Logout();
         } // End Sub Dispose 
 
+        /// <summary>
+        /// Check Windows credentials by performing a logon and return the resulting identity
+        /// </summary>
         public static WindowsIdentity CheckWindowsLogin(string userName, string domain, string password)
         {
             var imp = new Impersonator(userName, domain, password);

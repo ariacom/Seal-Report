@@ -425,6 +425,9 @@ namespace Seal.Model
         /// Current schedule if the Seal Scheduler is used
         /// </summary>
         SealSchedule _sealSchedule = null;
+        /// <summary>
+        /// Current schedule if the Seal Scheduler is used
+        /// </summary>
         [XmlIgnore]
         public SealSchedule SealSchedule
         {
@@ -685,6 +688,9 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public FailoverEmailMode ErrorEmailSendMode { get; set; } = FailoverEmailMode.All;
+        /// <summary>
+        /// Serialize ErrorEmailSendMode only if an error email address is defined
+        /// </summary>
         public bool ShouldSerializeErrorEmailSendMode() { return !string.IsNullOrEmpty(ErrorEmailTo); }
 
         /// <summary>
@@ -774,6 +780,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Register the task definition in the Windows Task Scheduler using the scheduler user configured
+        /// </summary>
         public void RegisterTaskDefinition(TaskDefinition definition)
         {
             var configuration = Report.Repository.Configuration;

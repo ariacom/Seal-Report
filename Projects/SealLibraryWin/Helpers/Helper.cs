@@ -43,8 +43,14 @@ namespace Seal.Helpers
     {
     }
 
+    /// <summary>
+    /// Static helper methods (strings, HTML, database connections, types, reflection, logging) that can be used in Razor scripts
+    /// </summary>
     public partial class Helper
     {
+        /// <summary>
+        /// Returns the Description attribute text of an enum value, or the value name if no description is defined
+        /// </summary>
         public static string GetEnumDescription(Type type, Object value)
         {
             FieldInfo fi = type.GetField(Enum.GetName(type, value));
@@ -53,6 +59,9 @@ namespace Seal.Helpers
             else return value.ToString();
         }
 
+        /// <summary>
+        /// Returns the Description attribute text of an enum value, or the value name if no description is defined
+        /// </summary>
         public static string GetEnumDescription(object value)
         {
             var type = value.GetType();
@@ -62,6 +71,9 @@ namespace Seal.Helpers
             else return value.ToString();
         }
 
+        /// <summary>
+        /// Returns the enum value having the given Description attribute text (or value name), or the default value if not found
+        /// </summary>
         public static T GetEnumFromDescription<T>(string description, T defaultValue) where T : Enum
         {
             var type = typeof(T);
@@ -85,6 +97,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Copy the public property values from a source object to a destination object of the same type. Properties with XmlIgnore or listed in skipNames are skipped.
+        /// </summary>
         static public void CopyProperties(object src, object dest, string[] skipNames = null)
         {
             var xmlIgnore = new XmlIgnoreAttribute();
@@ -96,6 +111,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Returns true if all writable property values of the two objects are identical (compared as strings)
+        /// </summary>
         static public bool ArePropertiesIdentical(object obj1, object obj2, string skipEmptySuffix = "")
         {
             bool result = true;
@@ -113,6 +131,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Copy the properties having the same name from a source object to a destination object of a different type
+        /// </summary>
         static public void CopyPropertiesDifferentObjects(object src, object dest)
         {
             var propSource = TypeDescriptor.GetProperties(src);
@@ -134,6 +155,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Copy the property values of a reference object to a destination object for the properties still having their default value
+        /// </summary>
         static public void CopyPropertiesFromReference(object defaultObject, object referenceObject, object destObject)
         {
             foreach (PropertyDescriptor item in TypeDescriptor.GetProperties(defaultObject))
@@ -143,6 +167,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Set a property value on an object by name from a string (enum, boolean, integer and string properties are supported)
+        /// </summary>
         static public void SetPropertyValue(object item, string propertyName, string propertyValue)
         {
             PropertyInfo prop = item.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
@@ -168,6 +195,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Returns the value of a public instance property of an object by name, or null if the property does not exist
+        /// </summary>
         static public object GetPropertyValue(object item, string propertyName)
         {
             PropertyInfo prop = item.GetType().GetProperty(propertyName, BindingFlags.Public | BindingFlags.Instance);
@@ -175,6 +205,9 @@ namespace Seal.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Returns the value of a public static property of a type by name, or null if the property does not exist
+        /// </summary>
         static public object GetStaticPropertyValue(Type type, string propertyName)
         {
             PropertyInfo prop = type.GetProperty(propertyName, BindingFlags.Public | BindingFlags.Static);
@@ -182,23 +215,35 @@ namespace Seal.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Returns a new GUID as a string without dashes
+        /// </summary>
         static public string NewGUID()
         {
             return Guid.NewGuid().ToString().Replace("-", "");
         }
 
+        /// <summary>
+        /// Returns the input string enclosed in double quotes, doubling any embedded double quote
+        /// </summary>
         static public string QuoteDouble(string input)
         {
             if (input == null) input = "";
             return string.Format("\"{0}\"", input.Replace("\"", "\"\""));
         }
 
+        /// <summary>
+        /// Returns the input string enclosed in single quotes, doubling any embedded single quote
+        /// </summary>
         static public string QuoteSingle(string input)
         {
             if (input == null) input = "";
             return string.Format("'{0}'", input.Replace("'", "''"));
         }
 
+        /// <summary>
+        /// Removes all white-space characters from the input string
+        /// </summary>
         static public string RemoveWhitespace(string input)
         {
             return new string(input.ToCharArray()
@@ -206,6 +251,9 @@ namespace Seal.Helpers
                 .ToArray());
         }
 
+        /// <summary>
+        /// Returns the first string that is not null or empty, or an empty string if none
+        /// </summary>
         static public string FirstNotEmpty(string str1, string str2 = null, string str3 = null, string str4 = null, string str5 = null)
         {
             if (!string.IsNullOrEmpty(str1)) return str1;
@@ -216,6 +264,9 @@ namespace Seal.Helpers
             return "";
         }
 
+        /// <summary>
+        /// Returns an HTML attribute string (name='value') if the value is not empty, otherwise an empty string
+        /// </summary>
         static public string AddAttribute(string name, string value)
         {
             name = name.Replace("\r\n", "_").Replace("\r", "_").Replace("\n", "_");
@@ -224,6 +275,9 @@ namespace Seal.Helpers
             return "";
         }
 
+        /// <summary>
+        /// Returns prefix + input + suffix if the input object is not null or empty, otherwise an empty string
+        /// </summary>
         static public string AddIfNotNull(string prefix, object input, string suffix)
         {
             if (input != null && input.ToString() != "") return prefix + input.ToString() + suffix;
@@ -231,36 +285,54 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Returns prefix + input + suffix if the input string is not empty, otherwise an empty string
+        /// </summary>
         static public string AddIfNotEmpty(string prefix, string input, string suffix)
         {
             if (!string.IsNullOrEmpty(input)) return prefix + input + suffix;
             return "";
         }
 
+        /// <summary>
+        /// Returns separator + input if the input string is not empty, otherwise an empty string
+        /// </summary>
         static public string AddNotEmpty(string separator, string input)
         {
             if (!string.IsNullOrEmpty(input)) return separator + input;
             return "";
         }
 
+        /// <summary>
+        /// Returns input + separator if the input string is not empty, otherwise an empty string
+        /// </summary>
         static public string AddNotEmpty2(string input, string separator)
         {
             if (!string.IsNullOrEmpty(input)) return input + separator;
             return "";
         }
 
+        /// <summary>
+        /// Append a value to a string, adding the separator first if the string is not empty
+        /// </summary>
         static public void AddValue(ref string input, string separator, string value)
         {
             if (!string.IsNullOrEmpty(input)) input += separator + value;
             else input = value;
         }
 
+        /// <summary>
+        /// Append a value to a StringBuilder, adding the separator first if the builder is not empty
+        /// </summary>
         static public void AddValue(ref StringBuilder input, string separator, string value)
         {
             if (input.Length > 0) input.Append(separator + value);
             else input = new StringBuilder(value);
         }
 
+        /// <summary>
+        /// Compare two strings ignoring leading and trailing spaces (null and empty strings are considered equal)
+        /// </summary>
         static public bool CompareTrim(string s1, string s2)
         {
             if (string.IsNullOrEmpty(s1) && string.IsNullOrEmpty(s2)) return true;
@@ -268,6 +340,9 @@ namespace Seal.Helpers
             return false;
         }
 
+        /// <summary>
+        /// Returns the list of non-empty lines contained in a string
+        /// </summary>
         static public List<string> GetStringList(string listInput)
         {
             var result = new List<string>();
@@ -281,6 +356,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns true if the input matches the pattern, where '*' is a wildcard
+        /// </summary>
         static public bool IsMatchWildcard(string input, string pattern)
         {
             var regexPattern = "^" + Regex.Escape(pattern).Replace(@"\*", ".*") + "$";
@@ -299,6 +377,9 @@ namespace Seal.Helpers
             else return new string[] { value };
         }
 
+        /// <summary>
+        /// Try to parse a string as a double, swapping ',' and '.' decimal separators if the first parse fails
+        /// </summary>
         static public bool ValidateNumeric(string value, out Double d)
         {
             bool result = false;
@@ -315,6 +396,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Concatenate the display values of result cells using the given separator
+        /// </summary>
         static public string ConcatCellValues(ResultCell[] cells, string separator)
         {
             string result = "";
@@ -322,12 +406,18 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns the default value if the input string is null or empty, otherwise the input
+        /// </summary>
         static public string IfNullOrEmpty(string value, string defaultValue)
         {
             if (string.IsNullOrEmpty(value)) return defaultValue;
             return value;
         }
 
+        /// <summary>
+        /// HTML-encode a string, converting new lines to br tags
+        /// </summary>
         static public string ToHtml(string value)
         {
             if (value != null) return HttpUtility.HtmlEncode(value).Replace("\r\n", "<br>").Replace("\n", "<br>");
@@ -337,17 +427,26 @@ namespace Seal.Helpers
         //Like ToHtml but for single-line contexts (e.g. a <select> restriction option label): newlines are
         //collapsed to a space instead of <br>. A <br> injected inside an <option> breaks bootstrap-select's
         //menu build and blanks the whole dropdown, so a stray CR/LF in an enum value must never reach it.
+        /// <summary>
+        /// HTML-encode a string for single-line contexts: new lines are converted to spaces instead of br tags
+        /// </summary>
         static public string ToHtmlNoBr(string value)
         {
             if (value != null) return HttpUtility.HtmlEncode(value).Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
             return "";
         }
 
+        /// <summary>
+        /// Convert a boolean to its JavaScript literal ('true' or 'false')
+        /// </summary>
         static public string ToJS(bool value)
         {
             return value.ToString().ToLower();
         }
 
+        /// <summary>
+        /// Encode a string to be used in JavaScript
+        /// </summary>
         static public string ToJS(string value)
         {
             if (string.IsNullOrEmpty(value)) return "";
@@ -386,6 +485,9 @@ namespace Seal.Helpers
         }
         */
 
+        /// <summary>
+        /// Converts a .NET date/time format pattern to a Moment.js format string
+        /// </summary>
         public static string ToMomentJSFormat(CultureInfo culture, string datetimeFormat)
         {
             var tokenMap = new (string CSharp, string Moment)[]
@@ -457,6 +559,9 @@ namespace Seal.Helpers
             return ConvertFormat(culture, datetimeFormat, tokenMap);
         }
 
+        /// <summary>
+        /// Converts a .NET date/time format pattern to a date-fns format string
+        /// </summary>
         public static string ToDateFnsFormat(CultureInfo culture, string datetimeFormat)
         {
             string format = datetimeFormat;
@@ -559,17 +664,26 @@ namespace Seal.Helpers
             return result.ToString();
         }
 
+        /// <summary>
+        /// Returns true if the two dates differ by less than one second
+        /// </summary>
         static public bool AreEqualToSecond(DateTime dt1, DateTime dt2)
         {
             return Math.Abs((dt1 - dt2).TotalSeconds) < 1;
         }
 
 
+        /// <summary>
+        /// Removes HTML tags and non-breaking space entities from a string
+        /// </summary>
         static public string RemoveHTMLTags(string value)
         {
             return Regex.Replace(value, @"<[^>]+>|&nbsp;", "").Trim();
         }
 
+        /// <summary>
+        /// Returns a name not present in the given list, appending a number to the name if necessary
+        /// </summary>
         static public string GetUniqueName(string name, List<string> entities)
         {
             string result;
@@ -583,6 +697,9 @@ namespace Seal.Helpers
             }
             return result;
         }
+        /// <summary>
+        /// Returns a name not present in the given list (case insensitive comparison), appending a number to the name if necessary
+        /// </summary>
         static public string GetUniqueNameCaseInsensitive(string name, List<string> entities)
         {
             string result;
@@ -598,6 +715,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Convert a database object name to a display name (split camel case, replace underscores with spaces, capitalize the first letter)
+        /// </summary>
         static public string DBNameToDisplayName(string name)
         {
             string result = name;
@@ -611,6 +731,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Convert a database column type value (OLE DB type number or type name) to a ColumnType
+        /// </summary>
         static public ColumnType DatabaseToNetTypeConverter(object dbValue)
         {
             ColumnType result = ColumnType.Text;
@@ -638,6 +761,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Convert an ODBC type name to a ColumnType, returning Text on error
+        /// </summary>
         static public ColumnType ODBCToNetTypeConverter(string odbcType)
         {
             ColumnType result = ColumnType.Text;
@@ -652,6 +778,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Convert an ODBC type name (e.g. 'varchar', 'datetime') to a ColumnType
+        /// </summary>
         static public ColumnType OdbcTypeConverter(string dbType)
         {
             string t = dbType.ToLower();
@@ -662,6 +791,9 @@ namespace Seal.Helpers
             return ColumnType.Numeric;
         }
 
+        /// <summary>
+        /// Convert an OleDbType to the corresponding .NET Type
+        /// </summary>
         static public Type OleDbToNetTypeConverter(OleDbType oleDbTypeNumber)
         {
             switch ((int)oleDbTypeNumber)
@@ -707,6 +839,9 @@ namespace Seal.Helpers
             throw (new Exception("DataType Not Supported"));
         }
 
+        /// <summary>
+        /// Convert a .NET type to a ColumnType (Text, DateTime or Numeric)
+        /// </summary>
         static public ColumnType NetTypeConverter(Type netType)
         {
             if (netType == typeof(string) || netType == typeof(Guid)) return ColumnType.Text;
@@ -714,6 +849,9 @@ namespace Seal.Helpers
             return ColumnType.Numeric;
         }
 
+        /// <summary>
+        /// Returns the list of ODBC driver names installed on the machine (read from the registry)
+        /// </summary>
         public static List<String> GetSystemDriverList()
         {
             List<string> names = new List<string>();
@@ -748,6 +886,9 @@ namespace Seal.Helpers
 
             return names;
         }
+        /// <summary>
+        /// Convert a NumericStandardFormat to its .NET format string (e.g. 'N2')
+        /// </summary>
         static public string ConvertNumericStandardFormat(NumericStandardFormat format)
         {
             if (format == NumericStandardFormat.Numeric0) return "N0";
@@ -780,6 +921,9 @@ namespace Seal.Helpers
             return "0";
         }
 
+        /// <summary>
+        /// Convert a DateTimeStandardFormat to its .NET format string (e.g. 'd')
+        /// </summary>
         static public string ConvertDateTimeStandardFormat(DateTimeStandardFormat format)
         {
             if (format == DateTimeStandardFormat.ShortDate) return "d";
@@ -793,6 +937,9 @@ namespace Seal.Helpers
             return "0";
         }
 
+        /// <summary>
+        /// Build a readable error message from a Razor template compilation exception
+        /// </summary>
         static public string GetExceptionMessage(TemplateCompilationException ex)
         {
             var result = new StringBuilder("");
@@ -805,6 +952,9 @@ namespace Seal.Helpers
             return firstError + result.ToString();
         }
 
+        /// <summary>
+        /// Parse a SQL statement through the Razor engine and execute it on the connection (used for Pre and Post SQL statements)
+        /// </summary>
         static public void ExecutePrePostSQL(DbConnection connection, string sql, object model, bool ignoreErrors)
         {
             try
@@ -827,11 +977,17 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Prefix a message with the current date and time
+        /// </summary>
         public static string FormatMessage(string message)
         {
             return string.Format("[{0} {1}] {2} ", DateTime.Now.ToShortDateString(), DateTime.Now.ToLongTimeString(), message);
         }
 
+        /// <summary>
+        /// Remove invalid file name and path characters from a string
+        /// </summary>
         public static string CleanFileName(string s)
         {
             foreach (char character in Path.GetInvalidFileNameChars())
@@ -849,9 +1005,21 @@ namespace Seal.Helpers
 
         static DateTime NextDailyPuge = DateTime.MinValue;
         const string TaskSchedulerEntry = "Seal Task Scheduler";
+        /// <summary>
+        /// Prefix of the daily log files for report executions
+        /// </summary>
         public const string DailyLogExecutions = "executions";
+        /// <summary>
+        /// Prefix of the daily log files for events
+        /// </summary>
         public const string DailyLogEvents = "events";
+        /// <summary>
+        /// Prefix of the daily log files for schedules
+        /// </summary>
         public const string DailyLogSchedules = "schedules";
+        /// <summary>
+        /// Append a message to a daily log file in the logs folder, purging log files older than logDays days
+        /// </summary>
         public static void WriteDailyLog(string prefix, string logsFolder, int logDays, string message)
         {
             try
@@ -894,6 +1062,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Log an exception (message and stack trace) to the daily events log file and to the Windows Event Log
+        /// </summary>
         public static void WriteLogException(string context, Exception ex)
         {
             try
@@ -924,6 +1095,9 @@ namespace Seal.Helpers
             Console.WriteLine(ex.Message);
         }
 
+        /// <summary>
+        /// Write a message to the daily log file and to the Windows Event Log
+        /// </summary>
         public static void WriteLogEntry(string source, EventLogEntryType type, string message)
         {
             string msg = message;
@@ -958,10 +1132,16 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Write a message to the scheduler daily log file and to the Windows Event Log
+        /// </summary>
         public static void WriteLogEntryScheduler(EventLogEntryType type, string message)
         {
             WriteLogEntry(TaskSchedulerEntry, type, message);
         }
+        /// <summary>
+        /// Write an exception message to the Windows Event Log
+        /// </summary>
         public static void WriteEventLogEntry(string source, Exception ex)
         {
             try
@@ -971,6 +1151,9 @@ namespace Seal.Helpers
             catch { }
         }
 
+        /// <summary>
+        /// Returns true if the current Windows user is an administrator of the machine
+        /// </summary>
         public static bool IsMachineAdministrator()
         {
             try
@@ -992,6 +1175,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Returns true if the operating system major version is 6 or greater (Windows Vista/Server 2008 or later)
+        /// </summary>
         public static bool IsValidOS()
         {
             int major = Environment.OSVersion.Version.Major;
@@ -999,6 +1185,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Write the content of a DataTable to the debug output
+        /// </summary>
         public static void DisplayDataTable(DataTable table)
         {
             foreach (System.Data.DataRow row in table.Rows)
@@ -1012,6 +1201,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load a DataTable from a SQL statement executed on a database connection
+        /// </summary>
         [System.Diagnostics.CodeAnalysis.SuppressMessage("Style", "IDE0038:Use pattern matching", Justification = "<Pending>")]
         public static DataTable GetDataTable(DbConnection connection, string sql)
         {
@@ -1070,6 +1262,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// If the source contains the pattern at the given index, append the replacement to the result, advance the index and return true
+        /// </summary>
         public static bool FindReplacePattern(string source, ref int index, string pattern, string replace, StringBuilder result)
         {
             if (index + pattern.Length <= source.Length && source.Substring(index, pattern.Length) == pattern)
@@ -1082,6 +1277,9 @@ namespace Seal.Helpers
 
         }
 
+        /// <summary>
+        /// Clone an object using XML serialization
+        /// </summary>
         public static object Clone(Object source)
         {
             XmlSerializer serializer = new XmlSerializer(source.GetType());
@@ -1093,6 +1291,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Serialize an object to an XML file
+        /// </summary>
         public static void Serialize(string path, object obj, XmlSerializer serializer = null)
         {
             if (serializer == null) serializer = new XmlSerializer(obj.GetType());
@@ -1108,6 +1309,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Create a DbConnection from a connection type and a connection string
+        /// </summary>
         public static DbConnection DbConnectionFromConnectionString(ConnectionType connectionType, string connectionString)
         {
             DbConnection connection;
@@ -1164,6 +1368,9 @@ namespace Seal.Helpers
             return connection;
         }
 
+        /// <summary>
+        /// Determine the DatabaseType from a connection string
+        /// </summary>
         static public DatabaseType GetDatabaseType(string connectionString)
         {
             DatabaseType result = DatabaseType.Standard;
@@ -1195,6 +1402,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Add 'User ID' and 'Password' to an OLE DB connection string if they are not already set
+        /// </summary>
         static public string GetOleDbConnectionString(string input, string userName, string password)
         {
             string result = input;
@@ -1203,6 +1413,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Add 'UID' and 'PWD' to an ODBC connection string if they are not already set
+        /// </summary>
         static public string GetOdbcConnectionString(string input, string userName, string password)
         {
             string result = input;
@@ -1211,6 +1424,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Replace the %USER% and %PASSWORD% keywords in a Mongo DB connection string
+        /// </summary>
         static public string GetMongoConnectionString(string input, string userName, string password)
         {
             string result = input;
@@ -1222,6 +1438,9 @@ namespace Seal.Helpers
             catch { }
             return result;
         }
+        /// <summary>
+        /// Add 'UID' and 'PWD' to a MySQL connection string if they are not already set
+        /// </summary>
         static public string GetMySQLConnectionString(string input, string userName, string password)
         {
             string result = input;
@@ -1230,6 +1449,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns the content of an image file as a base64 data URI to be used in an HTML img src attribute
+        /// </summary>
         public static string HtmlMakeImageSrcData(string path)
         {
             FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
@@ -1243,11 +1465,17 @@ namespace Seal.Helpers
             return "data:image/" + type + ";base64," + Convert.ToBase64String(filebytes, Base64FormattingOptions.None);
         }
 
+        /// <summary>
+        /// Returns a file path as an HTML encoded 'file:///' URL
+        /// </summary>
         public static string HtmlGetFilePath(string path)
         {
             return "file:///" + HttpUtility.HtmlEncode(path.Replace(Path.DirectorySeparatorChar.ToString(), "/"));
         }
 
+        /// <summary>
+        /// Returns true if the date/time format contains a time component
+        /// </summary>
         static public bool HasTimeFormat(DateTimeStandardFormat formatType, string format)
         {
             if (formatType.ToString().Contains("Time")) return true;
@@ -1300,6 +1528,9 @@ namespace Seal.Helpers
 
 
         //SQL Keywords management
+        /// <summary>
+        /// Replace all Seal keywords (enum filters, enum values, common restrictions and values) in a SQL statement by neutral values (e.g. common restrictions by '1=1')
+        /// </summary>
         public static string ClearAllSQLKeywords(string sql, ReportModel model = null)
         {
             sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword, "filter");
@@ -1311,6 +1542,9 @@ namespace Seal.Helpers
         }
 
         //SQL Keywords management
+        /// <summary>
+        /// Replace all Seal enum keywords (enum filters and values) in a LINQ script by 'null'
+        /// </summary>
         public static string ClearAllLINQKeywords(string script)
         {
             script = ClearSQLKeywords(script, Repository.EnumFilterKeyword, "null");
@@ -1318,6 +1552,9 @@ namespace Seal.Helpers
             return script;
         }
 
+        /// <summary>
+        /// Replace all occurrences of a keyword expression (keyword followed by a name and a closing '}') in a SQL statement by a given value
+        /// </summary>
         public static string ClearSQLKeywords(string sql, string keyword, string replacedBy)
         {
             if (string.IsNullOrEmpty(sql)) return "";
@@ -1345,6 +1582,9 @@ namespace Seal.Helpers
             return sql;
         }
 
+        /// <summary>
+        /// Merge a CTE (Common Table Expression 'WITH' clause) into an existing CTE clause
+        /// </summary>
         public static string AddCTE(string current, string CTE)
         {
             var result = current;
@@ -1361,6 +1601,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns the names used with a given keyword in a SQL statement (text between the keyword and the closing '}')
+        /// </summary>
         public static List<string> GetSQLKeywordNames(string sql, string keyword)
         {
             var result = new List<string>();
@@ -1391,6 +1634,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Returns the directory of the current application executable
+        /// </summary>
         public static string GetApplicationDirectory()
         {
             var assembly = Assembly.GetEntryAssembly();
@@ -1399,6 +1645,9 @@ namespace Seal.Helpers
             return Path.GetDirectoryName(assembly.Location);
         }
 
+        /// <summary>
+        /// Convert a TimeSpan to a translated display string (e.g. '2 hours'), or a default value if empty
+        /// </summary>
         public static string FromTimeSpan(TimeSpan val, string def, Repository repository)
         {
             string result = "";
@@ -1419,6 +1668,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Parse a translated display string (e.g. '2 hours') into a TimeSpan
+        /// </summary>
         public static TimeSpan ToTimeSpan(string str, Repository repository)
         {
             string secStr = repository == null ? "second" : repository.TranslateWebJS("second").ToLower();
@@ -1587,6 +1839,9 @@ namespace Seal.Helpers
         }
 
         #region License
+        /// <summary>
+        /// Decrypt a license text and extract its generation date, version, serial number, name and type
+        /// </summary>
         public static void GetLicense(string text, out DateTime generationDate, out int version, out string serial, out string name, out string type)
         {
             string[] texts = CryptoHelper.DecryptAES(text, CryptoHelper.AESLicenseKey).Split('\r');
@@ -1600,6 +1855,9 @@ namespace Seal.Helpers
             type = texts[5];
         }
 
+        /// <summary>
+        /// Read and check a license file, returning a text describing the license (empty if no file or invalid file)
+        /// </summary>
         public static string GetLicenseText(string licenseFilePath, out bool invalid)
         {
             var result = "";

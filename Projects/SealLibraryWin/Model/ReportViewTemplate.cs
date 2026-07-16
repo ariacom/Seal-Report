@@ -17,24 +17,78 @@ namespace Seal.Model
     /// </summary>
     public class ReportViewTemplate
     {
+        /// <summary>
+        /// Name of the default template
+        /// </summary>
         public const string DefaultName = "Default";
+        /// <summary>
+        /// Name of the Report template (root view)
+        /// </summary>
         public const string ReportName = "Report";
+        /// <summary>
+        /// Name of the Model template
+        /// </summary>
         public const string ModelName = "Model";
+        /// <summary>
+        /// Name of the Tab Page template
+        /// </summary>
         public const string TabPageName = "Tab Page";
+        /// <summary>
+        /// Name of the Model Detail template
+        /// </summary>
         public const string ModelDetailName = "Model Detail";
+        /// <summary>
+        /// Name of the Restrictions template
+        /// </summary>
         public const string RestrictionsName = "Restrictions";
+        /// <summary>
+        /// Name of the Widget template
+        /// </summary>
         public const string WidgetName = "Widget";
+        /// <summary>
+        /// Name of the Data Table template
+        /// </summary>
         public const string DataTableName = "Data Table";
+        /// <summary>
+        /// Name of the Page Table template
+        /// </summary>
         public const string PageTableName = "Page Table";
+        /// <summary>
+        /// Name of the Chart ECharts template
+        /// </summary>
         public const string ChartEChartsName = "Chart Echarts";
+        /// <summary>
+        /// Name of the Chart JS template
+        /// </summary>
         public const string ChartJSName = "Chart JS";
+        /// <summary>
+        /// Name of the Chart Plotly template
+        /// </summary>
         public const string ChartPlotlyName = "Chart Plotly";
+        /// <summary>
+        /// Name of the Chart Scottplot template
+        /// </summary>
         public const string ChartScottplotName = "Chart Scottplot";
+        /// <summary>
+        /// Name of the Gauge template
+        /// </summary>
         public const string GaugeName = "Gauge";
+        /// <summary>
+        /// Name of the Container template
+        /// </summary>
         public const string ContainerName = "Container";
+        /// <summary>
+        /// Name of the Container Grid Flex template
+        /// </summary>
         public const string ContainerGridFlexName = "Container Grid Flex";
 
+        /// <summary>
+        /// D3 color palette as a JavaScript array, used for chart series colors
+        /// </summary>
         public const string D3Colors = "['#1f77b4','#ff7f0e','#2ca02c','#d62728','#9467bd','#8c564b','#e377c2','#7f7f7f','#bcbd22','#17becf']";
+        /// <summary>
+        /// Google color palette as a JavaScript array, used for chart series colors
+        /// </summary>
         public const string GoogleColors = "['#3366cc','#dc3912','#ff9900','#109618','#990099','#0099c6','#dd4477','#66aa00','#b82e2e','#316395','#994499','#22aa99','#aaaa11','#6633cc','#e67300','#8b0707','#651067','#329262','#5574a6','#3b3eac']";
 
         /// <summary>
@@ -313,6 +367,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Sample values proposed for the CSS parameter of the Container Grid Flex template (format 'value|description')
+        /// </summary>
         public static string[] GridFlexContainerParameterSample = new string[] {
             "display:flex;\r\nflex-flow:row wrap;|Flex row in a single line with wrapping.",
             "display:flex;\r\nflex-flow:column;width:50%;|Flex column in a single column of 50%",
@@ -324,6 +381,9 @@ namespace Seal.Model
             "display:grid;\r\ngrid-template-columns:1fr\r\njustify-content:center;\r\nalign-content:center;|Grid: Full options",
         };
 
+        /// <summary>
+        /// Sample values proposed for the CSS parameter of the items of a Container Grid Flex template (format 'value|description')
+        /// </summary>
         public static string[] GridFlexItemParameterSample = new string[] {
             "width:50%;\r\nwidth:50%;|Flex: If container is flex-flow:row, the view1 and view2 have the same size on the first row",
             "flex:2;\r\nflex:1;\r\nflex:1;|Flex: If container is flex-flow:row, the view1, view2 and view3 have different sizes on the first row",

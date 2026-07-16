@@ -34,36 +34,108 @@ namespace Seal.Model
     /// </summary>
     public class Repository
     {
+        /// <summary>
+        /// Root product name
+        /// </summary>
         public const string SealRootProductName = "Seal";
+        /// <summary>
+        /// File extension of the configuration files (devices, schedules)
+        /// </summary>
         public const string SealConfigurationFileExtension = "scfx";
+        /// <summary>
+        /// File extension of the report files
+        /// </summary>
         public const string SealReportFileExtension = "srex";
+        /// <summary>
+        /// File extension of the report shortcut files
+        /// </summary>
         public const string SealReportShortcutFileExtension = "srln";
+        /// <summary>
+        /// Name of the Task Scheduler executable
+        /// </summary>
         public const string SealTaskScheduler = "SealTaskScheduler.exe";
+        /// <summary>
+        /// Name of the Report Designer executable
+        /// </summary>
         public const string SealReportDesigner = "SealReportDesigner.exe";
+        /// <summary>
+        /// Name of the Server Manager executable
+        /// </summary>
         public const string SealServerManager = "SealServerManager.exe";
+        /// <summary>
+        /// Name of the default repository directory created in the common application data folder
+        /// </summary>
         public const string SealDefaultRepository = "Seal Report Repository";
+        /// <summary>
+        /// Keyword replaced by the repository root path
+        /// </summary>
         public const string SealRepositoryKeyword = "%SEALREPOSITORY%";
+        /// <summary>
+        /// Keyword replaced by the repository Reports folder path
+        /// </summary>
         public const string SealReportsRepositoryKeyword = "%SEALREPORTSREPOSITORY%";
+        /// <summary>
+        /// Keyword replaced by the personal folder path of the user
+        /// </summary>
         public const string SealPersonalRepositoryKeyword = "%SEALPERSONALREPOSITORY%";
+        /// <summary>
+        /// Keyword replaced by the report display name
+        /// </summary>
         public const string SealReportDisplayNameKeyword = "%SEALREPORTDISPLAYNAME%";
+        /// <summary>
+        /// Alternate keyword replaced by the report display name
+        /// </summary>
         public const string SealReportDisplayNameKeyword2 = "{Report Name}";
+        /// <summary>
+        /// Keyword prefix used in the SQL to define a common restriction
+        /// </summary>
         public const string CommonRestrictionKeyword = "{CommonRestriction_";
+        /// <summary>
+        /// Keyword prefix used in the SQL to define a common value
+        /// </summary>
         public const string CommonValueKeyword = "{CommonValue_";
+        /// <summary>
+        /// Keyword used in the SQL of a dynamic enumerated list to specify the filter typed by the user
+        /// </summary>
         public const string EnumFilterKeyword = "{EnumFilter";
+        /// <summary>
+        /// Keyword prefix used in the SQL of a dynamic enumerated list to specify the values selected in another enumerated list (dependencies)
+        /// </summary>
         public const string EnumValuesKeyword = "{EnumValues_";
+        /// <summary>
+        /// Name used for a join having an automatic name
+        /// </summary>
         public const string JoinAutoName = "<AutomaticJoinName>";
 
 
         //appsettings.json
+        /// <summary>
+        /// Name of the Seal configuration section in appsettings.json
+        /// </summary>
         public const string SealConfigurationSectionKeyword = "SealConfiguration";
+        /// <summary>
+        /// Name of the key defining the repository path in appsettings.json
+        /// </summary>
         public const string SealConfigurationRepositoryPathKeyword = "RepositoryPath";
+        /// <summary>
+        /// Name of the key defining the maximum working set in appsettings.json
+        /// </summary>
         public const string SealConfigurationMaxWorkingSetKeyword = "MaxWorkingSet";
 
         //core installation subdirectory
+        /// <summary>
+        /// Name of the sub-directory containing the core installation binaries
+        /// </summary>
         public const string CoreInstallationSubDirectory = "Core";
 
+        /// <summary>
+        /// Static lock object used to synchronize repository initialization and result file path generation
+        /// </summary>
         public static object PathLock = new object();
 
+        /// <summary>
+        /// Name of the temporary directory used for the web publication
+        /// </summary>
         public const string SealWebPublishTemp = "temp";
 
         /// <summary>
@@ -121,6 +193,9 @@ namespace Seal.Model
 
 #endif
 
+        /// <summary>
+        /// True if a license file is present but invalid
+        /// </summary>
         public bool LicenseInvalid = false;
 
         private string _licenseText = null;
@@ -425,6 +500,9 @@ namespace Seal.Model
             return path;
         }
 
+        /// <summary>
+        /// Name of the default relative repository directory, used as a fallback when no repository path is configured (e.g. under wwwroot for Azure deployments)
+        /// </summary>
         public static string DefaultRepository
         {
             get
@@ -461,6 +539,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the static repository Instance has been created
+        /// </summary>
         public static bool IsInstanceCreated
         {
             get
@@ -1370,6 +1451,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns the list of two-letter language codes available in the translation files
+        /// </summary>
         public List<string> GetInstalledTranslationLanguages()
         {
             var result = new List<string>();
@@ -1670,8 +1754,14 @@ namespace Seal.Model
         }
 
 #if DEBUG
+        /// <summary>
+        /// List of translations requested but not found (Debug builds only)
+        /// </summary>
         static public List<RepositoryTranslation> UnkownTranslations = new List<RepositoryTranslation>();
 
+        /// <summary>
+        /// Debug helper to trace unknown translations and translation usage (Debug builds only)
+        /// </summary>
         public void FlushTranslationUsage()
         {
             /*

@@ -18,8 +18,14 @@ namespace Seal.Model
     /// </summary>
     public class NavigationContext
     {
+        /// <summary>
+        /// Current navigations done, indexed by the report execution GUID
+        /// </summary>
         public Dictionary<string, Navigation> Navigations = new Dictionary<string, Navigation>();
 
+        /// <summary>
+        /// Process a navigation (sub-report or drill) and returns the new report execution
+        /// </summary>
         public ReportExecution Navigate(string navigation, ReportExecution execution, bool newWindow)
         {
             var rootReport = execution.RootReport;
@@ -133,6 +139,9 @@ namespace Seal.Model
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
         }
 
+        /// <summary>
+        /// Execute the navigation script of a link (cell or report navigation script) and returns the script result
+        /// </summary>
         public string NavigateScript(string navigation, Report report, NameValueCollection parameters, HttpRequest request = null)
         {
             var linkGUID = navigation.Substring(3);
@@ -156,6 +165,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Register a navigation for a report execution
+        /// </summary>
         public void SetNavigation(ReportExecution execution)
         {
             Navigation navigation = null;
@@ -180,6 +192,9 @@ namespace Seal.Model
             if (execution.RootReport == null) execution.RootReport = execution.Report;
         }
 
+        /// <summary>
+        /// Returns the HTML list items of the navigation links for a root report
+        /// </summary>
         public string GetNavigationLinksHTML(Report rootReport)
         {
             string links = "";

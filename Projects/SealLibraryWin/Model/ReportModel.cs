@@ -39,6 +39,9 @@ namespace Seal.Model
     public class ReportModel : ReportComponent
     {
         const string DefaultClause = "<Default Clause>";
+        /// <summary>
+        /// Default template proposed for the LINQ query script
+        /// </summary>
         public const string DefaultLINQScriptTemplate = "var query2 = query.Distinct();";
 
 #if WINDOWS
@@ -131,6 +134,9 @@ namespace Seal.Model
 #endif
         public string SourceGUID { get; set; }
 
+        /// <summary>
+        /// GUID of the connection used to build the model
+        /// </summary>
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
         /// <summary>
         /// The connection used to build the model
@@ -181,6 +187,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<ReportRestriction> CommonRestrictions { get; set; } = new List<ReportRestriction>();
+        /// <summary>
+        /// Xml serialization helper: serialize CommonRestrictions only if not empty
+        /// </summary>
         public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
 
         /// <summary>
@@ -192,6 +201,9 @@ namespace Seal.Model
         [TypeConverter(typeof(ReportModelConverter))]
 #endif
         public string ReferenceModelGUID { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize ReferenceModelGUID only if not empty
+        /// </summary>
         public bool ShouldSerializeReferenceModelGUID() { return !string.IsNullOrEmpty(ReferenceModelGUID); }
 
         /// <summary>
@@ -259,6 +271,9 @@ namespace Seal.Model
                 if (updateModels) BuildQuery(false, true);
             }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize SubModelsSetRestr only if not the default value
+        /// </summary>
         public bool ShouldSerializeSubModelsSetRestr() { return !_subModelsSetRestr; }
 
 
@@ -283,6 +298,9 @@ namespace Seal.Model
                 if (updateModels) BuildQuery(false, true);
             }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize SubModelsSetAggr only if not the default value
+        /// </summary>
         public bool ShouldSerializeSubModelsSetAggr() { return !_subModelsSetAggr; }
 
         /// <summary>
@@ -312,6 +330,9 @@ namespace Seal.Model
         [DefaultValue(true)]
 #endif
         public bool ShareResultTable { get; set; } = true;
+        /// <summary>
+        /// Xml serialization helper: serialize ShareResultTable only if not the default value
+        /// </summary>
         public bool ShouldSerializeShareResultTable() { return !ShareResultTable; }
 
         /// <summary>
@@ -322,6 +343,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool PrintQuery { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize PrintQuery only if true
+        /// </summary>
         public bool ShouldSerializePrintQuery() { return PrintQuery; }
 
         /// <summary>
@@ -332,6 +356,9 @@ namespace Seal.Model
         [DefaultValue(true)]
 #endif
         public bool ShowFirstLine { get; set; } = true;
+        /// <summary>
+        /// Xml serialization helper: serialize ShowFirstLine only if not the default value
+        /// </summary>
         public bool ShouldSerializeShowFirstLine() { return !ShowFirstLine; }
 
         /// <summary>
@@ -363,6 +390,9 @@ namespace Seal.Model
             get { return Table != null ? Table.Alias : Name; }
             set { if (Table != null) Table.Alias = value; }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize Alias only for a SQL Model
+        /// </summary>
         public bool ShouldSerializeAlias() { return IsSQLModel; }
 
         /// <summary>
@@ -377,6 +407,9 @@ namespace Seal.Model
             get { return Table != null ? Table.KeepColumnNames : false; }
             set { if (Table != null) Table.KeepColumnNames = value; }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize KeepColNames only for a SQL Model
+        /// </summary>
         public bool ShouldSerializeKeepColNames() { return IsSQLModel; }
 
         /// <summary>
@@ -387,6 +420,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool UseRawSQL { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize UseRawSQL only for a SQL Model
+        /// </summary>
         public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
 
 
@@ -398,6 +434,9 @@ namespace Seal.Model
         [DefaultValue(true)]
 #endif
         public bool UseSelectDistinct { get; set; } = true;
+        /// <summary>
+        /// Xml serialization helper: serialize UseSelectDistinct only if not the default value
+        /// </summary>
         public bool ShouldSerializeUseSelectDistinct() { return !UseSelectDistinct; }
 
         /// <summary>
@@ -408,6 +447,9 @@ namespace Seal.Model
         [DefaultValue(0)]
 #endif
         public int MaxNumberOfRecords { get; set; } = 0;
+        /// <summary>
+        /// Xml serialization helper: serialize MaxNumberOfRecords only if not the default value
+        /// </summary>
         public bool ShouldSerializeMaxNumberOfRecords() { return MaxNumberOfRecords != 0; }
 
         string _sqlSelect;
@@ -523,12 +565,18 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout."), Id(12, 3)]
 #endif
         public int CommandTimeout { get; set; } = -1;
+        /// <summary>
+        /// Xml serialization helper: serialize CommandTimeout only if not the default value
+        /// </summary>
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != -1; }
 
         /// <summary>
         /// List of Joins used to perform the query and joins the tables involved. By default, all Joins available in the Data Source are used.
         /// </summary>
         public List<string> JoinsToUse { get; set; } = new List<string>();
+        /// <summary>
+        /// Xml serialization helper: serialize JoinsToUse only if not empty
+        /// </summary>
         public bool ShouldSerializeJoinsToUse() { return JoinsToUse.Count > 0; }
 
         /// <summary>
@@ -584,12 +632,18 @@ namespace Seal.Model
         /// List of SQL Sub-models involved in a LINQ Model 
         /// </summary>
         public List<ReportModel> LINQSubModels { get; set; } = new List<ReportModel>();
+        /// <summary>
+        /// Xml serialization helper: serialize LINQSubModels only if not empty
+        /// </summary>
         public bool ShouldSerializeLINQSubModels() { return LINQSubModels != null && LINQSubModels.Count > 0; }
 
         /// <summary>
         /// List of SQL Sub-tables involved in a LINQ Model 
         /// </summary>
         public List<MetaTable> LINQSubTables { get; set; } = new List<MetaTable>();
+        /// <summary>
+        /// Xml serialization helper: serialize LINQSubTables only if not empty
+        /// </summary>
         public bool ShouldSerializeLINQSubTables() { return LINQSubTables != null && LINQSubTables.Count > 0; }
 
         /// <summary>
@@ -758,6 +812,9 @@ namespace Seal.Model
         /// Elements selected for the model
         /// </summary>
         public List<ReportElement> Elements { get; set; } = new List<ReportElement>();
+        /// <summary>
+        /// Xml serialization helper: serialize Elements only if not empty
+        /// </summary>
         public bool ShouldSerializeElements() { return Elements.Count > 0; }
 
         /// <summary>
@@ -806,12 +863,18 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(_restriction) ? "" : _restriction; }
             set { _restriction = value; }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize Restriction only if not empty
+        /// </summary>
         public bool ShouldSerializeRestriction() { return !string.IsNullOrEmpty(_restriction); }
 
         /// <summary>
         /// List of restrictions of the model
         /// </summary>
         public List<ReportRestriction> Restrictions { get; set; } = new List<ReportRestriction>();
+        /// <summary>
+        /// Xml serialization helper: serialize Restrictions only if not empty
+        /// </summary>
         public bool ShouldSerializeRestrictions() { return Restrictions.Count > 0; }
 
 
@@ -825,12 +888,18 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(_aggregateRestriction) ? "" : _aggregateRestriction; }
             set { _aggregateRestriction = value; }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize AggregateRestriction only if not empty
+        /// </summary>
         public bool ShouldSerializeAggregateRestriction() { return !string.IsNullOrEmpty(_aggregateRestriction); }
 
         /// <summary>
         /// List of aggregate restrictions of the model
         /// </summary>
         public List<ReportRestriction> AggregateRestrictions { get; set; } = new List<ReportRestriction>();
+        /// <summary>
+        /// Xml serialization helper: serialize AggregateRestrictions only if not empty
+        /// </summary>
         public bool ShouldSerializeAggregateRestrictions() { return AggregateRestrictions.Count > 0; }
 
         /// <summary>
@@ -840,6 +909,9 @@ namespace Seal.Model
         [Browsable(false)]
 #endif
         public MetaTable Table { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize Table only for a SQL Model
+        /// </summary>
         public bool ShouldSerializeTable() { return IsSQLModel; }
 
         /// <summary>
@@ -933,6 +1005,9 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         public string Sql { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Sql only for a SQL Model
+        /// </summary>
         public bool ShouldSerializeSql() { return IsSQLModel; }
 
         /// <summary>

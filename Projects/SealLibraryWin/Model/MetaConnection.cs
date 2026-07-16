@@ -31,7 +31,13 @@ namespace Seal.Model
         [XmlIgnore]
         public MetaSource Source = null;
 
+        /// <summary>
+        /// Name of the repository security key used to encrypt the connection password
+        /// </summary>
         public const string PasswordKeyName = "Meta Connection Password";
+        /// <summary>
+        /// Default value of the repository security key used to encrypt the connection password
+        /// </summary>
         public const string PasswordKeyValue = "1awéàèüwienyjhdl+256()$$";
 
 #if WINDOWS
@@ -118,6 +124,9 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Description only if not empty
+        /// </summary>
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
@@ -130,6 +139,9 @@ namespace Seal.Model
 #endif
         public DatabaseType DatabaseType { get; set; } = DatabaseType.Standard;
 
+        /// <summary>
+        /// Start delimiter character used to quote table and column names, depending on the database type
+        /// </summary>
         public char StartDelimiter
         {
             get
@@ -141,6 +153,9 @@ namespace Seal.Model
                 return '[';
             }
         }
+        /// <summary>
+        /// End delimiter character used to quote table and column names, depending on the database type
+        /// </summary>
         public char EndDelimiter
         {
             get
@@ -207,6 +222,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize ConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeConnectionString() { return !string.IsNullOrEmpty(ConnectionString); }
 
         /// <summary>
@@ -218,6 +236,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string OdbcConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize OdbcConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeOdbcConnectionString() { return !string.IsNullOrEmpty(OdbcConnectionString); }
 
 
@@ -230,6 +251,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MSSqlServerConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize MSSqlServerConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeMSSqlServerConnectionString() { return !string.IsNullOrEmpty(MSSqlServerConnectionString); }
 
         /// <summary>
@@ -241,6 +265,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MongoDBConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize MongoDBConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeMongoDBConnectionString() { return !string.IsNullOrEmpty(MongoDBConnectionString); }
 
         /// <summary>
@@ -252,6 +279,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string MySQLConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize MySQLConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeMySQLConnectionString() { return !string.IsNullOrEmpty(MySQLConnectionString); }
 
         /// <summary>
@@ -263,14 +293,23 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string OracleConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize OracleConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeOracleConnectionString() { return !string.IsNullOrEmpty(OracleConnectionString); }
 
+        /// <summary>
+        /// PostgreSQL Connection string used to connect to the database if the connection type is PostgreSQL
+        /// </summary>
 #if WINDOWS
         [DefaultValue(null)]
         [DisplayName("PostgreSQL Connection string"), Description("PostgreSQL Connection string used to connect to the database if the connection type is PostgreSQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(10, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string PostgreSQLConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize PostgreSQLConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializePostgreSQLConnectionString() { return !string.IsNullOrEmpty(PostgreSQLConnectionString); }
 
         /// <summary>
@@ -282,6 +321,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SQLiteConnectionString { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize SQLiteConnectionString only if not empty
+        /// </summary>
         public bool ShouldSerializeSQLiteConnectionString() { return !string.IsNullOrEmpty(SQLiteConnectionString); }
 
         /// <summary>
@@ -293,6 +335,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ConnectionScript { get; set; } = null;
+        /// <summary>
+        /// Xml serialization helper: serialize ConnectionScript only if not empty
+        /// </summary>
         public bool ShouldSerializeConnectionScript() { return !string.IsNullOrEmpty(ConnectionScript); }
 
         /// <summary>
@@ -303,6 +348,9 @@ namespace Seal.Model
         [DisplayName("Database Date Time format"), Description("The date time format used to build date restrictions in the SQL WHERE clauses. This is not used for MS Access database (Serial Dates)."), Category("Definition"), Id(11, 1)]
 #endif
         public string DateTimeFormat { get; set; } = "yyyy-MM-dd HH:mm:ss";
+        /// <summary>
+        /// Xml serialization helper: serialize DateTimeFormat only if not the default value
+        /// </summary>
         public bool ShouldSerializeDateTimeFormat() { return DateTimeFormat != "yyyy-MM-dd HH:mm:ss"; }
 
         /// <summary>
@@ -313,6 +361,9 @@ namespace Seal.Model
         [DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed. 0 means no Timeout."), Category("Definition"), Id(12, 1)]
 #endif
         public int CommandTimeout { get; set; } = 0;
+        /// <summary>
+        /// Xml serialization helper: serialize CommandTimeout only if not the default value
+        /// </summary>
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != 0; }
 
         /// <summary>
@@ -329,6 +380,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Returns the connection string defined for the current connection type, without user name and password
+        /// </summary>
         public string GetRawConnectionString()
         {
             var result = "";
@@ -368,6 +422,9 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Returns the full connection string for the current connection type, with the given user name and password and the repository keyword replaced
+        /// </summary>
         public string GetFullConnectionString(string userName, string password)
         {
             var result = "";
@@ -407,6 +464,9 @@ namespace Seal.Model
             return Source.Repository.ReplaceRepositoryKeyword(result);
         }
 
+        /// <summary>
+        /// Sets the connection string of the current connection type
+        /// </summary>
         public void  SetConnectionString(string connectionString)
         {
             if (ConnectionType == ConnectionType.MSSQLServer || ConnectionType == ConnectionType.MSSQLServerMicrosoft)
@@ -450,12 +510,18 @@ namespace Seal.Model
         [DisplayName("User name"), Description("User name used to connect to the database."), Category("Security"), Id(1, 5)]
 #endif
         public string UserName { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize UserName only if not empty
+        /// </summary>
         public bool ShouldSerializeUserName() { return !string.IsNullOrEmpty(UserName); }
 
         /// <summary>
         /// Password
         /// </summary>
         public string Password { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Password only if not empty
+        /// </summary>
         public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(Password); }
 
         /// <summary>

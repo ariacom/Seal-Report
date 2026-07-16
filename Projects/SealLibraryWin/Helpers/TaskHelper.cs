@@ -18,14 +18,23 @@ using Microsoft.Data.SqlClient;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Helper class to load tables from Excel, CSV or external data sources and to execute SQL statements, used from Razor scripts of report tasks
+    /// </summary>
     public class TaskHelper
     {
         ReportTask _task = null;
+        /// <summary>
+        /// Constructor from a report task
+        /// </summary>
         public TaskHelper(ReportTask task)
         {
             _task = task;
         }
 
+        /// <summary>
+        /// Log a message in the report execution log
+        /// </summary>
         public void LogMessage(string message, params object[] args)
         {
             Log.LogMessage(message, args);
@@ -37,6 +46,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Current report task
+        /// </summary>
         public ReportTask Task
         {
             get
@@ -45,6 +57,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Connection of the current task
+        /// </summary>
         public MetaConnection TaskConnection
         {
             get
@@ -53,12 +68,18 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Returns a DbCommand for the task connection
+        /// </summary>
         public DbCommand GetDbCommand()
         {
             return _task.GetDbCommand(_task.Connection);
         }
 
         TaskDatabaseHelper _databaseHelper = null;
+        /// <summary>
+        /// TaskDatabaseHelper of the task, initialized with the default configuration of the task connection database type
+        /// </summary>
         public TaskDatabaseHelper DatabaseHelper
         {
             get
@@ -72,6 +93,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Refresh the dynamic enumerated lists of all the repository data sources and save the sources (a source name may be specified to filter)
+        /// </summary>
         public void RefreshRepositoryEnums(string sourceName = "")
         {
             Repository repository = Repository.Create();
@@ -101,6 +125,9 @@ namespace Seal.Helpers
             LogMessage("Refresh Enumerated Lists terminated\r\n");
         }
 
+        /// <summary>
+        /// Returns true if the source file is more recent than its copy in the load folder, meaning the file must be loaded again
+        /// </summary>
         public bool CheckForNewFileSource(string loadFolder, string sourceFilePath)
         {
             bool result = false;
@@ -205,6 +232,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load a DataTable in the database (drop, create and insert). Returns the number of rows inserted.
+        /// </summary>
         public int LoadTable(DataTable table, bool useAllConnections = false)
         {
             var result = 0;
@@ -230,6 +260,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Load a table from an Excel tab into the database. If the tab name is empty or contains a wildcard, all matching tabs are loaded. Returns the number of rows inserted.
+        /// </summary>
         public int LoadTableFromExcel(string sourceExcelPath, string sourceTabName, string destinationTableName, bool useAllConnections = false, int startRow = 1, int startColumn = 1, int endColumnIndex = 0, int endRowIndex = 0, bool hasHeader = true)
         {
             int result = 0;
@@ -306,6 +339,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Load a table from a CSV file into the database if the file has changed since the last load (or if forceLoad is true)
+        /// </summary>
         public bool LoadTableFromCSV(string loadFolder, string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = true, Encoding encoding = null, bool forceLoad = false)
         {
             bool result = false;
@@ -347,6 +383,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Load a table from a CSV file into the database
+        /// </summary>
         public void LoadTableFromCSV(string sourceCsvPath, string destinationTableName, char? separator = null, bool useAllConnections = false, bool useVBParser = false, Encoding encoding = null)
         {
             try
@@ -367,6 +406,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Load a table from a report data source into the database using a SQL SELECT statement
+        /// </summary>
         public bool LoadTableFromDataSource(string reportSourceName, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
         {
 
@@ -375,6 +417,9 @@ namespace Seal.Helpers
             return LoadTableFromExternalSource(source.Connection, sourceSelectStatement, destinationTableName, useAllConnections, sourceCheckSelect, destinationCheckSelect);
         }
 
+        /// <summary>
+        /// Load a table from an external connection into the database using a SQL SELECT statement. Optional check SELECT statements may be specified to skip the load if the data are identical.
+        /// </summary>
         public bool LoadTableFromExternalSource(MetaConnection sourceConnection, string sourceSelectStatement, string destinationTableName, bool useAllConnections = false, string sourceCheckSelect = "", string destinationCheckSelect = "")
         {
             bool result = false;
@@ -478,6 +523,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Execute a process and log its output. An exception is thrown if the process writes to the standard error.
+        /// </summary>
         public void ExecuteProcess(string path, string arguments = null, string workingDirectory = null)
         {
             var proc = new Process
@@ -506,6 +554,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Execute a SQL statement on the task connection (or on all the connections of the source)
+        /// </summary>
         public void ExecuteNonQuery(string sql, bool useAllConnections = false)
         {
             foreach (var connection in _task.Source.Connections.Where(i => useAllConnections || i.GUID == _task.Connection.GUID))
@@ -524,6 +575,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Execute a SQL statement on the task connection and return the first column of the first row of the result
+        /// </summary>
         public object ExecuteScalar(string sql)
         {
             object result = null;
@@ -544,6 +598,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Load a list of strings from the task connection using a SQL SELECT statement (first column of the result)
+        /// </summary>
         public List<string> LoadStringList(string sql)
         {
             var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
@@ -554,11 +611,17 @@ namespace Seal.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Load a list of strings from a given connection using a SQL SELECT statement (first column of the result)
+        /// </summary>
         public List<string> LoadStringList(MetaConnection connection, string sql)
         {
             return DatabaseHelper.LoadStringList(connection, sql);
         }
 
+        /// <summary>
+        /// Load a DataTable from the task connection using a SQL SELECT statement
+        /// </summary>
         public DataTable LoadDataTable(string sql)
         {
             var connection = _task.Source.Connections.FirstOrDefault(i => i.GUID == _task.Connection.GUID);
@@ -569,17 +632,26 @@ namespace Seal.Helpers
             return null;
         }
 
+        /// <summary>
+        /// Load a DataTable from a given connection using a SQL SELECT statement
+        /// </summary>
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
             return DatabaseHelper.LoadDataTable(connection, sql);
         }
 
 
+        /// <summary>
+        /// Execute a SQL statement on a given connection. Several statements may be executed using a commands separator.
+        /// </summary>
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {
             DatabaseHelper.ExecuteNonQuery(connection, sql, commandsSeparator);
         }
 
+        /// <summary>
+        /// Execute a SQL statement on a given connection and return the first column of the first row of the result
+        /// </summary>
         public object ExecuteScalar(MetaConnection connection, string sql)
         {
             return DatabaseHelper.ExecuteScalar(connection, sql);
@@ -741,6 +813,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Create (or re-create) an index on a MSSQL table
+        /// </summary>
         public void CreateMSSQLIndex(string tableName, string colNames, bool isCluster = false)
         {
             var indexName = string.Format("IX_{0}_{1}", tableName, colNames.Replace(",", "_"));
@@ -774,6 +849,9 @@ CREATE {3} INDEX {0} ON {1}({2})
         //SANDBOX !
         //Just use this to code, compile and debug your Razor Script within Visual Studio...
         //When OK, just cut and paste it into the Script of your Task using the Report Designer
+        /// <summary>
+        /// Sandbox method used to code, compile and debug a task Razor script within Visual Studio
+        /// </summary>
         public void DesignMyRazorScript()
         {
             DataTable table = new DataTable();

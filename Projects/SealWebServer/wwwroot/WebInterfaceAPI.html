@@ -1,28 +1,21 @@
 ﻿<!DOCTYPE html>
-<html>
+<html lang="en">
 <head>
-    <!-- Required meta tags always come first -->
     <meta charset="utf-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
-    <meta http-equiv="x-ua-compatible" content="ie=edge">
-    <link href="https://sealreport.org/demo/Images/favicon.ico" rel="shortcut icon" type="image/x-icon" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <link href="img/favicon.ico" rel="shortcut icon" type="image/x-icon" />
 
     <title>Seal Web Interface</title>
-    <!-- Latest compiled and minified CSS -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
 
-    <!-- Optional theme -->
-    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap-theme.min.css" integrity="sha384-fLW2N01lMqjakBkx3l/M9EahuwpSfeNvV63J5ezn3uZzapT0u7EYsXMjQV+0En5r" crossorigin="anonymous">
+    <link rel="stylesheet" href="lib/bootstrap/css/bootstrap.min.css" />
 
     <!-- jQuery first, then Bootstrap JS. -->
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.4/jquery.min.js"></script>
-
-    <!-- Latest compiled and minified JavaScript -->
-    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script src="lib/jquery/jquery.min.js"></script>
+    <script src="lib/bootstrap/js/bootstrap.bundle.min.js"></script>
 
     <style>
         body {
-            padding-top: 60px;
+            padding-top: 70px;
         }
 
         table th {
@@ -31,12 +24,12 @@
     </style>
 </head>
 <body>
-    <nav class="navbar-inverse navbar-fixed-top">
+    <nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
         <div class="container">
             <a class="navbar-brand" href="#">Seal Web Interface</a>
-            <ul class="nav navbar-nav pull-xs-right">
+            <ul class="navbar-nav ms-auto">
                 <li class="nav-item"><a class="nav-link" href="WebInterfaceSamples.html">Samples</a></li>
-                <li class="nav-item active"><a class="nav-link" href="WebInterfaceAPI.html">API Description</a></li>
+                <li class="nav-item"><a class="nav-link active" href="WebInterfaceAPI.html">API Description</a></li>
                 <li class="nav-item"><a class="nav-link" href="https://sealreport.org/" target="_blank">Seal Report Home</a></li>
             </ul>
         </div><!-- /.container -->
@@ -101,6 +94,7 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             name (string) : the user name<br />
                             group (string) :  the user's group names<br />
                             culture (string) : the user's culture name<br />
+                            language (string) : the user's two-letter language code<br />
                             folder (string) : the last folder viewed by the user<br />
                             showfolders (boolean) : true if the user can view the folders<br />
                             editprofile (boolean) : true if the user can edit his profile<br />
@@ -113,7 +107,10 @@ $.post("https://sealreport.org/demo/SWILogin", {
                             executionmode (integer): execution mode (0=Default thus from group, 1=New Window , 2=Same Window , 3=Always New Window) <br />
                             groupexecutionmode (integer): group execution mode<br />
                             sources ([MetaSource]): array of MetaSource with their connection names and identifiers<br />
-                            sessionId (string): the identifier of the user's session'<br />
+                            sessionId (string): the identifier of the user's session<br />
+                            changepassword (boolean): true if the user can change his password<br />
+                            showresetpassword (boolean): true if the reset password option is active<br />
+                            hasagent (boolean): true if an AI Agent is available for the user<br />
                             error (string) : if any error, the error description<br />
                             securitycoderequired (boolean): true if the Two-Factor Authentication is enabled
                         </td>
@@ -143,24 +140,102 @@ $.post("https://sealreport.org/demo/SWICheckSecurityCode", {
                     <tr>
                         <th>Returns</th>
                         <td>
-                            name (string) : the user name<br />
-                            group (string) :  the user's group names<br />
-                            culture (string) : the user's culture name<br />
-                            folder (string) : the last folder viewed by the user<br />
-                            showfolders (boolean) : true if the user can view the folders<br />
-                            editprofile (boolean) : true if the user can edit his profile<br />
-                            usertag (string) : custom tag string (e.g. may be used to show a photo of the user)<br />
-                            onstartup (integer): action taken after the login (0=Default, 1=Do not execute report, 2=Execute the last report, 3=Execute a specific report)<br />
-                            startupreport (string): if onstartup=3, specific report to execute<br />
-                            startupreportname (string): if onstartup=3, specific report name<br />
-                            report (string): if set, the last report to execute after the login<br />
-                            reportname (string): if set, the last report name  executed after the login<br />
-                            executionmode (integer): execution mode (0=Default thus from group, 1=New Window , 2=Same Window , 3=Always New Window) <br />
-                            groupexecutionmode (integer): group execution mode<br />
-                            sources ([MetaSource]): array of MetaSource with their connection names and identifiers<br />
-                            sessionId (string): the identifier of the user's session'<br />
-                            error (string) : if any error, the error description<br />
-                            login : true if the login has be re-done
+                            The same profile information as returned by SWILogin (name, group, culture, language, folder, executionmode, sources, sessionId, etc.), plus:<br />
+                            login (boolean) : true if the login has been re-done<br />
+                            error (string) : if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIResetPassword</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Send a reset password email to a user (executes the 'Reset Password Script' of the security configuration). The Reset Password feature must be enabled on the server.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIResetPassword", {
+    id: "the user identifier" // The user identifier (e.g. login id or email according to the security configuration)
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            An empty result on success.<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIResetPassword2</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Set a new user password from a reset password link (executes the 'Reset Password Script 2' of the security configuration with the identifier and token received in the reset email).</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIResetPassword2", {
+    guid: "the reset identifier", // The identifier received in the reset password link
+    token: "the reset token", // The token received in the reset password link
+    password1: "the new password", // The new password
+    password2: "the new password" // The new password confirmation (must be identical)
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            An empty result on success.<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIChangePassword</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Change the password of the logged user. The Change Password feature must be enabled on the server. By default the new password must contain at least 8 characters, including at least one uppercase letter, one number and one special character.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIChangePassword", {
+    password: "the current password", // The current password
+    password1: "the new password", // The new password
+    password2: "the new password", // The new password confirmation (must be identical)
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            An empty result on success.<br />
+                            error (string): if any error, the error description
                         </td>
                     </tr>
                 </tbody>
@@ -221,6 +296,46 @@ $.post("https://sealreport.org/demo/SWIGetRootFolders", {
                             manage (integer): manage flag for the folder (0=Do not manage sub-folders, 1=Manage sub-folders only as they are defined by the security (no rename or delete allowed), 2=Manage all: create, delete and rename sub-folders<br />
                             folders ([folder]): array of children folders<br />
                             error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIGetRootMenu</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the menu of the logged user: recent reports, favorite reports and the custom menu items built by the 'Menu Script' of the user's security groups.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIGetRootMenu", {
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            recentreports ([menuitem]): array of the recent reports executed by the user<br />
+                            favorites ([menuitem]): array of the favorite reports of the user<br />
+                            reports ([menuitem]): array of custom menu items (filled by the 'Menu Script' of the security groups)<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>menuitem</th>
+                        <td>
+                            path (string): the report path<br />
+                            name (string): the report display name<br />
+                            viewGUID (string): optional, the view GUID to execute<br />
+                            outputGUID (string): optional, the output GUID to execute
                         </td>
                     </tr>
                 </tbody>
@@ -476,9 +591,7 @@ $.post("https://sealreport.org/demo/SWIGetUserProfile")
                         <th>Returns</th>
                         <td>
                             authenticated (bool): true if the user is authenticated, if false the other properties are not set<br />
-                            name (string): the user name<br />
-                            group (string):  the user's group names<br />
-                            culture (string): the user's culture name<br />
+                            The same profile information as returned by SWILogin (name, group, culture, language, folder, executionmode, sources, sessionId, etc.)<br />
                             error (string): if any error, the error description
                         </td>
                     </tr>
@@ -501,6 +614,7 @@ $.post("https://sealreport.org/demo/SWISetUserProfile", {
             startupReport: "/Overview - Sales.srex", // if onStartup=3, the report to execute
             startupReportName: "Overview - Sales", // if onStartup=3, the report name to execute
             executionMode: 0, //(0=Default, 1=Execute by default in a new Window, 2=Execute in the same Window, 3=Execute always in a new Window)
+            connections: ["sourceGUID\nconnectionGUID"], // optional, default connection per data source: each entry contains the source GUID and the connection GUID separated by \n
             sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
@@ -520,6 +634,37 @@ $.post("https://sealreport.org/demo/SWISetUserProfile", {
         </div>
 
         <div class="col-lg-12">
+            <h2>SWIGetCultures</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the list of cultures available on the server (the 'Web Cultures' of the server configuration, or the cultures of the installed translations if none is defined). The culture identifier can be used in SWISetUserProfile.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIGetCultures", {
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            An array of items:<br />
+                            id (string): the culture English name (e.g. "French (France)")<br />
+                            val (string): the culture display name (native name and English name)<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
             <h2>SWITranslate</h2>
             <table class="table table-striped">
                 <tbody>
@@ -529,8 +674,8 @@ $.post("https://sealreport.org/demo/SWISetUserProfile", {
                         <td>
                             <pre>
 $.post("https://sealreport.org/demo/SWITranslate", {
-    context: "Element", // translation context as defined in Translations.csv or RepositoryTranslations.csv
-    instance: "Customers.City",  //optional, translation instance as defined in RepositoryTranslations.csv
+    context: "Element", // translation context as defined in Translations.xlsx or RepositoryTranslations.xlsx
+    instance: "Customers.City",  //optional, translation instance as defined in RepositoryTranslations.xlsx
     reference: "City", // reference text to translate
     sessionId: sessionId // The sessionId got from the SWILogin call
 })
@@ -543,9 +688,10 @@ $.post("https://sealreport.org/demo/SWITranslate", {
                     <tr>
                         <th>Returns</th>
                         <td>
-                            text (string): the text translate
+                            text (string): the translated text
                         </td>
                     </tr>
+                </tbody>
             </table>
         </div>
 
@@ -560,6 +706,34 @@ $.post("https://sealreport.org/demo/SWITranslate", {
                             <pre>
 $.post("https://sealreport.org/demo/SWIDeleteFiles", {
     paths: "\\report1.srex\n\\report2.srex", // The paths of the files to delete separated by \n
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIEmptyRecycleBin</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Empty the recycle bin of the logged user: permanently delete all the items it contains.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIEmptyRecycleBin", {
     sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
@@ -610,16 +784,17 @@ $.post("https://sealreport.org/demo/SWIMoveFile", {
         </div>
 
         <div class="col-lg-12">
-            <h2>SWIViewFile</h2>
+            <h2>SWICreateShortcut</h2>
             <table class="table table-striped">
                 <tbody>
-                    <tr><th>Description</th><td>View a file published in the repository.</td></tr>
+                    <tr><th>Description</th><td>Create a shortcut (.srln file) in a folder referencing a source report or file. The shortcut is named after the source file and the destination folder must have the Edit right. A shortcut cannot reference another shortcut.</td></tr>
                     <tr>
                         <th>Call</th>
                         <td>
                             <pre>
-$.post("https://sealreport.org/demo/SWIViewFile", {
-    path: "\\report.htm", // The path of the file to view
+$.post("https://sealreport.org/demo/SWICreateShortcut", {
+    source: "\\Samples\\01-Simple list.srex", // The path of the report or file to reference
+    destination: "\\MyFolder\\", // A path in the destination folder (its directory is used)
     sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {
@@ -631,7 +806,72 @@ $.post("https://sealreport.org/demo/SWIViewFile", {
                     <tr>
                         <th>Returns</th>
                         <td>
-                            url (string): the url of the result file<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWViewFile</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>View a file published in the repository. The response is the file content itself, so the call is typically done with a form post in a new window.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+    var f = $('&lt;form method="post" target="_blank" />').appendTo('body');
+    f.attr('action', sealServer + "SWViewFile");
+    f.append($('&lt;input />').attr('name', 'path').attr('value', "\\report.htm")); //the path of the file to view
+    f.append($('&lt;input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', sessionId)); //the current sessionId
+    f.children('input').attr('type', 'hidden');
+    f.submit();
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            The content of the file.
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWUploadFile</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Upload a file in a repository folder (multipart/form-data POST). The destination folder must have the Edit right and allow uploads.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+var formData = new FormData();
+formData.append("path", "\\MyFolder"); // The path of the destination folder
+formData.append("sessionId", sessionId); // The sessionId got from the SWILogin call
+formData.append("file", fileInput.files[0]); // The file to upload
+$.ajax({
+    url: "https://sealreport.org/demo/SWUploadFile",
+    type: "POST",
+    data: formData,
+    processData: false,
+    contentType: false
+})
+.done(function (data) {
+    if (data.Status) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            Status (boolean): true if the file has been uploaded<br />
+                            Message (string): the status message<br />
                             error (string): if any error, the error description
                         </td>
                     </tr>
@@ -709,6 +949,363 @@ $.post("https://sealreport.org/demo/SWIDeleteFolder", {
 $.post("https://sealreport.org/demo/SWIRenameFolder", {
     source: "\\Samples\\SubFolder", // The path of the folder to rename
     destination: "\\Samples\\NewSubFolder", // The path of the folder to rename
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWMarkFavorite</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Mark or unmark a report as favorite for the logged user (the call toggles the favorite state). For a shortcut, the favorite is recorded against the resolved target report.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWMarkFavorite", {
+    path: "\\Search - Orders.srex", // The path of the report
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            Message (string): the status message<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIRenameFavoriteReport</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Rename the personal display label of a favorite report. Only the entry stored in the user's profile is changed, the underlying report file is not modified.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIRenameFavoriteReport", {
+    path: "\\Search - Orders.srex", // The path of the favorite report
+    newName: "My Orders", // The new display label
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            name (string): the new display label<br />
+                            Message (string): the status message<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIRemoveRecentReport</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Remove a report from the recent reports list of the logged user.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIRemoveRecentReport", {
+    path: "\\Search - Orders.srex", // The path of the report to remove from the recent list
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            Message (string): the status message<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h1>AI Agents</h1>
+            <p>
+                The following endpoints are available when an AI Agent is configured for the logged user (the <b>hasagent</b> property returned by SWILogin is true).
+                A conversation is maintained in the user's session so that follow-up messages retain context.
+            </p>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIGetUserAgents</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the list of AI Agents available to the logged user, together with the currently selected agent.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIGetUserAgents", {
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            agents ([agent]): array of the agents available to the user<br />
+                            selectedGuid (string): the GUID of the currently selected agent<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>agent</th>
+                        <td>
+                            guid (string): the unique identifier of the agent<br />
+                            name (string): the agent name (translated)<br />
+                            description (string): the agent description (translated)
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWISelectAgent</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Select an AI Agent for the current session by GUID. The GUID must belong to one of the agents returned by SWIGetUserAgents. The selection is saved in the user's profile.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWISelectAgent", {
+    guid: "the agent GUID", // The GUID of the agent to select
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIGetAIAgentSamplePrompts</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns the list of sample prompts defined for the current AI Agent (translated in the user's culture).</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIGetAIAgentSamplePrompts", {
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            prompts ([string]): array of sample prompts<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIGetAIAgentResponse</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr>
+                        <th>Description</th>
+                        <td>
+                            Send a user message to the AI Agent and returns the AI response. The conversation history is kept in the session so follow-up messages retain context.<br /><br />
+                            The call may take a long time: while it is in flight, SWIGetAIAgentProgress can be polled to display the progress steps and SWICancelAIAgentResponse can be called to interrupt the response.
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIGetAIAgentResponse", {
+    message: "the user message", // The message to send to the agent
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.response.startsWith("Error: ")) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            response (string): the AI response text (starts with "Error: " if an error occurred)<br />
+                            reportActions ([reportaction]): optional, array of reports proposed for execution by the AI (e.g. to render Execute buttons)<br />
+                            tokens (integer): optional, the number of tokens used by the exchange<br />
+                            cost (number): optional, the cost of the exchange if costs are configured for the AI provider
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>reportaction</th>
+                        <td>
+                            path (string): the report path (can be used with SWExecuteReport)<br />
+                            name (string): the report display name<br />
+                            outputGUID (string): optional, the output GUID to execute
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIGetAIAgentProgress</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Returns and clears the progress steps (skill loads, tool calls) queued by the AI chat currently running for this session. Poll this while a SWIGetAIAgentResponse call is in flight to show a live step list.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIGetAIAgentProgress", {
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            messages ([string]): array of progress messages since the last call<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWICancelAIAgentResponse</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Signal the in-progress AI chat call of this session to stop at the next safe boundary (between tool-call iterations).</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWICancelAIAgentResponse", {
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIRewindAIAgent</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Rewind the current AI conversation to just before the selected user turn: the user message at the given index and everything after it are removed from the session history. The removed user message text is returned so it can be re-populated in the input box.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIRewindAIAgent", {
+    userMessageIndex: 0, // The index of the user message in the conversation (0 for the first user message)
+    sessionId: sessionId // The sessionId got from the SWILogin call
+})
+.done(function (data) {
+    if (!data.error) { /* Do your job here */ }
+})
+</pre>
+                        </td>
+                    </tr>
+                    <tr>
+                        <th>Returns</th>
+                        <td>
+                            message (string): the text of the removed user message<br />
+                            error (string): if any error, the error description
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+        </div>
+
+        <div class="col-lg-12">
+            <h2>SWIClearAIAgent</h2>
+            <table class="table table-striped">
+                <tbody>
+                    <tr><th>Description</th><td>Clear the AI Agent conversation history stored in the current session.</td></tr>
+                    <tr>
+                        <th>Call</th>
+                        <td>
+                            <pre>
+$.post("https://sealreport.org/demo/SWIClearAIAgent", {
     sessionId: sessionId // The sessionId got from the SWILogin call
 })
 .done(function (data) {

@@ -12,6 +12,9 @@ using Azure.Core;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Static helper methods for Azure: client principal parsing and Blob storage, available in Razor scripts
+    /// </summary>
     public static class AzureHelper
     {
         #region Client Principal Claim
@@ -35,6 +38,9 @@ namespace Seal.Helpers
             public IEnumerable<ClientPrincipalClaim> Claims { get; set; }
         }
 
+        /// <summary>
+        /// Parse the 'x-ms-client-principal' header of an Azure App Service request into a ClaimsPrincipal
+        /// </summary>
         public static ClaimsPrincipal ClaimsPrincipalParse(HttpRequest req)
         {
             var principal = new ClientPrincipal();
@@ -65,11 +71,17 @@ namespace Seal.Helpers
         #endregion
 
         #region Blob container
+        /// <summary>
+        /// Returns a BlobContainerClient for a container of an Azure storage account using a token credential
+        /// </summary>
         public static BlobContainerClient BlobGetContainerClient(string storageAccountName, TokenCredential credential, string ContainerName)
         {
             return new BlobServiceClient(new Uri($"https://{storageAccountName}.blob.core.windows.net"), credential).GetBlobContainerClient(ContainerName);
         }
 
+        /// <summary>
+        /// Upload a byte array to a blob in the container
+        /// </summary>
         public static void BlobSaveTo(byte[] bytes, string uri, bool overwrite, BlobContainerClient containerClient)
         {
 
@@ -80,6 +92,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Download a blob from the container as a byte array (throws an exception if the blob does not exist)
+        /// </summary>
         public static byte[] BlobDownloadFrom(string uri, BlobContainerClient containerClient)
         {
 

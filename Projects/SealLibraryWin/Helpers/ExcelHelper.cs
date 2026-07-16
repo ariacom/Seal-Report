@@ -14,8 +14,14 @@ using System.Text.RegularExpressions;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Static helper methods to read and write CSV values and load DataTables from Excel or CSV files, available in Razor scripts
+    /// </summary>
     public class ExcelHelper
     {
+        /// <summary>
+        /// Returns a value quoted and escaped for a CSV file, followed by the separator
+        /// </summary>
         static public string ToCsv(string value, string separator = "\t")
         {
             string val = value;
@@ -23,6 +29,9 @@ namespace Seal.Helpers
             return string.Format("\"{0}\"{1}", val, separator);
         }
 
+        /// <summary>
+        /// Returns a CSV value with its enclosing double quotes and escaping removed
+        /// </summary>
         static public string FromCsv(string value)
         {
             string result = value;
@@ -32,6 +41,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Returns true if all cells of the worksheet row are empty in the given column range
+        /// </summary>
         static public bool IsRowEmpty(ExcelWorksheet worksheet, int row, int startCol, int colCount)
         {
             bool rowEmpty = true;
@@ -165,6 +177,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load a DataTable from a CSV file. If no separator is specified, ',' or ';' is detected from the first line. If noHeader is true, column names are automatic.
+        /// </summary>
         static public DataTable LoadDataTableFromCSV(string csvPath, char? separator, Encoding encoding, bool noHeader = false)
         {
             DataTable result = null;
@@ -240,6 +255,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns a column name not already present in the table, appending a number if necessary
+        /// </summary>
         static public string GetUniqueColumnName(DataTable table, string columnName)
         {
             int index = 2;
@@ -252,6 +270,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Create and configure a Microsoft VB TextFieldParser to parse a CSV file
+        /// </summary>
         static public TextFieldParser InitCSVVBParser(string csvPath, char? separator, Encoding encoding, bool hasFieldsEnclosedInQuotes = true, bool trimWhiteSpace = true)
         {
             TextFieldParser csvParser;
@@ -276,6 +297,9 @@ namespace Seal.Helpers
             return csvParser;
         }
 
+        /// <summary>
+        /// Load a DataTable from an initialized Microsoft VB Parser (the first row is used as the header)
+        /// </summary>
         static public DataTable LoadDataTableFromCSVVBParser(TextFieldParser csvParser)
         {
             DataTable result = null;
@@ -308,6 +332,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Load a DataTable from a CSV file using the Microsoft VB Parser
+        /// </summary>
         static public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator, Encoding encoding)
         {
             var csvParser = InitCSVVBParser(csvPath, separator, encoding);

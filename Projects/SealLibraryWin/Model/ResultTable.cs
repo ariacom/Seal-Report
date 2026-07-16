@@ -373,6 +373,9 @@ namespace Seal.Model
             return false;
         }
 
+        /// <summary>
+        /// Statistics of the table per report element
+        /// </summary>
         public Dictionary<ReportElement, ResultStatistics> Statistics = new Dictionary<ReportElement, ResultStatistics>();
 
         /// <summary>
@@ -422,11 +425,29 @@ namespace Seal.Model
     /// </summary>
     public class ResultStatistics
     {
+        /// <summary>
+        /// Minimum of the cell values
+        /// </summary>
         public double Min = double.MaxValue;
+        /// <summary>
+        /// Maximum of the cell values
+        /// </summary>
         public double Max = double.MinValue;
+        /// <summary>
+        /// Minimum of the sub-total values
+        /// </summary>
         public double SubTotalMin = double.MaxValue;
+        /// <summary>
+        /// Maximum of the sub-total values
+        /// </summary>
         public double SubTotalMax = double.MinValue;
+        /// <summary>
+        /// Minimum of the total values
+        /// </summary>
         public double TotalMin = double.MaxValue;
+        /// <summary>
+        /// Maximum of the total values
+        /// </summary>
         public double TotalMax = double.MinValue;
     }
 }

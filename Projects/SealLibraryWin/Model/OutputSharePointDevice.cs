@@ -31,7 +31,13 @@ namespace Seal.Model
     /// </summary>
     public class OutputSharePointDevice : OutputDevice
     {
+        /// <summary>
+        /// Name of the crypto key used to encrypt the device client secret
+        /// </summary>
         public const string SecretKeyName = "Output SharePoint Device Secret";
+        /// <summary>
+        /// Default crypto key value used to encrypt the device client secret
+        /// </summary>
         public const string SecretKeyValue = "?d8s(Pz!k3RwB_0eL)m5qU+dV,7c";
 
         /// <summary>
@@ -90,6 +96,9 @@ namespace Seal.Model
 }
 ";
 
+        /// <summary>
+        /// Returns the default processing script template of the device
+        /// </summary>
         override public string GetProcessingScriptTemplate()
         {
             return ProcessingScriptTemplate;

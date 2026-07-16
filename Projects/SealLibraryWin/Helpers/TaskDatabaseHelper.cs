@@ -22,29 +22,80 @@ using System.Runtime.Intrinsics.X86;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Custom delegate to build the CREATE TABLE command for a table
+    /// </summary>
     public delegate string CustomGetTableCreateCommand(DataTable table);
 
+    /// <summary>
+    /// Custom delegate to build the comma-separated list of column names of a table
+    /// </summary>
     public delegate string CustomGetTableColumnNames(DataTable table);
+    /// <summary>
+    /// Custom delegate to get the database column name of a column
+    /// </summary>
     public delegate string CustomGetTableColumnName(DataColumn col);
+    /// <summary>
+    /// Custom delegate to get the database column type of a column
+    /// </summary>
     public delegate string CustomGetTableColumnType(DataColumn col);
 
+    /// <summary>
+    /// Custom delegate to build the comma-separated list of values of a row for an INSERT statement
+    /// </summary>
     public delegate string CustomGetTableColumnValues(DataRow row, string dateTimeFormat);
+    /// <summary>
+    /// Custom delegate to get the SQL value of a column of a row for an INSERT statement
+    /// </summary>
     public delegate string CustomGetTableColumnValue(DataRow row, DataColumn col, string datetimeFormat);
 
+    /// <summary>
+    /// Custom delegate to load a DataTable from a connection and a SQL SELECT statement
+    /// </summary>
     public delegate DataTable CustomLoadDataTable(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null);
+    /// <summary>
+    /// Custom delegate to load a DataTable from an Excel file
+    /// </summary>
     public delegate DataTable CustomLoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true);
+    /// <summary>
+    /// Custom delegate to load a DataTable from a CSV file
+    /// </summary>
     public delegate DataTable CustomLoadDataTableFromCSV(string csvPath, char? separator = null);
 
+    /// <summary>
+    /// Custom delegate to detect column types and convert the values of a table
+    /// </summary>
     public delegate DataTable CustomDetectAndConvertTypes(DataTable sourceTable);
 
+    /// <summary>
+    /// Helper class to perform database operations (load, create and insert tables, execute SQL statements), used from Razor scripts of report tasks
+    /// </summary>
     public class TaskDatabaseHelper
     {
         //Config, may be overwritten
+        /// <summary>
+        /// Database column type used for character columns (if empty, the default of the current database type is used)
+        /// </summary>
         public string ColumnCharType = "";
+        /// <summary>
+        /// Database column type used for numeric columns (if empty, the default of the current database type is used)
+        /// </summary>
         public string ColumnNumericType = "";
+        /// <summary>
+        /// Database column type used for integer columns (if empty, the default of the current database type is used)
+        /// </summary>
         public string ColumnIntegerType = "";
+        /// <summary>
+        /// Database column type used for date time columns (if empty, the default of the current database type is used)
+        /// </summary>
         public string ColumnDateTimeType = "";
+        /// <summary>
+        /// Statement added before the INSERT commands (if empty, the default of the current database type is used, e.g. 'begin' for Oracle)
+        /// </summary>
         public string InsertStartCommand = "";
+        /// <summary>
+        /// Statement added after the INSERT commands (if empty, the default of the current database type is used, e.g. 'end;' for Oracle)
+        /// </summary>
         public string InsertEndCommand = "";
         /// <summary>
         /// 0 = means auto size
@@ -62,14 +113,29 @@ namespace Seal.Helpers
         /// Sort column used if LoadBurstSize is specified
         /// </summary>
         public string LoadSortColumn = "";
+        /// <summary>
+        /// If true, a DbDataAdapter is used to fill the DataTable instead of a DataReader
+        /// </summary>
         public bool UseDbDataAdapter = false;
+        /// <summary>
+        /// Number of rows inserted per INSERT batch
+        /// </summary>
         public int InsertBurstSize = 2000;
         /// <summary>
         /// If set, limit the number of decimals for numeric values
         /// </summary>
         public int MaxDecimalNumber = -1;
+        /// <summary>
+        /// Default encoding used to load CSV files
+        /// </summary>
         public Encoding DefaultEncoding = Encoding.Default;
+        /// <summary>
+        /// If true, text values are trimmed before insert
+        /// </summary>
         public bool TrimText = true;
+        /// <summary>
+        /// If true, carriage returns and line feeds are replaced by spaces in text values before insert
+        /// </summary>
         public bool RemoveCrLf = false;
         /// <summary>
         /// /If true, insert command is built with multi rows 
@@ -85,24 +151,66 @@ namespace Seal.Helpers
         /// </summary>
         public bool TableLoadDetectAndConvertTypes = false;
 
+        /// <summary>
+        /// If true, the SQL commands executed are traced in the DebugLog
+        /// </summary>
         public bool DebugMode = false;
+        /// <summary>
+        /// Log of the SQL commands executed when DebugMode is true
+        /// </summary>
         public StringBuilder DebugLog = new StringBuilder();
+        /// <summary>
+        /// Command timeout in seconds used for SELECT statements (0 means no timeout)
+        /// </summary>
         public int SelectTimeout = 0;
+        /// <summary>
+        /// Command timeout in seconds used to execute statements (0 means no timeout)
+        /// </summary>
         public int ExecuteTimeout = 0;
 
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to build the CREATE TABLE command
+        /// </summary>
         public CustomGetTableCreateCommand MyGetTableCreateCommand = null;
 
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to build the list of column names
+        /// </summary>
         public CustomGetTableColumnNames MyGetTableColumnNames = null;
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to get a database column name
+        /// </summary>
         public CustomGetTableColumnName MyGetTableColumnName = null;
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to get a database column type
+        /// </summary>
         public CustomGetTableColumnType MyGetTableColumnType = null;
 
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to build the list of values of a row for an INSERT statement
+        /// </summary>
         public CustomGetTableColumnValues MyGetTableColumnValues = null;
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to get the SQL value of a column for an INSERT statement
+        /// </summary>
         public CustomGetTableColumnValue MyGetTableColumnValue = null;
 
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to load a DataTable from a connection
+        /// </summary>
         public CustomLoadDataTable MyLoadDataTable = null;
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to load a DataTable from an Excel file
+        /// </summary>
         public CustomLoadDataTableFromExcel MyLoadDataTableFromExcel = null;
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to load a DataTable from a CSV file
+        /// </summary>
         public CustomLoadDataTableFromCSV MyLoadDataTableFromCSV = null;
 
+        /// <summary>
+        /// If set, custom delegate used instead of the default implementation to detect column types and convert the values of a table
+        /// </summary>
         public CustomDetectAndConvertTypes MyDetectAndConvertTypes = null;
 
         string _defaultColumnCharType = "";
@@ -112,6 +220,9 @@ namespace Seal.Helpers
         string _defaultInsertStartCommand = "";
         string _defaultInsertEndCommand = "";
 
+        /// <summary>
+        /// Returns a valid database object name from a given name: invalid characters are replaced and the name is quoted according to the current database type
+        /// </summary>
         public string GetDatabaseName(string name)
         {
             char[] chars = new char[] { '-', '\"', '\'', '[', ']', '`', '(', ')', '/', '%', '\r', '\t', '\n' };
@@ -125,11 +236,17 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns the final INSERT command with the insert start and end commands added
+        /// </summary>
         public string GetInsertCommand(string sql)
         {
             return Helper.IfNullOrEmpty(InsertStartCommand, _defaultInsertStartCommand) + " " + sql + " " + Helper.IfNullOrEmpty(InsertEndCommand, _defaultInsertEndCommand);
         }
 
+        /// <summary>
+        /// Load a DataTable from an ODBC connection using a SQL SELECT statement
+        /// </summary>
         public DataTable OdbcLoadDataTable(string odbcConnectionString, string sql)
         {
             DataTable table = new DataTable();
@@ -144,6 +261,9 @@ namespace Seal.Helpers
             return table;
         }
 
+        /// <summary>
+        /// Load a DataTable from a connection using a SQL SELECT statement (an open connection may be provided)
+        /// </summary>
         public DataTable LoadDataTable(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null)
         {
             DataTable table = new DataTable();
@@ -232,6 +352,9 @@ namespace Seal.Helpers
             return table;
         }
 
+        /// <summary>
+        /// Returns true if a row of an Excel worksheet is empty
+        /// </summary>
         public bool IsRowEmpty(ExcelWorksheet worksheet, int row, int startCol, int colCount)
         {
             bool rowEmpty = true;
@@ -247,6 +370,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Detect the column types (integer, double, date time) of a source table containing string columns and return a new table with converted values
+        /// </summary>
         public DataTable DetectAndConvertTypes(DataTable sourceTable)
         {
             if (MyDetectAndConvertTypes != null) return MyDetectAndConvertTypes(sourceTable);
@@ -380,6 +506,9 @@ namespace Seal.Helpers
             return resultTable;
         }
 
+        /// <summary>
+        /// Load a DataTable from an Excel tab. A start row, and/or column can be specified. An end row and/or column can be specified.
+        /// </summary>
         public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true)
         {
             if (MyLoadDataTableFromExcel != null) return MyLoadDataTableFromExcel(excelPath, tabName, startRow, startCol, endCol, endRow, hasHeader);
@@ -390,6 +519,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load a DataTable from a CSV file
+        /// </summary>
         public DataTable LoadDataTableFromCSV(string csvPath, char? separator = null, Encoding encoding = null, bool noHeader = false)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
@@ -400,6 +532,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load a DataTable from a CSV file using the Microsoft Visual Basic Parser
+        /// </summary>
         public DataTable LoadDataTableFromCSVVBParser(string csvPath, char? separator = null, Encoding encoding = null)
         {
             if (MyLoadDataTableFromCSV != null) return MyLoadDataTableFromCSV(csvPath, separator);
@@ -409,7 +544,13 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Current database type used for the default configuration (set by SetDatabaseDefaultConfiguration)
+        /// </summary>
         public DatabaseType DatabaseType = DatabaseType.MSSQLServer;
+        /// <summary>
+        /// Set the default configuration values (column types, insert commands) for a given database type
+        /// </summary>
         public void SetDatabaseDefaultConfiguration(DatabaseType type)
         {
             DatabaseType = type;
@@ -453,6 +594,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Execute a DbCommand (the command is traced in the DebugLog if DebugMode is true)
+        /// </summary>
         public void ExecuteCommand(DbCommand command)
         {
             if (DebugMode) DebugLog.AppendLine("Executing SQL Command\r\n" + command.CommandText);
@@ -466,6 +610,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Returns a DbCommand created from a DbConnection
+        /// </summary>
         public DbCommand GetDbCommand(DbConnection connection)
         {
             DbCommand result = null;
@@ -481,6 +628,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Execute a SQL statement on a connection. Several statements may be executed using a commands separator.
+        /// </summary>
         public void ExecuteNonQuery(ConnectionType connectionType, string connectionString, string sql, string commandsSeparator = null, DbConnection openConnection = null)
         {
             var connection = openConnection;
@@ -509,6 +659,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Execute a SQL statement on a connection and return the first column of the first row of the result
+        /// </summary>
         public object ExecuteScalar(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null)
         {
             object result = null;
@@ -532,26 +685,41 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Load a DataTable from a MetaConnection using a SQL SELECT statement
+        /// </summary>
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
             return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
         }
+        /// <summary>
+        /// Load a list of strings from a MetaConnection using a SQL SELECT statement (first column of the result)
+        /// </summary>
         public List<string> LoadStringList(MetaConnection connection, string sql)
         {
             return (from r in LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection()).AsEnumerable() select r[0].ToString()).ToList();
         }
 
+        /// <summary>
+        /// Execute a SQL statement on a MetaConnection. Several statements may be executed using a commands separator.
+        /// </summary>
         public void ExecuteNonQuery(MetaConnection connection, string sql, string commandsSeparator = null)
         {
             ExecuteNonQuery(connection.ConnectionType, connection.FullConnectionString, sql, commandsSeparator, connection.GetOpenConnection());
         }
 
+        /// <summary>
+        /// Execute a SQL statement on a MetaConnection and return the first column of the first row of the result
+        /// </summary>
         public object ExecuteScalar(MetaConnection connection, string sql)
         {
             return ExecuteScalar(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
         }
 
 
+        /// <summary>
+        /// Drop and create a table in the database from a DataTable definition
+        /// </summary>
         public void CreateTable(DbCommand command, DataTable table)
         {
             try
@@ -564,6 +732,9 @@ namespace Seal.Helpers
             ExecuteCommand(command);
         }
 
+        /// <summary>
+        /// Insert the rows of a DataTable in the database table within a transaction (rows may be deleted first)
+        /// </summary>
         public void InsertTable(DbCommand command, DataTable table, string dateTimeFormat, bool deleteFirst)
         {
             DbTransaction transaction = command.Connection.BeginTransaction();
@@ -640,6 +811,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Insert rows given as arrays of SQL literal values in a database table within a transaction (rows may be deleted first)
+        /// </summary>
         public void RawInsertTable(DbCommand command, string tableName, string[] columns, List<string[]> rows, bool deleteFirst)
         {
             DbTransaction transaction = command.Connection.BeginTransaction();
@@ -715,6 +889,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Default implementation to build the CREATE TABLE command for a DataTable
+        /// </summary>
         public string RootGetTableCreateCommand(DataTable table)
         {
             StringBuilder result = new StringBuilder();
@@ -729,12 +906,18 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Returns the CREATE TABLE command for a DataTable (uses MyGetTableCreateCommand if defined)
+        /// </summary>
         public string GetTableCreateCommand(DataTable table)
         {
             if (MyGetTableCreateCommand != null) return MyGetTableCreateCommand(table);
             return RootGetTableCreateCommand(table);
         }
 
+        /// <summary>
+        /// Default implementation to build the comma-separated list of column names of a table
+        /// </summary>
         public string RootGetTableColumnNames(DataTable table)
         {
             StringBuilder result = new StringBuilder();
@@ -746,23 +929,35 @@ namespace Seal.Helpers
             return result.ToString();
         }
 
+        /// <summary>
+        /// Returns the comma-separated list of column names of a table (uses MyGetTableColumnNames if defined)
+        /// </summary>
         public string GetTableColumnNames(DataTable table)
         {
             if (MyGetTableColumnNames != null) return MyGetTableColumnNames(table);
             return RootGetTableColumnNames(table);
         }
 
+        /// <summary>
+        /// Default implementation to get the database column name of a column
+        /// </summary>
         public string RootGetTableColumnName(DataColumn col)
         {
             return GetDatabaseName(col.ColumnName);
         }
 
+        /// <summary>
+        /// Returns the database column name of a column (uses MyGetTableColumnName if defined)
+        /// </summary>
         public string GetTableColumnName(DataColumn col)
         {
             if (MyGetTableColumnName != null) return MyGetTableColumnName(col);
             return RootGetTableColumnName(col);
         }
 
+        /// <summary>
+        /// Returns true if the column has a numeric type
+        /// </summary>
         public bool IsNumeric(DataColumn col)
         {
             if (col == null) return false;
@@ -771,6 +966,9 @@ namespace Seal.Helpers
             return numericTypes.Contains(col.DataType);
         }
 
+        /// <summary>
+        /// Default implementation to get the database column type of a column
+        /// </summary>
         public string RootGetTableColumnType(DataColumn col)
         {
             StringBuilder result = new StringBuilder();
@@ -818,12 +1016,18 @@ namespace Seal.Helpers
             return result.ToString();
         }
 
+        /// <summary>
+        /// Returns the database column type of a column (uses MyGetTableColumnType if defined)
+        /// </summary>
         public string GetTableColumnType(DataColumn col)
         {
             if (MyGetTableColumnType != null) return MyGetTableColumnType(col);
             return RootGetTableColumnType(col);
         }
 
+        /// <summary>
+        /// Default implementation to build the comma-separated list of values of a row for an INSERT statement
+        /// </summary>
         public string RootGetTableColumnValues(DataRow row, string dateTimeFormat)
         {
             StringBuilder result = new StringBuilder();
@@ -836,12 +1040,18 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Returns the comma-separated list of values of a row for an INSERT statement (uses MyGetTableColumnValues if defined)
+        /// </summary>
         public string GetTableColumnValues(DataRow row, string dateTimeFormat)
         {
             if (MyGetTableColumnValues != null) return MyGetTableColumnValues(row, dateTimeFormat);
             return RootGetTableColumnValues(row, dateTimeFormat);
         }
 
+        /// <summary>
+        /// Default implementation to get the SQL value of a column of a row for an INSERT statement
+        /// </summary>
         public string RootGetTableColumnValue(DataRow row, DataColumn col, string dateTimeFormat)
         {
             string result = "";
@@ -876,12 +1086,18 @@ namespace Seal.Helpers
             return result.ToString();
         }
 
+        /// <summary>
+        /// Returns the SQL value of a column of a row for an INSERT statement (uses MyGetTableColumnValue if defined)
+        /// </summary>
         public string GetTableColumnValue(DataRow row, DataColumn col, string dateTimeFormat)
         {
             if (MyGetTableColumnValue != null) return MyGetTableColumnValue(row, col, dateTimeFormat);
             return RootGetTableColumnValue(row, col, dateTimeFormat);
         }
 
+        /// <summary>
+        /// Returns true if two rows have identical values
+        /// </summary>
         public bool AreRowsIdentical(DataRow row1, DataRow row2)
         {
             bool result = true;
@@ -896,6 +1112,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns true if two tables have identical rows and values
+        /// </summary>
         public bool AreTablesIdentical(DataTable checkTable1, DataTable checkTable2)
         {
             bool result = true;

@@ -105,6 +105,9 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+        /// <summary>
+        /// Serialize Description only if not empty
+        /// </summary>
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         private bool _isDynamic = false;
@@ -124,6 +127,9 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        /// <summary>
+        /// Serialize IsDynamic only if not the default value
+        /// </summary>
         public bool ShouldSerializeIsDynamic() { return IsDynamic; }
 
         private bool _isDbRefresh = false;
@@ -143,6 +149,9 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        /// <summary>
+        /// Serialize IsDbRefresh only if not the default value
+        /// </summary>
         public bool ShouldSerializeIsDbRefresh() { return IsDbRefresh; }
 
         /// <summary>
@@ -153,6 +162,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("List values depend on the connection"), Description("If True, the enum loads and stores the values for each connection."), Id(5, 1)]
 #endif
         public bool ValuesPerConnection { get; set; } = false;
+        /// <summary>
+        /// Serialize ValuesPerConnection only if not the default value
+        /// </summary>
         public bool ShouldSerializeValuesPerConnection() { return ValuesPerConnection; }
 
         /// <summary>
@@ -219,6 +231,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Use defined position to sort in reports"), Description("If True, the current position of the values in the list is used to sort the column in the report result."), Id(8, 1)]
 #endif
         public bool UsePosition { get; set; } = false;
+        /// <summary>
+        /// Serialize UsePosition only if not the default value
+        /// </summary>
         public bool ShouldSerializeUsePosition() { return UsePosition; }
 
         /// <summary>
@@ -229,6 +244,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Translate values"), Description("If True, the enumerated values are translated using the Repository translations."), Id(9, 1)]
 #endif
         public bool Translate { get; set; } = false;
+        /// <summary>
+        /// Serialize Translate only if not the default value
+        /// </summary>
         public bool ShouldSerializeTranslate() { return Translate; }
 
         /// <summary>
@@ -239,6 +257,9 @@ namespace Seal.Model
         [Category("Dynamic display"), DisplayName("Filter characters to type"), Description("If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed."), Id(1, 2)]
 #endif
         public int FilterChars { get; set; } = 0;
+        /// <summary>
+        /// Serialize FilterChars only if positive
+        /// </summary>
         public bool ShouldSerializeFilterChars() { return FilterChars > 0; }
 
         /// <summary>
@@ -291,9 +312,15 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<MetaEV> Values { get; set; } = new List<MetaEV>();
+        /// <summary>
+        /// Serialize Values only if not empty and the list has no dynamic display
+        /// </summary>
         public bool ShouldSerializeValues() { return !HasDynamicDisplay && Values.Count > 0; }
 
 
+        /// <summary>
+        /// Returns the list of values for a given connection (all values if ValuesPerConnection is false)
+        /// </summary>
         public List<MetaEV> GetValues(MetaConnection connection)
         {
             if (!ValuesPerConnection || connection == null) return Values;
@@ -323,6 +350,9 @@ namespace Seal.Model
         [XmlIgnore]
         public bool IsEditable = true;
 
+        /// <summary>
+        /// Current MetaSource
+        /// </summary>
         protected MetaSource _source;
         /// <summary>
         /// Current MetaSource

@@ -172,18 +172,27 @@ namespace Seal.Model
         /// </summary>
         public Dictionary<ResultPageIdentifierType, List<string>> Identifiers = new Dictionary<ResultPageIdentifierType, List<string>>();
 
+        /// <summary>
+        /// Add an identifier for a given type if not already present
+        /// </summary>
         public void SetIdentifier(ResultPageIdentifierType type, string id)
         {
             if (!Identifiers.ContainsKey(type)) Identifiers.Add(type, new List<string>());
             if (!Identifiers[type].Contains(id)) Identifiers[type].Add(id);
         }
 
+        /// <summary>
+        /// Returns the list of identifiers generated for a given type
+        /// </summary>
         public List<string> GetIdentifiers(ResultPageIdentifierType type)
         {
             if (Identifiers.ContainsKey(type)) return Identifiers[type];
             return new List<string>();
         }
 
+        /// <summary>
+        /// Clear the identifiers generated for a given type
+        /// </summary>
         public void ClearIdentifiers(ResultPageIdentifierType type)
         {
             if (Identifiers.ContainsKey(type)) Identifiers[type].Clear();

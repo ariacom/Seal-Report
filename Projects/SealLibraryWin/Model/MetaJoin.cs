@@ -98,6 +98,9 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+        /// <summary>
+        /// Serialize Description only if not empty
+        /// </summary>
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         private string _leftTableGUID;
@@ -188,6 +191,9 @@ namespace Seal.Model
             get { return _clause == null ? "" : _clause; }
             set { _clause = value; }
         }
+        /// <summary>
+        /// Serialize Clause only if not empty
+        /// </summary>
         public bool ShouldSerializeClause() { return !string.IsNullOrEmpty(_clause); }
 
         private JoinType _joinType = JoinType.Inner;
@@ -207,6 +213,9 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        /// <summary>
+        /// Serialize JoinType only if not the default value
+        /// </summary>
         public bool ShouldSerializeJoinType() { return JoinType != JoinType.Inner; }
 
         /// <summary>
@@ -217,6 +226,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is bi-directional"), Description("Indicates if the join can also be used in the other direction (left-right or right-left). For LINQ tables, the join clause must have the pattern with 'equals' (e.g. 'Helper.ToString(leftTable[\"col1\"]) equals Helper.ToString(rightTable[\"col2\"])')."), Id(4, 1)]
 #endif
         public bool IsBiDirectional { get; set; } = true;
+        /// <summary>
+        /// Serialize IsBiDirectional only if not the default value
+        /// </summary>
         public bool ShouldSerializeIsBiDirectional() { return !IsBiDirectional; }
 
         /// <summary>
@@ -297,6 +309,9 @@ var query = from {0} in aDataTable.AsEnumerable() join {1} in aDataTable.AsEnume
         [XmlIgnore]
         public bool IsEditable = true;
 
+        /// <summary>
+        /// Current MetaSource
+        /// </summary>
         protected MetaSource _source;
         /// <summary>
         /// Current MetaSource

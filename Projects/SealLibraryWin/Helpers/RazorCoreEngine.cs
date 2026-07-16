@@ -21,8 +21,17 @@ namespace Seal.Helpers
     /// </summary>
     public sealed class RawContent
     {
+        /// <summary>
+        /// The raw string value
+        /// </summary>
         public readonly string Value;
+        /// <summary>
+        /// Constructor from a string value
+        /// </summary>
         public RawContent(string v) { Value = v ?? ""; }
+        /// <summary>
+        /// Returns the raw string value
+        /// </summary>
         public override string ToString() => Value;
     }
 
@@ -71,6 +80,9 @@ namespace Seal.Helpers
         static readonly string _engineVersion =
             typeof(SealCoreTemplateBase).Assembly.GetName().Version?.ToString() ?? "0";
 
+        /// <summary>
+        /// Returns true if a compiled template is cached under the given key
+        /// </summary>
         public static bool IsTemplateCached(string key) => !string.IsNullOrEmpty(key) && _cache.ContainsKey(key);
 
         /// <summary>
@@ -172,6 +184,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Run the compiled template cached under 'key' with the given model and ViewBag, and return the rendered result
+        /// </summary>
         public static string Run(string key, object model, object viewBag = null)
         {
             if (!_cache.TryGetValue(key, out var t))

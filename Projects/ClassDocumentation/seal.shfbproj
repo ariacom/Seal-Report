@@ -18,9 +18,9 @@
     <HtmlHelpName>Documentation</HtmlHelpName>
     <Language>en-US</Language>
     <DocumentationSources>
-      <DocumentationSource sourceFile="..\SealLibrary\bin\Debug\Net8.0\SealLibrary.dll" />
+      <DocumentationSource sourceFile="..\SealLibrary\bin\Debug\net10.0\SealLibrary.dll" />
       <DocumentationSource sourceFile="..\SealLibrary\SealLibrary.xml" />
-      <DocumentationSource sourceFile="..\SealWebServer\bin\Debug\Net8.0\SealWebServer.dll" />
+      <DocumentationSource sourceFile="..\SealWebServer\bin\Debug\net10.0\SealWebServer.dll" />
       <DocumentationSource sourceFile="..\SealWebServer\SealWebServer.xml" />
     </DocumentationSources>
     <HelpFileFormat>Website</HelpFileFormat>
@@ -33,7 +33,7 @@
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <HelpTitle>Seal Report Library</HelpTitle>
-    <HelpFileVersion>1.0.0.0</HelpFileVersion>
+    <HelpFileVersion>10.0.0.0</HelpFileVersion>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <NamespaceGrouping>False</NamespaceGrouping>
     <MaximumGroupParts>2</MaximumGroupParts>
@@ -206,6 +206,23 @@
     <assemblyIdentity name="System.ServiceModel.Syndication" />
     <assemblyIdentity name="jose-jwt" />
     <assemblyIdentity name="Newtonsoft.Json" />
+    <assemblyIdentity name="RazorEngineCore" />
+    <assemblyIdentity name="OpenAI" />
+    <assemblyIdentity name="Azure.AI.OpenAI" />
+    <assemblyIdentity name="System.ClientModel" />
+    <assemblyIdentity name="Microsoft.Graph" />
+    <assemblyIdentity name="Microsoft.Graph.Core" />
+    <assemblyIdentity name="MailKit" />
+    <assemblyIdentity name="MimeKit" />
+    <assemblyIdentity name="SendGrid" />
+    <assemblyIdentity name="Microsoft.Data.SqlClient" />
+    <assemblyIdentity name="MySqlConnector" />
+    <assemblyIdentity name="HtmlSanitizer" />
+    <assemblyIdentity name="Microsoft.Win32.TaskScheduler" />
+    <assemblyIdentity name="Microsoft.Web.Administration" />
+    <assemblyIdentity name="Microsoft.AnalysisServices.AdomdClient" />
+    <assemblyIdentity name="System.Data.SQLite" />
+    <assemblyIdentity name="QuestPDF.Barcodes" />
     <assemblyIdentity name="ICSharpCode.SharpZipLib" />
     <assemblyIdentity name="Renci.SshNet" />
     <assemblyIdentity name="Oracle.ManagedDataAccess" />

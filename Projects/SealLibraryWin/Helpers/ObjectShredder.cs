@@ -5,6 +5,9 @@ using System.Reflection;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Utility class to convert a sequence of objects of type T into a DataTable (one column per public field or property)
+    /// </summary>
     public class ObjectShredder<T>
     {
         private System.Reflection.FieldInfo[] _fi;
@@ -13,6 +16,9 @@ namespace Seal.Helpers
         private System.Type _type;
 
         // ObjectShredder constructor.
+        /// <summary>
+        /// Constructor: initializes the field, property and ordinal maps from the type T
+        /// </summary>
         public ObjectShredder()
         {
             _type = typeof(T);
@@ -67,6 +73,9 @@ namespace Seal.Helpers
             return table;
         }
 
+        /// <summary>
+        /// Loads a DataTable from a sequence of primitive values (a single 'Value' column)
+        /// </summary>
         public DataTable ShredPrimitive(IEnumerable<T> source, DataTable table, LoadOption? options)
         {
             // Create a new table if the input table is null.
@@ -102,6 +111,9 @@ namespace Seal.Helpers
             return table;
         }
 
+        /// <summary>
+        /// Returns an array of the field and property values of an instance, ordered by the table columns
+        /// </summary>
         public object[] ShredObject(DataTable table, T instance)
         {
 
@@ -137,6 +149,9 @@ namespace Seal.Helpers
             return values;
         }
 
+        /// <summary>
+        /// Extend the table schema with columns for the public fields and properties of the given type
+        /// </summary>
         public DataTable ExtendTable(DataTable table, Type type)
         {
             // Extend the table schema if the input table was null or if the value
@@ -172,13 +187,22 @@ namespace Seal.Helpers
         }
     }
 
+    /// <summary>
+    /// LINQ extension methods to copy a sequence of objects to a DataTable
+    /// </summary>
     public static class CustomLINQtoDataSetMethods
     {
+        /// <summary>
+        /// Create a new DataTable from a sequence of objects
+        /// </summary>
         public static DataTable CopyToDataTable2<T>(this IEnumerable<T> source)
         {
             return new ObjectShredder<T>().Shred(source, null, null);
         }
 
+        /// <summary>
+        /// Load a sequence of objects into an existing DataTable
+        /// </summary>
         public static DataTable CopyToDataTable2<T>(this IEnumerable<T> source,
                                                     DataTable table, LoadOption? options)
         {

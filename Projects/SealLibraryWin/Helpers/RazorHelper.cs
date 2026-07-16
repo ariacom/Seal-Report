@@ -52,9 +52,15 @@ using Seal.Model;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Helper to compile and execute Razor scripts (RazorEngineCore based)
+    /// </summary>
     public class RazorHelper
     {
         //Directory location for cached assemblies
+        /// <summary>
+        /// Directory where the compiled script assemblies are cached
+        /// </summary>
         public static string RazorCacheDirectory = "";
 
         /// <summary>Logical cache key used by the RazorEngineCore backend.</summary>
@@ -63,6 +69,9 @@ namespace Seal.Helpers
             if (!string.IsNullOrEmpty(key)) return key;
             return model != null ? model.GetType().ToString() + "_" + GetFullScript(script) : script;
         }
+        /// <summary>
+        /// Field used to force the load of the System.Diagnostics.EventLog assembly (necessary to compile Security Scripts)
+        /// </summary>
         public static EventLogEntryType _01; //Necessary to compile Security Scripts
         static int _loadTries = 3;
         /// <summary>
@@ -158,6 +167,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Returns the script with the default Seal using directives added (@using Seal.Model, @using Seal.Helpers)
+        /// </summary>
         static public string GetFullScript(string script)
         {
             var result = (script == null ? "" : script);
@@ -170,6 +182,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Compile a Razor script (if not already cached) and execute it with the given model. Returns the result of the script execution.
+        /// </summary>
         static public string CompileExecute(string script, object model, string key = null, DateTime? lastModification = null)
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
@@ -195,6 +210,9 @@ namespace Seal.Helpers
             return ex;
         }
 
+        /// <summary>
+        /// Compile a Razor script under the given cache key if not already cached
+        /// </summary>
         static public void Compile(string script, Type modelType, string key)
         {
             if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
@@ -202,6 +220,9 @@ namespace Seal.Helpers
                 RazorCoreEngine.Compile(script, key, RazorCacheDirectory, null);
         }
 
+        /// <summary>
+        /// Compile a Razor script as a partial template and return its cache key (used later by @Include)
+        /// </summary>
         static public string CompilePartial(string script, object model, string key, DateTime? lastModification)
         {
             if (model != null && script != null && script.Trim().StartsWith("@"))
@@ -218,6 +239,9 @@ namespace Seal.Helpers
             return key;
         }
 
+        /// <summary>
+        /// Optional script validator called before compilation and execution
+        /// </summary>
         static public ScriptValidator Validator = null;
     }
 

@@ -28,10 +28,25 @@ namespace Seal.Model
     /// </summary>
     public class MetaTable : RootComponent, ReportExecutionLog
     {
+        /// <summary>
+        /// Name of the table parameter to generate the Mongo DB Stages from the elements and restrictions of the model
+        /// </summary>
         public const string ParameterNameMongoSync = "mongo_sync";
+        /// <summary>
+        /// Name of the table parameter defining the database name of the Mongo Server
+        /// </summary>
         public const string ParameterNameMongoDatabase = "mongo_database";
+        /// <summary>
+        /// Name of the table parameter defining the Mongo collection name to load
+        /// </summary>
         public const string ParameterNameMongoCollection = "mongo_collection";
+        /// <summary>
+        /// Name of the table parameter defining the array field name used for the 'unwind' stage
+        /// </summary>
         public const string ParameterNameMongoArrayName = "mongo_array_name";
+        /// <summary>
+        /// Name of the table parameter defining the operator applied if several restrictions are defined for the table
+        /// </summary>
         public const string ParameterNameMongoRestrictionOperator = "mongo_restriction_operator";
 
 #if WINDOWS
@@ -128,6 +143,9 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+        /// <summary>
+        /// True if Description must be serialized
+        /// </summary>
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
@@ -167,6 +185,9 @@ namespace Seal.Model
         public string TemplateName { get; set; }
 
         private MetaTableTemplate _tableTemplate = null;
+        /// <summary>
+        /// Current table template for a No SQL table
+        /// </summary>
         [XmlIgnore]
         public MetaTableTemplate TableTemplate
         {
@@ -188,6 +209,9 @@ namespace Seal.Model
         /// List of Table Parameters
         /// </summary>
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        /// <summary>
+        /// True if Parameters must be serialized
+        /// </summary>
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
         /// <summary>
@@ -445,6 +469,9 @@ namespace Seal.Model
         [DefaultValue(0)]
 #endif
         public int CacheDuration { get; set; } = 0;
+        /// <summary>
+        /// True if CacheDuration must be serialized
+        /// </summary>
         public bool ShouldSerializeCacheDuration() { return CacheDuration != 0; }
 
 
@@ -473,6 +500,9 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        /// <summary>
+        /// True if DynamicColumns must be serialized
+        /// </summary>
         public bool ShouldSerializeDynamicColumns() { return _dynamicColumns; }
 
         /// <summary>
@@ -483,6 +513,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Keep column names"), Description("If true, the display names of the columns are kept when generated from the source SQL."), Id(9, 1)]
 #endif
         public bool KeepColumnNames { get; set; } = false;
+        /// <summary>
+        /// True if KeepColumnNames must be serialized
+        /// </summary>
         public bool ShouldSerializeKeepColumnNames() { return KeepColumnNames; }
 
         /// <summary>
@@ -516,6 +549,9 @@ namespace Seal.Model
         /// </summary>
         [DefaultValue(false)]
         public bool MustRefresh { get; set; } = false;
+        /// <summary>
+        /// True if MustRefresh must be serialized
+        /// </summary>
         public bool ShouldSerializeMustRefresh() { return MustRefresh; }
 
         /// <summary>
@@ -544,6 +580,9 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(4, 2)]
 #endif
         public bool IgnorePrePostError { get; set; } = false;
+        /// <summary>
+        /// True if IgnorePrePostError must be serialized
+        /// </summary>
         public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
 
         /// <summary>
@@ -559,6 +598,9 @@ namespace Seal.Model
         /// List of MetColumn defined for the table
         /// </summary>
         public List<MetaColumn> Columns { get; set; } = new List<MetaColumn>();
+        /// <summary>
+        /// True if Columns must be serialized
+        /// </summary>
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>

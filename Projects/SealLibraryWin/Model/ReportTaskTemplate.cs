@@ -16,6 +16,9 @@ namespace Seal.Model
     /// </summary>
     public class ReportTaskTemplate
     {
+        /// <summary>
+        /// Name of the default task template
+        /// </summary>
         public const string DefaultName = "Default";
 
         /// <summary>
@@ -78,6 +81,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Parse the template configuration to initialize the task
+        /// </summary>
         public void ParseConfiguration(ReportTask task)
         {
             //Parse the file to init the template
@@ -109,6 +115,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Description of the template
+        /// </summary>
         public string Description
         {
             get
@@ -118,6 +127,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default execution step defined by the template
+        /// </summary>
         public ExecutionStep DefaultExecutionStep
         {
             get
@@ -127,6 +139,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default task script defined by the template
+        /// </summary>
         public string DefaultScript
         {
             get
@@ -136,6 +151,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default task body script defined by the template
+        /// </summary>
         public string DefaultBodyScript
         {
             get
@@ -145,6 +163,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Default parameters defined by the template
+        /// </summary>
         public List<Parameter> DefaultParameters
         {
             get
@@ -154,6 +175,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Last error message got when parsing the template
+        /// </summary>
         public string Error
         {
             get

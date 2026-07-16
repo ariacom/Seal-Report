@@ -11,9 +11,19 @@ using DynamicTypeDescriptor;
 
 namespace Seal.AI
 {
+    /// <summary>
+    /// Configuration of an AI provider (type, model, endpoint, API key, token costs)
+    /// defined in the server AI Configuration.
+    /// </summary>
     public class AIProviderConfiguration : RootEditor
     {
+        /// <summary>
+        /// Name of the server configuration encryption key used to encrypt provider API keys.
+        /// </summary>
         public const string AIProviderKeysKeyName = "AI Provider Keys";
+        /// <summary>
+        /// Default value of the encryption key used to encrypt provider API keys.
+        /// </summary>
         public const string AIProviderKeysKeyValue = "wwk93484*%%&%&kjtgé+c$àé";
 
         /// <summary>

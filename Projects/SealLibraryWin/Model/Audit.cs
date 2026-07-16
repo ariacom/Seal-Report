@@ -21,6 +21,9 @@ namespace Seal.Model
     /// </summary>
     public class ValidationException : Exception
     {
+        /// <summary>
+        /// Constructor with a message
+        /// </summary>
         public ValidationException(string message) : base(message)
         {
         }
@@ -31,6 +34,9 @@ namespace Seal.Model
     /// </summary>
     public class LoginException : Exception
     {
+        /// <summary>
+        /// Constructor with a message
+        /// </summary>
         public LoginException(string message) : base(message)
         {
         }
@@ -41,6 +47,9 @@ namespace Seal.Model
     /// </summary>
     public class SessionLostException : Exception
     {
+        /// <summary>
+        /// Constructor with a message
+        /// </summary>
         public SessionLostException(string message) : base(message)
         {
         }
@@ -51,6 +60,9 @@ namespace Seal.Model
     /// </summary>
     public class Audit
     {
+        /// <summary>
+        /// Default template of the Audit Script proposed in the server configuration
+        /// </summary>
         public const string AuditScriptTemplate = @"@{
     Audit audit = Model;
     //Default implementation: insert the audit record into the 'sr_audit' table of the data source
@@ -61,14 +73,38 @@ namespace Seal.Model
 }
 ";
 
+        /// <summary>
+        /// If true, the existence of the 'sr_audit' table is checked (and the table created or upgraded if necessary) on the next audit. Reset to false after the first check.
+        /// </summary>
         public static bool CheckTableCreation = true;
 
+        /// <summary>
+        /// Type of the audit event
+        /// </summary>
         public AuditType Type;
+        /// <summary>
+        /// Path involved in the event (e.g. report file path)
+        /// </summary>
         public string Path;
+        /// <summary>
+        /// Detail of the event
+        /// </summary>
         public string Detail;
+        /// <summary>
+        /// Error message if the event is an error
+        /// </summary>
         public string Error;
+        /// <summary>
+        /// Security user involved in the event
+        /// </summary>
         public SecurityUser User;
+        /// <summary>
+        /// Report involved in the event or null
+        /// </summary>
         public Report Report;
+        /// <summary>
+        /// Report schedule involved in the event or null
+        /// </summary>
         public ReportSchedule Schedule;
 
         /// <summary>
@@ -78,14 +114,41 @@ namespace Seal.Model
         public int? Duration;
 
         //AI Chat events
+        /// <summary>
+        /// For AI Chat events, name of the AI agent
+        /// </summary>
         public string AIAgentName;
+        /// <summary>
+        /// For AI Chat events, name of the AI provider used
+        /// </summary>
         public string AIProvider;
+        /// <summary>
+        /// For AI Chat events, name of the AI model used
+        /// </summary>
         public string AIModel;
+        /// <summary>
+        /// For AI Chat events, number of input tokens of the exchange
+        /// </summary>
         public int? AIInputTokens;
+        /// <summary>
+        /// For AI Chat events, number of output tokens of the exchange
+        /// </summary>
         public int? AIOutputTokens;
+        /// <summary>
+        /// For AI Chat events, number of API calls of the exchange
+        /// </summary>
         public int? AICalls;
+        /// <summary>
+        /// For AI Chat events, number of tool calls of the exchange
+        /// </summary>
         public int? AIToolCalls;
+        /// <summary>
+        /// For AI Chat events, number of messages in the chat
+        /// </summary>
         public int? AIMessageCount;
+        /// <summary>
+        /// For AI Chat events, cost of the exchange based on the provider token costs
+        /// </summary>
         public double? AICost;
 
         static string Key = Guid.NewGuid().ToString();

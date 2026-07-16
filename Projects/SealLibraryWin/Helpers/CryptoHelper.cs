@@ -13,11 +13,23 @@ using System.Text;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Static helper methods for hashing, AES, Triple DES and RSA encryption, available in Razor scripts
+    /// </summary>
     public class CryptoHelper
     {
+        /// <summary>
+        /// AES key used to decrypt license files
+        /// </summary>
         public const string AESLicenseKey = "sjedk*+$àWE¨€*2*%ssddè";
+        /// <summary>
+        /// RSA public key used to verify license file signatures
+        /// </summary>
         public const string RSALicensePublicKey = "<RSAKeyValue><Modulus>tOiIckJ3yCHhEHuGFmz2OrumK/GYc49bQNzBrc2aTvQSUWynKD3BiaYlP0biQrCCHxjYcKHvuEcmIug6OELsnQasrId/FzXXtGNH7UnYoZHqOI9xUW57Ycd4eg7VEv8kBPP/q+6YdS2BhTav1JApDgKluGbRpfZtuCCCsIZmhw0=</Modulus><Exponent>AQAB</Exponent></RSAKeyValue>";
 
+        /// <summary>
+        /// Hash a text with a salt using PBKDF2 (HMACSHA256, 100000 iterations), returned as a base64 string
+        /// </summary>
         public static string Hash(string text, string salt)
         {
             var bSalt = Encoding.GetEncoding(1252).GetBytes(salt + "47042ebf6b91akdjrdskjwk34dkf3241aa59ceca119ad").Take(128 / 8).ToArray();
@@ -34,6 +46,9 @@ namespace Seal.Helpers
 
         private static byte[] AESIV = { 22, 32, 44, 21, 34, 65, 98, 19, 11, 13, 46, 24, 36, 56, 96, 10 };
 
+        /// <summary>
+        /// Encrypt a text with a key using AES, returned as a base64 string
+        /// </summary>
         public static string EncryptAES(string text, string key)
         {
             string result = "";
@@ -65,6 +80,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Decrypt a base64 text with a key using AES
+        /// </summary>
         public static string DecryptAES(string text, string key)
         {
             string result = "";
@@ -106,6 +124,9 @@ namespace Seal.Helpers
             return crypto;
         }
 
+        /// <summary>
+        /// Encrypt a text with a key using Triple DES, returned as a base64 string
+        /// </summary>
         public static string EncryptTripleDES(string text, string key)
         {
             //Expect an ANSI key of 24 chars...
@@ -124,6 +145,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Decrypt a base64 text with a key using Triple DES
+        /// </summary>
         public static string DecryptTripleDES(string text, string key)
         {
             string result = "";
@@ -141,6 +165,9 @@ namespace Seal.Helpers
 
 
         //RSA Container base helpers
+        /// <summary>
+        /// Encrypt a text using the RSA key pair stored in a key container, returned as a base64 string
+        /// </summary>
         public static string EncryptWithRSAContainer(string text, string containerName, bool useMachineKeyStore)
         {
             CspParameters csp = new CspParameters();
@@ -168,6 +195,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Decrypt a base64 text using the RSA key pair stored in a key container
+        /// </summary>
         public static string DecryptWithRSAContainer(string text, string containerName, bool useMachineKeyStore)
 
         {
@@ -195,6 +225,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Encrypt a text with an RSA public key (XML format), returned as a base64 string
+        /// </summary>
         public static string RSAEncrypt(string publicKey, string textToEncrypt)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
@@ -208,6 +241,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Decrypt a base64 text with an RSA private key (XML format)
+        /// </summary>
         public static string RSADecrypt(string privateKey, string textToDecrypt)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
@@ -221,6 +257,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Sign a data string with an RSA private key (XML format) using SHA256, returned as a base64 string
+        /// </summary>
         public static string RSASignData(string privateKey, string data)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())
@@ -234,6 +273,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Verify the RSA signature of a data string using a public key (XML format) and SHA256
+        /// </summary>
         public static bool RSAVerifySignature(string publicKey, string data, string signature)
         {
             using (RSACryptoServiceProvider rsa = new RSACryptoServiceProvider())

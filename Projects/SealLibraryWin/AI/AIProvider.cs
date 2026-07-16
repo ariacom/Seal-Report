@@ -4,6 +4,10 @@ using OpenAI.Chat;
 
 namespace Seal.AI
 {
+    /// <summary>
+    /// Interface implemented by all AI chat providers (OpenAI, Azure OpenAI, Anthropic, Ollama)
+    /// used by the AI Agents feature.
+    /// </summary>
     public interface IAIProvider
     {
         /// <summary>
@@ -29,16 +33,26 @@ namespace Seal.AI
         AIUsage LastUsage { get; }
     }
 
+    /// <summary>
+    /// Base class for AI chat providers: holds the common connection and generation parameters
+    /// and the factory methods to create a provider from a configuration.
+    /// </summary>
     public abstract class AIProvider : IAIProvider
     {
         /// <summary>Unique identifier for this provider instance.</summary>
         public Guid GUID { get; set; } = Guid.NewGuid();
 
+        /// <summary>Resource endpoint URL of the provider API.</summary>
         protected string _endpoint;
+        /// <summary>API key used to authenticate against the provider.</summary>
         protected string _apiKey;
+        /// <summary>Name of the model to use (e.g. gpt-4o, claude-3-5-sonnet-20241022, llama3).</summary>
         protected string _model;
+        /// <summary>Sampling temperature (0.0 = default, deterministic).</summary>
         protected float _temperature;
+        /// <summary>Maximum number of tokens to generate (0 = provider default).</summary>
         protected int _maxTokens;
+        /// <summary>Nucleus sampling probability (1.0 = default, disabled).</summary>
         protected float _topP;
 
         /// <summary>
@@ -120,11 +134,18 @@ namespace Seal.AI
         }
     }
 
+    /// <summary>
+    /// Types of AI providers supported.
+    /// </summary>
     public enum ProviderType
     {
+        /// <summary>Azure OpenAI service.</summary>
         Azure,
+        /// <summary>Ollama server (local models).</summary>
         Ollama,
+        /// <summary>Anthropic API (Claude models).</summary>
         Anthropic,
+        /// <summary>OpenAI API.</summary>
         OpenAI
     }
 }

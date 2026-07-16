@@ -39,9 +39,21 @@ namespace Seal.Model
     /// </summary>
     public class DummyLogInterface : ExecutionLogInterface
     {
+        /// <summary>
+        /// Always false
+        /// </summary>
         public bool IsJobCancelled() { return false; }
+        /// <summary>
+        /// Does nothing
+        /// </summary>
         public void Log(string text, params object[] args) { }
+        /// <summary>
+        /// Does nothing
+        /// </summary>
         public void LogNoCR(string text, params object[] args) { }
+        /// <summary>
+        /// Does nothing
+        /// </summary>
         public void LogRaw(string text, params object[] args) { }
     }
 
@@ -50,13 +62,25 @@ namespace Seal.Model
     /// </summary>
     public class ConsoleLog : ExecutionLogInterface
     {
+        /// <summary>
+        /// Always false
+        /// </summary>
         public bool IsJobCancelled() { return false; }
+        /// <summary>
+        /// Log the text to the console
+        /// </summary>
         public void Log(string text, params object[] args) {
             Console.WriteLine(text, args);
         }
+        /// <summary>
+        /// Log the text to the console
+        /// </summary>
         public void LogNoCR(string text, params object[] args) {
             Console.WriteLine(text, args);
         }
+        /// <summary>
+        /// Log the text to the console
+        /// </summary>
         public void LogRaw(string text, params object[] args) {
             Console.WriteLine(text, args);
         }
@@ -67,16 +91,31 @@ namespace Seal.Model
     /// </summary>
     public class StringLog : ExecutionLogInterface
     {
+        /// <summary>
+        /// String builder containing the log result
+        /// </summary>
         public StringBuilder Result = new StringBuilder("");
+        /// <summary>
+        /// Always false
+        /// </summary>
         public bool IsJobCancelled() { return false; }
+        /// <summary>
+        /// Append the text to the log result
+        /// </summary>
         public void Log(string text, params object[] args)
         {
             Result.AppendFormat(text, args);
         }
+        /// <summary>
+        /// Append the text to the log result
+        /// </summary>
         public void LogNoCR(string text, params object[] args)
         {
             Result.AppendFormat(text, args);
         }
+        /// <summary>
+        /// Append the text to the log result
+        /// </summary>
         public void LogRaw(string text, params object[] args)
         {
             Result.AppendFormat(text, args);

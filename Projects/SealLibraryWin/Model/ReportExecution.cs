@@ -24,31 +24,100 @@ namespace Seal.Model
     public class ReportExecution
     {
         //Actions Keywords...
+        /// <summary>
+        /// Name of the form parameter containing the action to perform
+        /// </summary>
         public const string ActionCommand = "action";
 
+        /// <summary>
+        /// Action keyword to execute a report
+        /// </summary>
         public const string ActionExecuteReport = "ActionExecuteReport";
+        /// <summary>
+        /// Action keyword to refresh the execution status of a report
+        /// </summary>
         public const string ActionRefreshReport = "ActionRefreshReport";
+        /// <summary>
+        /// Action keyword to cancel a report execution
+        /// </summary>
         public const string ActionCancelReport = "ActionCancelReport";
+        /// <summary>
+        /// Action keyword to update a view parameter
+        /// </summary>
         public const string ActionUpdateViewParameter = "ActionUpdateViewParameter";
+        /// <summary>
+        /// Action keyword to perform a navigation (drill or sub-report)
+        /// </summary>
         public const string ActionNavigate = "ActionNavigate";
+        /// <summary>
+        /// Action keyword to perform a login
+        /// </summary>
         public const string ActionLogin = "ActionLogin";
+        /// <summary>
+        /// Action keyword to perform a logout
+        /// </summary>
         public const string ActionLogout = "ActionLogout";
+        /// <summary>
+        /// Action keyword to set the user information (culture)
+        /// </summary>
         public const string ActionSetUserInfo = "ActionSetUserInfo";
+        /// <summary>
+        /// Action keyword to get the navigation links of a report
+        /// </summary>
         public const string ActionGetNavigationLinks = "ActionGetNavigationLinks";
+        /// <summary>
+        /// Action keyword to get table data (page table load or server pagination)
+        /// </summary>
         public const string ActionGetTableData = "ActionGetTableData";
+        /// <summary>
+        /// Action keyword to get the values of an enumerated list
+        /// </summary>
         public const string ActionGetEnumValues = "ActionGetEnumValues";
+        /// <summary>
+        /// Action keyword to update the values of an enumerated list (dynamic filter)
+        /// </summary>
         public const string ActionUpdateEnumValues = "ActionUpdateEnumValues";
+        /// <summary>
+        /// Action keyword to execute a report from a trigger (restriction triggering the execution)
+        /// </summary>
         public const string ActionExecuteFromTrigger = "ActionExecuteFromTrigger";
 
         //Html Ids Keywords
+        /// <summary>
+        /// Html id of the report header form
+        /// </summary>
         public const string HtmlId_header_form = "header_form";
+        /// <summary>
+        /// Html id of the execution progress bar
+        /// </summary>
         public const string HtmlId_progress_bar = "progress_bar";
+        /// <summary>
+        /// Html id of the progress bar dedicated to tasks
+        /// </summary>
         public const string HtmlId_progress_bar_tasks = "progress_bar_tasks";
+        /// <summary>
+        /// Html id of the progress bar dedicated to models
+        /// </summary>
         public const string HtmlId_progress_bar_models = "progress_bar_models";
+        /// <summary>
+        /// Html id of the execution messages container
+        /// </summary>
         public const string HtmlId_execution_messages = "execution_messages";
+        /// <summary>
+        /// Html id of the input containing the navigation id
+        /// </summary>
         public const string HtmlId_navigation_id = "navigation_id";
+        /// <summary>
+        /// Html id of the input containing the navigation parameters
+        /// </summary>
         public const string HtmlId_navigation_parameters = "navigation_parameters";
+        /// <summary>
+        /// Html id of the input containing the execution GUID
+        /// </summary>
         public const string HtmlId_execution_guid = "execution_guid";
+        /// <summary>
+        /// Html id of the navigation menu
+        /// </summary>
         public const string HtmlId_navigation_menu = "nav_menu";
 
         /// <summary>
@@ -1947,6 +2016,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Process the report result for the current output: execute the pre/post scripts and the output device processing
+        /// </summary>
         public void ProcessOutput()
         {
             if (Report.OutputToExecute != null)

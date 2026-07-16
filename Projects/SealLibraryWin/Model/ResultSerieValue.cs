@@ -107,11 +107,29 @@ namespace Seal.Model
             get { return Element.EChartsSerie == EChartsSerieDefinition.Area; }
         }
 
+        /// <summary>
+        /// Serie values as a JavaScript string of {x,y} points, used to build the chart
+        /// </summary>
         public string ChartXYSerieValues;
+        /// <summary>
+        /// Serie values as a JavaScript string of {x,y} points with X and Y swapped, used to build the chart
+        /// </summary>
         public string ChartYXSerieValues;
+        /// <summary>
+        /// X values of the serie as a JavaScript string, used to build the chart
+        /// </summary>
         public string ChartXSerieValues;
+        /// <summary>
+        /// X values of the serie as a JavaScript string of date time strings, used to build the chart
+        /// </summary>
         public string ChartXDateTimeSerieValues;
+        /// <summary>
+        /// Y values of the serie as a JavaScript string, used to build the chart
+        /// </summary>
         public string ChartYSerieValues;
+        /// <summary>
+        /// Y values of the serie as a JavaScript string of date time strings, used to build the chart
+        /// </summary>
         public string ChartYDateSerieValues;
 
         /// <summary>

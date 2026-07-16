@@ -1,29 +1,16 @@
 ﻿@page
 @model IndexModel
-<nav class="navbar-inverse navbar-fixed-top">
+<nav class="navbar navbar-expand navbar-dark bg-dark fixed-top">
     <div class="container">
         <a class="navbar-brand" href="#">Seal Web Interface Samples</a>
-        <ul class="nav navbar-nav pull-xs-right">
-            <li class="nav-item active"><a class="nav-link" href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">API Description <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
-            <li class="nav-item"><a class="nav-link" href="https://sealreport.org/" target="_blank">Seal Report Home <span class="glyphicon glyphicon-new-window" aria-hidden="true"></span></a></li>
+        <ul class="navbar-nav ms-auto">
+            <li class="nav-item"><a class="nav-link active" href="https://sealreport.org/demo/WebInterfaceAPI.html" target="_blank">API Description &#8599;</a></li>
+            <li class="nav-item"><a class="nav-link" href="https://sealreport.org/" target="_blank">Seal Report Home &#8599;</a></li>
         </ul>
     </div><!-- /.container -->
 </nav><!-- /.navbar -->
 
 
-<style>
-    body {
-        padding-top: 60px;
-    }
-
-    .table td, .table th {
-        padding: 5px;
-    }
-
-    label {
-        font-weight: normal;
-    }
-</style>
 <script>
     var sealServer = "https://sealreport.org/demo/";
     sealServer = "https://localhost:44398/seal/";
@@ -38,7 +25,7 @@
     }
 
     $(document).ready(function () {
-        $("button").addClass("btn btn-mg btn-default");
+        $("button").addClass("btn btn-secondary");
         $("button").attr("type", "button");
         $("#host").text("Using the Web Report Server: " + sealServer);
 
@@ -421,12 +408,9 @@
         enableControls();
     });
 </script>
-<body>
-    <div class="container">
+<div class="row">
 
-        <div class="row row-offcanvas row-offcanvas-right">
-
-            <div class="col-xs-12 col-sm-12">
+            <div class="col-12">
                 <h3 id="host">Web Report Server</h3>
                 <br />
 
@@ -434,10 +418,8 @@
                     <tbody>
                         <tr>
                             <td>
-                                <div class="input-group">
-                                    <input type="text" class="form-control" id="user_name" name="user_name" placeholder="User name (leave it empty for the demo)" autofocus value="" />
-                                    <input type="password" class="form-control" id="password" name="password" placeholder="Password (leave it empty for the demo)" />
-                                </div>
+                                <input type="text" class="form-control mb-1" style="max-width: 420px;" id="user_name" name="user_name" placeholder="User name (leave it empty for the demo)" autofocus value="" />
+                                <input type="password" class="form-control" style="max-width: 420px;" id="password" name="password" placeholder="Password (leave it empty for the demo)" />
                                 <button id="login_button">Login (SWILogin)</button>
                                 <button id="login_execute_button">Login, Execute 'Search - Orders' and Logout</button>
                             </td>
@@ -559,13 +541,10 @@
                     </tbody>
                 </table>
             </div>
-        </div><!--/row-->
+</div><!--/row-->
 
-        <hr>
+<hr>
 
-        <footer>
-            <p>&copy; Seal Report</p>
-        </footer>
-
-    </div><!--/.container-->
-</body>
+<footer class="text-muted">
+    <p>&copy; Seal Report</p>
+</footer>

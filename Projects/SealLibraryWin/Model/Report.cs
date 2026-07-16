@@ -87,6 +87,9 @@ namespace Seal.Model
         #endregion
 
 #endif
+        /// <summary>
+        /// The display order in the tree view (always 0)
+        /// </summary>
         public int GetSort() { return 0; }
 
         /// <summary>
@@ -102,6 +105,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string DisplayName { get; set; } = "";
+        /// <summary>
+        /// True if DisplayName must be serialized
+        /// </summary>
         public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
 
         private string _displayNameEx = null;
@@ -142,6 +148,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string Guide { get; set; } = "";
+        /// <summary>
+        /// True if Guide must be serialized
+        /// </summary>
         public bool ShouldSerializeGuide() { return !string.IsNullOrEmpty(Guide); }
 
         /// <summary>
@@ -194,6 +203,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<ReportRestriction> InputValues { get; set; } = new List<ReportRestriction>();
+        /// <summary>
+        /// True if InputValues must be serialized
+        /// </summary>
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
 
         /// <summary>
@@ -204,6 +216,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool PrintQueries { get; set; } = false;
+        /// <summary>
+        /// True if PrintQueries must be serialized
+        /// </summary>
         public bool ShouldSerializePrintQueries() { return PrintQueries; }
 
         /// <summary>
@@ -216,6 +231,9 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public ReportKind Kind { get; set; } = ReportKind.Report;
+        /// <summary>
+        /// True if Kind must be serialized
+        /// </summary>
         public bool ShouldSerializeKind() { return Kind != ReportKind.Report; }
 
         /// <summary>
@@ -229,6 +247,9 @@ namespace Seal.Model
         /// </summary>
         public List<ReportSource> Sources { get; set; } = new List<ReportSource>();
 
+        /// <summary>
+        /// True if Sources must be serialized
+        /// </summary>
         public bool ShouldSerializeSources() { return Sources.Count > 0; }
 
         /// <summary>
@@ -236,18 +257,27 @@ namespace Seal.Model
         /// </summary>
         public List<ReportModel> Models { get; set; } = new List<ReportModel>();
 
+        /// <summary>
+        /// True if Models must be serialized
+        /// </summary>
         public bool ShouldSerializeModels() { return Models.Count > 0; }
 
         /// <summary>
         /// List of outputs of the report
         /// </summary>
         public List<ReportOutput> Outputs { get; set; } = new List<ReportOutput>();
+        /// <summary>
+        /// True if Outputs must be serialized
+        /// </summary>
         public bool ShouldSerializeOutputs() { return Outputs.Count > 0; }
 
         /// <summary>
         /// List of tasks of the report
         /// </summary>
         public List<ReportTask> Tasks { get; set; } = new List<ReportTask>();
+        /// <summary>
+        /// True if Tasks must be serialized
+        /// </summary>
         public bool ShouldSerializeTasks()
         {
             return Tasks.Count > 0;
@@ -297,6 +327,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string InitScript { get; set; } = "";
+        /// <summary>
+        /// True if InitScript must be serialized
+        /// </summary>
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
         /// <summary>
@@ -308,6 +341,9 @@ namespace Seal.Model
         [DefaultValue("")]
 #endif
         public string NavigationScript { get; set; }
+        /// <summary>
+        /// True if NavigationScript must be serialized
+        /// </summary>
         public bool ShouldSerializeNavigationScript() { return !string.IsNullOrEmpty(NavigationScript); }
 
 
@@ -337,6 +373,9 @@ namespace Seal.Model
         /// List of schedules of the report
         /// </summary>
         public List<ReportSchedule> Schedules { get; set; } = new List<ReportSchedule>();
+        /// <summary>
+        /// True if Schedules must be serialized
+        /// </summary>
         public bool ShouldSerializeSchedules() { return Schedules.Count > 0; }
 
         /// <summary>
@@ -368,6 +407,9 @@ namespace Seal.Model
         /// Meta information that can be used for any purpose
         /// </summary>
         public List<StringPair> MetaInfo { get; set; } = new List<StringPair>();
+        /// <summary>
+        /// True if MetaInfo must be serialized
+        /// </summary>
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0 && MetaInfo.Exists(i => !string.IsNullOrEmpty(i.Value)); }
 
         /// <summary>
@@ -965,6 +1007,9 @@ namespace Seal.Model
         /// </summary>
         [XmlIgnore]
         private bool _cancel = false;
+        /// <summary>
+        /// If true, the report execution is cancelled
+        /// </summary>
         public bool Cancel { get => _cancel; set => _cancel = value; }
 
         /// <summary>
@@ -2680,6 +2725,9 @@ namespace Seal.Model
         }
 
         List<Parameter> _resultOptionParameters;
+        /// <summary>
+        /// List of parameters displayed in the result options panel (tabs to show and renderer options)
+        /// </summary>
         [XmlIgnore]
         public List<Parameter> ResultOptionParameters
         {

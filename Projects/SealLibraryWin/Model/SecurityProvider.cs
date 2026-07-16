@@ -94,13 +94,22 @@ namespace Seal.Model
             return providers;
         }
 
+        /// <summary>
+        /// Clear the provider parameters
+        /// </summary>
         public void ClearConfiguration()
         {
             Parameters.Clear();
         }
 
 
+        /// <summary>
+        /// Last configuration parsed. Cache to avoid re-compilation, public for Cloning used in Repository.CreateFast()
+        /// </summary>
         public string _lastConfiguration = ""; //Cache to avoid re-compilation -> public for Cloning used in Repository.CreateFast()
+        /// <summary>
+        /// Parse the provider configuration to initialize the parameters
+        /// </summary>
         public void ParseConfiguration()
         {
             //Parse the file to init the provider

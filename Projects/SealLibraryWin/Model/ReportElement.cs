@@ -27,12 +27,30 @@ namespace Seal.Model
 #endif
     public class ReportElement : MetaColumn
     {
+        /// <summary>
+        /// Sort keyword for an automatic ascendant sort
+        /// </summary>
         public const string kAutomaticAscSortKeyword = "Automatic Ascendant";
+        /// <summary>
+        /// Sort keyword for an automatic descendant sort
+        /// </summary>
         public const string kAutomaticDescSortKeyword = "Automatic Descendant";
+        /// <summary>
+        /// Sort keyword when the element is not sorted
+        /// </summary>
         public const string kNoSortKeyword = "Not sorted";
+        /// <summary>
+        /// Sort keyword for an ascendant sort
+        /// </summary>
         public const string kAscendantSortKeyword = "Ascendant";
+        /// <summary>
+        /// Sort keyword for a descendant sort
+        /// </summary>
         public const string kDescendantSortKeyword = "Descendant";
 
+        /// <summary>
+        /// Special GUID used to clear the enumerated list of the element
+        /// </summary>
         public const string kClearEnumGUID = "CLEAR";
 
 
@@ -777,6 +795,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Custom SQL or LINQ expression of the element
+        /// </summary>
         protected string _SQL;
         /// <summary>
         /// If not empty, overwrite the default SQL or LINQ Expression used for the element in the SELECT statement
@@ -872,6 +893,9 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Apply Css to title"), Description("If True, the CSS Styles and Classes are also applied to the cell titles"), Id(6, 5)]
 #endif
         public bool CssTitle { get; set; } = false;
+        /// <summary>
+        /// Serialize CssTitle only if not the default value
+        /// </summary>
         public bool ShouldSerializeCssTitle() { return CssTitle; }
 
 
@@ -883,6 +907,9 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Force aggregrate"), Description("If Yes, it indicates that the element is an aggregate even it is set in a dimension (Page/Row/Column). By default, the metacolumn flag 'Is aggregate' is used. This flag impacts the build of the GROUP BY Clause."), Id(6, 5)]
 #endif
         public YesNoDefault ForceAggregate { get; set; } = YesNoDefault.Default;
+        /// <summary>
+        /// Serialize ForceAggregate only if not the default value
+        /// </summary>
         public bool ShouldSerializeForceAggregate() { return ForceAggregate != YesNoDefault.Default; }
 
 
@@ -894,6 +921,9 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Set empty cells to zero"), Description("If True, empty cells are set to 0."), Id(7, 5)]
 #endif
         public bool SetNullToZero { get; set; } = false;
+        /// <summary>
+        /// Serialize SetNullToZero only if not the default value
+        /// </summary>
         public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
 
         /// <summary>
@@ -904,6 +934,9 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Show all enum values"), Description("If True, all the values defined in the enumerated list will be shown in the tables, even if the value is not the database Result Set."), Id(8, 5)]
 #endif
         public bool ShowAllEnums { get; set; } = false;
+        /// <summary>
+        /// Serialize ShowAllEnums only if not the default value
+        /// </summary>
         public bool ShouldSerializeShowAllEnums() { return ShowAllEnums; }
 
         /// <summary>
@@ -914,6 +947,9 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Contains HTML"), Description("If True, the value contains HTML tags."), Id(9, 5)]
 #endif
         public bool ContainsHtml { get; set; } = false;
+        /// <summary>
+        /// Serialize ContainsHtml only if not the default value
+        /// </summary>
         public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
 
 
@@ -925,6 +961,9 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Insert position"), Description("The position in Page, Row, Column, Data of the element inserted if the model is used as a reference model. A value of 0 means to add the element at the end. A negative value can be specified to indicate the position from the last element (e.g. -1 means the position before the last element)."), Id(10, 5)]
 #endif
         public int InsertPosition { get; set; } = 0;
+        /// <summary>
+        /// Serialize InsertPosition only if not the default value
+        /// </summary>
         public bool ShouldSerializeInsertPosition() { return InsertPosition != 0; }
 
 

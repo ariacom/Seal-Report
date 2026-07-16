@@ -15,9 +15,18 @@ using Seal.Model;
 
 namespace Seal.Helpers
 {
+    /// <summary>
+    /// Static helper methods to manipulate files, directories and ZIP archives, available in Razor scripts
+    /// </summary>
     public class FileHelper
     {
+        /// <summary>
+        /// If set, overrides the temporary directory returned by TempPath
+        /// </summary>
         public static string AlternateTemporaryDirectory = null;
+        /// <summary>
+        /// Path of the temporary directory (AlternateTemporaryDirectory if set, otherwise the local user temp directory)
+        /// </summary>
         public static string TempPath
         {
             get
@@ -31,6 +40,9 @@ namespace Seal.Helpers
         }
 
 
+        /// <summary>
+        /// Path of the '_Seal_Report.Temp' application temporary directory (created if necessary)
+        /// </summary>
         public static string TempApplicationDirectory
         {
             get
@@ -51,6 +63,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Purge the application temporary directory (files older than 8 hours) and RazorEngine directories older than 120 minutes
+        /// </summary>
         public static void PurgeTempApplicationDirectory()
         {
             PurgeTempDirectory(TempApplicationDirectory);
@@ -70,6 +85,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Delete the files older than 8 hours in a directory
+        /// </summary>
         public static void PurgeTempDirectory(string directoryPath)
         {
             try
@@ -96,6 +114,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Replace invalid file name and path characters in a file path by a given string
+        /// </summary>
         public static string CleanFilePath(string filePath, string replace = "")
         {
             string result = filePath;
@@ -110,22 +131,34 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Returns true if the file name contains invalid characters
+        /// </summary>
         public static bool HasInvalidFileNameChars(string fileName)
         {
             char[] invalidChars = Path.GetInvalidFileNameChars();
             return fileName.IndexOfAny(invalidChars) >= 0;
         }
 
+        /// <summary>
+        /// Returns a unique file name in the directory of the given path, appending a number if the file exists. If lockFile is true, an empty file is created.
+        /// </summary>
         public static string GetUniqueFileName(string filePath, string newExtension = "", bool lockFile = false)
         {
             return GetUniqueFileName(Path.GetDirectoryName(filePath), Path.GetFileName(filePath), newExtension, lockFile);
         }
 
+        /// <summary>
+        /// Returns a unique file name in the application temporary directory for the given file name
+        /// </summary>
         public static string GetTempUniqueFileName(string filePath, string newExtension = "", bool lockFile = false)
         {
             return GetUniqueFileName(TempApplicationDirectory, Path.GetFileName(filePath), newExtension, lockFile);
         }
 
+        /// <summary>
+        /// Returns a unique file name in a directory, appending a number if the file exists and optionally changing the extension. If lockFile is true, an empty file is created.
+        /// </summary>
         public static string GetUniqueFileName(string directory, string fileName, string newExtension = "", bool lockFile = false)
         {
             int cnt = 0;
@@ -151,6 +184,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Write a string to a file, creating the directory if necessary
+        /// </summary>
         public static void WriteFile(string path, string data)
         {
             if (!Directory.Exists(Path.GetDirectoryName(path))) Directory.CreateDirectory(Path.GetDirectoryName(path));
@@ -159,6 +195,9 @@ namespace Seal.Helpers
             sw.Close();
         }
 
+        /// <summary>
+        /// Returns the content of a file as a string
+        /// </summary>
         public static string ReadFile(string path, string data)
         {
             StreamReader sr = new StreamReader(path);
@@ -167,6 +206,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Copy the files of a directory to a destination, optionally recursive, with a search pattern and a pattern of file name starts to skip
+        /// </summary>
         public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*", string skipStartsPattern = "")
         {
             if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", source, destination);
@@ -201,6 +243,9 @@ namespace Seal.Helpers
             if (!Directory.EnumerateFileSystemEntries(destination).Any()) Directory.Delete(destination);
         }
 
+        /// <summary>
+        /// Upload the files of a directory to an FTP destination, optionally recursive
+        /// </summary>
         public static void FtpCopyDirectory(FtpClient client, string source, string destination, bool recursive, ReportExecutionLog log = null)
         {
             if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", source, destination);
@@ -245,6 +290,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Create the root directory and an optional sub-folder if they do not exist, and return the resulting path
+        /// </summary>
         public static string CreateAndGetDirectory(string root, string subFolder)
         {
             string result = root;
@@ -257,6 +305,9 @@ namespace Seal.Helpers
             return result;
         }
 
+        /// <summary>
+        /// Add recursively the sub-folder paths of a directory to a list of choices (paths relative to the repository Reports folder, with a prefix)
+        /// </summary>
         public static void AddFolderChoices(string path, string prefix, List<string> choices)
         {
             foreach (var folder in Directory.GetDirectories(path))
@@ -268,6 +319,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Add recursively the sub-folder paths of a directory to a list of choices (paths relative to the repository Personal folder)
+        /// </summary>
         public static void AddPersonalFolderChoices(string path, List<string> choices)
         {
             foreach (var folder in Directory.GetDirectories(path))
@@ -278,11 +332,17 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Convert a file path to use the directory separator of the current operating system
+        /// </summary>
         public static string ConvertOSFilePath(string filePath)
         {
             return string.IsNullOrEmpty(filePath) ? "" : filePath.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
         }
 
+        /// <summary>
+        /// Create a ZIP archive from the files of a folder matching a filter, with an optional password
+        /// </summary>
         public static void CreateZIPFromFolder(string inputFolder, string filter, bool recursive, string zipPath, string password)
         {
             var dic = new Dictionary<string, string>();
@@ -290,11 +350,17 @@ namespace Seal.Helpers
             CreateZIP(dic, zipPath, password);
         }
 
+        /// <summary>
+        /// Create a ZIP archive containing a single file, with an optional password
+        /// </summary>
         public static void CreateZIPFromFile(string inputPath, string zipPath, string password)
         {
             CreateZIP(inputPath, Path.GetFileName(inputPath), zipPath, password);
         }
 
+        /// <summary>
+        /// Create a ZIP archive containing a single file with a given entry name, with an optional password
+        /// </summary>
         public static void CreateZIP(string inputPath, string entryName, string zipPath, string password)
         {
             var dic = new Dictionary<string, string>();
@@ -302,6 +368,9 @@ namespace Seal.Helpers
             CreateZIP(dic, zipPath, password);
         }
 
+        /// <summary>
+        /// Create a ZIP archive from a dictionary of file paths and their entry names, with an optional password
+        /// </summary>
         public static void CreateZIP(Dictionary<string, string> inputTargetPaths,  string zipPath, string password)
         {
             using (FileStream fsOut = File.Create(zipPath))
@@ -336,6 +405,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Extract all files of a ZIP archive to a folder, with an optional password
+        /// </summary>
         public static void ExtractZipFile(string archivePath, string password, string outFolder)
         {
             //code got from https://github.com/icsharpcode/SharpZipLib/wiki/Unpack-a-Zip-with-full-control-over-the-operation
@@ -406,27 +478,42 @@ namespace Seal.Helpers
 
 
         #region Seal Attachments
+        /// <summary>
+        /// Returns the prefix used for report result file names (file name plus extension without the dot)
+        /// </summary>
         public static string GetResultFilePrefix(string path)
         {
             return Path.GetFileNameWithoutExtension(path) + "_" + Path.GetExtension(path).Replace(".", "");
         }
 
+        /// <summary>
+        /// Returns true if the file path has the Seal report file extension
+        /// </summary>
         public static bool IsReportFile(string path)
         {
             return path.EndsWith("." + Repository.SealReportFileExtension);
         }
 
+        /// <summary>
+        /// Returns true if the file path has the Seal report shortcut file extension
+        /// </summary>
         public static bool IsShortcutFile(string path)
         {
             return path.EndsWith("." + Repository.SealReportShortcutFileExtension);
         }
 
+        /// <summary>
+        /// Returns true if the report file contains a schedule definition
+        /// </summary>
         public static bool ReportHasSchedule(string path)
         {
             string content = File.ReadAllText(path);
             return content.Contains("<ReportSchedule>") && content.Contains("</ReportSchedule>");
         }
 
+        /// <summary>
+        /// Replace a GUID by a new one in a report file
+        /// </summary>
         public static void ChangeGUID(string path, string oldGUID, string newGUID)
         {
             string content = File.ReadAllText(path);
@@ -434,6 +521,9 @@ namespace Seal.Helpers
             File.WriteAllText(path, content, new UTF8Encoding(false)); //No bom encoding
         }
 
+        /// <summary>
+        /// Delete a file if it exists
+        /// </summary>
         public static void DeleteFile(string path)
         {
             if (File.Exists(path))
@@ -442,6 +532,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Move (or copy if the copy flag is true) a file to a destination
+        /// </summary>
         public static void MoveFile(string source, string destination, bool copy)
         {
             if (source != destination)
@@ -451,6 +544,9 @@ namespace Seal.Helpers
             }
         }
 
+        /// <summary>
+        /// Returns the total size in bytes of a directory including its sub-directories
+        /// </summary>
         public static long GetDirectorySize(DirectoryInfo d)
         {
             long size = 0;

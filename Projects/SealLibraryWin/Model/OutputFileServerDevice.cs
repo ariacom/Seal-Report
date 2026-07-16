@@ -25,7 +25,13 @@ namespace Seal.Model
     /// </summary>
     public class OutputFileServerDevice : OutputDevice
     {
+        /// <summary>
+        /// Name of the crypto key used to encrypt the device password
+        /// </summary>
         public const string PasswordKeyName = "Output File Server Device Password";
+        /// <summary>
+        /// Default crypto key value used to encrypt the device password
+        /// </summary>
         public const string PasswordKeyValue = "?d_*er)wien?,édl+25.()à,";
 
         /// <summary>
@@ -114,6 +120,9 @@ namespace Seal.Model
 }
 ";
 
+        /// <summary>
+        /// Returns the default processing script template of the device
+        /// </summary>
         override public string GetProcessingScriptTemplate()
         {
             return ProcessingScriptTemplate;

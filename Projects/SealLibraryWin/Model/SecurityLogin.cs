@@ -62,6 +62,9 @@ namespace Seal.Model
         /// The password hashed
         /// </summary>
         public string Password { get; set; }
+        /// <summary>
+        /// Serialize Password only if not empty
+        /// </summary>
         public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(Password); }
 
         /// <summary>
@@ -115,8 +118,13 @@ namespace Seal.Model
 #endif
         public string Phone { get; set; }
 
-        //Deprecated: group names are converted into GroupIds when the security is loaded
+        /// <summary>
+        /// Deprecated: group names are converted into GroupIds when the security is loaded
+        /// </summary>
         public List<string> GroupNames { get; set; } = new List<string>();
+        /// <summary>
+        /// Serialize GroupNames only if not empty
+        /// </summary>
         public bool ShouldSerializeGroupNames() { return GroupNames.Count > 0; }
 
         /// <summary>
@@ -127,6 +135,9 @@ namespace Seal.Model
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> GroupIds { get; set; } = new List<string>();
+        /// <summary>
+        /// Serialize GroupIds only if not empty
+        /// </summary>
         public bool ShouldSerializeGroupIds() { return GroupIds.Count > 0; }
     }
 }

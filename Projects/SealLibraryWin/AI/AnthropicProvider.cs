@@ -9,6 +9,10 @@ using OpenAI.Chat;
 
 namespace Seal.AI
 {
+    /// <summary>
+    /// AI provider implementation for the Anthropic Messages REST API (Claude models),
+    /// with automatic retry on rate limit (429) and overload (529) responses.
+    /// </summary>
     public class AnthropicProvider : AIProvider
     {
         private static readonly HttpClient _httpClient = new()

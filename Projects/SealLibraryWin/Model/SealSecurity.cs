@@ -435,6 +435,9 @@ namespace Seal.Model
         /// List of SecurityParameter used by the provider
         /// </summary>
         public List<SecurityParameter> Parameters { get; set; } = new List<SecurityParameter>();
+        /// <summary>
+        /// Serialize Parameters only if not empty
+        /// </summary>
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
         /// <summary>
@@ -471,6 +474,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityGroup> Groups { get; set; } = new List<SecurityGroup>();
+        /// <summary>
+        /// Serialize Groups only if not empty
+        /// </summary>
         public bool ShouldSerializeGroups() { return Groups.Count > 0; }
 
         /// <summary>
@@ -481,6 +487,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SecurityLogin> Logins { get; set; } = new List<SecurityLogin>();
+        /// <summary>
+        /// Serialize Logins only if not empty
+        /// </summary>
         public bool ShouldSerializeLogins() { return Logins.Count > 0; }
 
         /// <summary>

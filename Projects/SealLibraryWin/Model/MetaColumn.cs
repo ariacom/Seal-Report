@@ -123,6 +123,9 @@ namespace Seal.Model
         /// Data type of the column
         /// </summary>
         protected ColumnType _type = ColumnType.Default;
+        /// <summary>
+        /// Data type of the column
+        /// </summary>
 #if WINDOWS
         [DefaultValue(ColumnType.Default)]
         [Category("Definition"), DisplayName("Data type"), Description("Data type of the column."), Id(3, 1)]
@@ -146,6 +149,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is aggregate"), Description("Must be True if the column contains SQL aggregate functions like SUM,MIN,MAX,COUNT,AVG."), Id(4, 1)]
 #endif
         public bool IsAggregate { get; set; } = false;
+        /// <summary>
+        /// True if IsAggregate must be serialized
+        /// </summary>
         public bool ShouldSerializeIsAggregate() { return IsAggregate; }
 
         /// <summary>
@@ -156,6 +162,9 @@ namespace Seal.Model
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string Description { get; set; }
+        /// <summary>
+        /// True if Description must be serialized
+        /// </summary>
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
@@ -178,8 +187,14 @@ namespace Seal.Model
             get { return string.IsNullOrEmpty(_tag) ? "" : _tag; }
             set { _tag = value; }
         }
+        /// <summary>
+        /// True if Tag must be serialized
+        /// </summary>
         public bool ShouldSerializeTag() { return !string.IsNullOrEmpty(_tag); }
 
+        /// <summary>
+        /// Display name of the column
+        /// </summary>
         protected string _displayName;
         /// <summary>
         /// Name used to display the column in the Report Designer tree view and in the report results
@@ -201,6 +216,9 @@ namespace Seal.Model
         [Category("Display"), DisplayName("Display order"), Description("The order number used to sort the column in the tree view (by table and by category)."), Id(4, 2)]
 #endif
         public int DisplayOrder { get; set; } = 1;
+        /// <summary>
+        /// True if DisplayOrder must be serialized
+        /// </summary>
         public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 1; }
 
         /// <summary>
@@ -230,6 +248,9 @@ namespace Seal.Model
 #endif
         public string CssStyle { get; set; } = null;
 
+        /// <summary>
+        /// Standard display format for numeric values
+        /// </summary>
         protected NumericStandardFormat _numericStandardFormat = NumericStandardFormat.Default;
         /// <summary>
         /// Standard display format applied to the element
@@ -254,8 +275,14 @@ namespace Seal.Model
                     _numericStandardFormat = value;
             }
         }
+        /// <summary>
+        /// True if NumericStandardFormat must be serialized
+        /// </summary>
         public bool ShouldSerializeNumericStandardFormat() { return _numericStandardFormat != NumericStandardFormat.Default; }
 
+        /// <summary>
+        /// Standard display format for date time values
+        /// </summary>
         protected DateTimeStandardFormat _datetimeStandardFormat = DateTimeStandardFormat.Default;
         /// <summary>
         /// Standard display format applied to the element
@@ -280,8 +307,14 @@ namespace Seal.Model
                     _datetimeStandardFormat = value;
             }
         }
+        /// <summary>
+        /// True if DateTimeStandardFormat must be serialized
+        /// </summary>
         public bool ShouldSerializeDateTimeStandardFormat() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
 
+        /// <summary>
+        /// Display format of the column values
+        /// </summary>
         protected string _format = "";
         /// <summary>
         /// If not empty, specify the format of the elements values displayed in the result tables (.Net Format Strings)
@@ -300,6 +333,9 @@ namespace Seal.Model
                 _format = value;
             }
         }
+        /// <summary>
+        /// True if Format must be serialized
+        /// </summary>
         public bool ShouldSerializeFormat() { return !string.IsNullOrEmpty(_format); }
 
         /// <summary>
@@ -368,6 +404,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// GUID of the enumerated list of the column
+        /// </summary>
         protected string _enumGUID;
         /// <summary>
         /// If defined, a list of values is proposed when the column is used for restrictions
@@ -382,6 +421,9 @@ namespace Seal.Model
             get { return _enumGUID; }
             set { _enumGUID = value; }
         }
+        /// <summary>
+        /// True if EnumGUID must be serialized
+        /// </summary>
         public bool ShouldSerializeEnumGUID() { return !string.IsNullOrEmpty(_enumGUID); }
 
         /// <summary>
@@ -410,6 +452,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Current MetaSource of the column
+        /// </summary>
         protected MetaSource _source;
 
         /// <summary>
@@ -511,6 +556,9 @@ namespace Seal.Model
         [Editor(typeof(ColumnsSelector), typeof(UITypeEditor))]
 #endif
         public List<string> DrillChildren { get; set; } = new List<string>();
+        /// <summary>
+        /// True if DrillChildren must be serialized
+        /// </summary>
         public bool ShouldSerializeDrillChildren() { return DrillChildren.Count > 0; }
 
         /// <summary>
@@ -521,6 +569,9 @@ namespace Seal.Model
         [Category("Drill"), DisplayName("Drill Up only if drill down occured."), Description("If true, Drill Up is activated only if a drill down occured."), Id(2, 4)]
 #endif
         public bool DrillUpOnlyIfDD { get; set; } = false;
+        /// <summary>
+        /// True if DrillUpOnlyIfDD must be serialized
+        /// </summary>
         public bool ShouldSerializeDrillUpOnlyIfDD() { return DrillUpOnlyIfDD; }
 
         /// <summary>
@@ -543,6 +594,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<SubReport> SubReports { get; set; } = new List<SubReport>();
+        /// <summary>
+        /// True if SubReports must be serialized
+        /// </summary>
         public bool ShouldSerializeSubReports() { return SubReports.Count > 0; }
 
         /// <summary>

@@ -36,11 +36,29 @@ namespace Seal.Model
     /// </summary>
     public class OutputEmailDevice : OutputDevice
     {
+        /// <summary>
+        /// Name of the security key used to encrypt the SMTP password
+        /// </summary>
         public const string PasswordKeyName = "Output Email Device Password";
+        /// <summary>
+        /// Default value of the security key used to encrypt the SMTP password
+        /// </summary>
         public const string PasswordKeyValue = "qdeferlwien?,édl+25.()à,";
+        /// <summary>
+        /// Name of the security key used to encrypt the SendGrid key
+        /// </summary>
         public const string SendGridKeyName = "Output Email Device SendGrid";
+        /// <summary>
+        /// Default value of the security key used to encrypt the SendGrid key
+        /// </summary>
         public const string SendGridKeyValue = "1d2fDFsdsdien32345,sadnD";
+        /// <summary>
+        /// Name of the security key used to encrypt the Azure secret
+        /// </summary>
         public const string AzureSecretKeyName = "Output Email Device Azure Secret";
+        /// <summary>
+        /// Default value of the security key used to encrypt the Azure secret
+        /// </summary>
         public const string AzureSecretKeyValue = "56asdsddsdien;:eweewwcf9";
 
         /// <summary>
@@ -48,16 +66,49 @@ namespace Seal.Model
         /// </summary>
         public class EmailDefinition
         {
+            /// <summary>
+            /// Current OutputEmailDevice
+            /// </summary>
             public OutputEmailDevice device;
+            /// <summary>
+            /// Email address of the sender
+            /// </summary>
             public string sender;
+            /// <summary>
+            /// Email addresses of the recipients
+            /// </summary>
             public string to;
+            /// <summary>
+            /// Email addresses used for the reply
+            /// </summary>
             public string replyTo;
+            /// <summary>
+            /// Email addresses in copy (CC)
+            /// </summary>
             public string cc;
+            /// <summary>
+            /// Email addresses in blind copy (BCC)
+            /// </summary>
             public string bcc;
+            /// <summary>
+            /// Subject of the email
+            /// </summary>
             public string subject;
+            /// <summary>
+            /// If true, the body is in HTML format
+            /// </summary>
             public bool isHtmlBody;
+            /// <summary>
+            /// Body of the email
+            /// </summary>
             public string body;
+            /// <summary>
+            /// Path of the file to attach
+            /// </summary>
             public string attachPath;
+            /// <summary>
+            /// Name of the attached file
+            /// </summary>
             public string attachName;
         }
 
@@ -425,6 +476,9 @@ namespace Seal.Model
 }
 ";
 
+        /// <summary>
+        /// Returns the processing script template of the device
+        /// </summary>
         override public string GetProcessingScriptTemplate()
         {
             return ProcessingScriptTemplate;

@@ -6,6 +6,10 @@ using OpenAI.Chat;
 
 namespace Seal.AI
 {
+    /// <summary>
+    /// AI provider implementation for Azure OpenAI, using the Azure OpenAI SDK client
+    /// with the model name as the deployment.
+    /// </summary>
     public class AzureProvider : AIProvider
     {
         private AzureOpenAIClient _azureClient;

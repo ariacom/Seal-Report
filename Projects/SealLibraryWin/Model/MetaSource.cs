@@ -92,6 +92,9 @@ namespace Seal.Model
         /// List of MetaConnection
         /// </summary>
         public List<MetaConnection> Connections { get; set; } = new List<MetaConnection>();
+        /// <summary>
+        /// True if Connections must be serialized
+        /// </summary>
         public bool ShouldSerializeConnections() { return Connections.Count > 0; }
 
 
@@ -105,6 +108,9 @@ namespace Seal.Model
         public string Description { get; set; }
 
 
+        /// <summary>
+        /// GUID of the connection currently used for this data source
+        /// </summary>
         protected string _connectionGUID;
         /// <summary>
         /// The connection currently used for this data source
@@ -128,6 +134,9 @@ namespace Seal.Model
         [Category("General"), DisplayName("Is Default"), Description("If true, this source is used as default when a new model is created in a report."), Id(3, 1)]
 #endif
         public bool IsDefault { get; set; } = false;
+        /// <summary>
+        /// True if IsDefault must be serialized
+        /// </summary>
         public bool ShouldSerializeIsDefault() { return IsDefault; }
 
         /// <summary>
@@ -138,6 +147,9 @@ namespace Seal.Model
         [Category("General"), DisplayName("Store Connections in a dedicated file"), Description("If true, the connections are saved in a XML file located beside the Data Source file. This may be useful for deployment."), Id(4, 1)]
 #endif
         public bool ExternalConnections { get; set; } = false;
+        /// <summary>
+        /// True if ExternalConnections must be serialized
+        /// </summary>
         public bool ShouldSerializeExternalConnections() { return ExternalConnections; }
 
         /// <summary>
@@ -148,6 +160,9 @@ namespace Seal.Model
         [Editor(typeof(DataSourcesSelector), typeof(UITypeEditor))]
 #endif
         public List<string> DataSourceReferences { get; set; } = new List<string>();
+        /// <summary>
+        /// True if DataSourceReferences must be serialized
+        /// </summary>
         public bool ShouldSerializeDataSourceReferences() { return DataSourceReferences.Count > 0; }
 
         /// <summary>
@@ -158,6 +173,9 @@ namespace Seal.Model
         [Category("General"), DisplayName("Is LINQ"), Description("If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models."), Id(6, 1)]
 #endif
         public bool IsNoSQL { get; set; } = false;
+        /// <summary>
+        /// True if IsNoSQL must be serialized
+        /// </summary>
         public bool ShouldSerializeIsNoSQL() { return IsNoSQL; }
 
         /// <summary>
@@ -174,6 +192,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string InitScript { get; set; } = "";
+        /// <summary>
+        /// True if InitScript must be serialized
+        /// </summary>
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
         /// <summary>
@@ -184,6 +205,9 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string PreSQL { get; set; }
+        /// <summary>
+        /// True if PreSQL must be serialized
+        /// </summary>
         public bool ShouldSerializePreSQL() { return !string.IsNullOrEmpty(PreSQL); }
 
         /// <summary>
@@ -194,6 +218,9 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string PostSQL { get; set; }
+        /// <summary>
+        /// True if PostSQL must be serialized
+        /// </summary>
         public bool ShouldSerializePostSQL() { return !string.IsNullOrEmpty(PostSQL); }
 
         /// <summary>
@@ -204,12 +231,18 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Ignore Pre and Post SQL Errors"), Description("If true, errors occuring during the Pre or Post SQL statements are ignored and the execution continues."), Id(7, 4)]
 #endif
         public bool IgnorePrePostError { get; set; } = false;
+        /// <summary>
+        /// True if IgnorePrePostError must be serialized
+        /// </summary>
         public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
 
         /// <summary>
         /// Meta information that can be used for any purpose
         /// </summary>
         public List<StringPair> MetaInfo { get; set; } = new List<StringPair>();
+        /// <summary>
+        /// True if MetaInfo must be serialized
+        /// </summary>
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
 
         /// <summary>
@@ -1074,17 +1107,35 @@ WHERE m.type = 'table';
         }
 
         //Temporary variables to help for serialization...
+        /// <summary>
+        /// Temporary list of connections used for serialization
+        /// </summary>
         [XmlIgnore]
         public List<MetaConnection> TempConnections = new List<MetaConnection>();
+        /// <summary>
+        /// Temporary list of tables used for serialization
+        /// </summary>
         [XmlIgnore]
         public List<MetaTable> TempTables = new List<MetaTable>();
+        /// <summary>
+        /// Temporary list of table links used for serialization
+        /// </summary>
         [XmlIgnore]
         public List<MetaTableLink> TempLinks = new List<MetaTableLink>();
+        /// <summary>
+        /// Temporary list of joins used for serialization
+        /// </summary>
         [XmlIgnore]
         public List<MetaJoin> TempJoins = new List<MetaJoin>();
+        /// <summary>
+        /// Temporary list of enums used for serialization
+        /// </summary>
         [XmlIgnore]
         public List<MetaEnum> TempEnums = new List<MetaEnum>();
 
+        /// <summary>
+        /// Before the serialization, keep current references in the temporary lists and remove the objects that are not editable (objects coming from Data Source References)
+        /// </summary>
         public void SetToTempReferences()
         {
             TempConnections = Connections.ToList();
@@ -1099,6 +1150,9 @@ WHERE m.type = 'table';
             MetaData.Enums.RemoveAll(i => !i.IsEditable);
         }
 
+        /// <summary>
+        /// After the serialization, restore the references saved in the temporary lists
+        /// </summary>
         public void GetFromTempReferences()
         {
             Connections = TempConnections;

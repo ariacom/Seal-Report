@@ -590,6 +590,9 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        /// <summary>
+        /// True if ModelGUID must be serialized
+        /// </summary>
         public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
 
         bool _useModelName = true;
@@ -612,6 +615,9 @@ namespace Seal.Model
                 _useModelName = value;
             }
         }
+        /// <summary>
+        /// True if UseModelName must be serialized
+        /// </summary>
         public bool ShouldSerializeUseModelName() { return !_useModelName; }
 
 
@@ -619,8 +625,14 @@ namespace Seal.Model
         /// List of Restrictions GUID to display for a Restrictions view.
         /// </summary>
         public List<string> RestrictionsGUID { get; set; } = new List<string>();
+        /// <summary>
+        /// True if RestrictionsGUID must be serialized
+        /// </summary>
         public bool ShouldSerializeRestrictionsGUID() { return RestrictionsGUID.Count > 0; }
 
+        /// <summary>
+        /// List of restrictions to display for a Restrictions view
+        /// </summary>
         [XmlIgnore]
         public List<ReportRestriction> Restrictions
         {
@@ -668,6 +680,9 @@ namespace Seal.Model
         [TypeConverter(typeof(ReportViewConverter))]
 #endif
         public string ReferenceViewGUID { get; set; }
+        /// <summary>
+        /// True if ReferenceViewGUID must be serialized
+        /// </summary>
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }
 
         /// <summary>
@@ -678,6 +693,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is enabled"), Description("If false, the view is not parsed."), Id(9, 1)]
 #endif
         public bool Enabled { get; set; } = true;
+        /// <summary>
+        /// True if Enabled must be serialized
+        /// </summary>
         public bool ShouldSerializeEnabled() { return !Enabled; }
 
         /// <summary>
@@ -736,6 +754,9 @@ namespace Seal.Model
         /// Children of the view
         /// </summary>
         public List<ReportView> Views = new List<ReportView>();
+        /// <summary>
+        /// True if Views must be serialized
+        /// </summary>
         public bool ShouldSerializeViews() { return Views.Count > 0; }
 
 
@@ -775,6 +796,9 @@ namespace Seal.Model
                 _customTemplate = value;
             }
         }
+        /// <summary>
+        /// True if CustomTemplate must be serialized
+        /// </summary>
         public bool ShouldSerializeCustomTemplate() { return !string.IsNullOrEmpty(CustomTemplate); }
 
         /// <summary>
@@ -785,6 +809,9 @@ namespace Seal.Model
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
         public List<ReportViewPartialTemplate> PartialTemplates { get; set; } = new List<ReportViewPartialTemplate>();
+        /// <summary>
+        /// True if PartialTemplates must be serialized
+        /// </summary>
         public bool ShouldSerializePartialTemplates() { return PartialTemplates.Count > 0; }
 
 
@@ -810,6 +837,9 @@ namespace Seal.Model
         /// The view parameters
         /// </summary>
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        /// <summary>
+        /// True if Parameters must be serialized
+        /// </summary>
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
 
@@ -830,6 +860,9 @@ namespace Seal.Model
                 _cultureName = value;
             }
         }
+        /// <summary>
+        /// True if CultureName must be serialized
+        /// </summary>
         public bool ShouldSerializeCultureName() { return !string.IsNullOrEmpty(_cultureName); }
 
 #if WINDOWS
@@ -995,6 +1028,9 @@ namespace Seal.Model
             set { _excelRenderer = value; }
         }
 
+        /// <summary>
+        /// True if ExcelRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializeExcelRenderer()
         {
             var emptyRenderer = new ExcelRenderer();
@@ -1021,6 +1057,9 @@ namespace Seal.Model
             set { _PDFRenderer = value; }
         }
 
+        /// <summary>
+        /// True if PDFRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializePDFRenderer()
         {
             var emptyRenderer = new PDFRenderer();
@@ -1047,6 +1086,9 @@ namespace Seal.Model
             set { _HTML2PDFRenderer = value; }
         }
 
+        /// <summary>
+        /// True if HTML2PDFRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializeHTML2PDFRenderer()
         {
             var emptyRenderer = new HTML2PDFRenderer();
@@ -1073,6 +1115,9 @@ namespace Seal.Model
             set { _csvRenderer = value; }
         }
 
+        /// <summary>
+        /// True if CSVRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializeCSVRenderer()
         {
             return (new CSVRenderer()).Serialize() != CSVRenderer.Serialize();
@@ -1098,6 +1143,9 @@ namespace Seal.Model
             set { _textRenderer = value; }
         }
 
+        /// <summary>
+        /// True if TextRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializeTextRenderer()
         {
             return (new TextRenderer()).Serialize() != TextRenderer.Serialize();
@@ -1123,6 +1171,9 @@ namespace Seal.Model
             set { _XMLRenderer = value; }
         }
 
+        /// <summary>
+        /// True if XMLRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializeXMLRenderer()
         {
             return (new XMLRenderer()).Serialize() != XMLRenderer.Serialize();
@@ -1148,6 +1199,9 @@ namespace Seal.Model
             set { _JsonRenderer = value; }
         }
 
+        /// <summary>
+        /// True if JsonRenderer must be serialized
+        /// </summary>
         public bool ShouldSerializeJsonRenderer()
         {
             return (new JsonRenderer()).Serialize() != JsonRenderer.Serialize();

@@ -44,10 +44,25 @@ namespace Seal.Model
         , ITreeSort
 #endif
     {
+        /// <summary>
+        /// Special connection GUID value meaning that the connection of the parent task is used
+        /// </summary>
         public const string ParentTaskConnectionGUID = "5";
+        /// <summary>
+        /// Keyword replaced by the execution input of the task in the task parameters
+        /// </summary>
         public const string ExecInputKeyword = "%EXECINPUT%";
+        /// <summary>
+        /// Keyword replaced by the execution result of the parent task in the task parameters
+        /// </summary>
         public const string ParentExecResultKeyword = "%PARENTEXECRESULT%";
+        /// <summary>
+        /// Description of the keywords supported in a task parameter
+        /// </summary>
         public const string TranslatedParameterDescription = " The parameter can contain the '%PARENTEXECRESULT%' keyword to specify the result of the parent task, '%EXECINPUT% for an optional input set in the task (e.g. used in Loop).";
+        /// <summary>
+        /// Description of the keywords supported in a task parameter, including the repository path keyword
+        /// </summary>
         public const string TranslatedParameterDescriptionFull = " The parameter can contain the '%SEALREPOSITORY%' keyword to specify the repository path, '%PARENTEXECRESULT%' for the result of the parent task, '%EXECINPUT% for an optional input set in the task (e.g. used in Loop).";
 
 #if WINDOWS
@@ -148,6 +163,9 @@ namespace Seal.Model
         public string TemplateName { get; set; }
 
         private ReportTaskTemplate _taskTemplate = null;
+        /// <summary>
+        /// Current task template
+        /// </summary>
         [XmlIgnore]
         public ReportTaskTemplate TaskTemplate
         {
@@ -180,6 +198,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if Tasks must be serialized
+        /// </summary>
         public bool ShouldSerializeViews() { return Tasks.Count > 0; }
 
         /// <summary>
@@ -197,6 +218,9 @@ namespace Seal.Model
         /// List of Table Parameters
         /// </summary>
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        /// <summary>
+        /// True if Parameters must be serialized
+        /// </summary>
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
         /// <summary>
@@ -366,6 +390,9 @@ namespace Seal.Model
 #endif
         public string SourceGUID { get; set; }
 
+        /// <summary>
+        /// GUID of the connection used by the task
+        /// </summary>
         protected string _connectionGUID = ReportSource.DefaultReportConnectionGUID;
 
         /// <summary>
@@ -402,6 +429,9 @@ namespace Seal.Model
         [TypeConverter(typeof(ReportTaskConverter))]
 #endif
         public string ReferenceTaskGUID { get; set; }
+        /// <summary>
+        /// True if ReferenceTaskGUID must be serialized
+        /// </summary>
         public bool ShouldSerializeReferenceTaskGUID() { return !string.IsNullOrEmpty(ReferenceTaskGUID); }
 
         /// <summary>
@@ -426,6 +456,9 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Is enabled"), Description("If false, the task is ignored and not executed."), Id(6, 1)]
 #endif
         public bool Enabled { get; set; } = true;
+        /// <summary>
+        /// True if Enabled must be serialized
+        /// </summary>
         public bool ShouldSerializeEnabled() { return !Enabled; }
 
         /// <summary>
@@ -500,6 +533,9 @@ namespace Seal.Model
 #endif
         public string BodyScript { get; set; }
 
+        /// <summary>
+        /// Default body script template: executes the SQL, the script, then the children tasks
+        /// </summary>
         public const string BodyScriptTemplate = @"@{
     ReportTask task = Model;
 
@@ -519,6 +555,9 @@ namespace Seal.Model
 }
 ";
 
+        /// <summary>
+        /// Body script template that executes the SQL and the script without the children tasks
+        /// </summary>
         public const string NoChildrenBodyScriptTemplate = @"@{
     ReportTask task = Model;
 
@@ -898,6 +937,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Execute the SQL statements of the task
+        /// </summary>
         public void ExecuteSQL()
         {
             if (!string.IsNullOrEmpty(SQL))
@@ -921,6 +963,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Execute the Razor script of the task (or the default script of the template)
+        /// </summary>
         public void ExecuteScript()
         {
             var script = string.IsNullOrEmpty(Script) ? DefaultScript : Script;
@@ -930,6 +975,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Handle an exception got during the task execution: log the error and cancel the report if IgnoreError is false
+        /// </summary>
         public void HandleException(Exception ex)
         {
             var message = ex.Message + (ex.InnerException != null ? "\r\n" + ex.InnerException.Message : "");

@@ -23,22 +23,70 @@ namespace Seal.Model
     /// </summary>
     public class Parameter : RootComponent
     {
+        /// <summary>
+        /// Name of the view parameter defining the report result format
+        /// </summary>
         public const string ReportFormatParameter = "report_format";
+        /// <summary>
+        /// Name of the view parameter enabling the Drill navigation
+        /// </summary>
         public const string DrillEnabledParameter = "drill_enabled";
+        /// <summary>
+        /// Name of the view parameter to apply the Drill navigation to all elements involved in the hierarchy
+        /// </summary>
         public const string DrillAllParameter = "drill_all";
+        /// <summary>
+        /// Name of the view parameter enabling the Sub-Reports navigation
+        /// </summary>
         public const string SubReportsEnabledParameter = "subreports_enabled";
+        /// <summary>
+        /// Name of the view parameter enabling the server pagination for HTML data tables
+        /// </summary>
         public const string ServerPaginationParameter = "serverpagination_enabled";
+        /// <summary>
+        /// Name of the view parameter enabling the Results menu to export the report result
+        /// </summary>
         public const string EnableResultsMenuParameter = "resultsmenu_enabled";
+        /// <summary>
+        /// Name of the view parameter to force the report execution even if some restrictions are prompted
+        /// </summary>
         public const string ForceExecutionParameter = "force_execution";
+        /// <summary>
+        /// Name of the view parameter to refresh the view or model when a View Restriction triggers an execution
+        /// </summary>
         public const string ForceRefreshParameter = "force_refresh";
+        /// <summary>
+        /// Name of the view parameter to load and process all models defined in the report during the execution
+        /// </summary>
         public const string ForceModelsLoad = "force_models_load";
         //Shared chart-series parameter; the stored key keeps its historical "nvd3_" name for report compatibility
+        /// <summary>
+        /// Name of the view parameter to insert a point with a 0 value in a chart serie when the Y value is NULL
+        /// </summary>
         public const string ChartAddNullPointParameter = "nvd3_add_null_point";
+        /// <summary>
+        /// Name of the view parameter defining the list of column numbers to hide in the result table
+        /// </summary>
         public const string ColumnsHiddenParameter = "columns_hidden";
+        /// <summary>
+        /// Name of the view parameter to encode the CSV export file in UTF8
+        /// </summary>
         public const string CSVUtf8Parameter = "csv_utf8";
+        /// <summary>
+        /// Name of the view parameter enabling the autoscroll of the execution messages
+        /// </summary>
         public const string AutoScrollParameter = "messages_autoscroll";
+        /// <summary>
+        /// Name of the view parameter defining the Root View executed from the Restrictions View
+        /// </summary>
         public const string RestrictionsExecView = "restrictions_exec_view";
+        /// <summary>
+        /// Name of the view parameter defining the view executed when a drill navigation occurs
+        /// </summary>
         public const string NavigationView = "navigation_view";
+        /// <summary>
+        /// Name of the result option parameter defining the tabs to show in the report result
+        /// </summary>
         public const string ResultOptionNameTabs = "|tabs"; //Generic requires |
 
         /// <summary>
@@ -358,6 +406,9 @@ namespace Seal.Model
         /// </summary>
         Type _enumType = null;
 
+        /// <summary>
+        /// If set, the .Net enum type used to build the enum values of the parameter
+        /// </summary>
         public Type EnumType
         {
             get
@@ -461,6 +512,9 @@ namespace Seal.Model
             set { Value = value; }
         }
 
+        /// <summary>
+        /// List of values when the parameter value contains multiple enum values ('|' separated)
+        /// </summary>
         [XmlIgnore]
         public string[] MultipleEnumValues
         {

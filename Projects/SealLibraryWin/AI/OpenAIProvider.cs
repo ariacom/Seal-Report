@@ -10,6 +10,9 @@ using OpenAI.Chat;
 
 namespace Seal.AI
 {
+    /// <summary>
+    /// AI provider implementation for the OpenAI Chat Completions REST API.
+    /// </summary>
     public class OpenAIProvider : AIProvider
     {
         private static readonly HttpClient _httpClient = new()

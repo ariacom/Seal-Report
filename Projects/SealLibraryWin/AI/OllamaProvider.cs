@@ -9,6 +9,9 @@ using OpenAI.Chat;
 
 namespace Seal.AI
 {
+    /// <summary>
+    /// AI provider implementation for an Ollama server (local models) using its /api/chat REST API.
+    /// </summary>
     public class OllamaProvider : AIProvider
     {
         private static readonly HttpClient _httpClient = new()

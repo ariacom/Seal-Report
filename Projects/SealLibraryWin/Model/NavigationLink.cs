@@ -13,13 +13,34 @@ namespace Seal.Model
     /// </summary>
     public class NavigationLink
     {
+        /// <summary>
+        /// Prefix used for a hyperlink navigation
+        /// </summary>
         public const string HyperLinkPrefix = "HL:";
+        /// <summary>
+        /// Prefix used for a file download navigation
+        /// </summary>
         public const string FileDownloadPrefix = "FD:";
+        /// <summary>
+        /// Prefix used for a report script navigation
+        /// </summary>
         public const string ReportScriptPrefix = "RS:";
+        /// <summary>
+        /// Prefix used for a report execution navigation
+        /// </summary>
         public const string ReportExecutionPrefix = "RE:";
 
+        /// <summary>
+        /// Type of the navigation link
+        /// </summary>
         public NavigationType Type;
+        /// <summary>
+        /// Link href
+        /// </summary>
         public string Href = "";
+        /// <summary>
+        /// Link href prefixed by the navigation type
+        /// </summary>
         public string FullHref {
             get
             {
@@ -30,8 +51,17 @@ namespace Seal.Model
                 return Href;
             }
         }
+        /// <summary>
+        /// Text of the link displayed to the user
+        /// </summary>
         public string Text = "";
+        /// <summary>
+        /// Result cell from which the navigation is done
+        /// </summary>
         public ResultCell Cell;
+        /// <summary>
+        /// Current report
+        /// </summary>
         public Report Report;
 
         /// <summary>

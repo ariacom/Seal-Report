@@ -16,6 +16,9 @@ namespace Seal.Model
     /// </summary>
     public class CategoryFolder : RootComponent
     {
+        /// <summary>
+        /// Static instance of the helper
+        /// </summary>
         public static CategoryFolder Instance = new CategoryFolder();
 
 #if WINDOWS
@@ -49,12 +52,18 @@ namespace Seal.Model
 #endif
         public string Path { get; set; }
 
+        /// <summary>
+        /// Last information message
+        /// </summary>
 #if WINDOWS
         [DisplayName("Information"), Description("Last information"), Category("Helpers"), Id(2, 1)]
         [EditorAttribute(typeof(InformationUITypeEditor), typeof(UITypeEditor))]
 #endif
         public string Information { get; set; }
 
+        /// <summary>
+        /// Set the last information message and update the editor attributes
+        /// </summary>
         public void SetInformation(string information)
         {
             Information = information;

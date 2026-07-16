@@ -109,6 +109,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool AllowReportDownload { get; set; } = false;
+        /// <summary>
+        /// Serialize AllowReportDownload only if not the default value
+        /// </summary>
         public bool ShouldSerializeAllowReportDownload() { return AllowReportDownload; }
 
         /// <summary>
@@ -119,6 +122,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool AllowUpload { get; set; } = false;
+        /// <summary>
+        /// Serialize AllowUpload only if not the default value
+        /// </summary>
         public bool ShouldSerializeAllowUpload() { return AllowUpload; }
 
         /// <summary>
@@ -147,6 +153,9 @@ namespace Seal.Model
         [Editor(typeof(FontAwesomeIconEditor), typeof(System.Drawing.Design.UITypeEditor))]
 #endif
         public string Icon { get; set; }
+        /// <summary>
+        /// Serialize Icon only if not empty
+        /// </summary>
         public bool ShouldSerializeIcon() { return !string.IsNullOrEmpty(Icon); }
 
         /// <summary>

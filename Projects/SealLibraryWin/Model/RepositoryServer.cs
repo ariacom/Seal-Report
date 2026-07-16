@@ -22,8 +22,17 @@ namespace Seal.Model
 
 
 
+        /// <summary>
+        /// Path of the repository folder containing the view templates
+        /// </summary>
         public static string ViewsFolder = "";
+        /// <summary>
+        /// Path of the repository folder containing the table templates
+        /// </summary>
         public static string TableTemplatesFolder = "";
+        /// <summary>
+        /// Path of the repository folder containing the task templates
+        /// </summary>
         public static string TaskTemplatesFolder = "";
 
 

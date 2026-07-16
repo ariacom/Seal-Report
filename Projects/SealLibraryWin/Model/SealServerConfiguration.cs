@@ -32,10 +32,22 @@ namespace Seal.Model
     /// </summary>
     public class SealServerConfiguration : RootComponent
     {
+        /// <summary>
+        /// Name of the repository security key used to encrypt the application key values
+        /// </summary>
         public const string ApplicationKeysKeyName = "Application Keys";
+        /// <summary>
+        /// Default value of the repository security key used to encrypt the application key values
+        /// </summary>
         public const string ApplicationKeysKeyValue = "1*çéàèüwien42feäöü!???**";
 
+        /// <summary>
+        /// Name of the repository security key used to encrypt the scheduler password
+        /// </summary>
         public const string SchedulerPasswordKeyName = "Scheduler Password";
+        /// <summary>
+        /// Default value of the repository security key used to encrypt the scheduler password
+        /// </summary>
         public const string SchedulerPasswordKeyValue = "eko934dj$$$12sdffwrkdk))";
 
         /// <summary>
@@ -207,6 +219,9 @@ namespace Seal.Model
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> WebCultures { get; set; } = new List<string>();
+        /// <summary>
+        /// Xml serialization helper: serialize WebCultures only if not empty
+        /// </summary>
         public bool ShouldSerializeWebCultures() { return WebCultures.Count > 0; }
 
         /// <summary>
@@ -279,6 +294,9 @@ namespace Seal.Model
         [DefaultValue(true)]
 #endif
         public bool EnableRazorCache { get; set; } = true;
+        /// <summary>
+        /// Xml serialization helper: serialize EnableRazorCache only if not the default value
+        /// </summary>
         public bool ShouldSerializeEnableRazorCache() { return !EnableRazorCache; }
 
         /// <summary>
@@ -289,6 +307,9 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool EnableRazorScriptValidation { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize EnableRazorScriptValidation only if true
+        /// </summary>
         public bool ShouldSerializeEnableRazorScriptValidation() { return EnableRazorScriptValidation; }
 
         /// <summary>
@@ -299,6 +320,9 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string RazorForbiddenTokens { get; set; } = "";
+        /// <summary>
+        /// Xml serialization helper: serialize RazorForbiddenTokens only if not empty
+        /// </summary>
         public bool ShouldSerializeRazorForbiddenTokens() { return !string.IsNullOrEmpty(RazorForbiddenTokens); }
 
         /// <summary>
@@ -309,6 +333,9 @@ namespace Seal.Model
         [Editor(typeof(StringListEditor), typeof(UITypeEditor))]
 #endif
         public List<string> ReportFormats { get; set; } = new List<string>();
+        /// <summary>
+        /// Xml serialization helper: serialize ReportFormats only if not empty
+        /// </summary>
         public bool ShouldSerializeReportFormats() { return ReportFormats.Count > 0; }
 
 
@@ -354,6 +381,9 @@ namespace Seal.Model
         [DefaultValue(DefaultScheduleSequencerPath)]
 #endif
         public string ScheduleSequencerPath { get; set; } = DefaultScheduleSequencerPath;
+        /// <summary>
+        /// Xml serialization helper: serialize ScheduleSequencerPath only if not the default value
+        /// </summary>
         public bool ShouldSerializeScheduleSequencerPath() { return ScheduleSequencerPath != DefaultScheduleSequencerPath; }
 
 
@@ -373,12 +403,18 @@ namespace Seal.Model
         [DisplayName("Scheduler User Name"), Description("User name used to configure tasks in the Windows Task Scheduler. If empty, the SYSTEM user account is used."), Category("Report Scheduler Settings"), Id(5, 2)]
 #endif
         public string SchedulerUser { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize SchedulerUser only if a password is set
+        /// </summary>
         public bool ShouldSerializeSchedulerUser() { return !string.IsNullOrEmpty(SchedulerPassword); }
 
         /// <summary>
         /// Scheduler Password
         /// </summary>
         public string SchedulerPassword { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize SchedulerPassword only if not empty
+        /// </summary>
         public bool ShouldSerializeSchedulerPassword() { return !string.IsNullOrEmpty(SchedulerPassword); }
 
         /// <summary>
@@ -938,15 +974,24 @@ namespace Seal.Model
         /// </summary>
         public class KeyValue
         {
+            /// <summary>
+            /// Display name of the key
+            /// </summary>
             public override string ToString()
             {
                 return Name;
             }
 
+            /// <summary>
+            /// The name of the key
+            /// </summary>
 #if WINDOWS
             [Category("Definition"), DisplayName("Key name"), Description("The name of the key.")]
 #endif
             public string Name { get; set; }
+            /// <summary>
+            /// The value of the key
+            /// </summary>
 #if WINDOWS
             [Category("Definition"), DisplayName("Key value"), Description("The value of the key.")]
 #endif
@@ -959,19 +1004,31 @@ namespace Seal.Model
         /// </summary>
         public class FileReplacePattern
         {
+            /// <summary>
+            /// Display name of the pattern
+            /// </summary>
             public override string ToString()
             {
                 return FileName + " " + OldValue;
             }
 
+            /// <summary>
+            /// The name of the attached file
+            /// </summary>
 #if WINDOWS
             [Category("Pattern Definition"), DisplayName("\tFile Name"), Description("The name of the attached file.")]
 #endif
             public string FileName { get; set; } = "filename.css";
+            /// <summary>
+            /// The pattern to replace
+            /// </summary>
 #if WINDOWS
             [Category("Pattern Definition"), DisplayName("\tOld Value"), Description("The pattern to replace.")]
 #endif
             public string OldValue { get; set; }
+            /// <summary>
+            /// The new value
+            /// </summary>
 #if WINDOWS
             [Category("Pattern Definition"), DisplayName("New Value"), Description("The new value.")]
 #endif
