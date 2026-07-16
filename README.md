@@ -29,7 +29,7 @@ and published in a minute.
 * **Low TCO (total cost of ownership)**: Designed for minimal ongoing maintenance.
 
 ## Quick Start
-1. **Install**: Download the latest setup from <a href="https://sealreport.org" target=_blank>sealreport.org</a> or the <a href="https://github.com/ariacom/Seal-Report/releases" target=_blank>GitHub Releases</a>.
+1. **Install**: Download the latest setup from <a href="https://github.com/ariacom/Seal-Report/releases" target=_blank>GitHub Releases</a>.
 2. **Connect**: Use the Server Manager to declare a data source (OLE DB, ODBC, MS SQL Server, Oracle, MySQL, SQLite, PostgreSQL, MongoDB, Excel, CSV, ...).
 3. **Design**: Build your first report in the Report Designer — drag elements, add restrictions, choose charts — or let the AI assistant create it for you.
 4. **Publish**: Deploy the Web Report Server (Windows or Linux) and schedule your report outputs.
