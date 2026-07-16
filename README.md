@@ -37,16 +37,21 @@ and published in a minute.
 Step-by-step tutorials are available at <a href="https://sealreport.org" target=_blank>sealreport.org</a>.
 
 ## Screen Shots
+### AI Agents
+Ask an agent in plain language: it inspects your data sources, answers with the data, then builds and saves the report for you.
+
+![AI Agents](Docs/Images/ai-chat.png)
+
 ### HTML Report Result
-![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult4.png)
+![HTML Report Result](Docs/Images/report-result-general.png)
 
-![HTML Report Result](https://ariacom.com/ImagesGITHUB/reportResult3.png)
-
-### Report Designer
-![Report Designer](https://ariacom.com/ImagesGITHUB/reportDesigner2.png)
+![HTML Report Result](Docs/Images/report-result-category.png)
 
 ### Web Report Server
-![Web Report Server](https://ariacom.com/ImagesGITHUB/webServer3.png)
+![Web Report Server](Docs/Images/web-report-server.png)
+
+### Report Designer
+![Report Designer](Docs/Images/report-designer.png)
 
 ## System Requirements
 **For use:**
