@@ -21,6 +21,7 @@
 		<PackageId>SealReportLibrary.NETCore</PackageId>
 		<PackageReleaseNotes></PackageReleaseNotes>
 		<PackageIcon>sealNugetLogo.png</PackageIcon>
+		<PackageReadmeFile>README.md</PackageReadmeFile>
 		<PackageTags>reporting;sql;linq;tasks;pdf;excel;sqlserver;scheduler,business intelligence;charts;cross tab</PackageTags>
 		<Title>Seal Report Library</Title>
 		<RepositoryUrl>https://github.com/ariacom/Seal-Report</RepositoryUrl>
@@ -34,6 +35,7 @@
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
+		<GenerateDocumentationFile>true</GenerateDocumentationFile>
 		<NoWarn>1701;1702;CA1416;CS1591;NU5104</NoWarn>
 	</PropertyGroup>
 
@@ -45,6 +47,7 @@
 
 	<ItemGroup>
 		<None Include="LICENSE.txt" Pack="true" PackagePath="" />
+		<None Include="README.md" Pack="true" PackagePath="" />
 		<Compile Include="..\SealLibraryWin\AI\ICancelOperation.cs" Link="AI\ICancelOperation.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIProvider.cs" Link="AI\AIProvider.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIServerConfiguration.cs" Link="AI\AIServerConfiguration.cs" />
