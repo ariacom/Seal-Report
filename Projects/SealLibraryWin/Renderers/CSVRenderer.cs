@@ -4,6 +4,9 @@
 //
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating a CSV result of the report view
+    /// </summary>
     public class CSVRenderer : RootRenderer
     {
 

@@ -13,32 +13,76 @@ using AngleSharp.Dom;
 
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Current Excel objects (package, workbook, worksheet and current position) shared by the Excel renderer templates during the report execution. The instance is available from the report with Report.ExcelResult.
+    /// </summary>
     public class ExcelResult
     {
+        /// <summary>
+        /// Current report
+        /// </summary>
         public Report Report { get; }
 
+        /// <summary>
+        /// Creates the Excel result and assigns it to the report
+        /// </summary>
         public ExcelResult(Report report)
         {
             Report = report;
             report.ExcelResult = this;
         }
 
+        /// <summary>
+        /// Current EPPlus package generating the result file
+        /// </summary>
         public ExcelPackage Package;
+
+        /// <summary>
+        /// Current workbook of the package
+        /// </summary>
         public ExcelWorkbook Workbook;
+
+        /// <summary>
+        /// Current worksheet being generated
+        /// </summary>
         public ExcelWorksheet Worksheet;
 
+        /// <summary>
+        /// Current row index in the worksheet, starting at 1
+        /// </summary>
         public int CurrentRow = 1;
+
+        /// <summary>
+        /// Current column index in the worksheet, starting at 1
+        /// </summary>
         public int CurrentCol = 1;
 
+        /// <summary>
+        /// Name of the style applied to a standard cell value
+        /// </summary>
         public const string CellValueStyle = "CellValueStyle";
+
+        /// <summary>
+        /// Name of the style applied to a total cell value
+        /// </summary>
         public const string CellValueTotalStyle = "CellValueTotalStyle";
+
+        /// <summary>
+        /// Name of the style applied to a title cell
+        /// </summary>
         public const string CellTitleStyle = "CellTitleStyle";
 
+        /// <summary>
+        /// Set a ResultCell value at the current row and column
+        /// </summary>
         public void SetValue(ResultCell cell, bool elementFormat, bool useStyle)
         {
             SetValue(Worksheet.Cells[CurrentRow, CurrentCol], cell, elementFormat, useStyle);
         }
 
+        /// <summary>
+        /// Set a ResultCell value at a given row and column
+        /// </summary>
         public void SetValue(int row, int col, ResultCell cell, bool elementFormat, bool useStyle)
         {
             SetValue(Worksheet.Cells[row, col], cell, elementFormat, useStyle);
@@ -143,15 +187,13 @@ namespace Seal.Renderer
         }
     }
 
-    // =========================================================================
-    // HtmlToText — converts limited HTML to plain text with structure preserved.
-    // Supported tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>
-    // Inline tags (<b>, <em>) are stripped; their text content is kept.
-    // Block tags produce newlines; list items get bullet / number prefixes.
-    // Uses AngleSharp (already a project dependency) — no extra NuGet needed.
-    // Usable from any renderer (Excel, Text, …).
-    // =========================================================================
-
+    /// <summary>
+    /// Converts limited HTML to plain text with the structure preserved. Usable from any renderer (Excel, Text, ...).
+    /// </summary>
+    /// <remarks>
+    /// Supported tags: h4, p, ul, ol, li, b, em, br.
+    /// Inline tags (b, em) are stripped and their text content is kept, block tags produce newlines and list items get bullet or number prefixes.
+    /// </remarks>
     public static class HtmlToText
     {
         /// <summary>

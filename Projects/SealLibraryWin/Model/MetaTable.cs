@@ -146,6 +146,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Description must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
@@ -212,6 +213,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Parameters must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
         /// <summary>
@@ -472,6 +474,7 @@ namespace Seal.Model
         /// <summary>
         /// True if CacheDuration must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCacheDuration() { return CacheDuration != 0; }
 
 
@@ -503,6 +506,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DynamicColumns must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDynamicColumns() { return _dynamicColumns; }
 
         /// <summary>
@@ -516,6 +520,7 @@ namespace Seal.Model
         /// <summary>
         /// True if KeepColumnNames must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeKeepColumnNames() { return KeepColumnNames; }
 
         /// <summary>
@@ -552,6 +557,7 @@ namespace Seal.Model
         /// <summary>
         /// True if MustRefresh must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMustRefresh() { return MustRefresh; }
 
         /// <summary>
@@ -583,6 +589,7 @@ namespace Seal.Model
         /// <summary>
         /// True if IgnorePrePostError must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
 
         /// <summary>
@@ -601,6 +608,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Columns must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeColumns() { return Columns.Count > 0; }
 
         /// <summary>

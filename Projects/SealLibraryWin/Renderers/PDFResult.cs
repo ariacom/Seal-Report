@@ -13,18 +13,43 @@ using IHtmlElement = AngleSharp.Dom.IElement;
 
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Current PDF objects shared by the PDF renderer templates during the report execution. The instance is available from the report with Report.PDFResult. The QuestPDF objects are used by the PDF renderer, the Puppeteer objects by the HTML to PDF renderer.
+    /// </summary>
     public class PDFResult
     {
         //Quest PDF Objects
+
+        /// <summary>
+        /// Current QuestPDF document generating the result file
+        /// </summary>
         public QuestPDF.Infrastructure.IDocument Document;
+
+        /// <summary>
+        /// Current QuestPDF container being filled
+        /// </summary>
         public IContainer Container;
 
         //Puppeeter Objects
+
+        /// <summary>
+        /// Current Puppeteer browser used to convert the HTML result
+        /// </summary>
         public IBrowser Browser;
+
+        /// <summary>
+        /// Current Puppeteer page used to convert the HTML result
+        /// </summary>
         public IPage Page;
 
+        /// <summary>
+        /// Current report
+        /// </summary>
         public Report Report { get; }
 
+        /// <summary>
+        /// Creates the PDF result and assigns it to the report
+        /// </summary>
         public PDFResult(Report report)
         {
             Report = report;
@@ -33,19 +58,22 @@ namespace Seal.Renderer
     }
 
 
-    // =========================================================================
-    // HtmlToQuestPdf — renders limited HTML into a QuestPDF IContainer.
-    // Supported tags: <h4>, <p>, <ul>, <ol>, <li>, <b>, <em>, <br>
-    // Block tags map to column items; inline tags produce styled spans.
-    // Uses AngleSharp (already a project dependency) — no extra NuGet needed.
-    //
-    // Usage in a Razor template:
-    //   column.Item().PaddingTop(10).Element(c =>
-    //       HtmlToQuestPdf.Render(c, Report.ExecutionView.GetValue("report_summary")));
-    // =========================================================================
-
+    /// <summary>
+    /// Renders limited HTML into a QuestPDF container.
+    /// </summary>
+    /// <remarks>
+    /// Supported tags: h4, p, ul, ol, li, b, em, br. Block tags map to column items, inline tags produce styled spans.
+    /// <para>Usage in a Razor template:</para>
+    /// <code>
+    /// column.Item().PaddingTop(10).Element(c =>
+    ///     HtmlToQuestPdf.Render(c, Report.ExecutionView.GetValue("report_summary")));
+    /// </code>
+    /// </remarks>
     public static class HtmlToQuestPdf
     {
+        /// <summary>
+        /// Renders an HTML string into the container
+        /// </summary>
         public static void Render(IContainer container, string html)
         {
             if (string.IsNullOrWhiteSpace(html))
@@ -212,8 +240,14 @@ namespace Seal.Renderer
     }
 
 
+    /// <summary>
+    /// Extensions to render a ResultCell in a QuestPDF container
+    /// </summary>
     public static class CellExtensions
     {
+        /// <summary>
+        /// Aligns the container from the CSS class or style of the cell, numeric and date time values are aligned right by default
+        /// </summary>
         public static IContainer AlignCell(this IContainer container, ResultCell cell)
         {
             if (cell.Element != null)

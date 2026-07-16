@@ -114,6 +114,7 @@ namespace Seal.AI
         /// <summary>
         /// Do not serialize AIProviders inline when they are stored in a dedicated file
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAIProviders() { return !ExternalAIProviders; }
 
         List<AIToolConfiguration> _AITools = new List<AIToolConfiguration>();

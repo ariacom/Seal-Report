@@ -11,6 +11,9 @@ using System.Text;
 
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating a PDF result of the report view with QuestPDF, the document is built in the <see cref="PDFResult"/> of the report
+    /// </summary>
     public class PDFRenderer : RootRenderer
     {
 
@@ -51,6 +54,9 @@ namespace Seal.Renderer
     /// </summary>
     public static class SkiaSharpHelpers
     {
+        /// <summary>
+        /// Draws on the container with a SkiaSharp canvas, the result is inserted as a vectorial SVG image
+        /// </summary>
         public static void SkiaSharpCanvas(this IContainer container, Action<SKCanvas, Size> drawOnCanvas)
         {
             container.Svg(size =>
@@ -65,6 +71,9 @@ namespace Seal.Renderer
             });
         }
 
+        /// <summary>
+        /// Draws on the container with a SkiaSharp canvas, the result is inserted as a rasterized PNG image
+        /// </summary>
         public static void SkiaSharpRasterized(this IContainer container, Action<SKCanvas, Size> drawOnCanvas)
         {
             container.Image(payload =>

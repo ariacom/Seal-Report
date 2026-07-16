@@ -198,6 +198,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize ViewParameters only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeViewParameters() { return ViewParameters.Count > 0; }
 
 
@@ -567,6 +568,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Restrictions only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeRestrictions() { return _restrictions.Count > 0; }
 
         #region Helpers

@@ -108,6 +108,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DisplayName must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDisplayName() { return !string.IsNullOrEmpty(DisplayName); }
 
         private string _displayNameEx = null;
@@ -151,6 +152,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Guide must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeGuide() { return !string.IsNullOrEmpty(Guide); }
 
         /// <summary>
@@ -206,6 +208,7 @@ namespace Seal.Model
         /// <summary>
         /// True if InputValues must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeInputValues() { return InputValues.Count > 0; }
 
         /// <summary>
@@ -219,6 +222,7 @@ namespace Seal.Model
         /// <summary>
         /// True if PrintQueries must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePrintQueries() { return PrintQueries; }
 
         /// <summary>
@@ -234,6 +238,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Kind must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeKind() { return Kind != ReportKind.Report; }
 
         /// <summary>
@@ -250,6 +255,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Sources must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSources() { return Sources.Count > 0; }
 
         /// <summary>
@@ -260,6 +266,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Models must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeModels() { return Models.Count > 0; }
 
         /// <summary>
@@ -269,6 +276,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Outputs must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeOutputs() { return Outputs.Count > 0; }
 
         /// <summary>
@@ -278,6 +286,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Tasks must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTasks()
         {
             return Tasks.Count > 0;
@@ -330,6 +339,7 @@ namespace Seal.Model
         /// <summary>
         /// True if InitScript must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
         /// <summary>
@@ -344,6 +354,7 @@ namespace Seal.Model
         /// <summary>
         /// True if NavigationScript must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeNavigationScript() { return !string.IsNullOrEmpty(NavigationScript); }
 
 
@@ -376,6 +387,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Schedules must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSchedules() { return Schedules.Count > 0; }
 
         /// <summary>
@@ -410,6 +422,7 @@ namespace Seal.Model
         /// <summary>
         /// True if MetaInfo must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0 && MetaInfo.Exists(i => !string.IsNullOrEmpty(i.Value)); }
 
         /// <summary>

@@ -237,6 +237,10 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public RestrictionOperatorStyle OperatorStyle { get; set; } = RestrictionOperatorStyle.Visible;
+        /// <summary>
+        /// Xml serialization helper: serialize OperatorStyle only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeOperatorStyle() { return OperatorStyle != RestrictionOperatorStyle.Visible; }
 
 
@@ -670,6 +674,10 @@ namespace Seal.Model
         /// Enumerated values for the restriction
         /// </summary>
         public List<string> EnumValues { get; set; } = new List<string>();
+        /// <summary>
+        /// Xml serialization helper: serialize EnumValues only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnumValues() { return EnumValues.Count > 0; }
 
         /// <summary>
@@ -694,6 +702,10 @@ namespace Seal.Model
         [TypeConverter(typeof(RestrictionDateConverter))]
 #endif
         public DateTime Date1 { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Date1 only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDate1() { return Date1 != DateTime.MinValue; }
 
         /// <summary>
@@ -704,6 +716,10 @@ namespace Seal.Model
         [TypeConverter(typeof(RestrictionDateConverter))]
 #endif
         public DateTime Date2 { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Date2 only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDate2() { return Date2 != DateTime.MinValue; }
 
         /// <summary>
@@ -714,6 +730,10 @@ namespace Seal.Model
         [TypeConverter(typeof(RestrictionDateConverter))]
 #endif
         public DateTime Date3 { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Date3 only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDate3() { return Date3 != DateTime.MinValue; }
 
         /// <summary>
@@ -724,6 +744,10 @@ namespace Seal.Model
         [TypeConverter(typeof(RestrictionDateConverter))]
 #endif
         public DateTime Date4 { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Date4 only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDate4() { return Date4 != DateTime.MinValue; }
 
         const string DateKeywordDescription = "Date keyword can be used to specify relative date and time for the restriction value. From the chosen keyword, operations +/- are allowed with the following units: Y(Year), S(Semester), Q(Quarter), M(Month), D(Day), h(hour), m(minute), s(second)";
@@ -773,6 +797,10 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public RestrictionLayout EnumLayout { get; set; } = RestrictionLayout.SelectWithFilter;
+        /// <summary>
+        /// Xml serialization helper: serialize EnumLayout only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnumLayout() { return EnumLayout != RestrictionLayout.SelectWithFilter; }
 
         /// <summary>
@@ -784,6 +812,10 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public FirstEnumSelection FirstSelection { get; set; } = FirstEnumSelection.None;
+        /// <summary>
+        /// Xml serialization helper: serialize FirstSelection only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeFirstSelection() { return FirstSelection != FirstEnumSelection.None; }
 
         /// <summary>
@@ -794,6 +826,10 @@ namespace Seal.Model
         [Category("Restriction values"), DisplayName("Trigger execution"), Description("If true, the report is executed or updated when a value is selected."), Id(12, 3)]
 #endif
         public bool TriggerExecution { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize TriggerExecution only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTriggerExecution() { return TriggerExecution; }
 
         /// <summary>
@@ -829,6 +865,10 @@ namespace Seal.Model
                 UpdateEditorAttributes();
             }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize TypeRe only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTypeRe() { return _type != ColumnType.Default; }
 
         /// <summary>
@@ -854,6 +894,10 @@ namespace Seal.Model
                     _datetimeStandardFormat = value;
             }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize DateTimeStandardFormatRe only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDateTimeStandardFormatRe() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
 
         /// <summary>
@@ -899,6 +943,10 @@ namespace Seal.Model
                 _format = value;
             }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize FormatRe only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeFormatRe() { return !string.IsNullOrEmpty(_format); }
 
         /// <summary>
@@ -932,6 +980,10 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Is case sensitive"), Description("If True, the restriction text is case sensitive in the LINQ where clause."), Id(10, 4)]
 #endif
         public bool CaseSensitive { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize CaseSensitive only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCaseSensitive() { return CaseSensitive; }
 
         /// <summary>
@@ -943,6 +995,10 @@ namespace Seal.Model
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
         public RestrictionBlanksOptions BlankValues { get; set; } = RestrictionBlanksOptions.Default;
+        /// <summary>
+        /// Xml serialization helper: serialize BlankValues only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeBlankValues() { return BlankValues != RestrictionBlanksOptions.Default; }
 
 
@@ -954,6 +1010,10 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Allow modifications through API"), Description("If True, the restriction can be modified through the Web API, even if the restriction is not prompted."), Id(15, 4)]
 #endif
         public bool AllowAPI { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize AllowAPI only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAllowAPI() { return AllowAPI; }
 
 

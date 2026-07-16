@@ -4,6 +4,9 @@
 //
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating a Json result of the report view, the result is built in the <see cref="JsonResult"/> of the report
+    /// </summary>
     public class JsonRenderer : RootRenderer
     {
 

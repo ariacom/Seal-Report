@@ -691,6 +691,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize ErrorEmailSendMode only if an error email address is defined
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeErrorEmailSendMode() { return !string.IsNullOrEmpty(ErrorEmailTo); }
 
         /// <summary>

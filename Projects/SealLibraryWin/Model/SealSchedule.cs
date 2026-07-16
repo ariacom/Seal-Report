@@ -5,6 +5,7 @@
 using Seal.Helpers;
 using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.IO;
 using System.Linq;
 using System.Xml;
@@ -134,6 +135,10 @@ namespace Seal.Model
         /// Meta information that can be used for any purpose
         /// </summary>
         public List<string> MetaInfo { get; set; } = new List<string>();
+        /// <summary>
+        /// Xml serialization helper: serialize MetaInfo only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
 
         /// <summary>

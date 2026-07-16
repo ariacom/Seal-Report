@@ -4,6 +4,9 @@
 //
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating an XML result of the report view
+    /// </summary>
     public class XMLRenderer : RootRenderer
     {
 

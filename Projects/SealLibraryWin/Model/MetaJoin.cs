@@ -101,6 +101,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Description only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         private string _leftTableGUID;
@@ -194,6 +195,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Clause only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeClause() { return !string.IsNullOrEmpty(_clause); }
 
         private JoinType _joinType = JoinType.Inner;
@@ -216,6 +218,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize JoinType only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeJoinType() { return JoinType != JoinType.Inner; }
 
         /// <summary>
@@ -229,6 +232,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize IsBiDirectional only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsBiDirectional() { return !IsBiDirectional; }
 
         /// <summary>

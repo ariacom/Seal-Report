@@ -21,6 +21,9 @@ using DynamicTypeDescriptor;
 
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Base class of all renderers. A renderer generates the result of a report view in a given format (Excel, PDF, CSV, Json, Text, XML) using a renderer template.
+    /// </summary>
     public class RootRenderer : RootEditor
     {
 #if WINDOWS
@@ -53,6 +56,9 @@ namespace Seal.Renderer
         #endregion
 #endif
 
+        /// <summary>
+        /// Display name of the renderer in the editor
+        /// </summary>
         public override string ToString()
         {
             return "";
@@ -129,6 +135,9 @@ namespace Seal.Renderer
             }
         }
 
+        /// <summary>
+        /// Last modification date time, used to build the template compilation cache key
+        /// </summary>
         [XmlIgnore]
         public DateTime LastTemplateModification = DateTime.Now;
 
@@ -149,12 +158,20 @@ namespace Seal.Renderer
                 _customTemplate = value;
             }
         }
+        /// <summary>
+        /// Xml serialization helper: serialize CustomTemplate only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCustomTemplate() { return !string.IsNullOrEmpty(CustomTemplate); }
 
         /// <summary>
         /// The renderer parameters
         /// </summary>
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
+        /// <summary>
+        /// Xml serialization helper: serialize Parameters only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
 #if WINDOWS
@@ -189,6 +206,9 @@ namespace Seal.Renderer
             //Remove parameters identical to config
             Parameters.RemoveAll(i => i.Value == null || i.Value == i.ConfigValue);
         }
+        /// <summary>
+        /// Operations performed after the serialization
+        /// </summary>
         public void AfterSerialization()
         {
             Parameters = _tempParameters;

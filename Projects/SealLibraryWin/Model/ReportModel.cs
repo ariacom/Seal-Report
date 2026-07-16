@@ -190,6 +190,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize CommonRestrictions only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCommonRestrictions() { return CommonRestrictions.Count > 0; }
 
         /// <summary>
@@ -204,6 +205,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ReferenceModelGUID only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeReferenceModelGUID() { return !string.IsNullOrEmpty(ReferenceModelGUID); }
 
         /// <summary>
@@ -274,6 +276,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize SubModelsSetRestr only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSubModelsSetRestr() { return !_subModelsSetRestr; }
 
 
@@ -301,6 +304,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize SubModelsSetAggr only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSubModelsSetAggr() { return !_subModelsSetAggr; }
 
         /// <summary>
@@ -333,6 +337,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ShareResultTable only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeShareResultTable() { return !ShareResultTable; }
 
         /// <summary>
@@ -346,6 +351,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize PrintQuery only if true
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePrintQuery() { return PrintQuery; }
 
         /// <summary>
@@ -359,6 +365,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ShowFirstLine only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeShowFirstLine() { return !ShowFirstLine; }
 
         /// <summary>
@@ -393,6 +400,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Alias only for a SQL Model
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAlias() { return IsSQLModel; }
 
         /// <summary>
@@ -410,6 +418,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize KeepColNames only for a SQL Model
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeKeepColNames() { return IsSQLModel; }
 
         /// <summary>
@@ -423,6 +432,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize UseRawSQL only for a SQL Model
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeUseRawSQL() { return IsSQLModel; }
 
 
@@ -437,6 +447,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize UseSelectDistinct only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeUseSelectDistinct() { return !UseSelectDistinct; }
 
         /// <summary>
@@ -450,6 +461,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize MaxNumberOfRecords only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMaxNumberOfRecords() { return MaxNumberOfRecords != 0; }
 
         string _sqlSelect;
@@ -568,6 +580,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize CommandTimeout only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != -1; }
 
         /// <summary>
@@ -577,6 +590,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize JoinsToUse only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeJoinsToUse() { return JoinsToUse.Count > 0; }
 
         /// <summary>
@@ -635,6 +649,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize LINQSubModels only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeLINQSubModels() { return LINQSubModels != null && LINQSubModels.Count > 0; }
 
         /// <summary>
@@ -644,6 +659,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize LINQSubTables only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeLINQSubTables() { return LINQSubTables != null && LINQSubTables.Count > 0; }
 
         /// <summary>
@@ -815,6 +831,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Elements only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeElements() { return Elements.Count > 0; }
 
         /// <summary>
@@ -866,6 +883,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Restriction only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeRestriction() { return !string.IsNullOrEmpty(_restriction); }
 
         /// <summary>
@@ -875,6 +893,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Restrictions only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeRestrictions() { return Restrictions.Count > 0; }
 
 
@@ -891,6 +910,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize AggregateRestriction only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAggregateRestriction() { return !string.IsNullOrEmpty(_aggregateRestriction); }
 
         /// <summary>
@@ -900,6 +920,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize AggregateRestrictions only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAggregateRestrictions() { return AggregateRestrictions.Count > 0; }
 
         /// <summary>
@@ -912,6 +933,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Table only for a SQL Model
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTable() { return IsSQLModel; }
 
         /// <summary>
@@ -1008,6 +1030,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Sql only for a SQL Model
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSql() { return IsSQLModel; }
 
         /// <summary>

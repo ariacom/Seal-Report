@@ -222,6 +222,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize WebCultures only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeWebCultures() { return WebCultures.Count > 0; }
 
         /// <summary>
@@ -297,6 +298,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize EnableRazorCache only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnableRazorCache() { return !EnableRazorCache; }
 
         /// <summary>
@@ -310,6 +312,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize EnableRazorScriptValidation only if true
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnableRazorScriptValidation() { return EnableRazorScriptValidation; }
 
         /// <summary>
@@ -323,6 +326,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize RazorForbiddenTokens only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeRazorForbiddenTokens() { return !string.IsNullOrEmpty(RazorForbiddenTokens); }
 
         /// <summary>
@@ -336,6 +340,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ReportFormats only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeReportFormats() { return ReportFormats.Count > 0; }
 
 
@@ -384,6 +389,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ScheduleSequencerPath only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeScheduleSequencerPath() { return ScheduleSequencerPath != DefaultScheduleSequencerPath; }
 
 
@@ -406,6 +412,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize SchedulerUser only if a password is set
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSchedulerUser() { return !string.IsNullOrEmpty(SchedulerPassword); }
 
         /// <summary>
@@ -415,6 +422,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize SchedulerPassword only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSchedulerPassword() { return !string.IsNullOrEmpty(SchedulerPassword); }
 
         /// <summary>

@@ -93,6 +93,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Folders only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeFolders() { return Folders.Count > 0; }
 
         /// <summary>
@@ -107,6 +108,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize RepositoryFolders only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeRepositoryFolders() { return RepositoryFolders.Count > 0; }
 
         /// <summary>
@@ -130,6 +132,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize PersonalFolderReportDownload only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePersonalFolderReportDownload() { return PersonalFolderReportDownload; }
 
         /// <summary>
@@ -143,6 +146,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize PersonalFolderUpload only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePersonalFolderUpload() { return PersonalFolderUpload; }
 
         /// <summary>
@@ -210,6 +214,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize DataSourceGUIDs only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDataSourceGUIDs() { return DataSourceGUIDs.Count > 0; }
 
         /// <summary>
@@ -223,6 +228,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize OutputDeviceGUIDs only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeOutputDeviceGUIDs() { return OutputDeviceGUIDs.Count > 0; }
 
         /// <summary>
@@ -262,6 +268,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize AgentGUIDs only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAgentGUIDs() { return AgentGUIDs.Count > 0; }
 
         /// <summary>

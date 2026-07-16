@@ -95,6 +95,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Connections must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeConnections() { return Connections.Count > 0; }
 
 
@@ -137,6 +138,7 @@ namespace Seal.Model
         /// <summary>
         /// True if IsDefault must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsDefault() { return IsDefault; }
 
         /// <summary>
@@ -150,6 +152,7 @@ namespace Seal.Model
         /// <summary>
         /// True if ExternalConnections must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeExternalConnections() { return ExternalConnections; }
 
         /// <summary>
@@ -163,6 +166,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DataSourceReferences must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDataSourceReferences() { return DataSourceReferences.Count > 0; }
 
         /// <summary>
@@ -176,6 +180,7 @@ namespace Seal.Model
         /// <summary>
         /// True if IsNoSQL must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsNoSQL() { return IsNoSQL; }
 
         /// <summary>
@@ -195,6 +200,7 @@ namespace Seal.Model
         /// <summary>
         /// True if InitScript must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeInitScript() { return !string.IsNullOrEmpty(InitScript); }
 
         /// <summary>
@@ -208,6 +214,7 @@ namespace Seal.Model
         /// <summary>
         /// True if PreSQL must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePreSQL() { return !string.IsNullOrEmpty(PreSQL); }
 
         /// <summary>
@@ -221,6 +228,7 @@ namespace Seal.Model
         /// <summary>
         /// True if PostSQL must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePostSQL() { return !string.IsNullOrEmpty(PostSQL); }
 
         /// <summary>
@@ -234,6 +242,7 @@ namespace Seal.Model
         /// <summary>
         /// True if IgnorePrePostError must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIgnorePrePostError() { return IgnorePrePostError; }
 
         /// <summary>
@@ -243,6 +252,7 @@ namespace Seal.Model
         /// <summary>
         /// True if MetaInfo must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
 
         /// <summary>

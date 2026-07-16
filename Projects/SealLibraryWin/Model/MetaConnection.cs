@@ -127,6 +127,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Description only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
@@ -225,6 +226,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeConnectionString() { return !string.IsNullOrEmpty(ConnectionString); }
 
         /// <summary>
@@ -239,6 +241,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize OdbcConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeOdbcConnectionString() { return !string.IsNullOrEmpty(OdbcConnectionString); }
 
 
@@ -254,6 +257,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize MSSqlServerConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMSSqlServerConnectionString() { return !string.IsNullOrEmpty(MSSqlServerConnectionString); }
 
         /// <summary>
@@ -268,6 +272,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize MongoDBConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMongoDBConnectionString() { return !string.IsNullOrEmpty(MongoDBConnectionString); }
 
         /// <summary>
@@ -282,6 +287,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize MySQLConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMySQLConnectionString() { return !string.IsNullOrEmpty(MySQLConnectionString); }
 
         /// <summary>
@@ -296,6 +302,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize OracleConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeOracleConnectionString() { return !string.IsNullOrEmpty(OracleConnectionString); }
 
         /// <summary>
@@ -310,6 +317,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize PostgreSQLConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePostgreSQLConnectionString() { return !string.IsNullOrEmpty(PostgreSQLConnectionString); }
 
         /// <summary>
@@ -324,6 +332,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize SQLiteConnectionString only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSQLiteConnectionString() { return !string.IsNullOrEmpty(SQLiteConnectionString); }
 
         /// <summary>
@@ -338,6 +347,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize ConnectionScript only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeConnectionScript() { return !string.IsNullOrEmpty(ConnectionScript); }
 
         /// <summary>
@@ -351,6 +361,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize DateTimeFormat only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDateTimeFormat() { return DateTimeFormat != "yyyy-MM-dd HH:mm:ss"; }
 
         /// <summary>
@@ -364,6 +375,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize CommandTimeout only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != 0; }
 
         /// <summary>
@@ -513,6 +525,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize UserName only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeUserName() { return !string.IsNullOrEmpty(UserName); }
 
         /// <summary>
@@ -522,6 +535,7 @@ namespace Seal.Model
         /// <summary>
         /// Xml serialization helper: serialize Password only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(Password); }
 
         /// <summary>

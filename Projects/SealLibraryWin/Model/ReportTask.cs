@@ -201,6 +201,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Tasks must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeViews() { return Tasks.Count > 0; }
 
         /// <summary>
@@ -221,6 +222,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Parameters must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
         /// <summary>
@@ -432,6 +434,7 @@ namespace Seal.Model
         /// <summary>
         /// True if ReferenceTaskGUID must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeReferenceTaskGUID() { return !string.IsNullOrEmpty(ReferenceTaskGUID); }
 
         /// <summary>
@@ -459,6 +462,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Enabled must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnabled() { return !Enabled; }
 
         /// <summary>

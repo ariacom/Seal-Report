@@ -4,6 +4,9 @@
 //
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating a plain text result of the report view
+    /// </summary>
     public class TextRenderer : RootRenderer
     {
 

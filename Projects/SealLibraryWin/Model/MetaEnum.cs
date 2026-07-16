@@ -108,6 +108,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Description only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         private bool _isDynamic = false;
@@ -130,6 +131,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize IsDynamic only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsDynamic() { return IsDynamic; }
 
         private bool _isDbRefresh = false;
@@ -152,6 +154,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize IsDbRefresh only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsDbRefresh() { return IsDbRefresh; }
 
         /// <summary>
@@ -165,6 +168,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize ValuesPerConnection only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeValuesPerConnection() { return ValuesPerConnection; }
 
         /// <summary>
@@ -234,6 +238,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize UsePosition only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeUsePosition() { return UsePosition; }
 
         /// <summary>
@@ -247,6 +252,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Translate only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTranslate() { return Translate; }
 
         /// <summary>
@@ -260,6 +266,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize FilterChars only if positive
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeFilterChars() { return FilterChars > 0; }
 
         /// <summary>
@@ -315,6 +322,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Values only if not empty and the list has no dynamic display
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeValues() { return !HasDynamicDisplay && Values.Count > 0; }
 
 

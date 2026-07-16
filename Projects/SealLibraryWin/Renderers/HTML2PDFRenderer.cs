@@ -4,6 +4,9 @@
 //
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating a PDF result by converting the HTML result of the report view with a headless browser
+    /// </summary>
     public class HTML2PDFRenderer : RootRenderer
     {
 

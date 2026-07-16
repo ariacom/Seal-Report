@@ -896,6 +896,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize CssTitle only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCssTitle() { return CssTitle; }
 
 
@@ -910,6 +911,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize ForceAggregate only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeForceAggregate() { return ForceAggregate != YesNoDefault.Default; }
 
 
@@ -924,6 +926,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize SetNullToZero only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSetNullToZero() { return SetNullToZero; }
 
         /// <summary>
@@ -937,6 +940,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize ShowAllEnums only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeShowAllEnums() { return ShowAllEnums; }
 
         /// <summary>
@@ -950,6 +954,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize ContainsHtml only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
 
 
@@ -964,6 +969,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize InsertPosition only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeInsertPosition() { return InsertPosition != 0; }
 
 

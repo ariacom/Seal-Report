@@ -152,6 +152,7 @@ namespace Seal.Model
         /// <summary>
         /// True if IsAggregate must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsAggregate() { return IsAggregate; }
 
         /// <summary>
@@ -165,6 +166,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Description must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDescription() { return !string.IsNullOrEmpty(Description); }
 
         /// <summary>
@@ -190,6 +192,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Tag must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTag() { return !string.IsNullOrEmpty(_tag); }
 
         /// <summary>
@@ -219,6 +222,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DisplayOrder must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDisplayOrder() { return DisplayOrder != 1; }
 
         /// <summary>
@@ -278,6 +282,7 @@ namespace Seal.Model
         /// <summary>
         /// True if NumericStandardFormat must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeNumericStandardFormat() { return _numericStandardFormat != NumericStandardFormat.Default; }
 
         /// <summary>
@@ -310,6 +315,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DateTimeStandardFormat must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDateTimeStandardFormat() { return _datetimeStandardFormat != DateTimeStandardFormat.Default; }
 
         /// <summary>
@@ -336,6 +342,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Format must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeFormat() { return !string.IsNullOrEmpty(_format); }
 
         /// <summary>
@@ -424,6 +431,7 @@ namespace Seal.Model
         /// <summary>
         /// True if EnumGUID must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnumGUID() { return !string.IsNullOrEmpty(_enumGUID); }
 
         /// <summary>
@@ -559,6 +567,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DrillChildren must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDrillChildren() { return DrillChildren.Count > 0; }
 
         /// <summary>
@@ -572,6 +581,7 @@ namespace Seal.Model
         /// <summary>
         /// True if DrillUpOnlyIfDD must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeDrillUpOnlyIfDD() { return DrillUpOnlyIfDD; }
 
         /// <summary>
@@ -597,6 +607,7 @@ namespace Seal.Model
         /// <summary>
         /// True if SubReports must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeSubReports() { return SubReports.Count > 0; }
 
         /// <summary>

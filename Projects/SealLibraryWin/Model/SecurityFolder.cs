@@ -2,9 +2,9 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
+using System.ComponentModel;
 using System.Xml.Serialization;
 #if WINDOWS
-using System.ComponentModel;
 using DynamicTypeDescriptor;
 using Seal.Forms;
 #endif
@@ -112,6 +112,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize AllowReportDownload only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAllowReportDownload() { return AllowReportDownload; }
 
         /// <summary>
@@ -125,6 +126,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize AllowUpload only if not the default value
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAllowUpload() { return AllowUpload; }
 
         /// <summary>
@@ -156,6 +158,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Icon only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIcon() { return !string.IsNullOrEmpty(Icon); }
 
         /// <summary>

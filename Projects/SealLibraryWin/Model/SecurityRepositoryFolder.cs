@@ -2,11 +2,11 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
+using System.ComponentModel;
 using System.IO;
 using System.Xml.Serialization;
 using Seal.Helpers;
 #if WINDOWS
-using System.ComponentModel;
 using DynamicTypeDescriptor;
 using Seal.Forms;
 #endif
@@ -111,6 +111,10 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool AllowUpload { get; set; } = false;
+        /// <summary>
+        /// Xml serialization helper: serialize AllowUpload only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAllowUpload() { return AllowUpload; }
 
         /// <summary>
@@ -121,6 +125,10 @@ namespace Seal.Model
         [Editor(typeof(FontAwesomeIconEditor), typeof(System.Drawing.Design.UITypeEditor))]
 #endif
         public string Icon { get; set; }
+        /// <summary>
+        /// Xml serialization helper: serialize Icon only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIcon() { return !string.IsNullOrEmpty(Icon); }
 
         /// <summary>

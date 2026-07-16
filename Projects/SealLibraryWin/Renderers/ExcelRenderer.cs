@@ -4,6 +4,9 @@
 //
 namespace Seal.Renderer
 {
+    /// <summary>
+    /// Renderer generating an Excel result of the report view, the workbook is built in the <see cref="ExcelResult"/> of the report
+    /// </summary>
     public class ExcelRenderer : RootRenderer
     {
 

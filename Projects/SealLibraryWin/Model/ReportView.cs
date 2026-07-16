@@ -593,6 +593,7 @@ namespace Seal.Model
         /// <summary>
         /// True if ModelGUID must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeModelGUID() { return !string.IsNullOrEmpty(_modelGUID); }
 
         bool _useModelName = true;
@@ -618,6 +619,7 @@ namespace Seal.Model
         /// <summary>
         /// True if UseModelName must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeUseModelName() { return !_useModelName; }
 
 
@@ -628,6 +630,7 @@ namespace Seal.Model
         /// <summary>
         /// True if RestrictionsGUID must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeRestrictionsGUID() { return RestrictionsGUID.Count > 0; }
 
         /// <summary>
@@ -683,6 +686,7 @@ namespace Seal.Model
         /// <summary>
         /// True if ReferenceViewGUID must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeReferenceViewGUID() { return !string.IsNullOrEmpty(ReferenceViewGUID); }
 
         /// <summary>
@@ -696,6 +700,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Enabled must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnabled() { return !Enabled; }
 
         /// <summary>
@@ -757,6 +762,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Views must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeViews() { return Views.Count > 0; }
 
 
@@ -799,6 +805,7 @@ namespace Seal.Model
         /// <summary>
         /// True if CustomTemplate must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCustomTemplate() { return !string.IsNullOrEmpty(CustomTemplate); }
 
         /// <summary>
@@ -812,6 +819,7 @@ namespace Seal.Model
         /// <summary>
         /// True if PartialTemplates must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePartialTemplates() { return PartialTemplates.Count > 0; }
 
 
@@ -840,6 +848,7 @@ namespace Seal.Model
         /// <summary>
         /// True if Parameters must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
 
@@ -863,6 +872,7 @@ namespace Seal.Model
         /// <summary>
         /// True if CultureName must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCultureName() { return !string.IsNullOrEmpty(_cultureName); }
 
 #if WINDOWS
@@ -1031,6 +1041,7 @@ namespace Seal.Model
         /// <summary>
         /// True if ExcelRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeExcelRenderer()
         {
             var emptyRenderer = new ExcelRenderer();
@@ -1060,6 +1071,7 @@ namespace Seal.Model
         /// <summary>
         /// True if PDFRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePDFRenderer()
         {
             var emptyRenderer = new PDFRenderer();
@@ -1089,6 +1101,7 @@ namespace Seal.Model
         /// <summary>
         /// True if HTML2PDFRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeHTML2PDFRenderer()
         {
             var emptyRenderer = new HTML2PDFRenderer();
@@ -1118,6 +1131,7 @@ namespace Seal.Model
         /// <summary>
         /// True if CSVRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCSVRenderer()
         {
             return (new CSVRenderer()).Serialize() != CSVRenderer.Serialize();
@@ -1146,6 +1160,7 @@ namespace Seal.Model
         /// <summary>
         /// True if TextRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTextRenderer()
         {
             return (new TextRenderer()).Serialize() != TextRenderer.Serialize();
@@ -1174,6 +1189,7 @@ namespace Seal.Model
         /// <summary>
         /// True if XMLRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeXMLRenderer()
         {
             return (new XMLRenderer()).Serialize() != XMLRenderer.Serialize();
@@ -1202,6 +1218,7 @@ namespace Seal.Model
         /// <summary>
         /// True if JsonRenderer must be serialized
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeJsonRenderer()
         {
             return (new JsonRenderer()).Serialize() != JsonRenderer.Serialize();

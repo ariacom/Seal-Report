@@ -22,6 +22,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Tables only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTables() { return Tables.Count > 0; }
 
         /// <summary>
@@ -32,6 +33,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize TableLinks only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTableLinks() { return TableLinks.Count > 0; }
 
         /// <summary>
@@ -42,6 +44,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Joins only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeJoins() { return Joins.Count > 0; }
 
         /// <summary>
@@ -52,6 +55,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Enums only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeEnums() { return Enums.Count > 0; }
 
 

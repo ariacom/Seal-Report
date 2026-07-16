@@ -65,6 +65,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Password only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePassword() { return !string.IsNullOrEmpty(Password); }
 
         /// <summary>
@@ -125,6 +126,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize GroupNames only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeGroupNames() { return GroupNames.Count > 0; }
 
         /// <summary>
@@ -138,6 +140,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize GroupIds only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeGroupIds() { return GroupIds.Count > 0; }
     }
 }

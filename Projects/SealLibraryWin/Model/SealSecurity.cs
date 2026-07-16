@@ -438,6 +438,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Parameters only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeParameters() { return Parameters.Count > 0; }
 
         /// <summary>
@@ -477,6 +478,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Groups only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeGroups() { return Groups.Count > 0; }
 
         /// <summary>
@@ -490,6 +492,7 @@ namespace Seal.Model
         /// <summary>
         /// Serialize Logins only if not empty
         /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeLogins() { return Logins.Count > 0; }
 
         /// <summary>
