@@ -17,6 +17,9 @@ namespace Seal.Model
     /// </summary>
     public class RootEditor
     {
+        /// <summary>
+        /// Type descriptor used to edit the properties in the PropertyGrid, null if the editor is not initialized
+        /// </summary>
 #if WINDOWS
         protected DynamicCustomTypeDescriptor _dctd = null;
 #else

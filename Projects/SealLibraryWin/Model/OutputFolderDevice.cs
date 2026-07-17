@@ -19,6 +19,9 @@ namespace Seal.Model
         /// </summary>
         public static string DefaultGUID = "c428a6ba-061b-4a47-b9bc-f3f02442ab4b";
 
+        /// <summary>
+        /// Default processing script template of the device
+        /// </summary>
         override public string GetProcessingScriptTemplate()
         {
             return "";

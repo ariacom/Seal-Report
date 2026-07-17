@@ -18,7 +18,14 @@ namespace Seal.Model
     /// </summary>
     public class ReportSource : MetaSource
     {
+        /// <summary>
+        /// Identifier of the connection defined in the repository source
+        /// </summary>
         public const string DefaultRepositoryConnectionGUID = "1";
+
+        /// <summary>
+        /// Identifier of the connection defined in the report source
+        /// </summary>
         public const string DefaultReportConnectionGUID = "2";
 
 #if WINDOWS

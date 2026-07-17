@@ -9,7 +9,14 @@ namespace Seal.Model
     /// </summary>
     public class Navigation
     {
+        /// <summary>
+        /// The report execution of the navigation
+        /// </summary>
         public ReportExecution Execution;
+
+        /// <summary>
+        /// The link used to trigger the navigation
+        /// </summary>
         public NavigationLink Link;
     }
 }

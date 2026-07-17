@@ -5,6 +5,9 @@
 using System.Collections.Generic;
 using System.Linq;
 
+//These classes are excluded from the class documentation by the API filter of the Sandcastle project, so their members are not documented
+#pragma warning disable CS1591
+
 namespace Seal.Model
 {
     public class EditorColumnDefinition

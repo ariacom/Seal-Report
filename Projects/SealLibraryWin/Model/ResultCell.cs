@@ -565,6 +565,9 @@ namespace Seal.Model
 
         List<NavigationLink> _links;
 
+        /// <summary>
+        /// Navigation links of the cell, the links are initialized at the first access
+        /// </summary>
         public List<NavigationLink> Links
         {
             get

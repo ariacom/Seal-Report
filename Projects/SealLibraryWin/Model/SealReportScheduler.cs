@@ -21,6 +21,9 @@ namespace Seal.Model
     {
         Dictionary<string, SealSchedule> _schedules = null;
 
+        /// <summary>
+        /// Loads a schedule from its identifier, returns null if the schedule file does not exist
+        /// </summary>
         public static SealSchedule LoadSealSchedule(string scheduleGUID)
         {
             foreach (var file in Directory.GetFiles(Repository.Instance.SchedulesFolder, $"*{scheduleGUID}.xml"))
@@ -97,6 +100,9 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Loads the report of a schedule, returns null if the report file does not exist
+        /// </summary>
         public static Report GetScheduledReport(SealSchedule refSchedule)
         {
             Report report = null;

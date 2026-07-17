@@ -6713,6 +6713,16 @@
             A navigation for a given ReportExecution and NavigationLink
             </summary>
         </member>
+        <member name="F:Seal.Model.Navigation.Execution">
+            <summary>
+            The report execution of the navigation
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Navigation.Link">
+            <summary>
+            The link used to trigger the navigation
+            </summary>
+        </member>
         <member name="T:Seal.Model.NavigationContext">
             <summary>
             Class to perform the navigation (sub-report or drill)
@@ -7323,6 +7333,11 @@
         <member name="F:Seal.Model.OutputFolderDevice.DefaultGUID">
             <summary>
             Default device identifier
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputFolderDevice.GetProcessingScriptTemplate">
+            <summary>
+            Default processing script template of the device
             </summary>
         </member>
         <member name="M:Seal.Model.OutputFolderDevice.Create">
@@ -8954,6 +8969,11 @@
         <member name="T:Seal.Model.ReportComponent">
             <summary>
             Component of the report having a reference to a Report object
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportComponent._report">
+            <summary>
+            Field of the Report property
             </summary>
         </member>
         <member name="P:Seal.Model.ReportComponent.Report">
@@ -11619,6 +11639,16 @@
             A ReportSource is a MetaSource dedicated for report executions
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportSource.DefaultRepositoryConnectionGUID">
+            <summary>
+            Identifier of the connection defined in the repository source
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportSource.DefaultReportConnectionGUID">
+            <summary>
+            Identifier of the connection defined in the report source
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportSource.MetaSourceGUID">
             <summary>
             Unique identifier of the source
@@ -13955,6 +13985,11 @@
             Compares 2 cells
             </summary>
         </member>
+        <member name="P:Seal.Model.ResultCell.Links">
+            <summary>
+            Navigation links of the cell, the links are initialized at the first access
+            </summary>
+        </member>
         <member name="M:Seal.Model.ResultCell.GetNavigationLinks(Seal.Model.ReportView)">
             <summary>
             Return the list of navigation links in the View context
@@ -14526,9 +14561,19 @@
             Base class containing a GUID and a Name
             </summary>
         </member>
+        <member name="F:Seal.Model.RootComponent._GUID">
+            <summary>
+            Field of the GUID property
+            </summary>
+        </member>
         <member name="P:Seal.Model.RootComponent.GUID">
             <summary>
             The unique identifier
+            </summary>
+        </member>
+        <member name="F:Seal.Model.RootComponent._name">
+            <summary>
+            Field of the Name property
             </summary>
         </member>
         <member name="P:Seal.Model.RootComponent.Name">
@@ -14539,6 +14584,11 @@
         <member name="T:Seal.Model.RootEditor">
             <summary>
             Editor component to edit the properties in PropertyGrid
+            </summary>
+        </member>
+        <member name="F:Seal.Model.RootEditor._dctd">
+            <summary>
+            Type descriptor used to edit the properties in the PropertyGrid, null if the editor is not initialized
             </summary>
         </member>
         <member name="M:Seal.Model.RootEditor.InitEditor">
@@ -14576,6 +14626,11 @@
             Main Scheduler to execute the report schedules defined in a repository.
             </summary>
         </member>
+        <member name="M:Seal.Model.SealReportScheduler.LoadSealSchedule(System.String)">
+            <summary>
+            Loads a schedule from its identifier, returns null if the schedule file does not exist
+            </summary>
+        </member>
         <member name="F:Seal.Model.SealReportScheduler.Running">
             <summary>
             True if the scheduler is running
@@ -14584,6 +14639,11 @@
         <member name="P:Seal.Model.SealReportScheduler.Instance">
             <summary>
             A general static instance of the Scheduler.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealReportScheduler.GetScheduledReport(Seal.Model.SealSchedule)">
+            <summary>
+            Loads the report of a schedule, returns null if the report file does not exist
             </summary>
         </member>
         <member name="M:Seal.Model.SealReportScheduler.Run">
@@ -14729,6 +14789,11 @@
         <member name="P:Seal.Model.SealSchedule.MetaInfo">
             <summary>
             Meta information that can be used for any purpose
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.ShouldSerializeMetaInfo">
+            <summary>
+            Xml serialization helper: serialize MetaInfo only if not empty
             </summary>
         </member>
         <member name="M:Seal.Model.SealSchedule.LoadFromFile(System.String)">
@@ -15573,9 +15638,19 @@
             If true, the user can upload files into this folder. Files are always downloadable; reports are not shown in repository folders, so only upload is configurable here.
             </summary>
         </member>
+        <member name="M:Seal.Model.SecurityRepositoryFolder.ShouldSerializeAllowUpload">
+            <summary>
+            Xml serialization helper: serialize AllowUpload only if not the default value
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityRepositoryFolder.Icon">
             <summary>
             Optional icon used for this folder in the Web Report Server tree view. Enter a Font Awesome class (e.g. 'fa-solid fa-database'); legacy Glyphicon names are also accepted. If empty, the default repository folder icon is used.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityRepositoryFolder.ShouldSerializeIcon">
+            <summary>
+            Xml serialization helper: serialize Icon only if not empty
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityRepositoryFolder.IsDefined">
@@ -16771,9 +16846,19 @@
             The custom template text used instead of the template defined by the template name
             </summary>
         </member>
+        <member name="M:Seal.Renderer.RootRenderer.ShouldSerializeCustomTemplate">
+            <summary>
+            Xml serialization helper: serialize CustomTemplate only if not empty
+            </summary>
+        </member>
         <member name="P:Seal.Renderer.RootRenderer.Parameters">
             <summary>
             The renderer parameters
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.RootRenderer.ShouldSerializeParameters">
+            <summary>
+            Xml serialization helper: serialize Parameters only if not empty
             </summary>
         </member>
         <member name="M:Seal.Renderer.RootRenderer.BeforeSerialization">

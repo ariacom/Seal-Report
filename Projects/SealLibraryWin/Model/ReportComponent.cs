@@ -11,6 +11,9 @@ namespace Seal.Model
     /// </summary>
     public class ReportComponent : RootComponent
     {
+        /// <summary>
+        /// Field of the Report property
+        /// </summary>
         protected Report _report;
         /// <summary>
         /// The current report

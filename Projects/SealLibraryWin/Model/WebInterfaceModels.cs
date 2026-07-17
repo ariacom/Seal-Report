@@ -6,6 +6,9 @@ using System.Collections.Generic;
 using System.IO;
 using System.Linq;
 
+//The members of the Seal Web Interface classes are not documented yet
+#pragma warning disable CS1591
+
 namespace Seal.Model
 {
     /// <summary>

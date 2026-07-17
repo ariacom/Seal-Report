@@ -9,6 +9,9 @@ namespace Seal.Model
     /// </summary>
     public class RootComponent : RootEditor
     {
+        /// <summary>
+        /// Field of the GUID property
+        /// </summary>
         protected string _GUID;
         /// <summary>
         /// The unique identifier
@@ -20,6 +23,9 @@ namespace Seal.Model
         }
 
 
+        /// <summary>
+        /// Field of the Name property
+        /// </summary>
         protected string _name;
         /// <summary>
         /// The name
