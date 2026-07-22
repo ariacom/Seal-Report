@@ -61,6 +61,8 @@ namespace Seal.Model
                 //Sub-Report
                 if (newReport == null)
                 {
+                    //Guard against path traversal: the sub-report path comes from the navigation POST and must stay within the repository
+                    if (reportPath.Contains("..\\") || reportPath.Contains("../")) throw new Exception("Error: invalid path");
                     string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath));
                     if (!File.Exists(path)) path = rootReport.Repository.ReportsFolder + path;
                     newReport = Report.LoadFromFile(path, rootReport.Repository);

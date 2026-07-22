@@ -288,7 +288,10 @@ namespace SealWebServer.Controllers
                     else if (nav.StartsWith(NavigationLink.ReportExecutionPrefix)) //Report execution
                     {
                         Report report = execution.Report;
-                        string path = report.Repository.ReportsFolder + nav.Substring(3);
+                        //Guard against path traversal: the report path comes from the navigation POST and must stay within the Reports folder
+                        string navPath = nav.Substring(3);
+                        if (navPath.Contains("..\\") || navPath.Contains("../")) throw new Exception("Error: invalid path");
+                        string path = report.Repository.ReportsFolder + navPath;
                         var newReport = Report.LoadFromFile(path, report.Repository);
                         newReport.WebUrl = report.WebUrl;
                         execution = new ReportExecution() { Report = newReport };
