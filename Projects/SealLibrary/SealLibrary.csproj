@@ -213,7 +213,7 @@
 		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.7" />
 		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.7" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.7" />
-		<PackageReference Include="AngleSharp" Version="1.4.0" />
+		<PackageReference Include="AngleSharp" Version="1.5.0" />
 		<PackageReference Include="MailKit" Version="4.16.0" />
 		<PackageReference Include="MimeKit" Version="4.16.0" />
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
