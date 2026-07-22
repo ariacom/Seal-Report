@@ -55,11 +55,13 @@
 
     function formatResponse(text: string): string {
         if (!text) return '';
-        // Escape HTML to prevent XSS
+        // Escape HTML to prevent XSS (including quotes, so escaped text is safe in attribute contexts too)
         text = text
             .replace(/&/g, '&amp;')
             .replace(/</g, '&lt;')
-            .replace(/>/g, '&gt;');
+            .replace(/>/g, '&gt;')
+            .replace(/"/g, '&quot;')
+            .replace(/'/g, '&#39;');
 
         // Inline formatting applied within a single (already escaped) line.
         function inline(s: string): string {

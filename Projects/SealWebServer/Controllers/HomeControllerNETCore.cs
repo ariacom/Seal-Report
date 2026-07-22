@@ -141,7 +141,7 @@ namespace SealWebServer.Controllers
         }
         private void setCookie(string name, string value)
         {
-            var options = new CookieOptions() { Expires = DateTime.Now.AddYears(2), HttpOnly = true };
+            var options = new CookieOptions() { Expires = DateTime.Now.AddYears(2), HttpOnly = true, Secure = Request.IsHttps };
             Response.Cookies.Append(name, value == null ? "" : value, options);
         }
 

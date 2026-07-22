@@ -235,7 +235,8 @@ namespace Seal.Helpers
                 rsa.FromXmlString(publicKey);
 
                 byte[] plainTextBytes = Encoding.UTF8.GetBytes(textToEncrypt);
-                byte[] cipherTextBytes = rsa.Encrypt(plainTextBytes, false);
+                //Use OAEP padding (true) instead of the weaker PKCS#1 v1.5 (false); paired with RSADecrypt below
+                byte[] cipherTextBytes = rsa.Encrypt(plainTextBytes, true);
 
                 return Convert.ToBase64String(cipherTextBytes);
             }
@@ -251,7 +252,8 @@ namespace Seal.Helpers
                 rsa.FromXmlString(privateKey);
 
                 byte[] cipherTextBytes = Convert.FromBase64String(textToDecrypt);
-                byte[] decryptedBytes = rsa.Decrypt(cipherTextBytes, false);
+                //Use OAEP padding (true) to match RSAEncrypt above
+                byte[] decryptedBytes = rsa.Decrypt(cipherTextBytes, true);
 
                 return Encoding.UTF8.GetString(decryptedBytes);
             }
