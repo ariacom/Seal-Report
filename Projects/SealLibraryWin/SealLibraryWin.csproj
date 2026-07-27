@@ -7,9 +7,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>10.0.0.0</Version>
-		<FileVersion>10.0.0.0</FileVersion>
-		<AssemblyVersion>10.0.0.0</AssemblyVersion>
+		<Version>10.0.1.0</Version>
+		<FileVersion>10.0.1.0</FileVersion>
+		<AssemblyVersion>10.0.1.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -55,7 +55,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
 		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.10" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
 		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.0" />
 		<PackageReference Include="EPPlus">
@@ -95,11 +95,11 @@
 		</PackageReference>
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="Twilio" Version="7.14.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.7" />
-		<PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.10" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="System.Data.Odbc" Version="10.0.7" />
-		<PackageReference Include="System.Data.OleDb" Version="10.0.7" />
+		<PackageReference Include="System.Data.Odbc" Version="10.0.10" />
+		<PackageReference Include="System.Data.OleDb" Version="10.0.10" />
 		<PackageReference Include="AngleSharp" Version="1.5.0" />
 		<PackageReference Include="DiffPlex" Version="1.9.0" />
 		<PackageReference Include="DiffPlex.Wpf" Version="1.9.1" />

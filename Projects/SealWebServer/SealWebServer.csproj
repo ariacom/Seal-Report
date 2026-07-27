@@ -16,9 +16,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealWebServer</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>10.0.0.0</Version>
-		<FileVersion>10.0.0.0</FileVersion>
-		<AssemblyVersion>10.0.0.0</AssemblyVersion>
+		<Version>10.0.1.0</Version>
+		<FileVersion>10.0.1.0</FileVersion>
+		<AssemblyVersion>10.0.1.0</AssemblyVersion>
 		<Description>Seal Report Web Server</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -50,14 +50,14 @@
 
 	<ItemGroup>
 		<PackageReference Include="IdentityModel" Version="7.0.0" />
-		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.7" />
-		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.7" />
+		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.10" />
+		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.10" />
 		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
-		<PackageReference Include="System.Security.Permissions" Version="10.0.7" />
+		<PackageReference Include="System.Security.Permissions" Version="10.0.10" />
 	</ItemGroup>
 
 	<ItemGroup>
