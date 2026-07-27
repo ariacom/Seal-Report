@@ -33,7 +33,7 @@
     <BuildAssemblerVerbosity>OnlyWarningsAndErrors</BuildAssemblerVerbosity>
     <SaveComponentCacheCapacity>100</SaveComponentCacheCapacity>
     <HelpTitle>Seal Report Library</HelpTitle>
-    <HelpFileVersion>10.0.0.0</HelpFileVersion>
+    <HelpFileVersion>10.0.1.0</HelpFileVersion>
     <RootNamespaceContainer>True</RootNamespaceContainer>
     <NamespaceGrouping>False</NamespaceGrouping>
     <MaximumGroupParts>2</MaximumGroupParts>
