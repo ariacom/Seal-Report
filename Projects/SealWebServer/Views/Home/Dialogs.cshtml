@@ -158,13 +158,13 @@
                 <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
             </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <input class="form-control" style="display:inline;width:50%;" id="create-folder-name" placeholder="@repository.TranslateWeb("New folder name")" />
-                    <button id="folder-create" type="button" class="btn btn-primary">@repository.TranslateWeb("Create new folder")</button>
+                <div class="mb-3 d-flex flex-column flex-sm-row gap-2">
+                    <input class="form-control" id="create-folder-name" placeholder="@repository.TranslateWeb("New folder name")" />
+                    <button id="folder-create" type="button" class="btn btn-primary flex-shrink-0 text-nowrap">@repository.TranslateWeb("Create new folder")</button>
                 </div>
-                <div class="mb-3">
-                    <input class="form-control" style="display:inline;width:50%;" id="rename-folder-name" placeholder="@repository.TranslateWeb("New folder path")" />
-                    <button id="folder-rename" type="button" class="btn btn-primary">@repository.TranslateWeb("Rename or move folder")</button>
+                <div class="mb-3 d-flex flex-column flex-sm-row gap-2">
+                    <input class="form-control" id="rename-folder-name" placeholder="@repository.TranslateWeb("New folder path")" />
+                    <button id="folder-rename" type="button" class="btn btn-primary flex-shrink-0 text-nowrap">@repository.TranslateWeb("Rename or move folder")</button>
                 </div>
                 <div class="mb-3">
                     <button id="folder-delete" type="button" class="btn btn-primary">@repository.TranslateWeb("Delete folder")</button>

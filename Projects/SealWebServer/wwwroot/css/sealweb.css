@@ -846,6 +846,10 @@ table.dataTable {
     max-width: 800px;
 }
 
+#folder-dialog .modal-dialog {
+    max-width: 640px;
+}
+
 #profile-dialog .modal-content,
 #folder-dialog .modal-content {
     border-radius: 12px;
