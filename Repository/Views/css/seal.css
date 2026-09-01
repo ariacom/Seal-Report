@@ -129,6 +129,26 @@
     --bs-nav-pills-link-active-bg: #337ab7;
 }
 
+/* Checkboxes and radios: skin to the Seal primary. Native inputs (report list,
+   select-all, restrictions) rely on the browser accent color; BS5
+   .form-check-input hardcodes its checked bg and focus ring to the bright
+   #0d6efd, so re-skin those explicitly as well. */
+input[type="checkbox"],
+input[type="radio"] {
+    accent-color: #337ab7;
+}
+
+.form-check-input:checked,
+.form-check-input[type="checkbox"]:indeterminate {
+    background-color: #337ab7;
+    border-color: #337ab7;
+}
+
+.form-check-input:focus {
+    border-color: #99bcd9;
+    box-shadow: 0 0 0 0.25rem rgba(51, 122, 183, 0.25);
+}
+
 body {
     min-height: 400px;
 }
