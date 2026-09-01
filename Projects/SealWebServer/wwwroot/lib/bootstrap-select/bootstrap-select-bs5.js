@@ -25,6 +25,40 @@
             $.fn.selectpicker.Constructor.DEFAULTS.virtualScroll = false;
         }
 
+        // bootstrap-select 1.14-beta3: buildData() APPENDS to the picker's cached option data
+        // instead of replacing it, so "refresh" duplicates every option internally. Two
+        // symptoms: on a not-yet-initialised <select>, "refresh" runs buildData() twice
+        // (constructor + refresh) and doubles the menu; on an already-initialised picker,
+        // every "refresh" adds another copy of all options and the button label concatenates
+        // every entry still flagged selected (e.g. fillEnumSelect() in helpers.js refreshes a
+        // live dynamic-enum picker after refilling its options). Most Seal code uses the safe
+        // build-once pattern, but make "refresh" itself safe in both cases: initialise a fresh
+        // picker, or reset the cached data first so buildData() rebuilds it from the <select>
+        // instead of appending.
+        if ($.fn.selectpicker) {
+            var _origSelectpicker = $.fn.selectpicker;
+            var _patchedSelectpicker = function (option) {
+                if (option === "refresh") {
+                    return this.each(function () {
+                        var $el = $(this);
+                        var picker = $el.data("selectpicker");
+                        if (picker) {
+                            if (picker.selectpicker) {
+                                if (picker.selectpicker.main) picker.selectpicker.main.data = null;
+                                if (picker.selectpicker.search) picker.selectpicker.search.data = [];
+                                if (picker.selectpicker.current) picker.selectpicker.current.data = [];
+                            }
+                            _origSelectpicker.call($el, "refresh");
+                        }
+                        else _origSelectpicker.call($el);
+                    });
+                }
+                return _origSelectpicker.apply(this, arguments);
+            };
+            $.extend(_patchedSelectpicker, _origSelectpicker); // Constructor, defaults, noConflict
+            $.fn.selectpicker = _patchedSelectpicker;
+        }
+
         // bootstrap-select 1.14 + BS5: bootstrap-select tries to suppress Bootstrap's own
         // keyboard handler with $(document).off('keydown.bs.dropdown.data-api'). That jQuery
         // .off() cannot remove Bootstrap 5's *native* delegated listener, so BS5's
