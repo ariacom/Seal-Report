@@ -94,6 +94,8 @@ namespace SWIUtil {
     }
 
     export function ShowHideControl(control: JQuery, show: boolean) {
+        //d-none is required to override display utility classes (d-flex, d-block...) that use !important and defeat the inline style set by toggle()
+        control.toggleClass("d-none", !show);
         control.toggle(show);
     }
 
