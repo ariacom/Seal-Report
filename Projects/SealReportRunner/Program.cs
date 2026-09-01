@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
@@ -23,9 +23,10 @@ namespace SealReportRunner
     /// regression testing of views (e.g. chart partials): exit code 1 if any view fails to compile/render, and the
     /// printed Result file is a real, browser-openable HTML that can be inspected.
     ///
-    /// Usage: SealReportRunner &lt;report-file&gt; [/o &lt;output&gt;] [/v &lt;view&gt;] [--scheduler] [--out &lt;path&gt;] [--assert &lt;text&gt;]... [--quiet]
+    /// Usage: SealReportRunner &lt;report-file&gt; [/o &lt;output&gt;] [/v &lt;view&gt;] [--format &lt;format&gt;] [--scheduler] [--out &lt;path&gt;] [--assert &lt;text&gt;]... [--quiet]
     ///   /o &lt;output&gt;   Execute the given report Output (resolved by name or GUID). Renders through the output device. Takes precedence over /v and the default render.
     ///   /v &lt;view&gt;     Render the given report View (resolved by name or GUID) instead of the default view.
+    ///   --format &lt;fmt&gt;  Render the result in the given format (html, print, Excel, PDF, HTML2PDF, csv, Text, XML, Json) instead of HTML. A binary result (Excel, PDF) cannot be used with --assert.
     ///   --scheduler   Legacy mode: execute in TaskScheduler context and do NOT render the result views (fast, but does not validate views; the Result file is an empty stub).
     ///   --out &lt;path&gt;  Write the rendered HTML result to &lt;path&gt; (overwritten). Default: a unique file in the report generation folder (its path is printed).
     ///   --assert &lt;text&gt;  Fail (exit 1) unless the rendered HTML contains &lt;text&gt;. May be repeated; all must match.
@@ -62,6 +63,12 @@ namespace SealReportRunner
                 if (mws > 0) Process.GetCurrentProcess().MaxWorkingSet = new IntPtr(Convert.ToInt64(Math.Max(1, mws) * 1024 * 1024 * 1024));
 
                 if (!File.Exists(options.ReportFile)) throw new Exception($"Unable to find report file '{options.ReportFile}'.");
+
+                ReportFormat format = ReportFormat.html;
+                if (!string.IsNullOrEmpty(options.Format) && !Enum.TryParse(options.Format, true, out format))
+                {
+                    throw new Exception($"Invalid format '{options.Format}'. Expected one of: {string.Join(", ", Enum.GetNames(typeof(ReportFormat)))}.");
+                }
 
                 var repository = Repository.Instance;
                 var report = Report.LoadFromFile(options.ReportFile, repository);
@@ -119,7 +126,12 @@ namespace SealReportRunner
                 string resultPath = report.ResultFilePath;
                 if (renderView)
                 {
-                    resultPath = execution.GenerateHTMLResult(false);
+                    if (!string.IsNullOrEmpty(options.Format))
+                    {
+                        report.Format = format;
+                        resultPath = execution.GenerateResult(format);
+                    }
+                    else resultPath = execution.GenerateHTMLResult(false);
                     FlushMessages(report, printed, options.Quiet);
                     if (report.HasErrors)
                     {
@@ -212,6 +224,11 @@ namespace SealReportRunner
                     if (i + 1 >= args.Length) return false;
                     options.Asserts.Add(args[++i]);
                 }
+                else if (arg.Equals("--format", StringComparison.OrdinalIgnoreCase))
+                {
+                    if (i + 1 >= args.Length) return false;
+                    options.Format = args[++i];
+                }
                 else if (arg.Equals("--scheduler", StringComparison.OrdinalIgnoreCase))
                 {
                     options.Scheduler = true;
@@ -231,10 +248,11 @@ namespace SealReportRunner
 
         static void PrintUsage()
         {
-            Console.Error.WriteLine("Usage: SealReportRunner <report-file> [/o <output>] [/v <view>] [--scheduler] [--out <path>] [--assert <text>]... [--quiet]");
+            Console.Error.WriteLine("Usage: SealReportRunner <report-file> [/o <output>] [/v <view>] [--format <format>] [--scheduler] [--out <path>] [--assert <text>]... [--quiet]");
             Console.Error.WriteLine("  Default: execute the report and render the result view to a self-contained HTML file (validates all views).");
             Console.Error.WriteLine("  /o <output>     Execute a report Output (by name or GUID). Takes precedence over /v and the default render.");
             Console.Error.WriteLine("  /v <view>       Render the given view (by name or GUID) instead of the default view.");
+            Console.Error.WriteLine("  --format <fmt>  Render the result in the given format (html, print, Excel, PDF, HTML2PDF, csv, Text, XML, Json) instead of HTML.");
             Console.Error.WriteLine("  --scheduler     Legacy mode: TaskScheduler context, no result view rendering (Result file is an empty stub).");
             Console.Error.WriteLine("  --out <path>    Write the rendered HTML result to <path> (overwritten).");
             Console.Error.WriteLine("  --assert <text> Fail unless the rendered HTML contains <text>. May be repeated.");
@@ -247,6 +265,7 @@ namespace SealReportRunner
             public string OutputNameOrGUID;
             public string ViewNameOrGUID;
             public string OutPath;
+            public string Format;
             public bool Scheduler;
             public bool Quiet;
             public List<string> Asserts = new List<string>();

@@ -1,4 +1,4 @@
-//
+﻿//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
@@ -11,7 +11,7 @@ using System.Data.OleDb;
 using System.Linq;
 using System.Text;
 using Microsoft.Data.SqlClient;
-using OfficeOpenXml;
+using ClosedXML.Excel;
 using System.Collections.Generic;
 using Oracle.ManagedDataAccess.Client;
 using Npgsql;
@@ -355,18 +355,9 @@ namespace Seal.Helpers
         /// <summary>
         /// Returns true if a row of an Excel worksheet is empty
         /// </summary>
-        public bool IsRowEmpty(ExcelWorksheet worksheet, int row, int startCol, int colCount)
+        public bool IsRowEmpty(IXLWorksheet worksheet, int row, int startCol, int colCount)
         {
-            bool rowEmpty = true;
-            for (int i = startCol; i <= startCol + colCount; i++)
-            {
-                if (worksheet.Cells[row, i].Value != null)
-                {
-                    rowEmpty = false;
-                    break;
-                }
-            }
-            return rowEmpty;
+            return ExcelHelper.IsRowEmpty(worksheet, row, startCol, colCount);
         }
 
 

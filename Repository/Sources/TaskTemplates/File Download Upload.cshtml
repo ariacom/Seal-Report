@@ -112,7 +112,7 @@
     else if (protocol == ""SCP"")
     {
         //Refer to https://github.com/sshnet/SSH.NET
-        using (var scp = new ScpClient(hostName, port, userName, password))
+        using (var scp = new ScpClient(hostName, port, userName, password, RemotePathTransformation.ShellQuote))
         {
             scp.Connect();
             using (Stream fileStream = File.Create(localFile))

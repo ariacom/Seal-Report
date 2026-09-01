@@ -13,7 +13,7 @@ using System.Diagnostics;
 using System.Text.RegularExpressions;
 using System.Threading;
 using System.Data.Common;
-using OfficeOpenXml;
+using ClosedXML.Excel;
 using Microsoft.Data.SqlClient;
 
 namespace Seal.Helpers
@@ -273,9 +273,11 @@ namespace Seal.Helpers
                 if (string.IsNullOrEmpty(sourceTabName) || sourceTabName.Contains("*"))
                 {
                     //Load all tabs
-                    ExcelPackage package = ExcelHelper.GetExcelPackage(sourcePath);
-                    var workbook = package.Workbook;
-                    var tabs = (from ws in workbook.Worksheets select ws.Name);
+                    var tabs = new List<string>();
+                    using (var workbook = ExcelHelper.GetWorkbook(sourcePath))
+                    {
+                        tabs.AddRange(from ws in workbook.Worksheets select ws.Name);
+                    }
                     foreach (var tab in tabs)
                     {
                         if (
@@ -316,9 +318,11 @@ namespace Seal.Helpers
                 {
                     if (CheckForNewFileSource(loadFolder, f))
                     {
-                        ExcelPackage package = ExcelHelper.GetExcelPackage(f);
-                        var workbook = package.Workbook;
-                        var tabs = (from ws in workbook.Worksheets select ws.Name);
+                        var tabs = new List<string>();
+                        using (var workbook = ExcelHelper.GetWorkbook(f))
+                        {
+                            tabs.AddRange(from ws in workbook.Worksheets select ws.Name);
+                        }
                         foreach (var tab in tabs)
                         {
                             LoadTableFromExcel(f, tab, tab, useAllConnections);

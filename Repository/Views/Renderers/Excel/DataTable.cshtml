@@ -40,12 +40,12 @@
         {
             if (modelViewRenderer.GetBoolValue("auto_filters"))
             {
-                result.Worksheet.Cells[initialRow, initialCol, initialRow, initialCol + page.DataTable.ColumnCount - 1].AutoFilter = true;
+                result.Worksheet.Range(initialRow, initialCol, initialRow, initialCol + page.DataTable.ColumnCount - 1).SetAutoFilter();
             }
 
             if (modelViewRenderer.GetBoolValue("freeze_panes") && initialRow < 14)
             {
-                result.Worksheet.View.FreezePanes(initialRow + page.DataTable.BodyStartRow, 1);
+                result.Worksheet.SheetView.Freeze(initialRow + page.DataTable.BodyStartRow - 1, 0);
             }
         }
     }

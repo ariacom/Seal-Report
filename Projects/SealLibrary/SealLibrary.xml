@@ -1261,19 +1261,24 @@
             Returns a CSV value with its enclosing double quotes and escaping removed
             </summary>
         </member>
-        <member name="M:Seal.Helpers.ExcelHelper.IsRowEmpty(OfficeOpenXml.ExcelWorksheet,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Seal.Helpers.ExcelHelper.GetCellValue(ClosedXML.Excel.IXLCell)">
+            <summary>
+            Returns the value of a cell as a .NET object (string, double, DateTime, boolean or TimeSpan), or null if the cell is blank
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.IsRowEmpty(ClosedXML.Excel.IXLWorksheet,System.Int32,System.Int32,System.Int32)">
             <summary>
             Returns true if all cells of the worksheet row are empty in the given column range
             </summary>
         </member>
-        <member name="M:Seal.Helpers.ExcelHelper.GetExcelPackage(System.String)">
+        <member name="M:Seal.Helpers.ExcelHelper.GetWorkbook(System.String)">
             <summary>
-            Load an Excel Package
+            Load an Excel Workbook
             </summary>
         </member>
         <member name="M:Seal.Helpers.ExcelHelper.LoadDataTableFromExcel(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
+            Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic.
             </summary>
         </member>
         <member name="M:Seal.Helpers.ExcelHelper.LoadDataTableFromCSV(System.String,System.Nullable{System.Char},System.Text.Encoding,System.Boolean)">
@@ -2416,7 +2421,7 @@
             Load a DataTable from a connection using a SQL SELECT statement (an open connection may be provided)
             </summary>
         </member>
-        <member name="M:Seal.Helpers.TaskDatabaseHelper.IsRowEmpty(OfficeOpenXml.ExcelWorksheet,System.Int32,System.Int32,System.Int32)">
+        <member name="M:Seal.Helpers.TaskDatabaseHelper.IsRowEmpty(ClosedXML.Excel.IXLWorksheet,System.Int32,System.Int32,System.Int32)">
             <summary>
             Returns true if a row of an Excel worksheet is empty
             </summary>
@@ -16958,7 +16963,7 @@
         </member>
         <member name="T:Seal.Renderer.ExcelResult">
             <summary>
-            Current Excel objects (package, workbook, worksheet and current position) shared by the Excel renderer templates during the report execution. The instance is available from the report with Report.ExcelResult.
+            Current Excel objects (workbook, worksheet and current position) shared by the Excel renderer templates during the report execution. The instance is available from the report with Report.ExcelResult.
             </summary>
         </member>
         <member name="P:Seal.Renderer.ExcelResult.Report">
@@ -16971,14 +16976,9 @@
             Creates the Excel result and assigns it to the report
             </summary>
         </member>
-        <member name="F:Seal.Renderer.ExcelResult.Package">
-            <summary>
-            Current EPPlus package generating the result file
-            </summary>
-        </member>
         <member name="F:Seal.Renderer.ExcelResult.Workbook">
             <summary>
-            Current workbook of the package
+            Current ClosedXML workbook generating the result file
             </summary>
         </member>
         <member name="F:Seal.Renderer.ExcelResult.Worksheet">
@@ -17011,6 +17011,27 @@
             Name of the style applied to a title cell
             </summary>
         </member>
+        <member name="P:Seal.Renderer.ExcelResult.CurrentCell">
+            <summary>
+            Cell at the current row and column
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.ApplyStyle(ClosedXML.Excel.IXLStyle,System.String)">
+            <summary>
+            Apply one of the standard Seal styles (value, title or total) to a style object.
+            ClosedXML has no named styles, so the attributes are set directly on the cell or the range.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.ApplyStyle(ClosedXML.Excel.IXLCell,System.String)">
+            <summary>
+            Apply one of the standard Seal styles to a cell
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.ApplyStyle(ClosedXML.Excel.IXLRange,System.String)">
+            <summary>
+            Apply one of the standard Seal styles to a range
+            </summary>
+        </member>
         <member name="M:Seal.Renderer.ExcelResult.SetValue(Seal.Model.ResultCell,System.Boolean,System.Boolean)">
             <summary>
             Set a ResultCell value at the current row and column
@@ -17021,7 +17042,12 @@
             Set a ResultCell value at a given row and column
             </summary>
         </member>
-        <member name="M:Seal.Renderer.ExcelResult.SetValue(OfficeOpenXml.ExcelRange,Seal.Model.ResultCell,System.Boolean,System.Boolean)">
+        <member name="M:Seal.Renderer.ExcelResult.SetValue(ClosedXML.Excel.IXLRange,Seal.Model.ResultCell,System.Boolean,System.Boolean)">
+            <summary>
+            Set a ResultCell value in the first cell of a range (e.g. a merged range)
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.SetValue(ClosedXML.Excel.IXLCell,Seal.Model.ResultCell,System.Boolean,System.Boolean)">
             <summary>
             Set a ResultCell value in an Excel cell
             </summary>
@@ -17036,10 +17062,27 @@
             Add a Worksheet to the current Workbook
             </summary>
         </member>
-        <member name="M:Seal.Renderer.ExcelResult.SetHtmlValue(OfficeOpenXml.ExcelRange,System.String)">
+        <member name="M:Seal.Renderer.ExcelResult.SetHtmlValue(ClosedXML.Excel.IXLCell,System.String)">
             <summary>
-            Converts an HTML string to plain text and writes it into an EPPlus cell.
-            The cell's WrapText / alignment / merge must be set by the caller.
+            Converts an HTML string to plain text and writes it into a cell.
+            The cell WrapText / alignment / merge must be set by the caller.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.SetHtmlValue(ClosedXML.Excel.IXLRange,System.String)">
+            <summary>
+            Converts an HTML string to plain text and writes it into the first cell of a range (e.g. a merged range).
+            The range WrapText / alignment / merge must be set by the caller.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.GetPaperSize(System.String)">
+            <summary>
+            Returns the ClosedXML paper size matching a name. The names of the EPPlus 'ePaperSize' enumeration
+            stored in existing reports (e.g. 'A4', 'Letter') are mapped to their ClosedXML equivalent ('A4Paper', 'LetterPaper').
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.GetPageOrientation(System.String)">
+            <summary>
+            Returns the ClosedXML page orientation matching a name
             </summary>
         </member>
         <member name="T:Seal.Renderer.HtmlToText">

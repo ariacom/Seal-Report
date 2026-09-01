@@ -4,7 +4,7 @@
 //
 
 using Microsoft.VisualBasic.FileIO;
-using OfficeOpenXml;
+using ClosedXML.Excel;
 using System;
 using System.Data;
 using System.IO;
@@ -42,14 +42,34 @@ namespace Seal.Helpers
 
 
         /// <summary>
+        /// Returns the value of a cell as a .NET object (string, double, DateTime, boolean or TimeSpan), or null if the cell is blank
+        /// </summary>
+        static public object GetCellValue(IXLCell cell)
+        {
+            if (cell == null) return null;
+
+            var value = cell.Value;
+            switch (value.Type)
+            {
+                case XLDataType.Blank: return null;
+                case XLDataType.Error: return null;
+                case XLDataType.Number: return value.GetNumber();
+                case XLDataType.DateTime: return value.GetDateTime();
+                case XLDataType.Boolean: return value.GetBoolean();
+                case XLDataType.TimeSpan: return value.GetTimeSpan();
+                default: return value.GetText();
+            }
+        }
+
+        /// <summary>
         /// Returns true if all cells of the worksheet row are empty in the given column range
         /// </summary>
-        static public bool IsRowEmpty(ExcelWorksheet worksheet, int row, int startCol, int colCount)
+        static public bool IsRowEmpty(IXLWorksheet worksheet, int row, int startCol, int colCount)
         {
             bool rowEmpty = true;
             for (int i = startCol; i <= startCol + colCount; i++)
             {
-                if (worksheet.Cells[row, i].Value != null)
+                if (GetCellValue(worksheet.Cell(row, i)) != null)
                 {
                     rowEmpty = false;
                     break;
@@ -59,121 +79,126 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Load an Excel Package
+        /// Load an Excel Workbook
         /// </summary>
-        static public ExcelPackage GetExcelPackage(string excelPath)
+        static public XLWorkbook GetWorkbook(string excelPath)
         {
             if (!File.Exists(excelPath)) throw new Exception($"Invalid path: '{excelPath}'");
 
-            ExcelPackage package;
+            XLWorkbook workbook;
             try
             {
-                package = new ExcelPackage(new FileInfo(excelPath));
+                workbook = new XLWorkbook(excelPath);
             }
             catch
             {
                 string newPath = FileHelper.GetTempUniqueFileName(excelPath);
                 FileHelper.PurgeTempApplicationDirectory();
                 File.Copy(excelPath, newPath, true);
-                package = new ExcelPackage(new FileInfo(newPath));
+                workbook = new XLWorkbook(newPath);
             }
 
-            return package;
+            return workbook;
         }
 
         /// <summary>
-        /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic. 
+        /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic.
         /// </summary>
         static public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true)
         {
-            ExcelPackage package = GetExcelPackage(excelPath);
-            var workbook = package.Workbook;
-            ExcelWorksheet worksheet = null;
-            if (workbook.Worksheets.Count == 0) throw new Exception("No sheet in the workbook.");
-            if (!string.IsNullOrEmpty(tabName))
+            using (var workbook = GetWorkbook(excelPath))
             {
-                foreach (ExcelWorksheet ws in workbook.Worksheets)
+                IXLWorksheet worksheet = null;
+                if (workbook.Worksheets.Count == 0) throw new Exception("No sheet in the workbook.");
+                if (!string.IsNullOrEmpty(tabName))
                 {
-                    if (ws.Name.ToLower() == tabName.ToLower())
+                    foreach (IXLWorksheet ws in workbook.Worksheets)
                     {
-                        worksheet = ws;
-                        break;
-                    }
-                }
-                if (worksheet == null) throw new Exception("Unable to find tab name specified.");
-            }
-            else worksheet = workbook.Worksheets.First();
-
-            DataTable result = new DataTable();
-            result.TableName = worksheet.Name;
-
-            int colTitle = startCol;
-            int colCount = 0, index = startCol;
-            while ((endCol == 0 && worksheet.Cells[startRow, index + 1].Value != null) || colCount < endCol)
-            {
-                colCount++;
-                index++;
-            }
-
-            while ((endCol == 0 && (worksheet.Cells[startRow, colTitle].Value != null)) || colTitle <= endCol)
-            {
-                int rowTitle = startRow;
-                string colName = worksheet.Cells[startRow, colTitle].Address;
-                if (hasHeader)
-                {
-                    colName = worksheet.Cells[startRow, colTitle].Text;
-                    if (string.IsNullOrEmpty(colName)) colName = worksheet.Cells[startRow, colTitle].Value.ToString();
-                    rowTitle++;
-                }
-                else colName = colName.Replace("'", "").Replace("!", "").Replace(worksheet.Name, "");
-                //get the type
-                Type t = typeof(string);
-                if (worksheet.Cells[rowTitle, colTitle] != null && worksheet.Cells[rowTitle, colTitle].Value != null)
-                {
-                    t = worksheet.Cells[rowTitle, colTitle].Value.GetType();
-                    //check that the type is consistent
-                    if (t != typeof(string))
-                    {
-                        rowTitle++;
-                        while (!IsRowEmpty(worksheet, rowTitle, startCol, colCount))
+                        if (ws.Name.ToLower() == tabName.ToLower())
                         {
-                            if (worksheet.Cells[rowTitle, colTitle].Value != null && t != worksheet.Cells[rowTitle, colTitle].Value.GetType())
-                            {
-                                t = typeof(string);
-                                break;
-                            }
-                            rowTitle++;
+                            worksheet = ws;
+                            break;
                         }
                     }
+                    if (worksheet == null) throw new Exception("Unable to find tab name specified.");
                 }
-                result.Columns.Add(GetUniqueColumnName(result, colName), t);
-                colTitle++;
-            }
+                else worksheet = workbook.Worksheets.First();
 
-            //copy values
-            int rowValue = startRow;
-            if (hasHeader) rowValue++;
-            while ((endRow == 0 && !IsRowEmpty(worksheet, rowValue, startCol, result.Columns.Count)) || rowValue < endRow)
-            {
-                DataRow dr = result.Rows.Add();
-                for (int colValue = startCol; colValue < startCol + result.Columns.Count; colValue++)
+                DataTable result = new DataTable();
+                result.TableName = worksheet.Name;
+
+                int colTitle = startCol;
+                int colCount = 0, index = startCol;
+                while ((endCol == 0 && GetCellValue(worksheet.Cell(startRow, index + 1)) != null) || colCount < endCol)
                 {
-                    object val = null;
-                    if (worksheet.Cells[rowValue, colValue].Value != null)
-                    {
-                        string valText = worksheet.Cells[rowValue, colValue].Text;
-                        if (!string.IsNullOrEmpty(worksheet.Cells[rowValue, colValue].Text)) valText = worksheet.Cells[rowValue, colValue].Value.ToString();
-
-                        if (string.IsNullOrEmpty(valText)) val = worksheet.Cells[rowValue, colValue].Value;
-                        else val = valText;
-                    }
-                    if (val == null) val = DBNull.Value;
-                    dr[colValue - startCol] = val;
+                    colCount++;
+                    index++;
                 }
-                rowValue++;
-            }
 
-            return result;
+                while ((endCol == 0 && GetCellValue(worksheet.Cell(startRow, colTitle)) != null) || colTitle <= endCol)
+                {
+                    int rowTitle = startRow;
+                    string colName = worksheet.Cell(startRow, colTitle).Address.ToStringRelative();
+                    if (hasHeader)
+                    {
+                        colName = worksheet.Cell(startRow, colTitle).GetFormattedString();
+                        if (string.IsNullOrEmpty(colName)) colName = GetCellValue(worksheet.Cell(startRow, colTitle))?.ToString();
+                        rowTitle++;
+                    }
+                    else colName = colName.Replace("'", "").Replace("!", "").Replace(worksheet.Name, "");
+                    //get the type
+                    Type t = typeof(string);
+                    var titleValue = GetCellValue(worksheet.Cell(rowTitle, colTitle));
+                    if (titleValue != null)
+                    {
+                        t = titleValue.GetType();
+                        //check that the type is consistent
+                        if (t != typeof(string))
+                        {
+                            rowTitle++;
+                            while (!IsRowEmpty(worksheet, rowTitle, startCol, colCount))
+                            {
+                                var rowValueType = GetCellValue(worksheet.Cell(rowTitle, colTitle));
+                                if (rowValueType != null && t != rowValueType.GetType())
+                                {
+                                    t = typeof(string);
+                                    break;
+                                }
+                                rowTitle++;
+                            }
+                        }
+                    }
+                    result.Columns.Add(GetUniqueColumnName(result, colName), t);
+                    colTitle++;
+                }
+
+                //copy values
+                int rowValue = startRow;
+                if (hasHeader) rowValue++;
+                while ((endRow == 0 && !IsRowEmpty(worksheet, rowValue, startCol, result.Columns.Count)) || rowValue < endRow)
+                {
+                    DataRow dr = result.Rows.Add();
+                    for (int colValue = startCol; colValue < startCol + result.Columns.Count; colValue++)
+                    {
+                        object val = null;
+                        var xlCell = worksheet.Cell(rowValue, colValue);
+                        var cellValue = GetCellValue(xlCell);
+                        if (cellValue != null)
+                        {
+                            string valText = xlCell.GetFormattedString();
+                            if (!string.IsNullOrEmpty(valText)) valText = cellValue.ToString();
+
+                            if (string.IsNullOrEmpty(valText)) val = cellValue;
+                            else val = valText;
+                        }
+                        if (val == null) val = DBNull.Value;
+                        dr[colValue - startCol] = val;
+                    }
+                    rowValue++;
+                }
+
+                return result;
+            }
         }
 
 

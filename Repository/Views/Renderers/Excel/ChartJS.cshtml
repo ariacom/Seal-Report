@@ -1,4 +1,7 @@
-﻿@using OfficeOpenXml.Drawing.Chart
+@using ClosedXML.Excel
+@using ClosedXML.Excel.Drawings
+@using ScottPlot
+@using System.IO
 @using Seal.Model
 @using Seal.Renderer
 @{
@@ -24,33 +27,38 @@
             //Target sheet can be changed here
             var sheet = result.Worksheet;
 
-            int serieIndex = 1;
-            var firstSerie = page.Series.OrderBy(i => i.Element.YAxisType).First(); //Take primary axis first
+            var series = page.Series.OrderBy(i => i, new ResultSerieComparer()).ToList();
 
-            eChartType chartType = getChartType(firstSerie.Element, modelView);
-            ExcelChart chart = sheet.Drawings.AddChart(view.GetValue("chartjs_title") + "_" + Guid.NewGuid().ToString(), chartType);
-            chart.SetPosition(rowStart - 1, 0, colStart - 1, 0);
-            chart.SetSize(renderer.GetNumericValue("chart_width"), renderer.GetNumericValue("chart_height"));
-            chart.Title.Text = modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"));
-            rowStart = chart.To.Row + 1;
-            var currentChart = chart;
+            var chartWidth = renderer.GetNumericValue("chart_width");
+            var chartHeight = renderer.GetNumericValue("chart_height");
+            if (chartWidth <= 0) chartWidth = 600;
+            if (chartHeight <= 0) chartHeight = 400;
+
+            //ClosedXML cannot create native Excel charts: the chart is rendered with ScottPlot and inserted as a picture.
+            //The chart values are still written below the picture so that they remain usable in Excel.
+            var chartTitle = modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_title"));
+            var png = getChartImage(page, series, modelView, chartTitle, chartWidth, chartHeight);
+            if (png != null)
+            {
+                using (var stream = new MemoryStream(png))
+                {
+                    sheet.AddPicture(stream, XLPictureFormat.Png)
+                        .MoveTo(sheet.Cell(rowStart, colStart))
+                        .WithSize(chartWidth, chartHeight);
+                }
+                //Leave room for the picture (a default row is about 20 pixels high)
+                rowStart += (int)Math.Ceiling(chartHeight / 20.0) + 1;
+            }
+
+            int serieIndex = 1;
 
             //Series Y values
             int colIndex = 0;
             ResultCell lastValueCell = null;
-            foreach (var serie in page.Series.OrderBy(i => i, new ResultSerieComparer()))
+            foreach (var serie in series)
             {
-                var chartType2 = getChartType(serie.Element, modelView);
-                var axis2 = (serie.Element.YAxisType == AxisType.Secondary);
-                if (chartType != chartType2 || chart.UseSecondaryAxis != axis2)
-                {
-                    //New chart type
-                    currentChart = chart.PlotArea.ChartTypes.Add(chartType2);
-                    currentChart.UseSecondaryAxis = axis2;
-                }
-
                 colIndex = 0;
-                sheet.Cells[rowStart + serieIndex, colStart + colIndex].Value = serie.SerieDisplayName;
+                sheet.Cell(rowStart + serieIndex, colStart + colIndex).Value = serie.SerieDisplayName ?? "";
                 colIndex++;
                 foreach (var xDimensionKey in page.PrimaryXValues.Keys)
                 {
@@ -64,16 +72,13 @@
                     colIndex++;
                 }
 
-                var valuesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart + serieIndex, colStart + 1, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count);
-                var namesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart, colStart + 1, rowStart, colStart + page.PrimaryXValues.Keys.Count);
-                var chartSerie = currentChart.Series.Add(valuesRange, namesRange);
-                chartSerie.Header = serie.SerieDisplayName;
+                var valuesRange = sheet.Range(rowStart + serieIndex, colStart + 1, rowStart + serieIndex, colStart + page.PrimaryXValues.Keys.Count).RangeAddress.ToStringRelative();
 
                 if (renderer.GetBoolValue("show_totals") && lastValueCell != null)
                 {
                     //Add a total column
                     result.SetValue(rowStart + serieIndex, colStart + colIndex, lastValueCell, true, true);
-                    sheet.Cells[rowStart + serieIndex, colStart + colIndex].Formula = "SUM(" + valuesRange + ")";
+                    sheet.Cell(rowStart + serieIndex, colStart + colIndex).FormulaA1 = "SUM(" + valuesRange + ")";
                 }
 
                 serieIndex++;
@@ -90,23 +95,23 @@
                 }
                 else
                 { //Several values for an axis, we force the string without the format
-                    sheet.Cells[rowStart, colStart + colIndex].Value = page.PrimaryXValues[xValues];
+                    sheet.Cell(rowStart, colStart + colIndex).Value = page.PrimaryXValues[xValues]?.ToString() ?? "";
                 }
                 colIndex++;
             }
 
             if (renderer.GetBoolValue("show_totals"))
             {
-                sheet.Cells[rowStart, colStart + colIndex].Value = report.Translate("Total");
+                sheet.Cell(rowStart, colStart + colIndex).Value = report.Translate("Total");
                 if (lastValueCell != null && page.Series.Count > 1)
                 {
                     //Add total row
-                    sheet.Cells[rowStart + serieIndex, colStart].Value = report.Translate("Total");
+                    sheet.Cell(rowStart + serieIndex, colStart).Value = report.Translate("Total");
                     for (colIndex = 1; colIndex <= page.PrimaryXValues.Keys.Count + 1; colIndex++)
                     {
-                        var valuesRange = OfficeOpenXml.ExcelRange.GetAddress(rowStart + 1, colStart + colIndex, rowStart + serieIndex - 1, colStart + colIndex);
+                        var valuesRange = sheet.Range(rowStart + 1, colStart + colIndex, rowStart + serieIndex - 1, colStart + colIndex).RangeAddress.ToStringRelative();
                         result.SetValue(rowStart + serieIndex, colStart + colIndex, lastValueCell, true, true);
-                        sheet.Cells[rowStart + serieIndex, colStart + colIndex].Formula = "SUM(" + valuesRange + ")";
+                        sheet.Cell(rowStart + serieIndex, colStart + colIndex).FormulaA1 = "SUM(" + valuesRange + ")";
                     }
                 }
             }
@@ -118,9 +123,168 @@
 }
 
 @functions {
-    eChartType getChartType(ReportElement element, ReportView modelView)
+    /// Renders the page series with ScottPlot and returns the chart as a PNG image.
+    /// Each serie keeps its own chart kind and Y axis, as the Excel chart types did.
+    byte[] getChartImage(ResultPage page, List<ResultSerie> series, ReportView modelView, string title, int width, int height)
     {
-        //Create chart type and configuration from existing definitions for Excel chart
+        try
+        {
+            var plt = new Plot();
+            var palette = new ScottPlot.Palettes.Category10();
+
+            var xKeys = page.PrimaryXValues.Keys.ToList();
+            var xCount = xKeys.Count;
+            if (xCount == 0) return null;
+
+            //Use the same labels as the values table below the chart: the display value of the axis cell,
+            //so that the element format is applied (e.g. a date shown as '01.1997' and not '01.01.1997 00:00:00')
+            var xLabels = new List<string>();
+            foreach (var xKey in xKeys)
+            {
+                string label = null;
+                var xVals = xKey as ResultCell[];
+                if (xVals != null && xVals.Length == 1) label = xVals[0].DisplayValue;
+                if (string.IsNullOrEmpty(label)) label = page.PrimaryXValues[xKey]?.ToString();
+                xLabels.Add(label ?? "");
+            }
+
+            //Build the Y values of each serie, aligned on the X values
+            var seriesValues = new List<double[]>();
+            foreach (var serie in series)
+            {
+                var y = new double[xCount];
+                for (int i = 0; i < xCount; i++)
+                {
+                    var value = serie.Values.FirstOrDefault(j => j.XDimensionValues == xKeys[i]);
+                    y[i] = (value != null && value.Yvalue != null && value.Yvalue.DoubleValue != null) ? value.Yvalue.DoubleValue.Value : 0;
+                }
+                seriesValues.Add(y);
+            }
+
+            //One chart kind per serie
+            var kinds = (from s in series select getChartKind(s.Element, modelView)).ToList();
+            var legendItems = new List<LegendItem>();
+
+            //Pie: only when all the series are pies, the first one is displayed
+            if (kinds.All(i => i == "pie"))
+            {
+                var slices = new List<PieSlice>();
+                for (int i = 0; i < xCount; i++)
+                {
+                    slices.Add(new PieSlice() { Value = seriesValues[0][i], Label = xLabels[i], FillColor = palette.GetColor(i) });
+                }
+                plt.Layout.Frameless();
+                plt.HideGrid();
+                plt.Add.Pie(slices);
+                //Frameless() hides the title panel, re-enable it when a title is defined
+                if (!string.IsNullOrEmpty(title)) { plt.Title(title); plt.Axes.Title.IsVisible = true; }
+                return plt.GetImageBytes(width, height, ImageFormat.Png);
+            }
+
+            var ticks = new List<Tick>();
+            var xPositions = Enumerable.Range(0, xCount).Select(i => (double)i).ToArray();
+
+            //Bars are drawn first: they define the X position of each group
+            var barSeries = Enumerable.Range(0, series.Count).Where(i => kinds[i].StartsWith("bar")).ToList();
+            bool horizontal = barSeries.Count > 0 && kinds[barSeries[0]].StartsWith("barh");
+            bool stacked = barSeries.Count > 0 && kinds[barSeries[0]].EndsWith("stacked");
+
+            if (barSeries.Count > 0)
+            {
+                int index = 0;
+                for (int i = 0; i < xCount; i++)
+                {
+                    double valueBase = 0;
+                    foreach (var s in barSeries)
+                    {
+                        var color = palette.GetColor(s);
+                        Bar bar;
+                        if (stacked)
+                        {
+                            bar = new Bar() { Position = index, ValueBase = valueBase, Value = valueBase + seriesValues[s][i], FillColor = color };
+                            valueBase += seriesValues[s][i];
+                        }
+                        else
+                        {
+                            bar = new Bar() { Position = index, Value = seriesValues[s][i], FillColor = color };
+                            index++;
+                        }
+                        var barPlot = plt.Add.Bar(bar);
+                        barPlot.Horizontal = horizontal;
+                        //Secondary Y axis (not supported for horizontal bars)
+                        if (series[s].Element.YAxisType == AxisType.Secondary && !horizontal) barPlot.Axes.YAxis = plt.Axes.Right;
+                        if (i == 0) legendItems.Add(new LegendItem() { LabelText = series[s].SerieDisplayName, FillColor = color, LineColor = color, MarkerColor = color });
+                    }
+                    //Tick is the center of the group
+                    ticks.Add(new Tick(stacked ? index : index - barSeries.Count + (barSeries.Count - 1) / 2.0, xLabels[i]));
+                    index++;
+                }
+                //The other series must follow the position of the bar groups
+                xPositions = (from t in ticks select t.Position).ToArray();
+            }
+            else
+            {
+                for (int i = 0; i < xCount; i++) ticks.Add(new Tick(i, xLabels[i]));
+            }
+
+            //Lines, areas and scatters
+            for (int s = 0; s < series.Count; s++)
+            {
+                if (kinds[s].StartsWith("bar")) continue;
+
+                var color = palette.GetColor(s);
+                ScottPlot.Plottables.Scatter plottable;
+                if (kinds[s] == "scatter")
+                {
+                    plottable = plt.Add.ScatterPoints(xPositions, seriesValues[s], color);
+                }
+                else
+                {
+                    var line = plt.Add.ScatterLine(xPositions, seriesValues[s], color);
+                    line.LineWidth = 2;
+                    if (kinds[s] == "area") line.FillY = true;
+                    plottable = line;
+                }
+                //The legend is built from the manual items below, do not set LegendText or the entry is duplicated
+                if (series[s].Element.YAxisType == AxisType.Secondary) plottable.Axes.YAxis = plt.Axes.Right;
+
+                legendItems.Add(new LegendItem() { LabelText = series[s].SerieDisplayName, LineColor = color, LineWidth = 2, MarkerColor = color });
+            }
+
+            //X labels
+            if (ticks.Count > 0)
+            {
+                var tickAxis = horizontal ? (ScottPlot.IAxis)plt.Axes.Left : plt.Axes.Bottom;
+                tickAxis.TickGenerator = new ScottPlot.TickGenerators.NumericManual(ticks.ToArray());
+
+                //Rotate the labels when they cannot fit side by side (about 7 pixels per character)
+                var labelWidth = xLabels.Count > 0 ? xLabels.Max(i => i.Length) : 0;
+                if (!horizontal && xCount * (labelWidth + 1) * 7 > width)
+                {
+                    plt.Axes.Bottom.TickLabelStyle.Rotation = 45;
+                    plt.Axes.Bottom.TickLabelStyle.Alignment = Alignment.MiddleLeft;
+                    plt.Axes.Bottom.MinimumSize = 60;
+                }
+            }
+
+            if (!string.IsNullOrEmpty(title)) plt.Title(title);
+            if (legendItems.Count > 0) plt.ShowLegend(legendItems.ToArray());
+            plt.Axes.AutoScale();
+
+            return plt.GetImageBytes(width, height, ImageFormat.Png);
+        }
+        catch (Exception ex)
+        {
+            //A chart must never break the Excel generation
+            Console.WriteLine("Unable to generate the Excel chart: " + ex.Message);
+            return null;
+        }
+    }
+
+    /// Returns the kind of chart to render, from the chart definitions of the element
+    string getChartKind(ReportElement element, ReportView modelView)
+    {
+        //Create the chart configuration from the existing definitions for the Excel chart
         var def = element.ChartJSSerie;
         var horizontal = false;
         var stacked = false;
@@ -130,13 +294,12 @@
             horizontal = view.GetBoolValue("chartjs_bar_horizontal");
             stacked = view.GetBoolValue("chartjs_bar_stacked");
         }
-        if (def == ChartJSSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
-        if (def == ChartJSSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
-        if (def == ChartJSSerieDefinition.Line) return eChartType.Line;
-        if (def == ChartJSSerieDefinition.Scatter) return eChartType.XYScatter;
-        if (def == ChartJSSerieDefinition.Pie) return eChartType.Pie;
-        if (def == ChartJSSerieDefinition.PolarArea) return eChartType.Pie;
-        if (def == ChartJSSerieDefinition.Radar) return eChartType.Radar;
+        if (def == ChartJSSerieDefinition.Bar) return getBarKind(horizontal, stacked);
+        if (def == ChartJSSerieDefinition.Line) return "line";
+        if (def == ChartJSSerieDefinition.Scatter) return "scatter";
+        if (def == ChartJSSerieDefinition.Pie) return "pie";
+        if (def == ChartJSSerieDefinition.PolarArea) return "pie";
+        if (def == ChartJSSerieDefinition.Radar) return "line";
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartScottplotName);
         if (view != null)
@@ -145,10 +308,9 @@
             stacked = view.GetBoolValue("chartsp_bar_stacked");
         }
         var def2 = element.ScottPlotSerie;
-        if (def2 == ScottPlotSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
-        if (def2 == ScottPlotSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
-        if (def2 == ScottPlotSerieDefinition.Scatter) return eChartType.XYScatter;
-        if (def2 == ScottPlotSerieDefinition.Pie) return eChartType.Pie;
+        if (def2 == ScottPlotSerieDefinition.Bar) return getBarKind(horizontal, stacked);
+        if (def2 == ScottPlotSerieDefinition.Scatter) return "scatter";
+        if (def2 == ScottPlotSerieDefinition.Pie) return "pie";
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartEChartsName);
         if (view != null)
@@ -157,13 +319,12 @@
             stacked = view.GetBoolValue("echarts_bar_stacked");
         }
         var def3 = element.EChartsSerie;
-        if (def3 == EChartsSerieDefinition.Scatter) return eChartType.XYScatter;
-        if (def3 == EChartsSerieDefinition.Pie) return eChartType.Pie;
-        if (def3 == EChartsSerieDefinition.Line) return eChartType.Line;
-        if (def3 == EChartsSerieDefinition.Area) return eChartType.AreaStacked;
-        if (def3 == EChartsSerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
-        if (def3 == EChartsSerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
-        if (def3 == EChartsSerieDefinition.Radar) return eChartType.Radar;
+        if (def3 == EChartsSerieDefinition.Scatter) return "scatter";
+        if (def3 == EChartsSerieDefinition.Pie) return "pie";
+        if (def3 == EChartsSerieDefinition.Line) return "line";
+        if (def3 == EChartsSerieDefinition.Area) return "area";
+        if (def3 == EChartsSerieDefinition.Bar) return getBarKind(horizontal, stacked);
+        if (def3 == EChartsSerieDefinition.Radar) return "line";
 
         view = modelView.Report.FindViewFromTemplate(modelView.Views, ReportViewTemplate.ChartPlotlyName);
         if (view != null)
@@ -172,11 +333,16 @@
             stacked = view.GetBoolValue("plotly_bar_stacked");
         }
         var def4 = element.PlotlySerie;
-        if (def4 == PlotlySerieDefinition.Bar && horizontal) return stacked ? eChartType.BarStacked : eChartType.BarClustered;
-        if (def4 == PlotlySerieDefinition.Bar) return stacked ? eChartType.ColumnStacked : eChartType.ColumnClustered;
-        if (def4 == PlotlySerieDefinition.Scatter) return eChartType.XYScatter;
-        if (def4 == PlotlySerieDefinition.Pie) return eChartType.Pie;
+        if (def4 == PlotlySerieDefinition.Bar) return getBarKind(horizontal, stacked);
+        if (def4 == PlotlySerieDefinition.Scatter) return "scatter";
+        if (def4 == PlotlySerieDefinition.Pie) return "pie";
 
-        return eChartType.XYScatter;
+        return "scatter";
+    }
+
+    string getBarKind(bool horizontal, bool stacked)
+    {
+        if (horizontal) return stacked ? "barhstacked" : "barh";
+        return stacked ? "barstacked" : "bar";
     }
 }

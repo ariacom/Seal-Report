@@ -15,8 +15,7 @@ using System.IO;
 using Microsoft.Win32.TaskScheduler;
 using System.Diagnostics;
 using System.Drawing;
-using OfficeOpenXml;
-using OfficeOpenXml.Style;
+using ClosedXML.Excel;
 
 namespace Seal.Forms
 {
@@ -722,97 +721,95 @@ namespace Seal.Forms
             try
             {
                 Cursor.Current = Cursors.WaitCursor;
-                var ep = new ExcelPackage();
+                var ep = new XLWorkbook();
                 var items = checkedItems.Where(i => i is MetaTable);
                 if (items.Count() > 0)
                 {
                     log.Log("Processing tables.");
-                    var ws = ep.Workbook.Worksheets.Add("Tables");
-                    ws.Cells["A1"].Value = "Name";
-                    ws.Cells["B1"].Value = "Column";
-                    ws.Cells["C1"].Value = "Type";
-                    ws.Cells["D1"].Value = "Category";
-                    ws.Cells["E1"].Value = "Display Name";
-                    ws.Cells["F1"].Value = "Display Order";
-                    ws.Cells["G1"].Value = "Enum";
-                    ws.Cells["H1"].Value = "CSS Class";
-                    ws.Cells["I1"].Value = "CSS Style";
-                    ws.Cells["J1"].Value = "Is Aggregate";
-                    ws.Cells["K1"].Value = "Numeric Standard Format";
-                    ws.Cells["L1"].Value = "DateTime Standard Format";
-                    ws.Cells["M1"].Value = "Format";
-                    ws.Cells["N1"].Value = "Tag";
-                    ws.Cells["O1"].Value = "GUID";
+                    var ws = ep.Worksheets.Add("Tables");
+                    ws.Cell("A1").Value = "Name";
+                    ws.Cell("B1").Value = "Column";
+                    ws.Cell("C1").Value = "Type";
+                    ws.Cell("D1").Value = "Category";
+                    ws.Cell("E1").Value = "Display Name";
+                    ws.Cell("F1").Value = "Display Order";
+                    ws.Cell("G1").Value = "Enum";
+                    ws.Cell("H1").Value = "CSS Class";
+                    ws.Cell("I1").Value = "CSS Style";
+                    ws.Cell("J1").Value = "Is Aggregate";
+                    ws.Cell("K1").Value = "Numeric Standard Format";
+                    ws.Cell("L1").Value = "DateTime Standard Format";
+                    ws.Cell("M1").Value = "Format";
+                    ws.Cell("N1").Value = "Tag";
+                    ws.Cell("O1").Value = "GUID";
                     int index = 2;
                     foreach (var item in items)
                     {
                         var table = item as MetaTable;
                         foreach (var col in table.Columns)
                         {
-                            ws.Cells["A" + index].Value = table.Name;
-                            ws.Cells["B" + index].Value = col.Name;
-                            ws.Cells["C" + index].Value = col.Type;
-                            ws.Cells["D" + index].Value = col.Category;
-                            ws.Cells["E" + index].Value = col.DisplayName;
-                            ws.Cells["F" + index].Value = col.DisplayOrder;
-                            ws.Cells["G" + index].Value = col.Enum?.Name;
-                            ws.Cells["H" + index].Value = col.CssClass;
-                            ws.Cells["I" + index].Value = col.CssStyle;
-                            ws.Cells["J" + index].Value = col.IsAggregate;
-                            ws.Cells["K" + index].Value = col.Enum == null && col.Type == ColumnType.Numeric ? col.NumericStandardFormat : "";
-                            ws.Cells["L" + index].Value = col.Enum == null && col.Type == ColumnType.DateTime ? col.DateTimeStandardFormat : "";
-                            ws.Cells["M" + index].Value = col.Format;
-                            ws.Cells["N" + index].Value = col.Tag;
-                            ws.Cells["O" + index].Value = col.GUID;
+                            ws.Cell("A" + index).Value = table.Name ?? "";
+                            ws.Cell("B" + index).Value = col.Name ?? "";
+                            ws.Cell("C" + index).Value = col.Type.ToString();
+                            ws.Cell("D" + index).Value = col.Category ?? "";
+                            ws.Cell("E" + index).Value = col.DisplayName ?? "";
+                            ws.Cell("F" + index).Value = col.DisplayOrder;
+                            ws.Cell("G" + index).Value = col.Enum?.Name ?? "";
+                            ws.Cell("H" + index).Value = col.CssClass ?? "";
+                            ws.Cell("I" + index).Value = col.CssStyle ?? "";
+                            ws.Cell("J" + index).Value = col.IsAggregate;
+                            ws.Cell("K" + index).Value = col.Enum == null && col.Type == ColumnType.Numeric ? col.NumericStandardFormat.ToString() : "";
+                            ws.Cell("L" + index).Value = col.Enum == null && col.Type == ColumnType.DateTime ? col.DateTimeStandardFormat.ToString() : "";
+                            ws.Cell("M" + index).Value = col.Format ?? "";
+                            ws.Cell("N" + index).Value = col.Tag ?? "";
+                            ws.Cell("O" + index).Value = col.GUID ?? "";
                             index++;
                         }
 
                     }
-                    ws.Cells["A1:O1"].AutoFilter = true;
-                    ws.Cells["A1:O1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells["A1:O1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
-                    ws.Cells["A1:O1"].Style.Font.Bold = true;
+                    ws.Range("A1:O1").SetAutoFilter();
+                    ws.Range("A1:O1").Style.Fill.BackgroundColor = XLColor.LightBlue;
+                    ws.Range("A1:O1").Style.Font.Bold = true;
                 }
 
                 items = checkedItems.Where(i => i is MetaEnum);
                 if (items.Count() > 0)
                 {
                     log.Log("Processing enumerated lists.");
-                    var ws = ep.Workbook.Worksheets.Add("Enums");
-                    ws.Cells["A1"].Value = "Name";
-                    ws.Cells["B1"].Value = "Id";
-                    ws.Cells["C1"].Value = "Value";
-                    ws.Cells["D1"].Value = "Restriction Value";
-                    ws.Cells["E1"].Value = "CSS";
-                    ws.Cells["F1"].Value = "Class";
-                    ws.Cells["G1"].Value = "GUID";
+                    var ws = ep.Worksheets.Add("Enums");
+                    ws.Cell("A1").Value = "Name";
+                    ws.Cell("B1").Value = "Id";
+                    ws.Cell("C1").Value = "Value";
+                    ws.Cell("D1").Value = "Restriction Value";
+                    ws.Cell("E1").Value = "CSS";
+                    ws.Cell("F1").Value = "Class";
+                    ws.Cell("G1").Value = "GUID";
                     int index = 2;
                     foreach (var item in items)
                     {
                         var en = item as MetaEnum;
                         foreach (var ev in en.Values)
                         {
-                            ws.Cells["A" + index].Value = en.Name.Replace("ENUM VALUES: ", "");
-                            ws.Cells["B" + index].Value = ev.Id;
-                            ws.Cells["C" + index].Value = ev.Val;
-                            ws.Cells["D" + index].Value = ev.ValR;
-                            ws.Cells["E" + index].Value = ev.Css;
-                            ws.Cells["F" + index].Value = ev.Class;
-                            ws.Cells["G" + index].Value = en.GUID;
+                            ws.Cell("A" + index).Value = en.Name.Replace("ENUM VALUES: ", "") ?? "";
+                            ws.Cell("B" + index).Value = ev.Id ?? "";
+                            ws.Cell("C" + index).Value = ev.Val ?? "";
+                            ws.Cell("D" + index).Value = ev.ValR ?? "";
+                            ws.Cell("E" + index).Value = ev.Css ?? "";
+                            ws.Cell("F" + index).Value = ev.Class ?? "";
+                            ws.Cell("G" + index).Value = en.GUID ?? "";
                             index++;
                         }
                     }
-                    ws.Cells["A1:G1"].AutoFilter = true;
-                    ws.Cells["A1:G1"].Style.Fill.PatternType = ExcelFillStyle.Solid;
-                    ws.Cells["A1:G1"].Style.Fill.BackgroundColor.SetColor(Color.LightBlue);
-                    ws.Cells["A1:G1"].Style.Font.Bold = true;
+                    ws.Range("A1:G1").SetAutoFilter();
+                    ws.Range("A1:G1").Style.Fill.BackgroundColor = XLColor.LightBlue;
+                    ws.Range("A1:G1").Style.Font.Bold = true;
                 }
-                foreach (ExcelWorksheet sheet in ep.Workbook.Worksheets.Where(i => i.Dimension != null))
+                foreach (IXLWorksheet sheet in ep.Worksheets.Where(i => i.LastCellUsed() != null))
                 {
-                    sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
-                    sheet.View.FreezePanes(2, 1);
+                    sheet.Columns().AdjustToContents();
+                    sheet.SheetView.Freeze(1, 0);
                 }
-                ep.SaveAs(new FileInfo(path));
+                ep.SaveAs(path);
                 log.Log($"The file '{path}' has been saved.\r\nIt can be modified and re-imported to the Data Source.");
             }
             catch (Exception ex)
@@ -833,8 +830,8 @@ namespace Seal.Forms
                 Cursor.Current = Cursors.WaitCursor;
                 _setModified = true;
 
-                var ep = new ExcelPackage(new FileInfo(path));
-                foreach (var ws in ep.Workbook.Worksheets)
+                using var ep = new XLWorkbook(path);
+                foreach (var ws in ep.Worksheets)
                 {
                     if (ws.Name == "Tables")
                     {
@@ -842,9 +839,9 @@ namespace Seal.Forms
                         int index = 2;
                         while (true)
                         {
-                            var tableName = ws.Cells["A" + index].Value?.ToString().Trim();
-                            var columnName = ws.Cells["B" + index].Value?.ToString().Trim();
-                            var columnGUID = ws.Cells["G" + index].Value?.ToString();
+                            var tableName = ExcelHelper.GetCellValue(ws.Cell("A" + index))?.ToString().Trim();
+                            var columnName = ExcelHelper.GetCellValue(ws.Cell("B" + index))?.ToString().Trim();
+                            var columnGUID = ExcelHelper.GetCellValue(ws.Cell("G" + index))?.ToString();
 
                             if (string.IsNullOrEmpty(tableName) || string.IsNullOrEmpty(columnName)) break;
                             log.Log($"Processing {tableName} {columnName}");
@@ -867,33 +864,33 @@ namespace Seal.Forms
                             }
 
                             //properties
-                            Helper.SetPropertyValue(column, "Type", ws.Cells["C" + index].Value?.ToString());
-                            column.Category = ws.Cells["D" + index].Value?.ToString();
-                            column.DisplayName = ws.Cells["E" + index].Value?.ToString();
-                            column.DisplayOrder = int.Parse(ws.Cells["F" + index].Value?.ToString());
+                            Helper.SetPropertyValue(column, "Type", ExcelHelper.GetCellValue(ws.Cell("C" + index))?.ToString());
+                            column.Category = ExcelHelper.GetCellValue(ws.Cell("D" + index))?.ToString();
+                            column.DisplayName = ExcelHelper.GetCellValue(ws.Cell("E" + index))?.ToString();
+                            column.DisplayOrder = int.Parse(ExcelHelper.GetCellValue(ws.Cell("F" + index))?.ToString());
                             //Enum
                             column.EnumGUID = "";
-                            var en = Source.MetaData.Enums.FirstOrDefault(i => i.Name.ToLower() == ws.Cells["G" + index].Value?.ToString().ToLower());
+                            var en = Source.MetaData.Enums.FirstOrDefault(i => i.Name.ToLower() == ExcelHelper.GetCellValue(ws.Cell("G" + index))?.ToString().ToLower());
                             if (en != null)
                             {
                                 column.EnumGUID = en.GUID;
                             }
 
-                            column.CssClass = ws.Cells["H" + index].Value?.ToString();
-                            column.CssStyle = ws.Cells["I" + index].Value?.ToString();
-                            column.IsAggregate = ws.Cells["J" + index].Value?.ToString().ToLower() == "true";
-                            var format = ws.Cells["K" + index].Value?.ToString();
+                            column.CssClass = ExcelHelper.GetCellValue(ws.Cell("H" + index))?.ToString();
+                            column.CssStyle = ExcelHelper.GetCellValue(ws.Cell("I" + index))?.ToString();
+                            column.IsAggregate = ExcelHelper.GetCellValue(ws.Cell("J" + index))?.ToString().ToLower() == "true";
+                            var format = ExcelHelper.GetCellValue(ws.Cell("K" + index))?.ToString();
                             if (!string.IsNullOrEmpty(format))
                             {
                                 Helper.SetPropertyValue(column, "NumericStandardFormat", format);
                             }
-                            format = ws.Cells["L" + index].Value?.ToString();
+                            format = ExcelHelper.GetCellValue(ws.Cell("L" + index))?.ToString();
                             if (!string.IsNullOrEmpty(format))
                             {
                                 Helper.SetPropertyValue(column, "DateTimeStandardFormat", format);
                             }
-                            column.Format = ws.Cells["M" + index].Value?.ToString();
-                            column.Tag = ws.Cells["N" + index].Value?.ToString();
+                            column.Format = ExcelHelper.GetCellValue(ws.Cell("M" + index))?.ToString();
+                            column.Tag = ExcelHelper.GetCellValue(ws.Cell("N" + index))?.ToString();
 
                             column.SetStandardFormat();
                             index++;
@@ -907,7 +904,7 @@ namespace Seal.Forms
                         var cleared = new List<MetaEnum>();
                         while (true)
                         {
-                            var enumName = ws.Cells["A" + index].Value?.ToString().Trim();
+                            var enumName = ExcelHelper.GetCellValue(ws.Cell("A" + index))?.ToString().Trim();
                             if (string.IsNullOrEmpty(enumName)) break;
                             var el = Source.MetaData.Enums.FirstOrDefault(i => i.Name == enumName);
                             if (el == null)
@@ -923,12 +920,12 @@ namespace Seal.Forms
                                 cleared.Add(el);
                             }
                             var item = new MetaEV();
-                            item.Id = ws.Cells["B" + index].Value?.ToString();
-                            item.Val = ws.Cells["C" + index].Value?.ToString();
+                            item.Id = ExcelHelper.GetCellValue(ws.Cell("B" + index))?.ToString();
+                            item.Val = ExcelHelper.GetCellValue(ws.Cell("C" + index))?.ToString();
                             log.Log($"Processing {item.Id} {item.Val}");
-                            item.ValR = ws.Cells["D" + index].Value?.ToString();
-                            item.Css = ws.Cells["E" + index].Value?.ToString();
-                            item.Class = ws.Cells["F" + index].Value?.ToString();
+                            item.ValR = ExcelHelper.GetCellValue(ws.Cell("D" + index))?.ToString();
+                            item.Css = ExcelHelper.GetCellValue(ws.Cell("E" + index))?.ToString();
+                            item.Class = ExcelHelper.GetCellValue(ws.Cell("F" + index))?.ToString();
                             index++;
                             el.Values.Add(item);
                         }

@@ -49,4 +49,4 @@ Reports can also be created from scratch, modified, rendered in other formats (E
 
 ## License
 
-Seal Report is free and open source under the [MIT License](https://github.com/ariacom/Seal-Report/blob/master/LICENSE). Third-party components are distributed under their own licenses, see [THIRD-PARTY-NOTICES.md](https://github.com/ariacom/Seal-Report/blob/master/THIRD-PARTY-NOTICES.md) (in particular QuestPDF and EPPlus if your own code calls their APIs directly).
+Seal Report is free and open source under the [MIT License](https://github.com/ariacom/Seal-Report/blob/master/LICENSE). Third-party components are distributed under their own licenses, see [THIRD-PARTY-NOTICES.md](https://github.com/ariacom/Seal-Report/blob/master/THIRD-PARTY-NOTICES.md) (in particular QuestPDF if your own code calls its APIs directly).

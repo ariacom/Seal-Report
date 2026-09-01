@@ -14,8 +14,6 @@ using RazorEngine.Templating;
 using System.Globalization;
 using System.Web;
 using System.Data;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Text;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Finance;
 using Seal.Renderer;
 using Microsoft.Graph.IdentityGovernance.PrivilegedAccess.Group.EligibilityScheduleRequests;
 #if WINDOWS

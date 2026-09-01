@@ -2,8 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
-using OfficeOpenXml;
-using OfficeOpenXml.Drawing.Chart;
+using ClosedXML.Excel;
 using Seal.Helpers;
 using Seal.Model;
 using System;
@@ -14,7 +13,7 @@ using AngleSharp.Dom;
 namespace Seal.Renderer
 {
     /// <summary>
-    /// Current Excel objects (package, workbook, worksheet and current position) shared by the Excel renderer templates during the report execution. The instance is available from the report with Report.ExcelResult.
+    /// Current Excel objects (workbook, worksheet and current position) shared by the Excel renderer templates during the report execution. The instance is available from the report with Report.ExcelResult.
     /// </summary>
     public class ExcelResult
     {
@@ -33,19 +32,14 @@ namespace Seal.Renderer
         }
 
         /// <summary>
-        /// Current EPPlus package generating the result file
+        /// Current ClosedXML workbook generating the result file
         /// </summary>
-        public ExcelPackage Package;
-
-        /// <summary>
-        /// Current workbook of the package
-        /// </summary>
-        public ExcelWorkbook Workbook;
+        public XLWorkbook Workbook;
 
         /// <summary>
         /// Current worksheet being generated
         /// </summary>
-        public ExcelWorksheet Worksheet;
+        public IXLWorksheet Worksheet;
 
         /// <summary>
         /// Current row index in the worksheet, starting at 1
@@ -73,11 +67,60 @@ namespace Seal.Renderer
         public const string CellTitleStyle = "CellTitleStyle";
 
         /// <summary>
+        /// Cell at the current row and column
+        /// </summary>
+        public IXLCell CurrentCell
+        {
+            get { return Worksheet.Cell(CurrentRow, CurrentCol); }
+        }
+
+        /// <summary>
+        /// Apply one of the standard Seal styles (value, title or total) to a style object.
+        /// ClosedXML has no named styles, so the attributes are set directly on the cell or the range.
+        /// </summary>
+        public void ApplyStyle(IXLStyle style, string styleName)
+        {
+            if (style == null) return;
+
+            if (styleName == CellTitleStyle)
+            {
+                style.Font.Bold = true;
+                style.Font.Italic = false;
+            }
+            else if (styleName == CellValueTotalStyle)
+            {
+                style.Font.Bold = true;
+                style.Font.Italic = true;
+            }
+            else
+            {
+                style.Font.Bold = false;
+                style.Font.Italic = false;
+            }
+        }
+
+        /// <summary>
+        /// Apply one of the standard Seal styles to a cell
+        /// </summary>
+        public void ApplyStyle(IXLCell cell, string styleName)
+        {
+            if (cell != null) ApplyStyle(cell.Style, styleName);
+        }
+
+        /// <summary>
+        /// Apply one of the standard Seal styles to a range
+        /// </summary>
+        public void ApplyStyle(IXLRange range, string styleName)
+        {
+            if (range != null) ApplyStyle(range.Style, styleName);
+        }
+
+        /// <summary>
         /// Set a ResultCell value at the current row and column
         /// </summary>
         public void SetValue(ResultCell cell, bool elementFormat, bool useStyle)
         {
-            SetValue(Worksheet.Cells[CurrentRow, CurrentCol], cell, elementFormat, useStyle);
+            SetValue(Worksheet.Cell(CurrentRow, CurrentCol), cell, elementFormat, useStyle);
         }
 
         /// <summary>
@@ -85,30 +128,38 @@ namespace Seal.Renderer
         /// </summary>
         public void SetValue(int row, int col, ResultCell cell, bool elementFormat, bool useStyle)
         {
-            SetValue(Worksheet.Cells[row, col], cell, elementFormat, useStyle);
+            SetValue(Worksheet.Cell(row, col), cell, elementFormat, useStyle);
+        }
+
+        /// <summary>
+        /// Set a ResultCell value in the first cell of a range (e.g. a merged range)
+        /// </summary>
+        public void SetValue(IXLRange range, ResultCell cell, bool elementFormat, bool useStyle)
+        {
+            if (range != null) SetValue(range.FirstCell(), cell, elementFormat, useStyle);
         }
 
         /// <summary>
         /// Set a ResultCell value in an Excel cell
         /// </summary>
-        public void SetValue(ExcelRange cells, ResultCell cell, bool elementFormat, bool useStyle)
+        public void SetValue(IXLCell xlCell, ResultCell cell, bool elementFormat, bool useStyle)
         {
             string format = null;
             var cultureInfo = Report.CultureInfo;
             if (cell.Element != null && !cell.Element.IsEnum && !cell.IsTitle && cell.Element.IsNumeric && elementFormat)
             {
                 format = cell.Element.GetExcelFormat(cultureInfo);
-                if (cell.DoubleValue != null) cells.Value = cell.DoubleValue.Value;
+                if (cell.DoubleValue != null) xlCell.Value = cell.DoubleValue.Value;
             }
             else if (cell.Element != null && !cell.Element.IsEnum && !cell.IsTitle && cell.Element.IsDateTime && elementFormat)
             {
                 format = cell.Element.GetExcelFormat(cultureInfo);
-                if (cell.DateTimeValue != null) cells.Value = cell.DateTimeValue.Value;
+                if (cell.DateTimeValue != null) xlCell.Value = cell.DateTimeValue.Value;
             }
             else
             {
-                if (elementFormat) cells.Value = cell.DisplayValue;
-                else if (cell.Value != null) cells.Value = cell.Value.ToString();
+                if (elementFormat) xlCell.Value = cell.DisplayValue ?? "";
+                else if (cell.Value != null) xlCell.Value = cell.Value.ToString();
             }
 
             if (useStyle)
@@ -117,15 +168,14 @@ namespace Seal.Renderer
                 if (cell.IsTitle) style = CellTitleStyle;
                 else if (cell.IsTotal) style = CellValueTotalStyle;
 
-                cells.StyleName = style;
+                ApplyStyle(xlCell, style);
             }
 
             //Apply format at the end to make it work
             if (!string.IsNullOrEmpty(format))
             {
-                cells.Style.Numberformat.Format = format;
+                xlCell.Style.NumberFormat.Format = format;
             }
-
         }
 
         /// <summary>
@@ -136,25 +186,10 @@ namespace Seal.Renderer
             try
             {
                 //Clear unused worksheet
-                bool cleaning = true;
-                while (cleaning)
+                foreach (var sheet in Workbook.Worksheets.ToList())
                 {
-                    cleaning = false;
-                    ExcelWorksheet toClean = null;
-                    foreach (var sheet in Workbook.Worksheets)
-                    {
-                        if (sheet.Dimension == null)
-                        {
-                            toClean = sheet;
-                            break;
-                        }
-                    }
-
-                    if (toClean != null && Workbook.Worksheets.Count > 1)
-                    {
-                        cleaning = true;
-                        Workbook.Worksheets.Delete(toClean);
-                    }
+                    if (Workbook.Worksheets.Count <= 1) break;
+                    if (sheet.LastCellUsed() == null) sheet.Delete();
                 }
             }
             catch (Exception ex)
@@ -170,6 +205,12 @@ namespace Seal.Renderer
         {
             if (string.IsNullOrEmpty(name)) name = "Sheet1";
 
+            //Excel does not accept these characters in a sheet name and ClosedXML rejects them
+            foreach (var invalidChar in new char[] { ':', '\\', '/', '?', '*', '[', ']' }) name = name.Replace(invalidChar, ' ');
+            name = name.Trim('\'').Trim();
+            if (string.IsNullOrEmpty(name)) name = "Sheet1";
+
+            //31 characters is the Excel limit for a sheet name: keep one character free for the unicity suffix added below
             if (name.Length > 31) name = name.Substring(0, 30);
             name = Helper.GetUniqueNameCaseInsensitive(name, (from w in Workbook.Worksheets.ToList() select w.Name).ToList());
             Worksheet = Workbook.Worksheets.Add(name);
@@ -178,12 +219,47 @@ namespace Seal.Renderer
         }
 
         /// <summary>
-        /// Converts an HTML string to plain text and writes it into an EPPlus cell.
-        /// The cell's WrapText / alignment / merge must be set by the caller.
+        /// Converts an HTML string to plain text and writes it into a cell.
+        /// The cell WrapText / alignment / merge must be set by the caller.
         /// </summary>
-        public void SetHtmlValue(ExcelRange cells, string html)
+        public void SetHtmlValue(IXLCell cell, string html)
         {
-            cells.Value = HtmlToText.Convert(html);
+            cell.Value = HtmlToText.Convert(html);
+        }
+
+        /// <summary>
+        /// Converts an HTML string to plain text and writes it into the first cell of a range (e.g. a merged range).
+        /// The range WrapText / alignment / merge must be set by the caller.
+        /// </summary>
+        public void SetHtmlValue(IXLRange range, string html)
+        {
+            SetHtmlValue(range.FirstCell(), html);
+        }
+
+        /// <summary>
+        /// Returns the ClosedXML paper size matching a name. The names of the EPPlus 'ePaperSize' enumeration
+        /// stored in existing reports (e.g. 'A4', 'Letter') are mapped to their ClosedXML equivalent ('A4Paper', 'LetterPaper').
+        /// </summary>
+        static public XLPaperSize GetPaperSize(string name)
+        {
+            XLPaperSize result;
+            if (!string.IsNullOrEmpty(name))
+            {
+                if (Enum.TryParse(name, true, out result)) return result;
+                //Legacy EPPlus name: 'A4' -> 'A4Paper'
+                if (Enum.TryParse(name + "Paper", true, out result)) return result;
+            }
+            return XLPaperSize.A4Paper;
+        }
+
+        /// <summary>
+        /// Returns the ClosedXML page orientation matching a name
+        /// </summary>
+        static public XLPageOrientation GetPageOrientation(string name)
+        {
+            XLPageOrientation result;
+            if (!string.IsNullOrEmpty(name) && Enum.TryParse(name, true, out result)) return result;
+            return XLPageOrientation.Portrait;
         }
     }
 

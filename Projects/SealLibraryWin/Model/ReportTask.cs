@@ -21,7 +21,6 @@ using System.Data.SQLite;
 using Npgsql.Internal;
 using DocumentFormat.OpenXml.Drawing;
 using DocumentFormat.OpenXml.Office2021.DocumentTasks;
-using OfficeOpenXml.FormulaParsing.Excel.Functions.Logical;
 
 using System.Runtime.InteropServices;
 using DocumentFormat.OpenXml.Office2016.Drawing.ChartDrawing;

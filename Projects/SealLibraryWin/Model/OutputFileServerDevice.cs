@@ -104,7 +104,7 @@ namespace Seal.Model
     else if (device.Protocol == FileServerProtocol.SCP)
     {
         //Refer to https://github.com/sshnet/SSH.NET
-        using (var scp = new ScpClient(device.HostName, device.PortNumber, device.UserName, device.ClearPassword))
+        using (var scp = new ScpClient(device.HostName, device.PortNumber, device.UserName, device.ClearPassword, RemotePathTransformation.ShellQuote))
         {
             scp.Connect();
             using (Stream fileStream = File.Create(report.ResultFilePath))
@@ -421,7 +421,7 @@ namespace Seal.Model
                 }
                 else if (Protocol == FileServerProtocol.SCP)
                 {
-                    using (var scp = new ScpClient(HostName, UserName, ClearPassword))
+                    using (var scp = new ScpClient(HostName, UserName, ClearPassword, RemotePathTransformation.ShellQuote))
                     {
                         scp.Connect();
                         scp.Disconnect();

@@ -26,7 +26,7 @@ using Microsoft.Web.Administration;
 using Newtonsoft.Json.Linq;
 using Npgsql;
 using System.Data.SQLite;
-using OfficeOpenXml;
+using ClosedXML.Excel;
 using Oracle.ManagedDataAccess.Client;
 using PuppeteerSharp;
 using Renci.SshNet;
@@ -127,7 +127,7 @@ namespace Seal.Helpers
                     _ = new SftpClient("", "a", "");
                     _ = new FtpClient();
                     _ = new AdomdConnection();
-                    _ = new ExcelPackage();
+                    _ = new XLWorkbook();
                     _ = new MongoClient();
                     _ = HttpUtility.HtmlEncode("");
                     _ = JsonContent.Create(new { });

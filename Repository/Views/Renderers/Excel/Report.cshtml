@@ -1,8 +1,5 @@
-﻿@using DocumentFormat.OpenXml
-@using OfficeOpenXml
-@using OfficeOpenXml.Style
+@using ClosedXML.Excel
 @using System.IO
-@using System.Drawing
 @using Seal.Model
 @using Seal.Renderer
 @{
@@ -13,33 +10,22 @@
     ExcelResult result = new ExcelResult(report);
 
     //Init Excel Result
-    using (result.Package = new ExcelPackage())
+    using (result.Workbook = new XLWorkbook())
     {
-        result.Workbook = result.Package.Workbook;
-        result.Worksheet = result.Workbook.Worksheets.Add(report.ExecutionName);
-
-        //Define default styles for value, title and total
-        var style = result.Workbook.Styles.CreateNamedStyle(ExcelResult.CellValueStyle);
-        style = result.Workbook.Styles.CreateNamedStyle(ExcelResult.CellTitleStyle);
-        style.Style.Font.Bold = true;
-        style = result.Workbook.Styles.CreateNamedStyle(ExcelResult.CellValueTotalStyle);
-        style.Style.Font.Bold = true;
-        style.Style.Font.Italic = true;
-        //style.Style.Font.UnderLine = true;
-        //style.Style.Font.Color.SetColor(System.Drawing.Color.Blue);
+        result.AddWorksheet(report.ExecutionName);
 
         //Summary
         if (report.ExecutionView.HasValue("report_summary"))
         {
-            var summaryCells = result.Worksheet.Cells[1, 1, 5, 10];
-            summaryCells.Merge = true;
-            summaryCells.Style.WrapText = true;
-            summaryCells.Style.VerticalAlignment = ExcelVerticalAlignment.Top; ;
-            summaryCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            var summaryCells = result.Worksheet.Range(1, 1, 5, 10);
+            summaryCells.Merge();
+            summaryCells.Style.Alignment.WrapText = true;
+            summaryCells.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+            summaryCells.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
             result.SetHtmlValue(summaryCells, report.ExecutionView.GetValue("report_summary"));
             result.CurrentRow = 6;
         }
-        
+
         view.ParseChildren();
 
         result.CleanWorkbook();
@@ -52,23 +38,24 @@
         }
 
         //Final options
-        foreach (ExcelWorksheet sheet in result.Workbook.Worksheets.Where(i => i.Dimension != null))
+        foreach (IXLWorksheet sheet in result.Workbook.Worksheets.Where(i => i.LastCellUsed() != null))
         {
             //Auto fit
-            if (renderer.GetBoolValue("auto_fit_columns")) sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
+            if (renderer.GetBoolValue("auto_fit_columns")) sheet.Columns().AdjustToContents();
 
             //Printer
-            sheet.PrinterSettings.PaperSize = (ePaperSize)Enum.Parse(typeof(ePaperSize), renderer.GetValue("printer_paper_size"));
-            sheet.PrinterSettings.Orientation = (eOrientation)Enum.Parse(typeof(eOrientation), renderer.GetValue("printer_orientation"));
-            sheet.PrinterSettings.FitToPage = renderer.GetBoolValue("printer_fit_page");
-            sheet.PrinterSettings.FitToWidth = renderer.GetNumericValue("printer_fit_width");
-            sheet.PrinterSettings.FitToHeight = renderer.GetNumericValue("printer_fit_height");
-            sheet.PrinterSettings.LeftMargin = 0.314m;
-            sheet.PrinterSettings.RightMargin = 0.314m;
-            sheet.PrinterSettings.TopMargin = 0.59m;
-            sheet.PrinterSettings.BottomMargin = 0.59m;
-            sheet.PrinterSettings.HeaderMargin = 0.314m;
-            sheet.PrinterSettings.FooterMargin = 0.314m;
+            sheet.PageSetup.PaperSize = ExcelResult.GetPaperSize(renderer.GetValue("printer_paper_size"));
+            sheet.PageSetup.PageOrientation = ExcelResult.GetPageOrientation(renderer.GetValue("printer_orientation"));
+            if (renderer.GetBoolValue("printer_fit_page"))
+            {
+                sheet.PageSetup.FitToPages(renderer.GetNumericValue("printer_fit_width"), renderer.GetNumericValue("printer_fit_height"));
+            }
+            sheet.PageSetup.Margins.Left = 0.314;
+            sheet.PageSetup.Margins.Right = 0.314;
+            sheet.PageSetup.Margins.Top = 0.59;
+            sheet.PageSetup.Margins.Bottom = 0.59;
+            sheet.PageSetup.Margins.Header = 0.314;
+            sheet.PageSetup.Margins.Footer = 0.314;
         }
 
         //Messages
@@ -79,21 +66,21 @@
         }
 
         //Header & Footer
-        foreach (ExcelWorksheet sheet in result.Workbook.Worksheets) 
+        foreach (IXLWorksheet sheet in result.Workbook.Worksheets)
         {
-            var headerFooter = sheet.HeaderFooter;
-            headerFooter.differentFirst = false;        
-            var logoPath = Path.ChangeExtension(report.Repository.Configuration.LogoFilePath, "png");
-            if (File.Exists(logoPath) && renderer.GetBoolValue("show_logo"))
-            {
-                headerFooter.OddHeader.InsertPicture(Image.FromFile(logoPath), PictureAlignment.Right);
-            }
-            headerFooter.OddHeader.LeftAlignedText = "&14&\"Arial,Regular Bold\" " + report.ExecutionName;
-            headerFooter.OddFooter.RightAlignedText = report.Translate("Page") + $" {ExcelHeaderFooter.PageNumber}/{ExcelHeaderFooter.NumberOfPages}";
-            headerFooter.OddFooter.LeftAlignedText = ExcelHeaderFooter.FilePath + ExcelHeaderFooter.FileName;
+            var header = sheet.PageSetup.Header;
+            header.Left.AddText(report.ExecutionName).SetFontSize(14).SetBold(true).SetFontName("Arial");
+
+            var footer = sheet.PageSetup.Footer;
+            footer.Right.AddText(report.Translate("Page") + " ");
+            footer.Right.AddText(XLHFPredefinedText.PageNumber);
+            footer.Right.AddText("/");
+            footer.Right.AddText(XLHFPredefinedText.NumberOfPages);
+            footer.Left.AddText(XLHFPredefinedText.Path);
+            footer.Left.AddText(XLHFPredefinedText.File);
         }
-        
-        if (!report.HasErrors) result.Package.SaveAs(new FileInfo(report.ResultFilePath));
+
+        if (!report.HasErrors) result.Workbook.SaveAs(report.ResultFilePath);
     }
 }
 
@@ -104,53 +91,54 @@
         Report report = result.Report;
         var sheet = result.Worksheet;
         int rowStart = 1, colStart = 1;
-        sheet.Cells[rowStart, 1].Value = report.DisplayNameEx;
-        sheet.Cells[rowStart, 1, rowStart, 1].StyleName = ExcelResult.CellTitleStyle;
+        sheet.Cell(rowStart, 1).Value = report.DisplayNameEx ?? "";
+        result.ApplyStyle(sheet.Cell(rowStart, 1), ExcelResult.CellTitleStyle);
         if (report.ExecutionView.HasValue("report_description"))
         {
             rowStart += 1;
-            sheet.Cells[rowStart, 1].Value = report.ExecutionView.GetValue("report_description");
-            var infoCells = sheet.Cells[rowStart, 1, rowStart + 1, 5];
-            infoCells.Merge = true;
-            infoCells.Style.WrapText = true;
-            infoCells.Style.VerticalAlignment = ExcelVerticalAlignment.Top; ;
-            infoCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+            sheet.Cell(rowStart, 1).Value = report.ExecutionView.GetValue("report_description") ?? "";
+            var infoCells = sheet.Range(rowStart, 1, rowStart + 1, 5);
+            infoCells.Merge();
+            infoCells.Style.Alignment.WrapText = true;
+            infoCells.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+            infoCells.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
             rowStart += 1;
         }
         rowStart += 2;
 
-        sheet.Cells[rowStart, 1].Value = report.Translate("Execution date");
-        sheet.Cells[rowStart, 2].Value = report.ExecutionStartDate;
-        sheet.Cells[rowStart, 2, rowStart, 4].Merge = true;
-        sheet.Cells[rowStart, 2].Style.Numberformat.Format = report.CultureInfo.DateTimeFormat.ShortDatePattern + " " + report.CultureInfo.DateTimeFormat.LongTimePattern;
+        sheet.Cell(rowStart, 1).Value = report.Translate("Execution date");
+        sheet.Cell(rowStart, 2).Value = report.ExecutionStartDate;
+        sheet.Range(rowStart, 2, rowStart, 4).Merge();
+        sheet.Cell(rowStart, 2).Style.NumberFormat.Format = report.CultureInfo.DateTimeFormat.ShortDatePattern + " " + report.CultureInfo.DateTimeFormat.LongTimePattern;
         rowStart++;
-        sheet.Cells[rowStart, 1].Value = report.Translate("Execution duration");
-        sheet.Cells[rowStart, 2, rowStart, 4].Merge = true;
-        sheet.Cells[rowStart, 2].Value = Math.Floor(report.ExecutionModelDuration.TotalSeconds);
-        sheet.Cells[rowStart - 1, 1, rowStart, 1].StyleName = ExcelResult.CellTitleStyle;
+        sheet.Cell(rowStart, 1).Value = report.Translate("Execution duration");
+        sheet.Range(rowStart, 2, rowStart, 4).Merge();
+        sheet.Cell(rowStart, 2).Value = Math.Floor(report.ExecutionModelDuration.TotalSeconds);
+        result.ApplyStyle(sheet.Range(rowStart - 1, 1, rowStart, 1), ExcelResult.CellTitleStyle);
 
         rowStart += 2;
-        sheet.Cells[rowStart, colStart++].Value = report.Translate("Model");
-        sheet.Cells[rowStart, colStart++].Value = report.Translate("Records");
-        sheet.Cells[rowStart, colStart++].Value = report.Translate("Pages");
-        sheet.Cells[rowStart, colStart++].Value = report.Translate("Duration (seconds)");
-        sheet.Cells[rowStart, colStart++].Value = report.Translate("Restrictions");
-        sheet.Cells[rowStart, colStart - 5, rowStart, colStart].StyleName = ExcelResult.CellTitleStyle;
+        sheet.Cell(rowStart, colStart++).Value = report.Translate("Model");
+        sheet.Cell(rowStart, colStart++).Value = report.Translate("Records");
+        sheet.Cell(rowStart, colStart++).Value = report.Translate("Pages");
+        sheet.Cell(rowStart, colStart++).Value = report.Translate("Duration (seconds)");
+        sheet.Cell(rowStart, colStart++).Value = report.Translate("Restrictions");
+        result.ApplyStyle(sheet.Range(rowStart, colStart - 5, rowStart, colStart), ExcelResult.CellTitleStyle);
         rowStart++;
         foreach (var item in report.Models.Where(i => i.ResultTable != null && i.Pages != null))
         {
             colStart = result.CurrentCol;
-            sheet.Cells[rowStart, colStart++].Value = item.Name + "(" + item.Connection.Name + ")";
-            sheet.Cells[rowStart, colStart++].Value = item.ResultTable.Rows.Count;
-            sheet.Cells[rowStart, colStart++].Value = item.Pages.Count;
-            sheet.Cells[rowStart, colStart++].Value = item.ExecutionDuration;
-            sheet.Cells[rowStart, colStart].Value = item.RestrictionText;
-            sheet.Cells[rowStart, colStart++].Style.WrapText = true;
+            sheet.Cell(rowStart, colStart++).Value = item.Name + "(" + item.Connection.Name + ")";
+            sheet.Cell(rowStart, colStart++).Value = item.ResultTable.Rows.Count;
+            sheet.Cell(rowStart, colStart++).Value = item.Pages.Count;
+            sheet.Cell(rowStart, colStart++).Value = item.ExecutionDuration;
+            sheet.Cell(rowStart, colStart).Value = item.RestrictionText ?? "";
+            sheet.Cell(rowStart, colStart++).Style.Alignment.WrapText = true;
             rowStart++;
         }
 
-        sheet.Cells[sheet.Dimension.Address].AutoFitColumns();
-        sheet.Cells[sheet.Dimension.Address].Style.VerticalAlignment = ExcelVerticalAlignment.Top;
+        sheet.Columns().AdjustToContents();
+        var usedRange = sheet.RangeUsed();
+        if (usedRange != null) usedRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
         sheet.Column(5).Width = 60;
     }
 
@@ -158,8 +146,8 @@
     {
         Report report = result.Report;
         var sheet = result.Worksheet;
-        sheet.Cells[result.CurrentRow, result.CurrentCol].Value = report.ExecutionMessages.Trim();
-        sheet.Cells[result.CurrentRow, result.CurrentCol].Style.WrapText = true;
+        sheet.Cell(result.CurrentRow, result.CurrentCol).Value = report.ExecutionMessages.Trim();
+        sheet.Cell(result.CurrentRow, result.CurrentCol).Style.Alignment.WrapText = true;
         sheet.Column(result.CurrentCol).Width = 80;
     }
 }

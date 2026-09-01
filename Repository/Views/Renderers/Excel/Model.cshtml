@@ -1,5 +1,4 @@
-﻿@using OfficeOpenXml
-@using OfficeOpenXml.Style
+﻿@using ClosedXML.Excel
 @using Seal.Model
 @using Seal.Renderer
 @{
@@ -15,11 +14,11 @@
     //Model summary
     if (view.HasValue("model_summary"))
     {
-        var summaryCells = result.Worksheet.Cells[result.CurrentRow, 1, result.CurrentRow + 5, 10];
-        summaryCells.Merge = true;
-        summaryCells.Style.WrapText = true;
-        summaryCells.Style.VerticalAlignment = ExcelVerticalAlignment.Top; ;
-        summaryCells.Style.HorizontalAlignment = ExcelHorizontalAlignment.Left;
+        var summaryCells = result.Worksheet.Range(result.CurrentRow, 1, result.CurrentRow + 5, 10);
+        summaryCells.Merge();
+        summaryCells.Style.Alignment.WrapText = true;
+        summaryCells.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+        summaryCells.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
         result.SetHtmlValue(summaryCells, view.GetValue("model_summary"));
         result.CurrentRow += 6;
     }

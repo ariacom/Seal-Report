@@ -1,4 +1,4 @@
-﻿@using OfficeOpenXml
+@using ClosedXML.Excel
 @using Seal.Model;
 @{
     ReportViewTemplate Template = Model;
@@ -7,16 +7,15 @@
     Template.Parameters.Add(new Parameter() { Name = "show_information", DisplayName = "Show report information", BoolValue = true, ShowInResultOptions = true, Description = "If true, report information is displayed in a dedicated sheet." });
     Template.Parameters.Add(new Parameter() { Name = "show_messages", DisplayName = "Show messages", BoolValue = false, ShowInResultOptions = true, Description = "If true, report execution messages are displayed in a dedicated sheet." });
     Template.Parameters.Add(new Parameter() { Name = "auto_fit_columns", DisplayName = "Auto Fit columns", BoolValue = true, ShowInResultOptions = true, Description = "If true, columns widths are ajusted with the cell content." });
-    Template.Parameters.Add(new Parameter() { Name = "show_logo", DisplayName = "Print: Show logo", BoolValue = false, ShowInResultOptions = true, Description = "If true, the logo is inserted in the top right part of the header." });
     Template.Parameters.Add(new Parameter()
             {
                 Name = "printer_paper_size",
                 DisplayName = "Print: Paper size",
                 Description = "Define the size of the paper when printing the document.",
-                Value = "A4",
+                Value = "A4Paper",
                 UseOnlyEnumValues = true,
                 Enums = new string[] { },
-                EnumType = typeof(ePaperSize)
+                EnumType = typeof(XLPaperSize)
             });
     Template.Parameters.Add(new Parameter()
             {
@@ -27,7 +26,7 @@
                 ShowInResultOptions = true,
                 UseOnlyEnumValues = true,
                 Enums = new string[] { },
-                EnumType = typeof(eOrientation)
+                EnumType = typeof(XLPageOrientation)
             });
     Template.Parameters.Add(new Parameter() { Name = "printer_fit_page", DisplayName = "Print: Fit to page", BoolValue = true, Description = "If true, the pages are adapted to the paper size when printing." });
     Template.Parameters.Add(new Parameter() { Name = "printer_fit_width", DisplayName = "Print: Fit to width", NumericValue = 1, Description = "If 'Fit to page' is true, number of pages to fit in width, 0 for automatic." });

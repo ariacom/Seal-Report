@@ -18,7 +18,7 @@ and published in a minute.
 * **HTML5 Charts**: Define and display chart series in two mouse clicks (support of ChartJS, ECharts, Plotly, ScottPlot and Gauge libraries).
 * **AI Agents**: Chat with role-based AI agents to design reports, analyze data, manage data sources, schedule executions or administer the server — using your own provider (OpenAI, Azure OpenAI, Anthropic or Ollama, including local models). AI tasks can also be embedded in reports.
 * **Fully responsive HTML rendering with the Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, responsiveness, table sorting and filtering). Customize your report presentation in HTML with Razor parsing.
-* **Excel and PDF**: Full control of your report result in Excel (EPPlus library) or PDF (QuestPDF library). Several other formats are available (XML, JSON, Text, CSV) or can easily be customized.
+* **Excel and PDF**: Full control of your report result in Excel (ClosedXML library) or PDF (QuestPDF library). Several other formats are available (XML, JSON, Text, CSV) or can easily be customized.
 * **KPI and Widget Views**: Create and display your Key Performance Indicators in a single report.
 * **Web Report Server**: Publish your reports on the web (Windows and Linux with .NET).
 * **Report Scheduler**: Schedule report executions and generate results in folders, FTP/SFTP servers or SharePoint document libraries, or send them by email (SMTP, SendGrid or MS Graph) — integrated with the Windows Task Scheduler or available as a service.
