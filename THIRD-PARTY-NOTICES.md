@@ -57,6 +57,8 @@ Free to use and redistribute, but not an open-source license.
 | TaskScheduler | 2.12.2 | 2025-07-08 | MIT |
 | Bootstrap | 5.3.3 | 2024-02-20 | MIT |
 | jQuery | 3.7.1 | 2023-08-28 | MIT |
+| bootstrap-select | 1.14.0-beta3 | 2022-04-20 | MIT |
+| flatpickr | 4.6.13 | 2022-04-14 | MIT |
 | DataTables | 2.3.7 | 2026-01-30 | MIT |
 | Chart.js | 4.5.1 | 2025-10-13 | MIT |
 | ECharts | 5.6.0 | 2024-12-28 | Apache-2.0 |
