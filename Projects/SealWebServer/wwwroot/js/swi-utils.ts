@@ -109,12 +109,13 @@ namespace SWIUtil {
         return window.innerWidth < 768;
     }
     export function StartSpinning() {
-        $("#refresh-nav-item").addClass("fa-spin");
+        //own 'spinning' class: FA6's fa-spin is frozen by its prefers-reduced-motion rule
+        $("#refresh-nav-item").addClass("spinning");
         $("#refresh-nav-item").css("display", "inline-block");
     }
 
     export function StopSpinning() {
-        $("#refresh-nav-item").removeClass("fa-spin");
+        $("#refresh-nav-item").removeClass("spinning");
         $("#refresh-nav-item").css("display", "block");
     }
 

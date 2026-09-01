@@ -499,10 +499,17 @@ table.dataTable {
 #refresh-nav-item {
     font-size: 20px;
 }
-    /* spin speed */
-    #refresh-nav-item.fa-spin {
-        animation-duration: 1s;
+    /* own animation instead of FA's fa-spin, which is frozen by FA6's
+       prefers-reduced-motion rule (a progress spinner must keep moving) */
+    #refresh-nav-item.spinning {
+        animation: refresh-spin 1s linear infinite;
     }
+
+@keyframes refresh-spin {
+    to {
+        transform: rotate(360deg);
+    }
+}
 
 #agent-nav-item {
     font-size: 20px;

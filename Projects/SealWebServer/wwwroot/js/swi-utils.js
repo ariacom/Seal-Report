@@ -125,12 +125,12 @@ var SWIUtil;
     }
     SWIUtil.IsMobile = IsMobile;
     function StartSpinning() {
-        $("#refresh-nav-item").addClass("fa-spin");
+        $("#refresh-nav-item").addClass("spinning");
         $("#refresh-nav-item").css("display", "inline-block");
     }
     SWIUtil.StartSpinning = StartSpinning;
     function StopSpinning() {
-        $("#refresh-nav-item").removeClass("fa-spin");
+        $("#refresh-nav-item").removeClass("spinning");
         $("#refresh-nav-item").css("display", "block");
     }
     SWIUtil.StopSpinning = StopSpinning;
