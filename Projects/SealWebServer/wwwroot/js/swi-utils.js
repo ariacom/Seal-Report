@@ -125,6 +125,7 @@ var SWIUtil;
     }
     SWIUtil.IsMobile = IsMobile;
     function StartSpinning() {
+        //own 'spinning' class: FA6's fa-spin is frozen by its prefers-reduced-motion rule
         $("#refresh-nav-item").addClass("spinning");
         $("#refresh-nav-item").css("display", "inline-block");
     }
