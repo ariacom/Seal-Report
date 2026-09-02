@@ -12,7 +12,8 @@
         $(document).ready(function () {
             $('#ResultOptions').click(function (e) {
                 e.preventDefault();
-                $(this).closest('.open').removeClass('open'); // closes the dropdown
+                //Close the Results dropdown (the click does not propagate to the document, so Bootstrap does not close it)
+                $(this).closest('.dropdown').find('[data-bs-toggle="dropdown"]').each(function () { const dd = bootstrap.Dropdown.getInstance(this); if (dd) dd.hide(); });
                 bootstrap.Modal.getOrCreateInstance(document.getElementById('result-options-modal')).show();
                 return false;
             });        
