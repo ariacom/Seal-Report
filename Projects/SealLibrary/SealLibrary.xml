@@ -13379,11 +13379,6 @@
             Razor cache folder for compiled assemblies for Windows applications.
             </summary>
         </member>
-        <member name="P:Seal.Model.Repository.SealConverterPath">
-            <summary>
-            SealConverter assembly path
-            </summary>
-        </member>
         <member name="P:Seal.Model.Repository.SubReportsFolder">
             <summary>
             SubReports folder

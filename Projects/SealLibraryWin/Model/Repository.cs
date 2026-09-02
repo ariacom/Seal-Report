@@ -1139,21 +1139,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// SealConverter assembly path
-        /// </summary>
-        public string SealConverterPath
-        {
-            get
-            {
-#if WINDOWS
-                return Path.Combine(AssembliesFolder, "SealConverterWin.dll");
-#else
-                return Path.Combine(AssembliesFolder, "SealConverter.dll");
-#endif
-            }
-        }
-
-        /// <summary>
         /// SubReports folder
         /// </summary>
         public string SubReportsFolder
@@ -1368,7 +1353,6 @@ namespace Seal.Model
         {
             get
             {
-                bool hasConverter = File.Exists(SealConverterPath);
                 var result = new List<ReportFormat>();
                 foreach (ReportFormat format in Enum.GetValues(typeof(ReportFormat)))
                 {
