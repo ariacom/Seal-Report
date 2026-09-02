@@ -16,7 +16,6 @@ using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 
 using Microsoft.CodeAnalysis;
-using SharpCompress.Common;
 using System.Runtime.Loader;
 using Microsoft.CodeAnalysis.Text;
 using System.Xml.Serialization;
