@@ -211,8 +211,8 @@ class SWIMain {
             _main._newWindow = true;
             _main._reportIcon = "";
         }
-        //Reset init state
-        $("#menu-main-button").show();
+        //Reset init state (ShowHideControl: a plain .show() cannot override the d-none set at init)
+        SWIUtil.ShowHideControl($("#menu-main-button"), true);
         $("#nav_button,#brand-id").css("pointer-events", "");
         $("#brand-id").unbind("click").on("click", function () {
             window.location.href = WebApplicationName;
