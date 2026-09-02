@@ -190,6 +190,11 @@
                 var pie = plt.Add.Pie(slices);
 
                 pie.ExplodeFraction = view.GetDoubleValue("chartsp_pie_explode_fraction");
+                //ScottPlot 5.1: Pie.ShowSliceLabels was removed, visibility is now per slice
+                if (!view.GetBoolValue("chartsp_pie_labels"))
+                {
+                    foreach (var slice in slices) slice.LabelStyle.IsVisible = false;
+                }
                 pie.SliceLabelDistance = view.GetDoubleValue("chartsp_pie_distance");
             }
         }
