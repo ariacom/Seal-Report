@@ -4,7 +4,6 @@
     <OutputType>WinExe</OutputType>
     <TargetFramework>net10.0-windows7.0</TargetFramework>
     <UseWindowsForms>true</UseWindowsForms>
-    <GenerateAssemblyInfo>false</GenerateAssemblyInfo>
     <RootNamespace>Seal</RootNamespace>
     <AssemblyName>SealServerManager</AssemblyName>
     <ApplicationIcon>serverManager.ico</ApplicationIcon>
