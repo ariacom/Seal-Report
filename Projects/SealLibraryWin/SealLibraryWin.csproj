@@ -140,6 +140,7 @@
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load CSV To Database.cshtml" Link="TaskTemplates\Load CSV To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load XML To Database.cshtml" Link="TaskTemplates\Load XML To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Load Model To Database.cshtml" Link="TaskTemplates\Load Model To Database.cshtml" />
+		<None Include="..\..\Repository\Sources\TaskTemplates\Load Table To Database.cshtml" Link="TaskTemplates\Load Table To Database.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\Execute Report.cshtml" Link="TaskTemplates\Execute Report.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\AI Agent.cshtml" Link="TaskTemplates\AI Agent.cshtml" />
 		<None Include="..\..\Repository\Sources\TaskTemplates\AI Cancel Output.cshtml" Link="TaskTemplates\AI Cancel Output.cshtml" />
