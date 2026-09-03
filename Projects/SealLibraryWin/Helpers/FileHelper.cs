@@ -157,7 +157,9 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Returns a unique file name in a directory, appending a number if the file exists and optionally changing the extension. If lockFile is true, an empty file is created.
+        /// Returns a unique file name in a directory, appending a number if the file exists and optionally changing the extension.
+        /// If lockFile is true, an empty file is created atomically to reserve the name: the reservation is safe across threads and processes
+        /// sharing the same directory (e.g. several Seal processes writing to the same temporary directory).
         /// </summary>
         public static string GetUniqueFileName(string directory, string fileName, string newExtension = "", bool lockFile = false)
         {
@@ -168,19 +170,22 @@ namespace Seal.Helpers
                 result = Path.Combine(directory, Path.GetFileNameWithoutExtension(fileName));
                 if (cnt > 0) result += cnt.ToString();
                 result += (newExtension == "" || newExtension == "." ? Path.GetExtension(fileName) : newExtension);
-                if (!File.Exists(result)) break;
+                if (!File.Exists(result))
+                {
+                    if (!lockFile) break;
+                    //Reserve the name: CreateNew fails only if another thread or process created the file between the check and the creation (rare race)
+                    try
+                    {
+                        using (new FileStream(result, FileMode.CreateNew, FileAccess.Write, FileShare.None)) { }
+                        break;
+                    }
+                    catch (IOException) when (File.Exists(result))
+                    {
+                        //Taken meanwhile, try the next number
+                    }
+                }
                 cnt += 1;
             }
-
-            if (lockFile)
-            {
-                try
-                {
-                    File.WriteAllText(result, "");
-                }
-                catch { }
-            }
-
             return result;
         }
 

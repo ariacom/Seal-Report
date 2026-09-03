@@ -309,6 +309,24 @@
             p.Start();
                                 </code></pre>
                             <p>
+                                Once executed, the same execution can generate the result in several formats without executing the report again. Use the <b>GenerateResult(format, filePath)</b> overload to control where each file is written (the calls must be sequential):
+                            </p>
+                            <pre><code class="language-csharp">
+            Repository repository = Repository.Create();
+            Report report = Report.LoadFromFile(@@"C:\ProgramData\Seal Report Repository\Reports\Search - Orders.srex", repository);
+            report.ExecutionContext = ReportExecutionContext.TaskScheduler; //no HTML display file is generated
+            ReportExecution execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(100);
+            if (report.HasErrors) throw new Exception(report.ExecutionErrors);
+            //Generate the result in the formats and locations of your choice
+            execution.GenerateResult(ReportFormat.Excel, @@"C:\Results\Orders.xlsx");
+            execution.GenerateResult(ReportFormat.csv, @@"C:\Results\Orders.csv");
+            execution.GenerateResult(ReportFormat.HTML2PDF, @@"C:\Results\Orders.pdf");
+            //Without a file path, the result is generated in the Seal temporary directory (use FileHelper.AlternateTemporaryDirectory to relocate it per process)
+            string htmlPath = execution.GenerateResult(ReportFormat.html);
+                                </code></pre>
+                            <p>
                                 The following code shows how to create a report having a restriction (also got from the <strong>TestAndSamples</strong> project of the solution).
                             </p>
                             <pre><code class="language-csharp">

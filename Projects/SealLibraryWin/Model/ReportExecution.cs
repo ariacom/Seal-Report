@@ -184,7 +184,8 @@ namespace Seal.Model
                 var orignalFormat = Report.Format;
                 try
                 {
-                    string htmlPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
+                    //Reserve the name before rendering: the rendering takes time and a concurrent export of the same report must not get the same path
+                    string htmlPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"), "", true);
 
                     //Reset identifiers
                     foreach (var page in Report.Models.SelectMany(i => i.Pages)) page.Identifiers.Clear();
@@ -2303,15 +2304,17 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Generate the HTML result of the current execution
+        /// Generate the HTML result of the current execution. If filePath is not specified, a unique file is created in the generation folder.
         /// </summary>
-        public string GenerateHTMLResult(bool isPrint = false)
+        public string GenerateHTMLResult(bool isPrint = false, string filePath = null)
         {
             Report.IsNavigating = false;
 
             var originalFromMenu = Report.OnlyBody;
             var originalFormat = Report.Format;
-            string newPath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"));
+            string newPath = string.IsNullOrEmpty(filePath) ?
+                FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName) + ".html"), "", true) :
+                prepareResultFile(filePath);
 
             Parameter paginationParameter = Report.ExecutionView.Parameters.FirstOrDefault(i => i.Name == Parameter.ServerPaginationParameter);
             bool initialValue = (paginationParameter != null ? paginationParameter.BoolValue : false);
@@ -2346,7 +2349,18 @@ namespace Seal.Model
             return GenerateHTMLResult(true);
         }
 
-        private Task<string> GenerateResultAsync(ReportFormat format)
+        /// <summary>
+        /// Create the directory of an explicit result path and an empty result file (the renderers check the file content to know if they have produced it)
+        /// </summary>
+        string prepareResultFile(string filePath)
+        {
+            var directory = Path.GetDirectoryName(filePath);
+            if (!string.IsNullOrEmpty(directory) && !Directory.Exists(directory)) Directory.CreateDirectory(directory);
+            File.WriteAllText(filePath, "");
+            return filePath;
+        }
+
+        private Task<string> GenerateResultAsync(ReportFormat format, string filePath = null)
         {
             //Enable/Disable Tabs from result options
             var activeTabs = Report.ResultOptionParameters.FirstOrDefault(i => i.ResultOptionName == Parameter.ResultOptionNameTabs);
@@ -2358,15 +2372,17 @@ namespace Seal.Model
                 }
             }
 
-            if (format == ReportFormat.html) return Task.FromResult(GenerateHTMLResult(false));
-            else if (format == ReportFormat.print) return Task.FromResult(GenerateHTMLResult(true));
+            if (format == ReportFormat.html) return Task.FromResult(GenerateHTMLResult(false, filePath));
+            else if (format == ReportFormat.print) return Task.FromResult(GenerateHTMLResult(true, filePath));
 
             Report.IsNavigating = false;
             var originalFormat = Report.Format;
             try
             {
                 Report.Format = format;
-                Report.ResultFilePath = FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)), "." + Report.ResultExtension, true);
+                Report.ResultFilePath = string.IsNullOrEmpty(filePath) ?
+                    FileHelper.GetUniqueFileName(Path.Combine(Report.GenerationFolder, Path.GetFileNameWithoutExtension(Report.ResultFileName)), "." + Report.ResultExtension, true) :
+                    prepareResultFile(filePath);
                 Report.HTMLResultFilePath = "";
                 Report.Status = ReportStatus.RenderingResult;
                 executeTasks(ExecutionStep.BeforeRendering);
@@ -2392,11 +2408,23 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Generate the report in a given format and retruns the file path
+        /// Generate the result of the current execution in a given format and returns the path of the generated file, created in the generation folder.
+        /// The same execution can be used to generate several formats (e.g. Excel then PDF) without executing the report again,
+        /// but the calls must be sequential: the report execution state (format, result file path) is shared, so do not generate several formats in parallel.
         /// </summary>
         public string GenerateResult(ReportFormat format)
         {
-            var result = Task.Run(() => GenerateResultAsync(format));
+            return GenerateResult(format, null);
+        }
+
+        /// <summary>
+        /// Generate the result of the current execution in a given format to an explicit file path (its directory is created if necessary, an existing file is overwritten) and returns this path.
+        /// This allows the caller to control the result location instead of the generation folder. The calls must be sequential (see GenerateResult(ReportFormat)).
+        /// The intermediate files of a conversion (e.g. the HTML rendered for a PDF conversion) are still created in the generation folder.
+        /// </summary>
+        public string GenerateResult(ReportFormat format, string filePath)
+        {
+            var result = Task.Run(() => GenerateResultAsync(format, filePath));
             return result.Result;
         }
 

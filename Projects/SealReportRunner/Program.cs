@@ -126,12 +126,14 @@ namespace SealReportRunner
                 string resultPath = report.ResultFilePath;
                 if (renderView)
                 {
+                    //With --out, generate directly to the requested path (GenerateResult overload with an explicit file path)
+                    var outPath = string.IsNullOrEmpty(options.OutPath) ? null : Path.GetFullPath(options.OutPath);
                     if (!string.IsNullOrEmpty(options.Format))
                     {
                         report.Format = format;
-                        resultPath = execution.GenerateResult(format);
+                        resultPath = execution.GenerateResult(format, outPath);
                     }
-                    else resultPath = execution.GenerateHTMLResult(false);
+                    else resultPath = execution.GenerateHTMLResult(false, outPath);
                     FlushMessages(report, printed, options.Quiet);
                     if (report.HasErrors)
                     {
@@ -141,8 +143,9 @@ namespace SealReportRunner
                     }
                 }
 
-                //Copy the result to the requested location
-                if (!string.IsNullOrEmpty(options.OutPath) && !string.IsNullOrEmpty(resultPath) && File.Exists(resultPath))
+                //Copy the result to the requested location (scheduler mode: the result was not generated there directly)
+                if (!string.IsNullOrEmpty(options.OutPath) && !string.IsNullOrEmpty(resultPath) && File.Exists(resultPath)
+                    && !string.Equals(Path.GetFullPath(resultPath), Path.GetFullPath(options.OutPath), StringComparison.OrdinalIgnoreCase))
                 {
                     File.Copy(resultPath, options.OutPath, true);
                     resultPath = options.OutPath;

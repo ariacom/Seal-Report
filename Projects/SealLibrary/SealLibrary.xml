@@ -1358,7 +1358,9 @@
         </member>
         <member name="M:Seal.Helpers.FileHelper.GetUniqueFileName(System.String,System.String,System.String,System.Boolean)">
             <summary>
-            Returns a unique file name in a directory, appending a number if the file exists and optionally changing the extension. If lockFile is true, an empty file is created.
+            Returns a unique file name in a directory, appending a number if the file exists and optionally changing the extension.
+            If lockFile is true, an empty file is created atomically to reserve the name: the reservation is safe across threads and processes
+            sharing the same directory (e.g. several Seal processes writing to the same temporary directory).
             </summary>
         </member>
         <member name="M:Seal.Helpers.FileHelper.WriteFile(System.String,System.String)">
@@ -9682,9 +9684,9 @@
             Execute a report schedule
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.GenerateHTMLResult(System.Boolean)">
+        <member name="M:Seal.Model.ReportExecution.GenerateHTMLResult(System.Boolean,System.String)">
             <summary>
-            Generate the HTML result of the current execution
+            Generate the HTML result of the current execution. If filePath is not specified, a unique file is created in the generation folder.
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.GeneratePrintResult">
@@ -9692,9 +9694,23 @@
             Generate the HTML Print result of the current execution
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportExecution.prepareResultFile(System.String)">
+            <summary>
+            Create the directory of an explicit result path and an empty result file (the renderers check the file content to know if they have produced it)
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportExecution.GenerateResult(Seal.Model.ReportFormat)">
             <summary>
-            Generate the report in a given format and retruns the file path
+            Generate the result of the current execution in a given format and returns the path of the generated file, created in the generation folder.
+            The same execution can be used to generate several formats (e.g. Excel then PDF) without executing the report again,
+            but the calls must be sequential: the report execution state (format, result file path) is shared, so do not generate several formats in parallel.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.GenerateResult(Seal.Model.ReportFormat,System.String)">
+            <summary>
+            Generate the result of the current execution in a given format to an explicit file path (its directory is created if necessary, an existing file is overwritten) and returns this path.
+            This allows the caller to control the result location instead of the generation folder. The calls must be sequential (see GenerateResult(ReportFormat)).
+            The intermediate files of a conversion (e.g. the HTML rendered for a PDF conversion) are still created in the generation folder.
             </summary>
         </member>
         <member name="F:Seal.Model.ReportExecution.CurrentEnumValues">
