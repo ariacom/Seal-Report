@@ -840,7 +840,7 @@ class SWIMain {
                 var button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Views and outputs")).addClass("btn btn-secondary btn-table report-output");
                 button.append($("<span class='fa-solid fa-table-list'></span>"));
                 $td.append(button);
-                if (_main._folder && _main._folder.reportdownload) {
+                if (file.reportdownload) {
                     button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Download report")).addClass("btn btn-secondary btn-table report-download d-none d-sm-inline-block");
                     button.append($("<span class='fa-solid fa-circle-down'></span>"));
                     $td.append(button);

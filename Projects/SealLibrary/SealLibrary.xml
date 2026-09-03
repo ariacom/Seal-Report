@@ -16638,6 +16638,11 @@
             True if the report is a favorite
             </summary>
         </member>
+        <member name="F:Seal.Model.SWIFile.reportdownload">
+            <summary>
+            True if the report definition can be downloaded: the folder allows it and, for a shortcut, the target folder allows it too
+            </summary>
+        </member>
         <member name="F:Seal.Model.SWIFile.isshortcut">
             <summary>
             True if the file is a shortcut (.srln) referencing a target report or file

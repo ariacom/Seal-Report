@@ -958,7 +958,8 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(path);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (file.isreport && !folder.reportdownload) throw new Exception("Error: no right to download the report definition.");
+                //Per-file right: the folder allows report definition download and, for a shortcut, the target folder allows it too
+                if (file.isreport && !file.reportdownload) throw new Exception("Error: no right to download the report definition.");
                 int effRight;
                 string viewPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
                 return getFileResult(getFullPath(viewPath), null);

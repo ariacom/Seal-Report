@@ -941,7 +941,8 @@ namespace SealWebServer.Controllers
                         name = Repository.TranslateFileName(newPath) + (isReport ? "" : Path.GetExtension(newPath)),
                         last = System.IO.File.GetLastWriteTime(newPath).ToString("G", Repository.CultureInfo),
                         isreport = isReport,
-                        right = folder.right
+                        right = folder.right,
+                        reportdownload = isReport && folder.reportdownload
                     };
                     if (!folder.IsRepository && FileHelper.IsShortcutFile(newPath))
                     {
@@ -1041,6 +1042,8 @@ namespace SealWebServer.Controllers
                         file.targetpath = targetPath;
                         file.isreport = FileHelper.IsReportFile(targetPath);
                         file.right = Math.Min(folder.right, targetFolder.right);
+                        //The definition lives in the target folder: like the rights, the most restrictive download setting of both folders applies
+                        file.reportdownload = file.isreport && folder.reportdownload && targetFolder.reportdownload;
                         file.name = !string.IsNullOrEmpty(shortcut.Name) ? shortcut.Name : Repository.TranslateFileName(targetFullPath) + (file.isreport ? "" : Path.GetExtension(targetFullPath));
                         resolved = true;
                     }
@@ -1055,6 +1058,7 @@ namespace SealWebServer.Controllers
             {
                 file.broken = true;
                 file.isreport = false;
+                file.reportdownload = false;
                 file.right = folder.right;
             }
         }
@@ -1083,7 +1087,8 @@ namespace SealWebServer.Controllers
                     broken = file.broken,
                     istask = file.istask,
                     isscheduled = file.isscheduled,
-                    right = file.right
+                    right = file.right,
+                    reportdownload = file.reportdownload
                 });
 
             }

@@ -221,6 +221,11 @@ namespace Seal.Model
         public bool isfavorite;
 
         /// <summary>
+        /// True if the report definition can be downloaded: the folder allows it and, for a shortcut, the target folder allows it too
+        /// </summary>
+        public bool reportdownload;
+
+        /// <summary>
         /// True if the file is a shortcut (.srln) referencing a target report or file
         /// </summary>
         public bool isshortcut;
