@@ -5,7 +5,6 @@
 using Seal.Model;
 using System;
 using System.Diagnostics;
-using System.Media;
 using System.Reflection;
 using System.Windows.Forms;
 
@@ -40,7 +39,7 @@ namespace Seal.Forms
         {
             get
             {
-                return Assembly.GetExecutingAssembly().GetName().Version.ToString();
+                return Repository.ProductVersion;
             }
         }
 
@@ -121,8 +120,6 @@ namespace Seal.Forms
                 if (string.IsNullOrWhiteSpace(text))
                 {
                     this.textBoxDescription.Text = "\r\nA genuine seal named 'Chocolat' from Dun Laoghaire, Dublin.\r\n\r\nVisit our Web site, take a dive and join the Seal community...\r\n";
-                    SoundPlayer simpleSound = new SoundPlayer(Properties.Resources.seal_barking);
-                    simpleSound.Play();
                 }
                 else
                 {

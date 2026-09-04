@@ -13112,7 +13112,7 @@
         </member>
         <member name="P:Seal.Model.Repository.ProductVersion">
             <summary>
-            Product version
+            Product version: only the 3 first numbers are used (e.g. 10.1.0), the revision is always 0
             </summary>
         </member>
         <member name="F:Seal.Model.Repository.ProductAdditionalInfo">

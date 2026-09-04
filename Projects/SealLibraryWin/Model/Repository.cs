@@ -148,11 +148,15 @@ namespace Seal.Model
         public string RepositoryPath { get; private set; }
 
         /// <summary>
-        /// Product version
+        /// Product version: only the 3 first numbers are used (e.g. 10.1.0), the revision is always 0
         /// </summary>
         public static string ProductVersion
         {
-            get { return Assembly.GetExecutingAssembly().GetName().Version.ToString(); }
+            get
+            {
+                var v = Assembly.GetExecutingAssembly().GetName().Version;
+                return string.Format("{0}.{1}.{2}", v.Major, v.Minor, v.Build);
+            }
         }
 
         /// <summary>
