@@ -8605,9 +8605,13 @@
             For Script Files, insert the attached file names or their contents according to execution context 
             </summary>
         </member>
-        <member name="M:Seal.Model.Report.AttachScriptFile(System.String,System.String)">
+        <member name="M:Seal.Model.Report.GetAssetVersion(System.String)">
             <summary>
             For a Script File, insert the attached script file name or it content according to execution context 
+            </summary>
+            <summary>
+            Cache-busting token appended to web asset references (?v=...): changes whenever the file changes,
+            so browsers do not keep serving a stale cached script/css after an upgrade.
             </summary>
         </member>
         <member name="M:Seal.Model.Report.AttachAssets(System.Collections.Generic.IEnumerable{Seal.Model.ClientAsset})">

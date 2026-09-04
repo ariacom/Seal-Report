@@ -2113,6 +2113,16 @@ namespace Seal.Model
         /// <summary>
         /// For a Script File, insert the attached script file name or it content according to execution context 
         /// </summary>
+        /// <summary>
+        /// Cache-busting token appended to web asset references (?v=...): changes whenever the file changes,
+        /// so browsers do not keep serving a stale cached script/css after an upgrade.
+        /// </summary>
+        static string GetAssetVersion(string sourceFilePath)
+        {
+            try { return File.GetLastWriteTimeUtc(sourceFilePath).Ticks.ToString("x"); }
+            catch { return Repository.ProductVersion; }
+        }
+
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
             fileName = FileHelper.ConvertOSFilePath(fileName);
@@ -2125,7 +2135,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<script type='text/javascript' src='{0}js/{1}'></script>", WebUrl, fileName);
+                    return string.Format("<script type='text/javascript' src='{0}js/{1}?v={2}'></script>", WebUrl, fileName, GetAssetVersion(sourceFilePath));
                 }
                 else
                 {
@@ -2175,7 +2185,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<script type='text/javascript' src='{0}{1}'></script>", WebUrl, relativePath);
+                    return string.Format("<script type='text/javascript' src='{0}{1}?v={2}'></script>", WebUrl, relativePath, GetAssetVersion(sourceFilePath));
                 }
                 //reference local file
                 string fileReference = Helper.HtmlGetFilePath(sourceFilePath);
@@ -2205,7 +2215,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<link type='text/css' href='{0}{1}' rel='stylesheet'/>", WebUrl, relativePath);
+                    return string.Format("<link type='text/css' href='{0}{1}?v={2}' rel='stylesheet'/>", WebUrl, relativePath, GetAssetVersion(sourceFilePath));
                 }
                 //reference local file
                 string fileReference = Helper.HtmlGetFilePath(sourceFilePath);
@@ -2247,7 +2257,7 @@ namespace Seal.Model
             {
                 if (ExecutionContext == ReportExecutionContext.WebReport || ExecutionContext == ReportExecutionContext.WebOutput)
                 {
-                    return string.Format("<link type='text/css' href='{0}css/{1}' rel='stylesheet'/>", WebUrl, fileName);
+                    return string.Format("<link type='text/css' href='{0}css/{1}?v={2}' rel='stylesheet'/>", WebUrl, fileName, GetAssetVersion(sourceFilePath));
                 }
                 else
                 {

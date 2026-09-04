@@ -1005,7 +1005,7 @@ class SWIMain {
         });
 
         var isMobile = SWIUtil.IsMobile();
-        new DataTable($('#file-table'), {
+        const filesTable = new DataTable($('#file-table'), {
             bSort: true,
             stateSave: true,
             aaSorting: [],
@@ -1046,6 +1046,21 @@ class SWIMain {
         });
 
         _main.enableControls();
+
+        //DataTables Responsive measured the columns above while the table may still have been
+        //hidden (#main-container / .folderview are only revealed later in the login flow): the
+        //garbage widths then collapse the Name column (dtr-hidden) until a window resize.
+        //Re-measure once the table actually gets laid out with a real width.
+        const tableEl = document.getElementById("file-table");
+        if (tableEl) {
+            const ro = new ResizeObserver(function () {
+                if (tableEl.offsetWidth > 0) {
+                    ro.disconnect();
+                    filesTable.responsive.recalc();
+                }
+            });
+            ro.observe(tableEl);
+        }
     }
 
     public showTreeView(show: boolean) {

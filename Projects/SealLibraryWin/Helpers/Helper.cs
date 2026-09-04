@@ -1086,8 +1086,8 @@ namespace Seal.Helpers
                     else WriteDailyLog(DailyLogEvents, FileHelper.TempApplicationDirectory, 30, fullMessage);
                 }
 
-                if (ex.Message.Length > 32000) msg = ex.Message.Substring(32000);
-                else msg = ex.Message;
+                //EventLog.WriteEntry throws when the message exceeds ~32k characters, truncate it first
+                msg = ex.Message.Length > 32000 ? ex.Message.Substring(0, 32000) : ex.Message;
                 if (RuntimeInformation.IsOSPlatform(OSPlatform.Windows)) EventLog.WriteEntry("Seal Report", $"{context}\r\n{msg}", EventLogEntryType.Error);
             }
             catch { }

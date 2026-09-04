@@ -674,7 +674,7 @@ namespace Seal.Model
                     if (connection.ConnectionType == ConnectionType.MSSQLServer)
                     {
                         connection.ConnectionType = ConnectionType.MSSQLServerMicrosoft;
-                        if (!connection.MSSqlServerConnectionString.ToLower().Contains("trustservercertificate=true;"))
+                        if (!string.IsNullOrEmpty(connection.MSSqlServerConnectionString) && !connection.MSSqlServerConnectionString.ToLower().Contains("trustservercertificate=true;"))
                         {
                             if (!connection.MSSqlServerConnectionString.EndsWith(";")) connection.MSSqlServerConnectionString += ";";
                             connection.MSSqlServerConnectionString += "TrustServerCertificate=True;";
