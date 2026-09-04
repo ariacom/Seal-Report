@@ -52,7 +52,7 @@ Listed in alphabetical order.
 | ClosedXML (Excel processing) | 0.105.1 | 2026-07-25 | MIT |
 | D3 (incl. d3-time v1, d3-time-format v2) | 3.5.9 | 2015-11-16 | BSD-3-Clause |
 | DataTables | 2.3.7 | 2026-01-30 | MIT |
-| DiffPlex | 1.9.0 | 2025-09-13 | Apache-2.0 |
+| DiffPlex / DiffPlex.Wpf | 1.9.0 / 1.9.1 | 2025-09-13 / 2025-10-30 | Apache-2.0 |
 | DocumentFormat.OpenXml | 3.5.1 | 2026-03-18 | MIT |
 | ECharts | 5.6.0 | 2024-12-28 | Apache-2.0 |
 | flatpickr | 4.6.13 | 2022-04-14 | MIT |
@@ -76,6 +76,7 @@ Listed in alphabetical order.
 | ScintillaNET.Core | 3.6.51 | 2020-08-30 | MIT (Scintilla license for the native component) |
 | ScottPlot | 5.1.58 | 2026-03-29 | MIT |
 | SendGrid | 9.29.3 | 2024-04-02 | MIT |
+| SharpCompress | 0.48.1 | 2026-05-14 | MIT |
 | SharpZipLib | 1.4.2 | 2023-01-30 | MIT |
 | SkiaSharp / HarfBuzzSharp / Svg.Skia | 3.119.2 / 8.3.1.3 / 4.5.0 | 2026-02-07 / 2026-02-07 / 2026-04-22 | MIT |
 | SSH.NET | 2026.0.0 | 2026-08-09 | MIT |
