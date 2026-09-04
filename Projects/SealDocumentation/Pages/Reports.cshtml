@@ -512,6 +512,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Chart JS:</b> Render the Chart JS series of the page result</li>
                                 <li><b>ECharts Chart</b>: Render the ECharts series of the page result</li>
                                 <li><b>Plotly Chart</b>: Render the Plotly series of the page result</li>
+                                <li><b>Chart Scottplot</b>: Render the ScottPlot series of the page result as a static image (PNG or SVG)</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
                                 <li><b>Gauge</b>: Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed.</li>
                             </ul>
@@ -567,7 +568,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             </p>
                             <ul>
                                 <li><b>CSV</b>: Generates a CSV file.</li>
-                                <li><b>Excel</b>: Generate an XLSX file using the <strong>EPPLus</strong> library.</li>
+                                <li><b>Excel</b>: Generate an XLSX file using the <strong>ClosedXML</strong> library (charts are rendered as images with <strong>ScottPlot</strong>).</li>
                                 <li><b>HTML to PDF</b>: Generate a PDF from the HTML Print format using the <strong>PuppeteerSharp</strong> library.</li>
                                 <li><b>Json</b>: Generate a simple Json file.</li>
                                 <li><b>PDF</b>: Generate a PDF file using the <strong>QuestPDF</strong> library and <strong>PuppeteerSharp</strong> library if JavaScript Charts or Gauge are involved.</li>

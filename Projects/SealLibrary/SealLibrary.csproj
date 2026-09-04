@@ -193,7 +193,6 @@
 		<PackageReference Include="Svg.Skia" Version="4.5.0" />
 		<PackageReference Include="System.ClientModel" Version="1.10.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
-		<PackageReference Include="System.Drawing.Common" Version="10.0.10" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.IO.Packaging" Version="10.0.10" />
 		<PackageReference Include="TaskScheduler" Version="2.12.2" />

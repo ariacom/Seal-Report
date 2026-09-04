@@ -15,8 +15,8 @@
       <Prompt>PromptOneValue</Prompt>
       <OperatorStyle>NotModifiable</OperatorStyle>
       <DisplayOrderRE>3</DisplayOrderRE>
-      <Value1>{InstallationDirectory}\Web.NETCore</Value1>
       <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
       <TypeRe>Text</TypeRe>
       <EnumGUIDRE>4bcf1ccc-cb6b-446a-b6ee-0bc0ac4d2b15</EnumGUIDRE>
     </ReportRestriction>
