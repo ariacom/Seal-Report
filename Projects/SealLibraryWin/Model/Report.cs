@@ -2082,19 +2082,20 @@ namespace Seal.Model
         /// </summary>
         public string AttachImageFile(string fileName)
         {
-            if (ExecutionContext == ReportExecutionContext.WebReport)
-            {
-                return string.Format("{0}img/{1}", WebUrl, fileName);
-            }
-
             if (GenerateHTMLDisplay)
             {
+                if (ExecutionContext == ReportExecutionContext.WebReport)
+                {
+                    return string.Format("{0}img/{1}", WebUrl, fileName);
+                }
                 //Rendering the display, we return full path with file:///
                 return GetImageFile(fileName);
             }
 
-            //generating result file
-            return Helper.HtmlMakeImageSrcData(Path.Combine(Repository.ViewImagesFolder, fileName));
+            //generating result file (also from the Web Report Server): embed the image so the result is self-contained
+            var sourceFilePath = Path.Combine(Repository.ViewImagesFolder, fileName);
+            if (!File.Exists(sourceFilePath)) return GetImageFile(fileName);
+            return Helper.HtmlMakeImageSrcData(sourceFilePath);
         }
 
         /// <summary>
@@ -2147,7 +2148,7 @@ namespace Seal.Model
 
             //generating result file, set the script directly in the result
             string result = "<script type='text/javascript'>\r\n";
-            result += Repository.Configuration.GetAttachedFileContent(sourceFilePath);
+            result += Helper.EscapeInlineScript(Repository.Configuration.GetAttachedFileContent(sourceFilePath));
             result += "\r\n</script>\r\n";
             return result;
         }
@@ -2194,7 +2195,7 @@ namespace Seal.Model
 
             //generating result file, set the script directly in the result
             string result = "<script type='text/javascript'>\r\n";
-            result += Repository.Configuration.GetAttachedFileContent(sourceFilePath);
+            result += Helper.EscapeInlineScript(Repository.Configuration.GetAttachedFileContent(sourceFilePath));
             result += "\r\n</script>\r\n";
             return result;
         }
@@ -2222,9 +2223,9 @@ namespace Seal.Model
                 return string.Format("<link type='text/css' href='{0}' rel='stylesheet'/>", fileReference);
             }
 
-            //generating result file, set the CSS directly in the result
+            //generating result file, set the CSS directly in the result with its local resources (fonts, images) embedded as data URIs
             string result = "<style type='text/css'>\r\n";
-            result += Repository.Configuration.GetAttachedFileContent(sourceFilePath);
+            result += Helper.InlineCssUrls(Repository.Configuration.GetAttachedFileContent(sourceFilePath), Path.GetDirectoryName(sourceFilePath));
             result += "\r\n</style>\r\n";
             return result;
         }
@@ -2267,9 +2268,9 @@ namespace Seal.Model
                 }
             }
 
-            //generating result file, set the CSS directly in the result
+            //generating result file, set the CSS directly in the result with its local resources (fonts, images) embedded as data URIs
             string result = "<style type='text/css'>\r\n";
-            result += Repository.Configuration.GetAttachedFileContent(sourceFilePath);
+            result += Helper.InlineCssUrls(Repository.Configuration.GetAttachedFileContent(sourceFilePath), Path.GetDirectoryName(sourceFilePath));
             result += "\r\n</style>\r\n";
             return result;
         }

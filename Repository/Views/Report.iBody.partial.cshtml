@@ -317,9 +317,9 @@
 
 @if (report.HasChartJSChart)
 {
-    @Raw(report.AttachScriptPath("lib/chartjs/Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.0/chart.min.js"))
+    @Raw(report.AttachScriptPath("lib/chartjs/Chart.min.js", "https://cdnjs.cloudflare.com/ajax/libs/Chart.js/4.5.1/chart.umd.min.js"))
     @Raw(report.AttachScriptPath("lib/chartjs/chartjs-plugin-datalabels.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-plugin-datalabels/2.2.0/chartjs-plugin-datalabels.min.js"))
-    @Raw(report.AttachScriptPath("lib/chartjs/chartjs-adapter-date-fns.min.js", "https://cdnjs.cloudflare.com/ajax/libs/chartjs-adapter-date-fns/3.0.0/chartjs-adapter-date-fns.min.js"))
+    @Raw(report.AttachScriptPath("lib/chartjs/chartjs-adapter-date-fns.min.js", "https://cdn.jsdelivr.net/npm/chartjs-adapter-date-fns@3.0.0/dist/chartjs-adapter-date-fns.bundle.min.js"))
 }
 
 @if (report.HasPlotlyChart)

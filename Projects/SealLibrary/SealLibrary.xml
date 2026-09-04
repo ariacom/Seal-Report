@@ -1905,6 +1905,28 @@
             Returns the content of an image file as a base64 data URI to be used in an HTML img src attribute
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.GetCssResourceMimeType(System.String)">
+            <summary>
+            Returns the MIME type of a file referenced from a CSS (font or image) from its extension
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.Helper.InlineCssUrls(System.String,System.String)">
+            <summary>
+            Inline the local resources referenced with url() in a CSS content (fonts, images) as data URIs, so the CSS can be embedded in a self-contained HTML result file.
+            Relative paths are resolved against the folder of the CSS file. External (http, https, //), data: and anchor references are kept, as well as files not found.
+            For a font-face 'src' list declaring several formats of the same font (e.g. woff2 then ttf), only the first available file is kept to limit the result size.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.Helper.EscapeInlineScript(System.String)">
+            <summary>
+            Make a JavaScript source safe to embed in an inline &lt;script&gt; block of a self-contained HTML result:
+            the closing tag sequences it may contain in string literals (e.g. '&lt;/body&gt;' in the ECharts 'save as image' code) are escaped as '&lt;\/...',
+            which is identical for the JavaScript engine but no longer looks like HTML markup.
+            Without this, the browser closes the script at a '&lt;/script' sequence, and HTML post-processors that inject markup before '&lt;/body&gt;'
+            (Visual Studio Browser Link and browser refresh, Application Insights or proxy script injection) cut the library in the middle,
+            leaving its global (e.g. 'echarts') undefined in the exported result.
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.HtmlGetFilePath(System.String)">
             <summary>
             Returns a file path as an HTML encoded 'file:///' URL

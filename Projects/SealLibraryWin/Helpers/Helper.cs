@@ -1466,6 +1466,104 @@ namespace Seal.Helpers
         }
 
         /// <summary>
+        /// Returns the MIME type of a file referenced from a CSS (font or image) from its extension
+        /// </summary>
+        public static string GetCssResourceMimeType(string path)
+        {
+            switch (Path.GetExtension(path).ToLower())
+            {
+                case ".woff2": return "font/woff2";
+                case ".woff": return "font/woff";
+                case ".ttf": return "font/ttf";
+                case ".otf": return "font/otf";
+                case ".eot": return "application/vnd.ms-fontobject";
+                case ".svg": return "image/svg+xml";
+                case ".png": return "image/png";
+                case ".gif": return "image/gif";
+                case ".jpg":
+                case ".jpeg": return "image/jpeg";
+                case ".webp": return "image/webp";
+                case ".ico": return "image/x-icon";
+                default: return "application/octet-stream";
+            }
+        }
+
+        static readonly Regex _cssUrlRegex = new Regex(@"url\(\s*(['""]?)([^'""\)]+)\1\s*\)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex _cssFontSrcRegex = new Regex(@"src\s*:\s*((?:url\([^\)]*\)\s*(?:format\([^\)]*\))?\s*,?\s*)+)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+        static readonly Regex _cssFontSrcEntryRegex = new Regex(@"url\([^\)]*\)\s*(?:format\([^\)]*\))?", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// Inline the local resources referenced with url() in a CSS content (fonts, images) as data URIs, so the CSS can be embedded in a self-contained HTML result file.
+        /// Relative paths are resolved against the folder of the CSS file. External (http, https, //), data: and anchor references are kept, as well as files not found.
+        /// For a font-face 'src' list declaring several formats of the same font (e.g. woff2 then ttf), only the first available file is kept to limit the result size.
+        /// </summary>
+        public static string InlineCssUrls(string css, string cssFolder)
+        {
+            if (string.IsNullOrEmpty(css) || string.IsNullOrEmpty(cssFolder)) return css;
+
+            var cache = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+            string getDataUri(string url)
+            {
+                //Returns the data URI of a local file referenced by a CSS url, null if the reference is not a local file
+                url = url.Trim();
+                if (url.Length == 0 || url.StartsWith("data:", StringComparison.OrdinalIgnoreCase) || url.StartsWith("#") || url.StartsWith("//") || url.Contains("://")) return null;
+                var filePart = url;
+                int idx = filePart.IndexOfAny(new char[] { '?', '#' });
+                if (idx >= 0) filePart = filePart.Substring(0, idx);
+                if (filePart.Length == 0) return null;
+                string result;
+                if (cache.TryGetValue(filePart, out result)) return result;
+                try
+                {
+                    var path = Path.GetFullPath(Path.Combine(cssFolder, FileHelper.ConvertOSFilePath(filePart)));
+                    result = File.Exists(path) ? "data:" + GetCssResourceMimeType(path) + ";base64," + Convert.ToBase64String(File.ReadAllBytes(path), Base64FormattingOptions.None) : null;
+                }
+                catch
+                {
+                    result = null;
+                }
+                cache[filePart] = result;
+                return result;
+            }
+
+            //Font faces: keep only the first available format of the src list
+            css = _cssFontSrcRegex.Replace(css, srcMatch =>
+            {
+                foreach (Match entry in _cssFontSrcEntryRegex.Matches(srcMatch.Groups[1].Value))
+                {
+                    var urlMatch = _cssUrlRegex.Match(entry.Value);
+                    if (!urlMatch.Success) continue;
+                    var dataUri = getDataUri(urlMatch.Groups[2].Value);
+                    if (dataUri != null) return "src:" + _cssUrlRegex.Replace(entry.Value, "url(" + dataUri + ")");
+                }
+                return srcMatch.Value;
+            });
+
+            //Other references (images, remaining fonts)
+            return _cssUrlRegex.Replace(css, m =>
+            {
+                var dataUri = getDataUri(m.Groups[2].Value);
+                return dataUri != null ? "url(" + dataUri + ")" : m.Value;
+            });
+        }
+
+        static readonly Regex _inlineScriptClosingTagRegex = new Regex(@"</(script|body|html|head)", RegexOptions.Compiled | RegexOptions.IgnoreCase);
+
+        /// <summary>
+        /// Make a JavaScript source safe to embed in an inline &lt;script&gt; block of a self-contained HTML result:
+        /// the closing tag sequences it may contain in string literals (e.g. '&lt;/body&gt;' in the ECharts 'save as image' code) are escaped as '&lt;\/...',
+        /// which is identical for the JavaScript engine but no longer looks like HTML markup.
+        /// Without this, the browser closes the script at a '&lt;/script' sequence, and HTML post-processors that inject markup before '&lt;/body&gt;'
+        /// (Visual Studio Browser Link and browser refresh, Application Insights or proxy script injection) cut the library in the middle,
+        /// leaving its global (e.g. 'echarts') undefined in the exported result.
+        /// </summary>
+        public static string EscapeInlineScript(string script)
+        {
+            if (string.IsNullOrEmpty(script)) return script;
+            return _inlineScriptClosingTagRegex.Replace(script, m => "<\\/" + m.Groups[1].Value);
+        }
+
+        /// <summary>
         /// Returns a file path as an HTML encoded 'file:///' URL
         /// </summary>
         public static string HtmlGetFilePath(string path)
