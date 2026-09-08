@@ -124,6 +124,7 @@ namespace Seal.Model
             if (newReport == null) throw new Exception("Invalid Navigation");
 
             newReport.WebUrl = rootReport.WebUrl;
+            newReport.ForceShowErrorMessages = rootReport.ForceShowErrorMessages;
             newReport.IsNavigating = true;
             if (!newWindow) newReport.HasNavigation = true;
             newReport.ExecutionView.InitParameters(false);
