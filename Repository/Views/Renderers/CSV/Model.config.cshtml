@@ -1,9 +1,13 @@
 ﻿@using Seal.Model;
+@using Seal.Helpers;
 @{
     ReportViewTemplate Template = Model;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = "csv_separator", DisplayName = "Separator", Description = "The separator used to generate the CSV file. If empty, the default value of the current culture is used." });
+    Template.Parameters.Add(new Parameter() { Name = "csv_separator", DisplayName = "Separator", Description = "The separator used to generate the CSV file. If empty, the value of the server configuration is used, then the list separator of the current culture." });
+    Template.Parameters.Add(new Parameter() { Name = "csv_quoting", Value = "Always", Enums = new string[] { }, EnumType = typeof(CsvQuoting), UseOnlyEnumValues = true, DisplayName = "Quote values", Description = "Defines when a value is enclosed in double quotes: Always, When needed (RFC 4180: only if the value contains the separator, a double quote, a line break or a leading/trailing space) or Never (no escaping at all)." });
     Template.Parameters.Add(new Parameter() { Name = "use_display_format", DisplayName = "Use element format", BoolValue = true, Description = "If true, the display format of the element is applied to the values displayed in the CSV file" });
+    Template.Parameters.Add(new Parameter() { Name = "csv_invariant_raw", DisplayName = "Invariant raw values", BoolValue = false, Description = "If true and the element format is not used, dates are written in ISO 8601 (yyyy-MM-ddTHH:mm:ss) and numbers with the invariant culture (dot decimal separator, no thousands separator). Recommended when the file is consumed by a program." });
+    Template.Parameters.Add(new Parameter() { Name = "csv_line_ending", Value = "CrLf", Enums = new string[] { }, EnumType = typeof(CsvLineEnding), UseOnlyEnumValues = true, DisplayName = "Line ending", Description = "The line ending used in the CSV file: CRLF (Windows, RFC 4180) or LF (Unix)." });
     Template.Parameters.Add(new Parameter() { Name = "add_last_separator", DisplayName = "Add last separator", BoolValue = false, Description = "If true, the separator is added to the last value of the line." });
 }

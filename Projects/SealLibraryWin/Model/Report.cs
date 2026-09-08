@@ -1287,8 +1287,8 @@ namespace Seal.Model
         {
             get
             {
-                //Utf8 by default, except for CSV if specified
-                return (Format == ReportFormat.csv && !ExecutionView.CSVRenderer.GetBoolValue(Parameter.CSVUtf8Parameter)) ? Encoding.Default : Encoding.UTF8;
+                //Utf8 by default, except for CSV where the encoding is defined by the CSV renderer of the root view
+                return Format == ReportFormat.csv ? ExcelHelper.GetCsvEncoding(ExecutionView.CSVRenderer.GetValue(Parameter.CSVEncodingParameter)) : Encoding.UTF8;
             }
         }
 

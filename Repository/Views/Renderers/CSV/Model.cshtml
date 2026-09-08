@@ -1,14 +1,19 @@
 ﻿@using Seal.Model
+@using Seal.Helpers
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
     ReportModel reportModel = view.Model;
 
-    string separator = view.CSVRenderer.GetValue("csv_separator");
-    separator = string.IsNullOrEmpty(separator) ? report.Repository.Configuration.CsvSeparator : separator;
-    separator = string.IsNullOrEmpty(separator) ? report.Repository.CultureInfo.TextInfo.ListSeparator : separator;
+    string separator = view.CSVRenderer.GetSeparator();
+    CsvQuoting quoting = view.CSVRenderer.GetQuoting();
+    string newLine = view.CSVRenderer.GetLineEnding();
     bool useFormat = view.CSVRenderer.GetBoolValue("use_display_format", true);
-    bool addLastSeparator = view.CSVRenderer.GetBoolValue("add_last_separator", true);
+    bool invariantRaw = view.CSVRenderer.GetBoolValue("csv_invariant_raw", false);
+    bool addLastSeparator = view.CSVRenderer.GetBoolValue("add_last_separator", false);
+
+    //CSV value of a cell followed by the separator (except for the last value of the line if 'Add last separator' is false)
+    Func<ResultCell, bool, bool, string> csvValue = (cell, format, isLast) => cell.CSVValue(format, (!addLastSeparator && isLast) ? "" : separator, quoting, invariantRaw);
 }
 @foreach (ResultPage page in reportModel.Pages)
 {
@@ -18,7 +23,7 @@
         {
             ResultCell header = page.PageTable[0,i];
             ResultCell value = page.PageTable[1,i];
-            @Raw(header.CSVValue(false, separator) + value.CSVValue(useFormat, (!addLastSeparator && i == page.PageTable.ColumnCount - 1) ? "" : separator) + "\r\n")
+            @Raw(csvValue(header, false, false) + csvValue(value, useFormat, i == page.PageTable.ColumnCount - 1) + newLine)
         }
     }
     if (page.DataTable != null && view.GetBoolValue("show_data_tables"))
@@ -27,10 +32,10 @@
         {
             for (int col = 0; col < page.DataTable.ColumnCount; col++)
             {
-                @Raw(page.DataTable[row, col].CSVValue(useFormat, (!addLastSeparator && col == page.DataTable.ColumnCount - 1) ? "" : separator))
+                @Raw(csvValue(page.DataTable[row, col], useFormat, col == page.DataTable.ColumnCount - 1))
             }
-            @Raw("\r\n")
+            @Raw(newLine)
         }
     }
-    @Raw("\r\n")
+    @Raw(newLine)
 }

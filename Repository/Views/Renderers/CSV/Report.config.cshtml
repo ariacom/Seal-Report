@@ -1,7 +1,9 @@
 ﻿@using Seal.Model;
+@using Seal.Helpers;
 @{
     ReportViewTemplate Template = Model;
 
     //Parameters for this template
-    Template.Parameters.Add(new Parameter() { Name = Parameter.CSVUtf8Parameter, BoolValue = true, DisplayName = "Encode file in UTF8", Description = "If true, the file generated for a CSV export is encoded in UTF8, otherwise the file encoding is the Default of the machine executing the report." });
+    Template.Parameters.Add(new Parameter() { Name = Parameter.CSVEncodingParameter, Value = "Utf8Bom", Enums = new string[] { }, EnumType = typeof(CsvEncoding), UseOnlyEnumValues = true, DisplayName = "File encoding", Description = "Encoding of the CSV file: UTF-8 with BOM (recognized by Excel), UTF-8 without BOM, UTF-16 LE with BOM or Windows-1252 (ANSI, characters outside the code page are lost)." });
+    Template.Parameters.Add(new Parameter() { Name = "csv_excel_hint", DisplayName = "Add Excel separator hint", BoolValue = false, Description = "If true, a first line 'sep=<separator>' is added to the file so that Excel uses the right separator whatever the locale of the user. Other programs read this line as data, keep it false if the file is not opened directly in Excel." });
 }

@@ -15,6 +15,45 @@ using System.Text.RegularExpressions;
 namespace Seal.Helpers
 {
     /// <summary>
+    /// Defines when a CSV value is enclosed in double quotes
+    /// </summary>
+    public enum CsvQuoting
+    {
+        [System.ComponentModel.Description("Always")]
+        Always,
+        [System.ComponentModel.Description("When needed (RFC 4180)")]
+        WhenNeeded,
+        [System.ComponentModel.Description("Never")]
+        Never,
+    }
+
+    /// <summary>
+    /// Line ending used in a CSV file
+    /// </summary>
+    public enum CsvLineEnding
+    {
+        [System.ComponentModel.Description("CRLF (Windows)")]
+        CrLf,
+        [System.ComponentModel.Description("LF (Unix)")]
+        Lf,
+    }
+
+    /// <summary>
+    /// Encoding of a CSV file
+    /// </summary>
+    public enum CsvEncoding
+    {
+        [System.ComponentModel.Description("UTF-8 with BOM (Excel)")]
+        Utf8Bom,
+        [System.ComponentModel.Description("UTF-8 without BOM")]
+        Utf8,
+        [System.ComponentModel.Description("UTF-16 LE with BOM")]
+        Utf16,
+        [System.ComponentModel.Description("Windows-1252 (ANSI)")]
+        Windows1252,
+    }
+
+    /// <summary>
     /// Static helper methods to read and write CSV values and load DataTables from Excel or CSV files, available in Razor scripts
     /// </summary>
     public class ExcelHelper
@@ -24,9 +63,59 @@ namespace Seal.Helpers
         /// </summary>
         static public string ToCsv(string value, string separator = "\t")
         {
-            string val = value;
-            if (val != null) val = val.Replace("\"", "\"\"");
-            return string.Format("\"{0}\"{1}", val, separator);
+            return ToCsv(value, separator, CsvQuoting.Always);
+        }
+
+        /// <summary>
+        /// Returns a value escaped for a CSV file, followed by the separator. The quoting mode defines when the value is enclosed in double quotes:
+        /// Always, WhenNeeded (RFC 4180: only if the value contains the separator, a double quote, a line break or a leading/trailing space) or Never.
+        /// </summary>
+        static public string ToCsv(string value, string separator, CsvQuoting quoting)
+        {
+            string val = value ?? "";
+            bool quote = quoting == CsvQuoting.Always;
+            if (quoting == CsvQuoting.WhenNeeded)
+            {
+                quote = val.Contains("\"") || val.Contains("\r") || val.Contains("\n")
+                    || (!string.IsNullOrEmpty(separator) && val.Contains(separator))
+                    || (val.Length > 0 && (val[0] == ' ' || val[val.Length - 1] == ' '));
+            }
+            if (quote) val = "\"" + val.Replace("\"", "\"\"") + "\"";
+            return val + separator;
+        }
+
+        /// <summary>
+        /// Returns the CsvQuoting from its name (Always by default)
+        /// </summary>
+        static public CsvQuoting GetCsvQuoting(string name)
+        {
+            CsvQuoting result;
+            return Enum.TryParse(name, true, out result) ? result : CsvQuoting.Always;
+        }
+
+        /// <summary>
+        /// Returns the line ending string from a CsvLineEnding name (CRLF by default)
+        /// </summary>
+        static public string GetCsvLineEnding(string name)
+        {
+            CsvLineEnding result;
+            return Enum.TryParse(name, true, out result) && result == CsvLineEnding.Lf ? "\n" : "\r\n";
+        }
+
+        /// <summary>
+        /// Returns the .NET Encoding from a CsvEncoding name (UTF-8 with BOM by default)
+        /// </summary>
+        static public Encoding GetCsvEncoding(string name)
+        {
+            CsvEncoding result;
+            if (!Enum.TryParse(name, true, out result)) result = CsvEncoding.Utf8Bom;
+            switch (result)
+            {
+                case CsvEncoding.Utf8: return new UTF8Encoding(false);
+                case CsvEncoding.Utf16: return Encoding.Unicode;
+                case CsvEncoding.Windows1252: return Encoding.GetEncoding(1252);
+                default: return new UTF8Encoding(true);
+            }
         }
 
         /// <summary>

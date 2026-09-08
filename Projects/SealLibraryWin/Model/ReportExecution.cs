@@ -206,6 +206,14 @@ namespace Seal.Model
 
 
         /// <summary>
+        /// Returns the content written in the result file: leading and trailing line breaks are removed for a CSV result (spaces are significant), otherwise the result is trimmed
+        /// </summary>
+        string getResultFileContent(string result)
+        {
+            return Report.Format == ReportFormat.csv ? result.Trim('\r', '\n') : result.Trim();
+        }
+
+        /// <summary>
         /// Render the report result
         /// </summary>
         public void RenderResult()
@@ -220,7 +228,7 @@ namespace Seal.Model
                 //Check that the file has not been done by the Renderer
                 if (Report.Renderer == null || string.IsNullOrEmpty(File.ReadAllText(Report.ResultFilePath).Trim()))
                 {
-                    File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                    File.WriteAllText(Report.ResultFilePath, getResultFileContent(result), Report.ResultFileEncoding);
                 }
             }
             catch (Exception ex)
@@ -232,7 +240,7 @@ namespace Seal.Model
                     string newPath = FileHelper.GetUniqueFileName(Path.Combine(newFolder, Report.ResultFileName), "." + Report.ResultExtension, true);
                     Report.ExecutionMessages += string.Format("Unable to write to '{0}'.\r\nChanging report result to '{1}'.\r\n{2}\r\n", Report.ResultFilePath, newPath, ex.Message);
                     Report.ResultFilePath = newPath;
-                    File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                    File.WriteAllText(Report.ResultFilePath, getResultFileContent(result), Report.ResultFileEncoding);
                 }
             }
         }
@@ -2393,7 +2401,7 @@ namespace Seal.Model
                 //Check that the file has not been done by the Renderer
                 if (Report.Renderer == null || string.IsNullOrEmpty(File.ReadAllText(Report.ResultFilePath).Trim()))
                 {
-                    File.WriteAllText(Report.ResultFilePath, result.Trim(), Report.ResultFileEncoding);
+                    File.WriteAllText(Report.ResultFilePath, getResultFileContent(result), Report.ResultFileEncoding);
                 }
                 executeTasks(ExecutionStep.AfterRendering);
             }

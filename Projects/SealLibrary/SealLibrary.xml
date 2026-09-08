@@ -1246,6 +1246,21 @@
             Download a blob from the container as a byte array (throws an exception if the blob does not exist)
             </summary>
         </member>
+        <member name="T:Seal.Helpers.CsvQuoting">
+            <summary>
+            Defines when a CSV value is enclosed in double quotes
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.CsvLineEnding">
+            <summary>
+            Line ending used in a CSV file
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.CsvEncoding">
+            <summary>
+            Encoding of a CSV file
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.ExcelHelper">
             <summary>
             Static helper methods to read and write CSV values and load DataTables from Excel or CSV files, available in Razor scripts
@@ -1254,6 +1269,27 @@
         <member name="M:Seal.Helpers.ExcelHelper.ToCsv(System.String,System.String)">
             <summary>
             Returns a value quoted and escaped for a CSV file, followed by the separator
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.ToCsv(System.String,System.String,Seal.Helpers.CsvQuoting)">
+            <summary>
+            Returns a value escaped for a CSV file, followed by the separator. The quoting mode defines when the value is enclosed in double quotes:
+            Always, WhenNeeded (RFC 4180: only if the value contains the separator, a double quote, a line break or a leading/trailing space) or Never.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.GetCsvQuoting(System.String)">
+            <summary>
+            Returns the CsvQuoting from its name (Always by default)
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.GetCsvLineEnding(System.String)">
+            <summary>
+            Returns the line ending string from a CsvLineEnding name (CRLF by default)
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.GetCsvEncoding(System.String)">
+            <summary>
+            Returns the .NET Encoding from a CsvEncoding name (UTF-8 with BOM by default)
             </summary>
         </member>
         <member name="M:Seal.Helpers.ExcelHelper.FromCsv(System.String)">
@@ -7664,9 +7700,9 @@
             Name of the view parameter defining the list of column numbers to hide in the result table
             </summary>
         </member>
-        <member name="F:Seal.Model.Parameter.CSVUtf8Parameter">
+        <member name="F:Seal.Model.Parameter.CSVEncodingParameter">
             <summary>
-            Name of the view parameter to encode the CSV export file in UTF8
+            Name of the view parameter defining the encoding of the CSV export file (CsvEncoding name)
             </summary>
         </member>
         <member name="F:Seal.Model.Parameter.AutoScrollParameter">
@@ -9628,6 +9664,11 @@
         <member name="M:Seal.Model.ReportExecution.Render">
             <summary>
             Render the report and returns the result
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.getResultFileContent(System.String)">
+            <summary>
+            Returns the content written in the result file: leading and trailing line breaks are removed for a CSV result (spaces are significant), otherwise the result is trimmed
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.RenderResult">
@@ -13927,6 +13968,11 @@
             CSV value of the cell
             </summary>
         </member>
+        <member name="M:Seal.Model.ResultCell.CSVValue(System.Boolean,System.String,Seal.Helpers.CsvQuoting,System.Boolean)">
+            <summary>
+            CSV value of the cell with a quoting mode. If useFormat is false and invariantRaw is true, dates are written in ISO 8601 and numbers with the invariant culture.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ResultCell.DisplayValue">
             <summary>
             Display value of the cell
@@ -13935,6 +13981,11 @@
         <member name="P:Seal.Model.ResultCell.RawDisplayValue">
             <summary>
             Display value of the cell without applying the format or translation
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultCell.InvariantDisplayValue">
+            <summary>
+            Culture independent value of the cell without format or translation: ISO 8601 for dates (yyyy-MM-ddTHH:mm:ss), invariant culture for numbers
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.DoubleValue">
@@ -16981,6 +17032,21 @@
         <member name="M:Seal.Renderer.CSVRenderer.GetFileExtension">
             <summary>
             File name extension of the generated result
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.CSVRenderer.GetSeparator">
+            <summary>
+            Separator used for the CSV values: the 'csv_separator' parameter of the view, then the server configuration, then the list separator of the repository culture
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.CSVRenderer.GetQuoting">
+            <summary>
+            Quoting mode of the CSV values from the 'csv_quoting' parameter (Always by default)
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.CSVRenderer.GetLineEnding">
+            <summary>
+            Line ending of the CSV lines from the 'csv_line_ending' parameter (CRLF by default)
             </summary>
         </member>
         <member name="T:Seal.Renderer.ExcelRenderer">

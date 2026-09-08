@@ -1,6 +1,19 @@
 ﻿@using Seal.Model
+@using System.Linq
 @{
     Report report = Model;
     ReportView view = report.CurrentView;
+
+    if (view.CSVRenderer.GetBoolValue("csv_excel_hint"))
+    {
+        //Excel separator hint: the separator and line ending of the first model view of the result
+        Func<ReportView, ReportView> firstModelView = null;
+        firstModelView = v => v.Model != null ? v : v.Views.OrderBy(i => i.SortOrder).Select(i => firstModelView(i)).FirstOrDefault(i => i != null);
+        var modelView = firstModelView(view);
+        if (modelView != null)
+        {
+            @Raw("sep=" + modelView.CSVRenderer.GetSeparator() + modelView.CSVRenderer.GetLineEnding())
+        }
+    }
 }
 @Raw(view.ParseChildren())

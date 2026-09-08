@@ -69,9 +69,9 @@ namespace Seal.Model
         /// </summary>
         public const string ColumnsHiddenParameter = "columns_hidden";
         /// <summary>
-        /// Name of the view parameter to encode the CSV export file in UTF8
+        /// Name of the view parameter defining the encoding of the CSV export file (CsvEncoding name)
         /// </summary>
-        public const string CSVUtf8Parameter = "csv_utf8";
+        public const string CSVEncodingParameter = "csv_encoding";
         /// <summary>
         /// Name of the view parameter enabling the autoscroll of the execution messages
         /// </summary>

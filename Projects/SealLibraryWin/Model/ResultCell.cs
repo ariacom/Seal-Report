@@ -175,7 +175,15 @@ namespace Seal.Model
         /// </summary>
         public string CSVValue(bool useFormat, string separator)
         {
-            return ExcelHelper.ToCsv(useFormat ? DisplayValue : RawDisplayValue, separator);
+            return CSVValue(useFormat, separator, CsvQuoting.Always, false);
+        }
+
+        /// <summary>
+        /// CSV value of the cell with a quoting mode. If useFormat is false and invariantRaw is true, dates are written in ISO 8601 and numbers with the invariant culture.
+        /// </summary>
+        public string CSVValue(bool useFormat, string separator, CsvQuoting quoting, bool invariantRaw = false)
+        {
+            return ExcelHelper.ToCsv(useFormat ? DisplayValue : (invariantRaw ? InvariantDisplayValue : RawDisplayValue), separator, quoting);
         }
 
         /// <summary>
@@ -211,6 +219,20 @@ namespace Seal.Model
             }
         }
 
+
+        /// <summary>
+        /// Culture independent value of the cell without format or translation: ISO 8601 for dates (yyyy-MM-ddTHH:mm:ss), invariant culture for numbers
+        /// </summary>
+        public string InvariantDisplayValue
+        {
+            get
+            {
+                if (Value == null) return "";
+                if (Value is DateTime) return ((DateTime)Value).ToString("yyyy-MM-ddTHH:mm:ss", CultureInfo.InvariantCulture);
+                if (Value is IFormattable) return ((IFormattable)Value).ToString(null, CultureInfo.InvariantCulture);
+                return Value.ToString();
+            }
+        }
 
         /// <summary>
         /// Double value of the cell if possible
