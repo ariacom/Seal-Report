@@ -1454,9 +1454,7 @@ namespace Seal.Helpers
         /// </summary>
         public static string HtmlMakeImageSrcData(string path)
         {
-            FileStream fs = new FileStream(path, FileMode.Open, FileAccess.Read);
-            byte[] filebytes = new byte[fs.Length];
-            _ = fs.Read(filebytes, 0, Convert.ToInt32(fs.Length));
+            byte[] filebytes = File.ReadAllBytes(path);
             var ext = Path.GetExtension(path);
             string type;
             if (ext == ".ico") type = "x-icon";
