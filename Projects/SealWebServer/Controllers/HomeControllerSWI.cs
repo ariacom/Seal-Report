@@ -86,10 +86,12 @@ namespace SealWebServer.Controllers
 
         private object getNotAuthenticatedProfile()
         {
+            //The session may be new (expired, application restart, session cookie replaced): the repository is not created yet
+            var repository = Repository ?? CreateRepository();
             return new
             {
                 authenticated = false,
-                showresetpassword = Repository.Security.ResetPasswordActive
+                showresetpassword = repository.Security.ResetPasswordActive
             };
         }
 
