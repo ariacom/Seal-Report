@@ -33,7 +33,26 @@ namespace SealWebServer
                 options.Cookie.HttpOnly = true;
                 // Make the session cookie essential
                 options.Cookie.IsEssential = true;
+                // Scope the session cookie to the application path: the framework default is "/", so two instances
+                // published as sub-applications of the same web site (e.g. /LEG and /REP) would share and overwrite
+                // the same '.AspNetCore.Session' cookie, which makes them unusable simultaneously in one browser.
+                options.Cookie.Path = GetSessionCookiePath(sessionConfiguration);
             });
-        }   
+        }
+
+        /// <summary>
+        /// Path of the session cookie: the 'SessionCookiePath' setting if set, else the reverse proxy path base,
+        /// else the IIS application path published by the ASP.NET Core Module (ASPNETCORE_APPL_PATH), else "/".
+        /// </summary>
+        static string GetSessionCookiePath(SessionConfiguration sessionConfiguration)
+        {
+            var path = sessionConfiguration.SessionCookiePath;
+            if (string.IsNullOrWhiteSpace(path)) path = PathBaseProxy;
+            if (string.IsNullOrWhiteSpace(path)) path = System.Environment.GetEnvironmentVariable("ASPNETCORE_APPL_PATH");
+            if (string.IsNullOrWhiteSpace(path)) return "/";
+            path = path.Trim();
+            if (!path.StartsWith("/")) path = "/" + path;
+            return path.Length > 1 ? path.TrimEnd('/') : path;
+        }
     }
 }
