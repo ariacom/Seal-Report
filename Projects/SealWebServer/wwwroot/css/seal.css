@@ -606,26 +606,26 @@ table.dataTable thead .dt-column-order {
 
 /* Report execution progress (Bootstrap 5 rework).
    Replaces the removed BS3 contextual/striped classes: the bars are styled via
-   .bg-* + .progress-bar-animated and made a bit taller/rounded with spacing so
-   the timer + task/model messages stay readable while a report executes. */
+   .bg-* + .progress-bar-animated, kept compact (slim bars, tight spacing) so the
+   timer + task/model messages stay readable without taking much vertical room. */
 #progress_panel {
     border: 0;
     border-radius: .5rem;
     box-shadow: 0 1px 4px rgba(0, 0, 0, .12);
-    margin-bottom: 12px;
+    margin-bottom: 8px;
 }
 
 #progress_panel .card-body {
-    padding: 14px 16px;
+    padding: 8px 12px;
 }
 
 #progress_panel .progress {
     display: flex;
     width: 100%;
-    height: 1.9rem;
-    border-radius: .5rem;
+    height: 1.25rem;
+    border-radius: .4rem;
     background-color: #e7eaee;
-    margin-bottom: 10px;
+    margin-bottom: 6px;
 }
 
 #progress_panel .progress:last-child {
@@ -638,10 +638,10 @@ table.dataTable thead .dt-column-order {
        grows with the progression width beyond that. */
     min-width: max-content;
     justify-content: flex-start;
-    padding: 0 12px;
-    font-size: 13px;
+    padding: 0 10px;
+    font-size: 12px;
     font-weight: 600;
-    line-height: 1.9rem;
+    line-height: 1.25rem;
     white-space: nowrap;
     color: #fff;
     transition: width .4s ease;
