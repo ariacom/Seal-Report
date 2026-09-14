@@ -935,7 +935,7 @@ AND [0416b8e2-b450-4cda-bdbe-af8d75c85032]</Restriction>
                         </Parameter>
                         <Parameter>
                           <Name>kpi_trend_icon</Name>
-                          <Value>glyphicon glyphicon-user</Value>
+                          <Value>fa-solid fa-user</Value>
                         </Parameter>
                         <Parameter>
                           <Name>kpi_button_size</Name>
@@ -1028,7 +1028,7 @@ AND [0416b8e2-b450-4cda-bdbe-af8d75c85032]</Restriction>
                         </Parameter>
                         <Parameter>
                           <Name>kpi_trend_icon</Name>
-                          <Value>glyphicon glyphicon-cog</Value>
+                          <Value>fa-solid fa-gear</Value>
                         </Parameter>
                         <Parameter>
                           <Name>kpi_button_size</Name>
@@ -1141,8 +1141,8 @@ btn-danger</Value>
                         </Parameter>
                         <Parameter>
                           <Name>kpi_trend_icon</Name>
-                          <Value>glyphicon glyphicon-ok|1
-glyphicon glyphicon-remove</Value>
+                          <Value>fa-solid fa-check|1
+fa-solid fa-xmark</Value>
                         </Parameter>
                         <Parameter>
                           <Name>kpi_button_size</Name>

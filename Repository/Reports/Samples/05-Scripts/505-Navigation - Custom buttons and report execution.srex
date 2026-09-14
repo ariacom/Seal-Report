@@ -358,7 +358,7 @@
                     {
                         if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
-                        &lt;th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))&gt;@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") &amp;&amp; table.HasNavigation(row, col) &amp;&amp; report.GenerateHTMLDisplay ? "&lt;span class='navigation_icon glyphicon glyphicon-share'&gt;&lt;/span&gt;" : "")&lt;/th&gt;
+                        &lt;th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(cell))&gt;@Raw(cell.HTMLValue)@Raw(view.GetBoolValue("data_tables_show_navigation") &amp;&amp; table.HasNavigation(row, col) &amp;&amp; report.GenerateHTMLDisplay ? "&lt;span class='navigation_icon fa-solid fa-share'&gt;&lt;/span&gt;" : "")&lt;/th&gt;
                     }
                 &lt;/tr&gt;
             }

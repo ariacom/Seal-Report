@@ -456,8 +456,8 @@ btn-success</Value>
                     </Parameter>
                     <Parameter>
                       <Name>kpi_trend_icon</Name>
-                      <Value>glyphicon glyphicon-remove|0
-glyphicon glyphicon-ok
+                      <Value>fa-solid fa-xmark|0
+fa-solid fa-check
 </Value>
                     </Parameter>
                     <Parameter>

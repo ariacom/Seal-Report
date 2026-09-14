@@ -290,13 +290,13 @@ if (typeof _main == 'undefined') {
 
 &lt;div id='exec_report_search' class="btn_rcorners"&gt;
 
-&lt;span class="glyphicon glyphicon-usd btn_glyphicon text-info"&gt;&lt;/span&gt;
+&lt;span class="fa-solid fa-dollar-sign btn_glyphicon text-info"&gt;&lt;/span&gt;
 
 &lt;div class='btn_txt'&gt;
     &lt;span&gt;Search an Order&lt;br&gt;Same window&lt;/span&gt;
 &lt;/div&gt;
 
-  &lt;span class="glyphicon glyphicon-search btn_glyphicon text-success"&gt;&lt;/span&gt;
+  &lt;span class="fa-solid fa-magnifying-glass btn_glyphicon text-success"&gt;&lt;/span&gt;
 &lt;/div&gt;
 
 
@@ -324,13 +324,13 @@ if (typeof _main == 'undefined') {
 
 &lt;div id='exec_report_search_nw' class="btn_rcorners"&gt;
 
-&lt;span class="glyphicon glyphicon-usd btn_glyphicon text-success"&gt;&lt;/span&gt;
+&lt;span class="fa-solid fa-dollar-sign btn_glyphicon text-success"&gt;&lt;/span&gt;
 
 &lt;div class='btn_txt'&gt;
     &lt;span&gt;Search an Order&lt;br&gt;New window&lt;/span&gt;
 &lt;/div&gt;
 
-  &lt;span class="glyphicon glyphicon-search btn_glyphicon text-success"&gt;&lt;/span&gt;
+  &lt;span class="fa-solid fa-magnifying-glass btn_glyphicon text-success"&gt;&lt;/span&gt;
 &lt;/div&gt;
 
 
@@ -357,13 +357,13 @@ if (typeof _main == 'undefined') {
 
 &lt;div id='view_treeview_folders' class="btn_rcorners"&gt;
 
-&lt;span class="glyphicon glyphicon-folder-open btn_glyphicon text-warning"&gt;&lt;/span&gt;
+&lt;span class="fa-solid fa-folder-open btn_glyphicon text-warning"&gt;&lt;/span&gt;
 
 &lt;div class='btn_txt'&gt;
     &lt;span&gt;Open a folder&lt;br&gt;01-Tasks&lt;/span&gt;
 &lt;/div&gt;
 
-  &lt;span class="glyphicon glyphicon-chevron-down btn_glyphicon text-success"&gt;&lt;/span&gt;
+  &lt;span class="fa-solid fa-chevron-down btn_glyphicon text-success"&gt;&lt;/span&gt;
 &lt;/div&gt;
 
 
@@ -393,13 +393,13 @@ if (typeof _main == 'undefined') {
 
 &lt;div id='view_folder' class="btn_rcorners"&gt;
 
-&lt;span class="glyphicon glyphicon-folder-open btn_glyphicon text-danger"&gt;&lt;/span&gt;
+&lt;span class="fa-solid fa-folder-open btn_glyphicon text-danger"&gt;&lt;/span&gt;
 
 &lt;div class='btn_txt'&gt;
     &lt;span&gt;Open a folder&lt;br&gt;05-Scripts&lt;/span&gt;
 &lt;/div&gt;
 
-  &lt;span class="glyphicon glyphicon-chevron-down btn_glyphicon text-success"&gt;&lt;/span&gt;
+  &lt;span class="fa-solid fa-chevron-down btn_glyphicon text-success"&gt;&lt;/span&gt;
 &lt;/div&gt;
 
 

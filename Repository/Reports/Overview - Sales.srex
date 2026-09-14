@@ -1664,8 +1664,8 @@ text-bg-success</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_icon</Name>
-                                      <Value>glyphicon glyphicon-circle-arrow-down|0
-glyphicon glyphicon-ok</Value>
+                                      <Value>fa-solid fa-circle-arrow-down|0
+fa-solid fa-check</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_button_size</Name>
@@ -1815,8 +1815,8 @@ text-bg-success</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_goal_icon</Name>
-                                      <Value>glyphicon glyphicon-circle-arrow-down|0
-glyphicon glyphicon-ok</Value>
+                                      <Value>fa-solid fa-circle-arrow-down|0
+fa-solid fa-check</Value>
                                     </Parameter>
                                     <Parameter>
                                       <Name>kpi_button_size</Name>
@@ -1968,8 +1968,8 @@ text-bg-success</Value>
                                 </Parameter>
                                 <Parameter>
                                   <Name>kpi_goal_icon</Name>
-                                  <Value>glyphicon glyphicon-circle-arrow-down|0
-glyphicon glyphicon-ok</Value>
+                                  <Value>fa-solid fa-circle-arrow-down|0
+fa-solid fa-check</Value>
                                 </Parameter>
                               </Parameters>
                               <SortOrder>1</SortOrder>
