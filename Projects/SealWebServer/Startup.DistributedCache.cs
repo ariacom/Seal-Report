@@ -1,5 +1,8 @@
-﻿using System;
+using System;
 using System.Linq;
+using Microsoft.AspNetCore.Builder;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Http.Features;
 using Microsoft.Extensions.DependencyInjection;
 using SealWebServer.Models.Configuration;
 
@@ -28,46 +31,94 @@ namespace SealWebServer
                 services.AddDistributedMemoryCache();
             }
 
-            services.AddSession(options =>
+            services.AddHttpContextAccessor();
+            services.AddSession();
+            services.AddOptions<SessionOptions>().Configure<IHttpContextAccessor>((options, contextAccessor) =>
             {
                 options.IdleTimeout = TimeSpan.FromMinutes(sessionConfiguration.SessionTimeout);
-                options.Cookie.HttpOnly = true;
-                // Make the session cookie essential
-                options.Cookie.IsEssential = true;
-                // Scope the session cookie to the application path: the framework default is "/", so two instances
-                // published as sub-applications of the same web site (e.g. /LEG and /REP) would share and overwrite
-                // the same '.AspNetCore.Session' cookie, which makes them unusable simultaneously in one browser.
-                options.Cookie.Path = GetSessionCookiePath(sessionConfiguration);
-                // Also make the cookie name specific to the path: a stale site-wide cookie (written by an older version or
-                // by an instance published at the site root) is then simply ignored instead of resetting the session on each request.
-                options.Cookie.Name = GetSessionCookieName(options.Cookie.Path);
+                // Scope the session cookie to the application: the framework default is a cookie named '.AspNetCore.Session' with
+                // path "/", so two instances published as sub-applications of the same web site (e.g. /LEG and /REP) would share
+                // and overwrite the same cookie, which makes them unusable simultaneously in one browser.
+                var fixedPath = NormalizeCookiePath(sessionConfiguration.SessionCookiePath) ?? NormalizeCookiePath(PathBaseProxy);
+                options.Cookie = new SessionCookieBuilder(fixedPath, contextAccessor);
             });
         }
 
         /// <summary>
-        /// Name of the session cookie: the default '.AspNetCore.Session' at the root, else suffixed with the sanitized path (e.g. '.AspNetCore.Session.REP')
+        /// Normalized cookie path ("/xxx" without trailing slash), null if empty or root
         /// </summary>
-        static string GetSessionCookieName(string path)
+        static string NormalizeCookiePath(string path)
         {
-            const string defaultName = ".AspNetCore.Session";
-            if (string.IsNullOrEmpty(path) || path == "/") return defaultName;
-            var suffix = new string(path.Trim('/').Select(c => char.IsLetterOrDigit(c) || c == '-' || c == '_' ? c : '.').ToArray());
-            return defaultName + "." + suffix;
+            if (string.IsNullOrWhiteSpace(path)) return null;
+            path = path.Trim();
+            if (!path.StartsWith("/")) path = "/" + path;
+            path = path.TrimEnd('/');
+            return path.Length > 1 ? path : null;
         }
 
         /// <summary>
-        /// Path of the session cookie: the 'SessionCookiePath' setting if set, else the reverse proxy path base,
-        /// else the IIS application path published by the ASP.NET Core Module (ASPNETCORE_APPL_PATH), else "/".
+        /// Builder of the session cookie, scoped to the application path: the 'SessionCookiePath' setting (or the reverse proxy
+        /// path base) if set, else the path base of the current request (the IIS application path, as typed by the browser).
+        /// Browsers match cookie paths case-sensitively whereas IIS paths are not, so a path derived from the configuration only
+        /// (e.g. "/REP") would never be sent back when the user browses "/rep/", and the session would be lost on every request.
+        /// The cookie name is also suffixed with the lower-case application path (e.g. '.AspNetCore.Session.rep'): a stale site-wide
+        /// cookie written by an older version or by an instance published at the site root is then simply ignored instead of
+        /// resetting the session on each request.
         /// </summary>
-        static string GetSessionCookiePath(SessionConfiguration sessionConfiguration)
+        class SessionCookieBuilder : CookieBuilder
         {
-            var path = sessionConfiguration.SessionCookiePath;
-            if (string.IsNullOrWhiteSpace(path)) path = PathBaseProxy;
-            if (string.IsNullOrWhiteSpace(path)) path = System.Environment.GetEnvironmentVariable("ASPNETCORE_APPL_PATH");
-            if (string.IsNullOrWhiteSpace(path)) return "/";
-            path = path.Trim();
-            if (!path.StartsWith("/")) path = "/" + path;
-            return path.Length > 1 ? path.TrimEnd('/') : path;
+            const string DefaultName = ".AspNetCore.Session";
+            readonly string _fixedPath;
+            readonly IHttpContextAccessor _contextAccessor;
+
+            public SessionCookieBuilder(string fixedPath, IHttpContextAccessor contextAccessor)
+            {
+                _fixedPath = fixedPath;
+                _contextAccessor = contextAccessor;
+                HttpOnly = true;
+                // Make the session cookie essential
+                IsEssential = true;
+                SameSite = SameSiteMode.Lax;
+                SecurePolicy = CookieSecurePolicy.None;
+            }
+
+            /// <summary>
+            /// Name of the cookie for the current request
+            /// </summary>
+            public override string Name
+            {
+                get
+                {
+                    var applicationPath = _fixedPath ?? GetRequestPathBase(_contextAccessor.HttpContext);
+                    if (string.IsNullOrEmpty(applicationPath) || applicationPath == "/") return DefaultName;
+                    var suffix = new string(applicationPath.Trim('/').ToLowerInvariant().Select(c => char.IsLetterOrDigit(c) || c == '-' || c == '_' ? c : '.').ToArray());
+                    return DefaultName + "." + suffix;
+                }
+                set { }
+            }
+
+            public override CookieOptions Build(HttpContext context, DateTimeOffset expiresFrom)
+            {
+                var result = base.Build(context, expiresFrom);
+                result.Path = _fixedPath ?? GetRequestPathBase(context);
+                return result;
+            }
+
+            /// <summary>
+            /// Path base of the request with the casing sent by the browser (the PathBase may carry the configured casing with some hosting models), "/" if none
+            /// </summary>
+            static string GetRequestPathBase(HttpContext context)
+            {
+                var pathBase = context?.Request.PathBase ?? PathString.Empty;
+                if (!pathBase.HasValue) return "/";
+                var raw = context.Features.Get<IHttpRequestFeature>()?.RawTarget;
+                if (!string.IsNullOrEmpty(raw) && raw.StartsWith("/") && raw.Length >= pathBase.Value.Length
+                    && string.Compare(raw, 0, pathBase.Value, 0, pathBase.Value.Length, StringComparison.OrdinalIgnoreCase) == 0)
+                {
+                    return raw.Substring(0, pathBase.Value.Length);
+                }
+                return pathBase.Value;
+            }
         }
     }
 }
