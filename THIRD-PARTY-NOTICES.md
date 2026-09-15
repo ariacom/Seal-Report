@@ -47,11 +47,10 @@ Listed in alphabetical order.
 | bootstrap-select | 1.14.0-beta3 | 2022-04-20 | MIT |
 | Chart.js | 4.5.1 | 2025-10-13 | MIT |
 | chartjs-adapter-date-fns (bundles date-fns) | 3.0.0 | 2022-12-11 | MIT |
-| chartjs-adapter-moment | 1.0.1 | 2022-11-21 | MIT |
 | chartjs-plugin-datalabels | 2.2.0 | 2022-12-15 | MIT |
 | ClosedXML (Excel processing) | 0.105.1 | 2026-07-25 | MIT |
 | D3 (incl. d3-time v1, d3-time-format v2) | 3.5.9 | 2015-11-16 | BSD-3-Clause |
-| DataTables | 2.3.7 | 2026-01-30 | MIT |
+| DataTables (core, with Buttons, DateTime, FixedColumns, FixedHeader, Responsive, Scroller and Select) | 2.3.7 | 2026-01-30 | MIT |
 | DiffPlex / DiffPlex.Wpf | 1.9.0 / 1.9.1 | 2025-09-13 / 2025-10-30 | Apache-2.0 |
 | DocumentFormat.OpenXml | 3.5.1 | 2026-03-18 | MIT |
 | ECharts | 5.6.0 | 2024-12-28 | Apache-2.0 |
@@ -61,10 +60,10 @@ Listed in alphabetical order.
 | HtmlSanitizer | 9.1.923-beta | 2026-04-27 | MIT |
 | IdentityModel | 7.0.0 | 2024-04-09 | Apache-2.0 |
 | jose-jwt | 5.3.0 | 2026-03-27 | MIT |
-| jQuery | 3.7.1 | 2023-08-28 | MIT |
+| jQuery (bundled in the DataTables build) | 3.7.0 | 2023-05-11 | MIT |
 | MailKit / MimeKit | 4.16.0 | 2026-04-15 | MIT |
 | Microsoft.Data.SqlClient | 7.0.1 | 2026-04-24 | MIT |
-| moment | 2.20.1 | 2017-12-19 | MIT |
+| moment | 2.30.1 | 2023-12-26 | MIT |
 | MongoDB.Driver | 3.9.0 | 2026-05-27 | Apache-2.0 |
 | MySqlConnector | 2.6.1 | 2026-06-25 | MIT |
 | Newtonsoft.Json | 13.0.4 | 2025-09-16 | MIT |

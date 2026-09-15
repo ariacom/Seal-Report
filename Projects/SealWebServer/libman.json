@@ -13,11 +13,6 @@
       ]
     },
     {
-      "library": "jquery@3.7.1",
-      "destination": "wwwroot/lib/jquery/",
-      "files": [ "jquery.min.js" ]
-    },
-    {
       "library": "popper.js@2.11.8",
       "destination": "wwwroot/lib/popper/",
       "files": [ "umd/popper.min.js" ]
