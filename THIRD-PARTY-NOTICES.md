@@ -10,8 +10,8 @@ packages that are distributed under their own licenses. Most are permissive
 The following are freely redistributable but distributed under Microsoft's own
 (non-open-source) license terms, not an OSI license:
 - **Microsoft.AnalysisServices.AdomdClient** 19.84.1 (released 2024-07-02) — Analysis Services / MSAS driver
+- **Microsoft.Data.SqlClient.SNI.runtime** 6.0.2 (released 2025-01-16) — native SQL Server network library pulled in by Microsoft.Data.SqlClient on Windows
 - **Microsoft.Web.Administration** 11.1.0 (released 2018-01-23) — IIS administration
-- **Microsoft.Web.WebView2** 1.0.3912.50 (released 2026-04-13) — embedded browser control
 
 ### Oracle.ManagedDataAccess.Core (Oracle database driver)
 Version 23.26.200 (released 2026-04-06).
@@ -63,6 +63,7 @@ Listed in alphabetical order.
 | jQuery (bundled in the DataTables build) | 3.7.0 | 2023-05-11 | MIT |
 | MailKit / MimeKit | 4.16.0 | 2026-04-15 | MIT |
 | Microsoft.Data.SqlClient | 7.0.1 | 2026-04-24 | MIT |
+| Microsoft.Web.WebView2 (SDK; the WebView2 Runtime is not redistributed and must be installed on the machine) | 1.0.3912.50 | 2026-04-13 | BSD-3-Clause |
 | moment | 2.30.1 | 2023-12-26 | MIT |
 | MongoDB.Driver | 3.9.0 | 2026-05-27 | Apache-2.0 |
 | MySqlConnector | 2.6.1 | 2026-06-25 | MIT |
