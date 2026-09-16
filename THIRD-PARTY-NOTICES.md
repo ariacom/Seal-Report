@@ -56,7 +56,8 @@ Listed in alphabetical order.
 
 | Package | Version | Release date | License |
 |---|---|---|---|
-| AngleSharp | 1.5.0 | 2026-06-06 | MIT |
+| AngleSharp | 1.8.1 | 2026-09-10 | MIT |
+| AngleSharp.Css (pulled in by HtmlSanitizer) | 1.0.2 | 2026-08-21 | MIT |
 | Azure SDKs / Microsoft.* packages | various | various | MIT |
 | Azure.AI.OpenAI | 2.1.0 | 2024-12-06 | MIT |
 | Bootstrap | 5.3.3 | 2024-02-20 | MIT |
@@ -74,7 +75,7 @@ Listed in alphabetical order.
 | flatpickr | 4.6.13 | 2022-04-14 | MIT |
 | FluentFTP | 54.2.1 | 2026-09-08 | MIT |
 | Font Awesome (Free) | 6.7.2 | 2024-12-16 | CC BY 4.0 (icons), OFL (fonts), MIT (code) |
-| HtmlSanitizer | 9.1.923-beta | 2026-04-27 | MIT |
+| HtmlSanitizer | 9.2.1039 | 2026-08-28 | MIT |
 | jose-jwt | 5.3.0 | 2026-03-27 | MIT |
 | jQuery (bundled in the DataTables build) | 3.7.0 | 2023-05-11 | MIT |
 | MailKit / MimeKit | 4.18.0 | 2026-09-13 | MIT |
@@ -90,7 +91,7 @@ Listed in alphabetical order.
 | PuppeteerSharp | 24.40.0 | 2026-03-20 | MIT |
 | RazorEngineCore | 2026.1.1 | 2026-01-17 | MIT |
 | ScintillaNET.Core | 3.6.51 | 2020-08-30 | MIT (Scintilla license for the native component) |
-| ScottPlot | 5.1.58 | 2026-03-29 | MIT |
+| ScottPlot | 5.1.59 | 2026-06-22 | MIT |
 | SendGrid | 9.29.3 | 2024-04-02 | MIT |
 | SharpCompress | 0.48.1 | 2026-05-14 | MIT |
 | SharpZipLib | 1.4.2 | 2023-01-30 | MIT |
