@@ -220,7 +220,8 @@
                                     </code></pre>
                                 </li>
                                 <li>
-                                    For <b>HTML to PDF</b> results (<b>Puppeteer</b>), a Chromium install is required (<i>libnss3</i> and the other Chromium dependencies): follow the procedure:<br /><a href="https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#recommended-enable-user-namespace-cloning" target="_blank">Running Puppeteer on WSL (Windows subsystem for Linux)</a>
+                                    For <b>HTML to PDF</b> results (<b>Puppeteer</b>), the <b>Chromium</b> browser itself is downloaded at the first execution in the <i>Assemblies/Chromium</i> Repository sub-folder, but its shared libraries must be installed (<i>libnss3</i> and the other Chromium dependencies): follow the procedure:<br /><a href="https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#recommended-enable-user-namespace-cloning" target="_blank">Running Puppeteer on WSL (Windows subsystem for Linux)</a><br />
+                                    If the server has no access to the internet, the execution fails with a message giving the URL of the Chromium archive and the target folder: download it from another machine and unzip it in this folder.
                                 </li>
                                 <li>
                                     From the <b>Ubuntu Command Prompt</b>, create the <i>/seal</i> installation folder:
@@ -396,7 +397,7 @@
                                     Using a standard FTP Client like FileZilla, check the Logs files in the <i>'/site/wwwroot/Repository/Logs'</i> remote folder.
                                 </li>
                                 <li>
-                                    HTML and JavaScript for PDF support: As PuppeteerSharp requires a chrome install on the server, to host in azure you need to use azure docker support.
+                                    HTML and JavaScript for PDF support: As PuppeteerSharp requires a Chromium browser and its dependencies on the server, to host in azure you need to use azure docker support.
                                     Rebuild your app as a docker image and host as a web app or azure function as required.
                                 </li>
                             </ol>

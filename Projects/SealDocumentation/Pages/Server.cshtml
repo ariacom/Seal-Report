@@ -111,6 +111,12 @@ namespace MyNamespace
                                 Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
                                 In this case all the Java Scripts and CSS files used in the report result will be loaded from the server.
                             </div>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Session cookie and several instances on the same web site</h4>
+                                The session cookie is scoped to the application: its path and its name are built from the application path of each request (<eg>e.g. the cookie <i>.AspNetCore.Session.rep</i> with the path <i>/rep</i></eg>).<br />
+                                Several instances published as sub-applications of the same web site (<eg>e.g. <i>/LEG</i> and <i>/REP</i></eg>) can thus be used simultaneously in the same browser.<br />
+                                Set the <code>SessionCookiePath</code> property in the <i>appsettings.json</i> file only if the path seen by the browser differs from the application path (<eg>e.g. url rewriting</eg>). Note that cookie paths are case sensitive for the browser.
+                            </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>ASP Session Storage (<a href="https://github.com/ariacom/Seal-Report/pull/46" target="_blank">Pull Request 46</a>)</h4>
                                 <h5>Session management options</h5>

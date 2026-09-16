@@ -567,14 +567,25 @@ model.ResultTable = query2.CopyToDataTable2();
                                 The following renderers are implemented:
                             </p>
                             <ul>
-                                <li><b>CSV</b>: Generates a CSV file.</li>
+                                <li>
+                                    <b>CSV</b>: Generates a CSV file.<br />
+                                    The renderer parameters define the file format: <code>File encoding</code> (UTF-8 with or without BOM, UTF-16 LE, Windows-1252) and <code>Add Excel separator hint</code> (a first line <i>sep=&lt;separator&gt;</i> so that Excel uses the right separator whatever the locale of the user) for the report,
+                                    <code>Separator</code>, <code>Quote values</code> (<i>Always</i>, <i>When needed</i> following the RFC 4180, or <i>Never</i>), <code>Use element format</code>, <code>Invariant raw values</code> (ISO 8601 dates and invariant numbers when the element format is not used, recommended if the file is consumed by a program), <code>Line ending</code> and <code>Add last separator</code> for each model.
+                                </li>
                                 <li><b>Excel</b>: Generate an XLSX file using the <strong>ClosedXML</strong> library (charts are rendered as images with <strong>ScottPlot</strong>).</li>
-                                <li><b>HTML to PDF</b>: Generate a PDF from the HTML Print format using the <strong>PuppeteerSharp</strong> library.</li>
+                                <li><b>HTML to PDF</b>: Generate a PDF from the HTML Print format using the <strong>PuppeteerSharp</strong> library (a <strong>Chromium</strong> browser is downloaded at the first execution, see the <i>Chromium browser</i> note below).</li>
                                 <li><b>Json</b>: Generate a simple Json file.</li>
                                 <li><b>PDF</b>: Generate a PDF file using the <strong>QuestPDF</strong> library and <strong>PuppeteerSharp</strong> library if JavaScript Charts or Gauge are involved.</li>
                                 <li><b>Text</b>: Generate a simple text file.</li>
                                 <li><b>XML</b>: Generate a simple XML file.</li>
                             </ul>
+
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Chromium browser</h4>
+                                The <b>HTML to PDF</b> renderer, and the <b>PDF</b> renderer if the report contains JavaScript Charts or Gauges, need a headless browser to print the HTML result.<br />
+                                At the first execution, an unbranded <b>Chromium</b> build (pinned revision, BSD-3-Clause) is downloaded from the Chromium snapshots and installed in the <i>Assemblies\Chromium</i> Repository sub-folder. Nothing has to be installed on the machine.<br />
+                                If the server has no access to the internet, the execution fails with a message giving the URL of the archive and the target folder: download the archive from another machine and unzip it in this folder, then execute the report again.
+                            </div>
 
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Excel and PDF samples</h4>
