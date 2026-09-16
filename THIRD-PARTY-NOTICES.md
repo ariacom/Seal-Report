@@ -9,12 +9,12 @@ packages that are distributed under their own licenses. Most are permissive
 ### Microsoft proprietary redistributables
 The following are freely redistributable but distributed under Microsoft's own
 (non-open-source) license terms, not an OSI license:
-- **Microsoft.AnalysisServices.AdomdClient** 19.84.1 (released 2024-07-02) — Analysis Services / MSAS driver
-- **Microsoft.Data.SqlClient.SNI.runtime** 6.0.2 (released 2025-01-16) — native SQL Server network library pulled in by Microsoft.Data.SqlClient on Windows
+- **Microsoft.AnalysisServices.AdomdClient** 19.117.0 (released 2026-09-09) — Analysis Services / MSAS driver
+- **Microsoft.Data.SqlClient.SNI.runtime** 6.0.3 (released 2026-08-14) — native SQL Server network library pulled in by Microsoft.Data.SqlClient on Windows
 - **Microsoft.Web.Administration** 11.1.0 (released 2018-01-23) — IIS administration
 
 ### Oracle.ManagedDataAccess.Core (Oracle database driver)
-Version 23.26.200 (released 2026-04-06).
+Version 23.26.301 (released 2026-09-08).
 Distributed by Oracle under the
 [Oracle Free Use Terms and Conditions (FUTC)](https://www.oracle.com/downloads/licenses/oracle-free-license.html).
 Free to use and redistribute, but not an open-source license.
@@ -72,20 +72,19 @@ Listed in alphabetical order.
 | DocumentFormat.OpenXml | 3.5.1 | 2026-03-18 | MIT |
 | ECharts | 5.6.0 | 2024-12-28 | Apache-2.0 |
 | flatpickr | 4.6.13 | 2022-04-14 | MIT |
-| FluentFTP | 54.1.1 | 2026-04-10 | MIT |
+| FluentFTP | 54.2.1 | 2026-09-08 | MIT |
 | Font Awesome (Free) | 6.7.2 | 2024-12-16 | CC BY 4.0 (icons), OFL (fonts), MIT (code) |
 | HtmlSanitizer | 9.1.923-beta | 2026-04-27 | MIT |
-| IdentityModel | 7.0.0 | 2024-04-09 | Apache-2.0 |
 | jose-jwt | 5.3.0 | 2026-03-27 | MIT |
 | jQuery (bundled in the DataTables build) | 3.7.0 | 2023-05-11 | MIT |
-| MailKit / MimeKit | 4.16.0 | 2026-04-15 | MIT |
-| Microsoft.Data.SqlClient | 7.0.1 | 2026-04-24 | MIT |
+| MailKit / MimeKit | 4.18.0 | 2026-09-13 | MIT |
+| Microsoft.Data.SqlClient | 7.0.3 | 2026-09-10 | MIT |
 | Microsoft.Web.WebView2 (SDK; the WebView2 Runtime is not redistributed and must be installed on the machine) | 1.0.3912.50 | 2026-04-13 | BSD-3-Clause |
 | moment | 2.30.1 | 2023-12-26 | MIT |
-| MongoDB.Driver | 3.9.0 | 2026-05-27 | Apache-2.0 |
-| MySqlConnector | 2.6.1 | 2026-06-25 | MIT |
+| MongoDB.Driver | 3.11.2 | 2026-09-10 | Apache-2.0 |
+| MySqlConnector | 2.6.2 | 2026-08-11 | MIT |
 | Newtonsoft.Json | 13.0.4 | 2025-09-16 | MIT |
-| Npgsql (PostgreSQL) | 10.0.2 | 2026-03-12 | PostgreSQL License (MIT-like) |
+| Npgsql (PostgreSQL) | 10.0.3 | 2026-05-27 | PostgreSQL License (MIT-like) |
 | Plotly.js | 3.1.1 | 2025-09-29 | MIT |
 | Popper (@popperjs/core) | 2.11.8 | 2023-05-26 | MIT |
 | PuppeteerSharp | 24.40.0 | 2026-03-20 | MIT |
@@ -95,7 +94,7 @@ Listed in alphabetical order.
 | SendGrid | 9.29.3 | 2024-04-02 | MIT |
 | SharpCompress | 0.48.1 | 2026-05-14 | MIT |
 | SharpZipLib | 1.4.2 | 2023-01-30 | MIT |
-| SkiaSharp / HarfBuzzSharp / Svg.Skia | 3.119.2 / 8.3.1.3 / 4.5.0 | 2026-02-07 / 2026-02-07 / 2026-04-22 | MIT |
+| SkiaSharp / HarfBuzzSharp | 3.119.2 / 8.3.1.3 | 2026-02-07 / 2026-02-07 | MIT |
 | SSH.NET | 2026.0.0 | 2026-08-09 | MIT |
 | System.Data.SQLite | 1.0.119 | 2024-09-29 | Public Domain |
 | TaskScheduler | 2.12.2 | 2025-07-08 | MIT |

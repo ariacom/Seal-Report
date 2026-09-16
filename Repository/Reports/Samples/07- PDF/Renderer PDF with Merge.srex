@@ -2591,7 +2591,6 @@ ORDER BY 1</Sql>
 @using QuestPDF.Fluent
 @using QuestPDF.Helpers
 @using Colors = QuestPDF.Helpers.Colors
-@using Svg.Skia
 @using PuppeteerSharp
 @using Seal.Model
 @using Seal.Helpers

@@ -4,7 +4,6 @@
 //
 using QuestPDF.Fluent;
 using QuestPDF.Infrastructure;
-using Svg.Skia;
 using Seal.Model;
 using PuppeteerSharp;
 using AngleSharp.Html.Parser;

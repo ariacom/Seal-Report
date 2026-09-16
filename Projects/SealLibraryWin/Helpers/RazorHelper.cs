@@ -46,7 +46,6 @@ using Microsoft.Data.SqlClient;
 using System.DirectoryServices;
 using System.Net;
 using Twilio.Rest.Api.V2010.Account;
-using Svg.Skia;
 using System.Diagnostics;
 using Seal.Model;
 
@@ -146,7 +145,6 @@ namespace Seal.Helpers
                     //when several Seal processes start at the same time (e.g. web server + scheduler on first run).
                     using (var dummyStream = new MemoryStream())
                         SpreadsheetDocument.Create(dummyStream, SpreadsheetDocumentType.Workbook, autoSave: false).Dispose();
-                    _ = new SKSvg();
                     _ = new PdfOptions();
                     _ = new NpgsqlConnection("");
                     _ = new SQLiteConnection("");

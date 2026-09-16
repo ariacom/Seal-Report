@@ -82,7 +82,6 @@
     <assemblyIdentity name="ClosedXML" />
     <assemblyIdentity name="QuestPDF" />
     <assemblyIdentity name="PuppeteerSharp" />
-    <assemblyIdentity name="Svg.Skia" />
     <assemblyIdentity name="SkiaSharp" />
     <assemblyIdentity name="ScottPlot" />
     <assemblyIdentity name="DocumentFormat.OpenXml" />

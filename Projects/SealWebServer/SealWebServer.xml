@@ -419,5 +419,36 @@
             If true, the Login Password fields are hidden (e.g. for Integrated Windows Authentication)
             </summary>
         </member>
+        <member name="P:SealWebServer.Models.Configuration.SessionConfiguration.SessionCookiePath">
+            <summary>
+            Optional path of the session cookie. If not set, the IIS application path is used (or "/" when not hosted in a sub-application).
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Startup.NormalizeCookiePath(System.String)">
+            <summary>
+            Normalized cookie path ("/xxx" without trailing slash), null if empty or root
+            </summary>
+        </member>
+        <member name="T:SealWebServer.Startup.SessionCookieBuilder">
+            <summary>
+            Builder of the session cookie, scoped to the application path: the 'SessionCookiePath' setting (or the reverse proxy
+            path base) if set, else the path base of the current request (the IIS application path, as typed by the browser).
+            Browsers match cookie paths case-sensitively whereas IIS paths are not, so a path derived from the configuration only
+            (e.g. "/REP") would never be sent back when the user browses "/rep/", and the session would be lost on every request.
+            The cookie name is also suffixed with the lower-case application path (e.g. '.AspNetCore.Session.rep'): a stale site-wide
+            cookie written by an older version or by an instance published at the site root is then simply ignored instead of
+            resetting the session on each request.
+            </summary>
+        </member>
+        <member name="P:SealWebServer.Startup.SessionCookieBuilder.Name">
+            <summary>
+            Name of the cookie for the current request
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Startup.SessionCookieBuilder.GetRequestPathBase(Microsoft.AspNetCore.Http.HttpContext)">
+            <summary>
+            Path base of the request with the casing sent by the browser (the PathBase may carry the configured casing with some hosting models), "/" if none
+            </summary>
+        </member>
     </members>
 </doc>

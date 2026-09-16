@@ -155,32 +155,34 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Core" Version="1.54.0" />
+		<PackageReference Include="Azure.Core" Version="1.62.0" />
 		<PackageReference Include="Azure.Identity" Version="1.21.0" />
-		<PackageReference Include="Azure.Storage.Blobs" Version="12.27.0" />
-		<PackageReference Include="Azure.Storage.Common" Version="12.26.0" />
-		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.25.0" />
-		<PackageReference Include="Azure.Storage.Queues" Version="12.25.0" />
+		<PackageReference Include="Azure.Storage.Blobs" Version="12.29.2" />
+		<PackageReference Include="Azure.Storage.Common" Version="12.28.0" />
+		<PackageReference Include="Azure.Storage.Files.Shares" Version="12.27.1" />
+		<PackageReference Include="Azure.Storage.Queues" Version="12.27.1" />
 		<PackageReference Include="DocumentFormat.OpenXml" Version="3.5.1" />
 		<PackageReference Include="ClosedXML" Version="0.105.1" />
-		<PackageReference Include="FluentFTP" Version="54.1.1" />
+		<PackageReference Include="FluentFTP" Version="54.2.1" />
 		<PackageReference Include="HarfBuzzSharp.NativeAssets.Linux" Version="8.3.1.3" />
 		<PackageReference Include="HtmlSanitizer" Version="9.1.923-beta" />
 		<PackageReference Include="jose-jwt" Version="5.3.0" />
-		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient.NetCore.retail.amd64" Version="19.84.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.9" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.9" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.9" />
-		<PackageReference Include="Microsoft.AspNetCore.Http.Features" Version="5.0.17" />
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.10" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.1" />
-		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.0" />
+		<PackageReference Include="Microsoft.AnalysisServices.AdomdClient" Version="19.117.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http" Version="2.3.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Abstractions" Version="2.3.13" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.3.13" />
+		<!-- No Microsoft.AspNetCore.Http.Features reference: the standalone 5.0.x package is deprecated.
+		     The 2.3.x Http packages above bring the features types transitively, and the web server gets
+		     them from the ASP.NET Core shared framework. -->
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.12" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.3" />
+		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.3" />
 		<!-- Graph 6.x pulls Graph.Core 4.x -> Kiota 2.x, which is already above the GHSA-7j59-v9qr-6fq9 fix (1.22.0); no Kiota pin needed -->
-		<PackageReference Include="Microsoft.Graph" Version="6.2.0" />
-		<PackageReference Include="MongoDB.Driver" Version="3.9.0" />
-		<PackageReference Include="MySqlConnector" Version="2.6.1" />
-		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.200" />
-		<PackageReference Include="Npgsql" Version="10.0.2" />
+		<PackageReference Include="Microsoft.Graph" Version="6.6.0" />
+		<PackageReference Include="MongoDB.Driver" Version="3.11.2" />
+		<PackageReference Include="MySqlConnector" Version="2.6.2" />
+		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.301" />
+		<PackageReference Include="Npgsql" Version="10.0.3" />
 		<PackageReference Include="PuppeteerSharp" Version="24.40.0" />
 		<PackageReference Include="QuestPDF" Version="2026.2.4" />
 		<PackageReference Include="QuestPDF.Barcodes" Version="2024.10.3" />
@@ -188,33 +190,31 @@
 		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2" />
-		<PackageReference Include="SkiaSharp.Svg" Version="1.60.0" />
 		<PackageReference Include="SSH.NET" Version="2026.0.0" />
-		<PackageReference Include="Svg.Skia" Version="4.5.0" />
-		<PackageReference Include="System.ClientModel" Version="1.10.0" />
+		<PackageReference Include="System.ClientModel" Version="1.15.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
-		<PackageReference Include="System.IO.Packaging" Version="10.0.10" />
+		<PackageReference Include="System.IO.Packaging" Version="10.0.12" />
 		<PackageReference Include="TaskScheduler" Version="2.12.2" />
 		<PackageReference Include="Microsoft.Web.Administration" Version="11.1.0" />
 		<PackageReference Include="Twilio" Version="7.14.7" />
-		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.10" />
-		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.10" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.10" />
+		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.12" />
+		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.12" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
-		<PackageReference Include="System.Data.Odbc" Version="10.0.10" />
-		<PackageReference Include="System.Data.OleDb" Version="10.0.10" />
-		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.10" />
-		<PackageReference Include="System.DirectoryServices" Version="10.0.10" />
-		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.10" />
-		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.10" />
-		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.10" />
+		<PackageReference Include="System.Data.Odbc" Version="10.0.12" />
+		<PackageReference Include="System.Data.OleDb" Version="10.0.12" />
+		<PackageReference Include="System.Diagnostics.EventLog" Version="10.0.12" />
+		<PackageReference Include="System.DirectoryServices" Version="10.0.12" />
+		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.12" />
+		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.12" />
+		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.12" />
 		<PackageReference Include="AngleSharp" Version="1.5.0" />
-		<PackageReference Include="MailKit" Version="4.16.0" />
-		<PackageReference Include="MimeKit" Version="4.16.0" />
+		<PackageReference Include="MailKit" Version="4.18.0" />
+		<PackageReference Include="MimeKit" Version="4.18.0" />
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
 		<PackageReference Include="RazorEngineCore" Version="2026.1.1" />
-		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.13" />
 	</ItemGroup>
 
 	<ItemGroup>
