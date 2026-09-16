@@ -34,6 +34,22 @@ directly** (for example in a custom Razor script or a product embedding Seal Rep
 your organization exceeds USD 1,000,000 in annual revenue, you may need your own QuestPDF
 Professional or Enterprise license. Please review the QuestPDF license terms for your case.
 
+### Chromium (headless browser for HTML-to-PDF and chart snapshots, downloaded at first use)
+The browser is not shipped: the server downloads an unbranded Chromium snapshot build
+(BSD-3-Clause) from the Chromium project when the first PDF is produced, and runs it
+unmodified as a separate process. Like every Chromium build it embeds third-party libraries
+under their own open-source licenses, including FFmpeg (LGPL-2.1) and hunspell
+(MPL/GPL/LGPL tri-license); their credits are available in the browser at chrome://credits.
+Because the browser is neither redistributed, modified nor linked into Seal Report, this
+creates no obligation for Seal Report or for code built on it. On a server without internet
+access the browser must be installed manually: download `chrome-win.zip` for revision 1681099
+(Linux: `chrome-linux.zip` for revision 1681097) from
+`https://storage.googleapis.com/chromium-browser-snapshots/Win_x64/1681099/` (Linux:
+`.../Linux_x64/1681097/`) and unzip it into `<repository>\Assemblies\Chromium\Win64-1681099\`
+(Linux: `Linux-1681097`) so that `chrome-win\chrome.exe` (Linux: `chrome-linux\chrome`)
+exists there. When the browser is missing and cannot be downloaded, the PDF export fails with
+an error that repeats the URL and the target folder.
+
 ## Other notable packages
 
 Listed in alphabetical order.
@@ -49,6 +65,7 @@ Listed in alphabetical order.
 | chartjs-adapter-date-fns (bundles date-fns) | 3.0.0 | 2022-12-11 | MIT |
 | chartjs-plugin-datalabels | 2.2.0 | 2022-12-15 | MIT |
 | ClosedXML (Excel processing) | 0.105.1 | 2026-07-25 | MIT |
+| Chromium (unbranded snapshot build used as headless browser for HTML-to-PDF and chart snapshots; not shipped, downloaded at first use by PuppeteerSharp into the repository Assemblies folder; embeds third-party libraries under their own licenses, see above) | revision 1681099 (Windows) / 1681097 (Linux), Chrome 153 branch point | 2026-08 | BSD-3-Clause |
 | D3 (incl. d3-time v1, d3-time-format v2) | 3.5.9 | 2015-11-16 | BSD-3-Clause |
 | DataTables (core, with Buttons, DateTime, FixedColumns, FixedHeader, Responsive, Scroller and Select) | 2.3.7 | 2026-01-30 | MIT |
 | DiffPlex / DiffPlex.Wpf | 1.9.0 / 1.9.1 | 2025-09-13 / 2025-10-30 | Apache-2.0 |

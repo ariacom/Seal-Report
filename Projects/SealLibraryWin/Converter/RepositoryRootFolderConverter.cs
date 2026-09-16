@@ -37,6 +37,7 @@ namespace Seal.Forms
         //Large or system folders that are listed but never expanded (they hold thousands of files or are internal)
         static readonly string[] NoRecursePaths = new string[]
         {
+            Path.DirectorySeparatorChar + "Assemblies" + Path.DirectorySeparatorChar + "Chromium",
             Path.DirectorySeparatorChar + "Assemblies" + Path.DirectorySeparatorChar + "Chrome",
             Path.DirectorySeparatorChar + "Assemblies" + Path.DirectorySeparatorChar + "ChromeHeadlessShell",
         };

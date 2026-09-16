@@ -16,15 +16,41 @@
     {
         if (!string.IsNullOrEmpty(report.HTMLResultFilePath) && File.Exists(report.HTMLResultFilePath))
         {
-            //Download browser, save in it Assemblies\Chrome directory by default
-            string chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, "chrome.exe", SearchOption.AllDirectories).FirstOrDefault();
-            if (string.IsNullOrEmpty(chromePath))
+            //Headless browser: an unbranded Chromium build (BSD-3-Clause, no Google Chrome terms of service),
+            //downloaded at first use from the chromium-browser-snapshots bucket into Assemblies\Chromium.
+            //The revision is pinned to the nearest snapshot of the Chrome 153 stable branch point (September 2026).
+            //To upgrade: take chromium_main_branch_position of the current stable release from
+            //https://chromiumdash.appspot.com/fetch_releases?channel=Stable&platform=Windows&num=1
+            //and use the nearest revision that exists in https://storage.googleapis.com/chromium-browser-snapshots/Win_x64/
+            //The download goes through the system default proxy; set fetcher.WebProxy for a specific one.
+            var fetcher = new BrowserFetcher(new BrowserFetcherOptions() { Browser = SupportedBrowser.Chromium, Path = report.Repository.AssembliesFolder });
+            string chromiumRevision = fetcher.Platform == Platform.Linux ? "1681097" : "1681099";
+            string chromePath = fetcher.GetExecutablePath(chromiumRevision);
+            if (!File.Exists(chromePath))
             {
-                var bfOptions = new BrowserFetcherOptions() { Path = report.Repository.AssembliesFolder };
-                await new BrowserFetcher(bfOptions).DownloadAsync();
-                chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, "chrome.exe", SearchOption.AllDirectories).FirstOrDefault();
-                //Try default location
-                if (string.IsNullOrEmpty(chromePath)) await new BrowserFetcher().DownloadAsync();
+                try
+                {
+                    await fetcher.DownloadAsync(chromiumRevision);
+                    //The snapshot archive also contains a large test executable that is useless here (about 340 MB)
+                    foreach (var testsName in new[] { "interactive_ui_tests.exe", "interactive_ui_tests" })
+                    {
+                        var testsPath = Path.Combine(Path.GetDirectoryName(chromePath), testsName);
+                        if (File.Exists(testsPath)) File.Delete(testsPath);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    //No download possible (server without internet access): use any Chromium-based browser copied under the Assemblies folder
+                    var expectedPath = chromePath;
+                    chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, Path.GetFileName(expectedPath), SearchOption.AllDirectories).FirstOrDefault();
+                    if (string.IsNullOrEmpty(chromePath))
+                    {
+                        var isLinux = fetcher.Platform == Platform.Linux;
+                        var archiveUrl = $"https://storage.googleapis.com/chromium-browser-snapshots/{(isLinux ? "Linux_x64" : "Win_x64")}/{chromiumRevision}/{(isLinux ? "chrome-linux" : "chrome-win")}.zip";
+                        var targetFolder = Path.GetDirectoryName(Path.GetDirectoryName(expectedPath));
+                        throw new Exception($"Unable to download Chromium revision {chromiumRevision} into '{report.Repository.AssembliesFolder}': {ex.Message}\r\nOn a server without internet access, install the browser manually: download {archiveUrl} and unzip it into '{targetFolder}' so that '{expectedPath}' exists.", ex);
+                    }
+                }
             }
 
             //Options
