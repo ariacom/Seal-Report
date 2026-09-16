@@ -79,7 +79,9 @@ namespace SealWebServer
                 // Make the session cookie essential
                 IsEssential = true;
                 SameSite = SameSiteMode.Lax;
-                SecurePolicy = CookieSecurePolicy.None;
+                // Flag the cookie 'Secure' when the request is served over HTTPS: 'Always' would break the installations
+                // published over plain HTTP, where the browser would simply drop the cookie and the session would be lost.
+                SecurePolicy = CookieSecurePolicy.SameAsRequest;
             }
 
             /// <summary>
