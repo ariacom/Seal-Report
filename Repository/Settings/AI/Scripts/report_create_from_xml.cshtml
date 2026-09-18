@@ -24,6 +24,10 @@
         ["Personal"] = repo.GetPersonalFolder(securityContext),
     };
 
+    // A folder is not a report path: 'Personal\' would resolve outside the user's folders and end in a misleading 'write access denied'
+    if (string.IsNullOrWhiteSpace(path) || path.EndsWith(Path.DirectorySeparatorChar) || roots.ContainsKey(path))
+        { tool.ExecResult = $"Error: 'path' must end with a report file name, for instance '{path.TrimEnd(Path.DirectorySeparatorChar)}{Path.DirectorySeparatorChar}my_report.srex' (got the folder '{path}'). You have not been denied access: call the tool again with a file name."; return; }
+
     string fullPath = null;
     foreach (var kv in roots)
         if (path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
