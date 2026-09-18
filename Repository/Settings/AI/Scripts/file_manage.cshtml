@@ -11,8 +11,8 @@
 
     var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var action = args.GetProperty("action").GetString();
-    var path   = args.GetProperty("path").GetString();
-    var dest   = args.TryGetProperty("destination", out var dp) ? dp.GetString() : null;
+    var path   = Seal.Helpers.FileHelper.ConvertOSFilePath(args.GetProperty("path").GetString());
+    var dest   = args.TryGetProperty("destination", out var dp) ? Seal.Helpers.FileHelper.ConvertOSFilePath(dp.GetString()) : null;
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (action: {action}, path: {path})..");
 
     // Root folder map

@@ -41,9 +41,15 @@
     var connection = conn.GetOpenConnection();
     var helper     = new TaskDatabaseHelper();
     try {
-        // Note: square-bracket quoting is SQL Server syntax.
-        // For PostgreSQL use "double quotes"; for MySQL use `backticks`.
-        var sql = $"SELECT COUNT(*) FROM [{tableName}]";
+        // Resolve against the source metadata when possible: MetaTable.FullSQLName handles custom
+        // SQL tables and a table called by its alias (the 'where' then uses that alias). Otherwise
+        // GetTableName applies the database-type delimiters only when the raw name requires them
+        // (a hard-coded [name] is SQL Server syntax: PostgreSQL rejects it, and it breaks
+        // schema-qualified names).
+        var mtable   = source.MetaData.Tables.FirstOrDefault(t => t.Name == tableName || t.DisplayName == tableName || t.Alias == tableName);
+        var useFull  = mtable != null && (!string.IsNullOrEmpty(mtable.Sql) || (mtable.Alias == tableName && mtable.Name != tableName));
+        var tableSQL = useFull ? mtable.FullSQLName : source.GetTableName(mtable != null ? mtable.Name : tableName);
+        var sql = $"SELECT COUNT(*) FROM {tableSQL}";
         if (!string.IsNullOrWhiteSpace(whereStr)) sql += $" WHERE {whereStr}";
 
         var table = helper.LoadDataTable(conn.ConnectionType,

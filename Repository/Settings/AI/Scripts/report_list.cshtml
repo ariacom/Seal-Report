@@ -67,7 +67,7 @@
 
         // Apply optional name filter
         if (filterFolders.Count > 0 && !filterFolders.Any(f =>
-                displayPath.IndexOf(f, StringComparison.OrdinalIgnoreCase) >= 0))
+                displayPath.IndexOf(Seal.Helpers.FileHelper.ConvertOSFilePath(f), StringComparison.OrdinalIgnoreCase) >= 0))
             continue;
 
         // Scan this folder only (TopDirectoryOnly – every sub-folder is its own entry

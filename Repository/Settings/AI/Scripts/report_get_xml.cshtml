@@ -10,7 +10,7 @@
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
 
     var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
-    var path = args.GetProperty("path").GetString();
+    var path = Seal.Helpers.FileHelper.ConvertOSFilePath(args.GetProperty("path").GetString());
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
 
     var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)

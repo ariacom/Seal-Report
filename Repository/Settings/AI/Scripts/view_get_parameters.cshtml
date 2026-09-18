@@ -11,7 +11,7 @@
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
 
     var args         = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
-    var relativePath = args.GetProperty("path").GetString();
+    var relativePath = Seal.Helpers.FileHelper.ConvertOSFilePath(args.GetProperty("path").GetString());
     var viewName     = args.TryGetProperty("view_name",     out var vnp) ? vnp.GetString() : null;
     var templateName = args.TryGetProperty("template_name", out var tnp) ? tnp.GetString() : null;
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {relativePath}, view: {viewName ?? templateName ?? "all"})..");
