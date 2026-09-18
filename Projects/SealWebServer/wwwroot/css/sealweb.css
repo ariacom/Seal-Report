@@ -1087,16 +1087,22 @@ table.dataTable {
     left: min(var(--ai-panel-width), calc(100vw - 26px));
 }
 
-/* Drag handle to resize the panel — pinned to the right edge */
+/* Drag handle to resize the panel — sits just OUTSIDE the right edge, so it never covers
+   the scrollbar of the messages list (which is glued to the inner right edge) */
 .ai-panel-resizer {
     position: absolute;
     top: 0;
-    right: 0;
-    width: 5px;
+    right: -6px;
+    width: 6px;
     height: 100%;
     cursor: ew-resize;
     z-index: 502;
     background: transparent;
+}
+
+/* closed drawer: the handle would otherwise stick out at the left edge of the screen */
+#ai-chat-panel:not(.ai-panel-open) .ai-panel-resizer {
+    display: none;
 }
 
 .ai-panel-resizer:hover,

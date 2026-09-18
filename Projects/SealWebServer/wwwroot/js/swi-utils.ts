@@ -95,8 +95,11 @@ namespace SWIUtil {
 
     export function ShowHideControl(control: JQuery, show: boolean) {
         //d-none is required to override display utility classes (d-flex, d-block...) that use !important and defeat the inline style set by toggle()
-        control.toggleClass("d-none", !show);
-        control.toggle(show);
+        //force a real boolean: with undefined/null (e.g. '_main._folder && ...'), jQuery toggle() flips the current state instead of hiding,
+        //and leaves an inline 'display: block' that later breaks inline-block controls (light buttons)
+        const visible = !!show;
+        control.toggleClass("d-none", !visible);
+        control.toggle(visible);
     }
 
     export function GetOption(val: string, text: string, valSelected: string) {

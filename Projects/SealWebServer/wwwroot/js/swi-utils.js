@@ -109,8 +109,11 @@ var SWIUtil;
     SWIUtil.IsEnabled = IsEnabled;
     function ShowHideControl(control, show) {
         //d-none is required to override display utility classes (d-flex, d-block...) that use !important and defeat the inline style set by toggle()
-        control.toggleClass("d-none", !show);
-        control.toggle(show);
+        //force a real boolean: with undefined/null (e.g. '_main._folder && ...'), jQuery toggle() flips the current state instead of hiding,
+        //and leaves an inline 'display: block' that later breaks inline-block controls (light buttons)
+        const visible = !!show;
+        control.toggleClass("d-none", !visible);
+        control.toggle(visible);
     }
     SWIUtil.ShowHideControl = ShowHideControl;
     function GetOption(val, text, valSelected) {
