@@ -48,7 +48,8 @@
         {
             var left  = join.LeftTable?.AliasName  ?? "?";
             var right = join.RightTable?.AliasName ?? "?";
-            sb.AppendLine($"  {left} → {right}{(string.IsNullOrEmpty(join.Description) ? "" : $" — {join.Description}")}");
+            var joinInfo = $"{join.JoinType}{(join.IsBiDirectional ? "" : ", not bi-directional")}{(join.Weight != 1 ? $", weight {join.Weight}" : "")}";
+            sb.AppendLine($"  {left} → {right} [{joinInfo}] (GUID: {join.GUID}){(string.IsNullOrEmpty(join.Description) ? "" : $" — {join.Description}")}");
             if (!string.IsNullOrWhiteSpace(join.Clause))
                 sb.AppendLine($"    ON {join.Clause.Trim()}");
         }

@@ -45,6 +45,21 @@ namespace Seal.Forms
         public EntityCollectionEditor(Type type) : base(type) { }
         bool _useHandlerInterface = true;
 
+        public override object EditValue(ITypeDescriptorContext context, IServiceProvider provider, object value)
+        {
+            //Joins of a model: the list has one item per join of the Data Source during the edition, only the joins changed are kept after
+            var model = CollectionItemType == typeof(JoinOverride) ? context.Instance as ReportModel : null;
+            if (model != null && model.InitJoinOverrides() && HelperEditor.HandlerInterface != null) HelperEditor.HandlerInterface.SetModified();
+            try
+            {
+                return base.EditValue(context, provider, value);
+            }
+            finally
+            {
+                if (model != null) model.CleanJoinOverrides();
+            }
+        }
+
         // Override this method in order to access the containing user controls
         // from the default Collection Editor form or to add new ones...
         protected override CollectionForm CreateCollectionForm()
@@ -124,6 +139,10 @@ namespace Seal.Forms
                 frmCollectionEditorForm.Text = "Partial Template Collection Editor";
                 _useHandlerInterface = false;
             }
+            else if (CollectionItemType == typeof(JoinOverride))
+            {
+                frmCollectionEditorForm.Text = "Joins of the Model Collection Editor";
+            }
             else if (CollectionItemType == typeof(SealServerConfiguration.FileReplacePattern))
             {
                 frmCollectionEditorForm.Text = "File Pattern Collection Editor";
@@ -188,6 +207,10 @@ namespace Seal.Forms
                     propertyGrid.ToolbarVisible = false;
                     propertyGrid.PropertyValueChanged += new PropertyValueChangedEventHandler(propertyGrid_PropertyValueChanged);
                     propertyGrid.LineColor = SystemColors.ControlLight;
+                    //'Reset to default value' menu like in the main property grid
+                    PropertyGridHelper.AddResetMenu(propertyGrid, SetModified);
+                    //Joins of a model: properties sorted by Id, the default values are the values of the Data Source
+                    if (CollectionItemType == typeof(JoinOverride)) propertyGrid.PropertySort = PropertySort.Categorized;
                     propertyGrid.Tag = _component;
                 }
             }
@@ -321,6 +344,7 @@ namespace Seal.Forms
             else if (value is SecurityRepositoryFolder) result = ((SecurityRepositoryFolder)value).Path;
             else if (value is SecurityFolder) result = ((SecurityFolder)value).Path;
             else if (value is SubReport) result = ((SubReport)value).Name;
+            else if (value is JoinOverride) result = ((JoinOverride)value).DisplayText;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
             else if (value is SealServerConfiguration.FileReplacePattern) result = ((SealServerConfiguration.FileReplacePattern)value).ToString();
             else if (value is MetaEV)

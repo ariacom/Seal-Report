@@ -101,6 +101,11 @@ namespace Seal.Forms
                     frm.clearToolStripButton.Visible = false;
                     frm.checkSQLToolStripButton.Text = join.Source.IsNoSQL ? "Check Script" : "Check SQL";
                     isLINQ = join.Source.IsNoSQL;
+                    if (join.LeftTable != null && join.RightTable != null)
+                    {
+                        if (join.Source.IsSQL) description = string.Format("SQL clause (ON clause) used to join the left table '{0}' and the right table '{1}'. Several conditions can be combined with AND.\r\nThe join type, the bi-directional flag and the weight are properties of the join: they can be changed for a model in the 'Joins of the model' of the report, where SQL can also be added to this clause.\r\n", join.LeftTable.AliasName, join.RightTable.AliasName);
+                        else description = string.Format("LINQ clause used to join the left table '{0}' and the right table '{1}'.\r\nThe clause must have the pattern '<left expression> equals <right expression>' to allow the join to be used in both directions.\r\n", join.LeftTable.AliasName, join.RightTable.AliasName);
+                    }
 
                     if (join.LeftTable != null && join.RightTable != null && join.LeftTable.Columns.Count > 0 && join.RightTable.Columns.Count > 0)
                     {
@@ -120,6 +125,17 @@ namespace Seal.Forms
                         forceValueToEdit = true;
                         if (join.Source.IsSQL) valueToEdit = string.Format("{0}.<ColumnName> = {1}.<ColumnName>", join.LeftTable.AliasName, join.RightTable.AliasName);
                         else valueToEdit = string.Format("Helper.ToString({0}[\"<ColumnName>\"]) equals Helper.ToString({1}[\"<ColumnName>\"])", join.LeftTable.LINQResultName, join.RightTable.LINQResultName);
+                    }
+                }
+                else if (context.Instance is JoinOverride)
+                {
+                    JoinOverride joinOverride = context.Instance as JoinOverride;
+                    if (joinOverride.Join != null && joinOverride.Join.RightTable != null)
+                    {
+                        samples.Add(string.Format("{0}.<ColumnName> = 'value'", joinOverride.Join.RightTable.AliasName));
+                        samples.Add(string.Format("{0}.<ColumnName> >= {{CommonValue_MinValue}}", joinOverride.Join.RightTable.AliasName));
+                        samples.Add("{CommonRestriction_Name}");
+                        description = string.Format("SQL added with an AND to the join clause for this model:\r\n{0}\r\n", joinOverride.Join.Clause.Trim());
                     }
                 }
                 else if (context.Instance is MetaEnum)

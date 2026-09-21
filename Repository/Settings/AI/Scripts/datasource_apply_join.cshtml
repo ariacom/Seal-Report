@@ -60,6 +60,7 @@
         if (!string.IsNullOrEmpty(clause)) join.Clause = clause;
         if (!string.IsNullOrEmpty(joinType) && Enum.TryParse<JoinType>(joinType, true, out var jt)) join.JoinType = jt;
         join.IsBiDirectional = biDir;
+        if (args.TryGetProperty("weight", out var wp) && wp.ValueKind == JsonValueKind.Number) join.Weight = wp.GetInt32();
 
         if (join.LeftTable == null || join.RightTable == null)
         { if (!updating) source.RemoveJoin(join); tool.ExecResult = "Error: both left_table and right_table are required for a new join."; return; }

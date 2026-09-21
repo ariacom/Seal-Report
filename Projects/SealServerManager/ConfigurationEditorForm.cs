@@ -35,6 +35,8 @@ namespace Seal.Forms
             mainPropertyGrid.ToolbarVisible = false;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
+            //The modifications are saved when the form is validated
+            PropertyGridHelper.AddResetMenu(mainPropertyGrid, () => { });
             mainPropertyGrid.SelectedObject = _configuration;
 
             publish1ToolStripButton.Visible = configuration.ForPublication;

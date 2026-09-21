@@ -130,6 +130,7 @@ AND [f3]</Restriction>
         <!-- repeat for each restriction -->
       </Restrictions>
       <!-- AggregateRestriction / AggregateRestrictions: same pattern, applied as HAVING clause -->
+      <!-- JoinOverrides: OPTIONAL, omit it by default. See "Join overrides" below. -->
     </ReportModel>
   </Models>
   <Views>
@@ -252,6 +253,36 @@ Always include a `<ShowTotal>` on every `Data` element. Choose by table shape:
 - **A column is enumerated when `datasource_get_detail` marks it `enumerated list: …`** — judge by that marker, never by the column name.
 - **Enumerated restriction values** — always call `database_get_sample_values` first, then list all returned values as `<EnumValues><string>…</string></EnumValues>`. Never use `<Value1>` for enumerated columns.
 - **Date restrictions** — set `<Prompt>PromptTwoValues</Prompt>` so the user can adjust the range. For a concrete year/date, set literal `<Date1>`/`<Date2>`; never substitute a relative keyword.
+
+### Join overrides (`<JoinOverrides>` inside `<ReportModel>`)
+The tables of a model are linked automatically with the joins of the data source (listed under `## Joins` by
+`datasource_get_detail`, with their type and GUID). **Omit `<JoinOverrides>` by default.** Add it only when the
+request needs a join to behave differently **for this report only** — the data source is never modified:
+
+- "all customers, **even those without orders**", "include products never sold", "with or without…" → the join must
+  become an outer join that keeps the rows of the table the user wants complete.
+- a filter on the optional table must not remove the rows of the complete table (e.g. "all customers with their 1997
+  orders, if any") → put the filter in `<AdditionalClause>` instead of a `<ReportRestriction>` (a restriction goes to
+  the WHERE clause and turns the outer join back into an inner join).
+
+```xml
+<JoinOverrides>
+  <JoinOverride>
+    <JoinGUID>«join GUID from datasource_get_detail»</JoinGUID>
+    <JoinType>LeftOuter</JoinType>   <!-- optional: Inner | LeftOuter | RightOuter -->
+    <AdditionalClause>Orders.OrderDate >= '1997-01-01'</AdditionalClause>  <!-- optional: SQL added with AND to the join clause -->
+    <!-- also optional: <Exclude>true</Exclude> (join not used by this model), <IsBiDirectional>false</IsBiDirectional>,
+         <Weight>5</Weight> (1-1000: a higher weight makes the join avoided when another path exists) -->
+  </JoinOverride>
+</JoinOverrides>
+```
+
+- **Left / right are the tables of the join as listed** (`Left → Right`): for `Customers → Orders`, `LeftOuter` keeps all
+  Customers, `RightOuter` keeps all Orders.
+- Only set the elements that change; everything omitted keeps the data source value.
+- `<JoinGUID>` must be copied verbatim from `datasource_get_detail` — never fabricate it.
+- `<AdditionalClause>` is raw SQL in the dialect of the source (SQL sources only); qualify columns with their table name.
+- To count rows of the optional table, use `Count` on one of **its** columns (rows without match give 0).
 
 ### Charts (ChartJS — default engine)
 Add a chart whenever the user says "chart", "graph", "plot", "visualize", or "show as chart". Use ChartJS unless another engine is explicitly requested.

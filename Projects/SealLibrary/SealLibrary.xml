@@ -5780,6 +5780,167 @@
             Meta enum of the value. Used only for the editor.
             </summary>
         </member>
+        <member name="T:Seal.Model.JoinOverride">
+            <summary>
+            Defines how a join of the Data Source is changed for a model: only the values specified replace the ones of the join.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.JoinGUID">
+            <summary>
+            GUID of the join of the Data Source
+            </summary>
+        </member>
+        <member name="F:Seal.Model.JoinOverride.Join">
+            <summary>
+            Join of the Data Source
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.Exclude">
+            <summary>
+            If true, the join is not used for the model
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.ShouldSerializeExclude">
+            <summary>
+            Serialize Exclude only if true
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.JoinType">
+            <summary>
+            If specified, the type of join used for the model. Left and right are the left and right tables defined in the join.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.ShouldSerializeJoinType">
+            <summary>
+            Serialize JoinType only if specified
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.IsBiDirectional">
+            <summary>
+            If specified, indicates if the join can be used in both directions for the model
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.ShouldSerializeIsBiDirectional">
+            <summary>
+            Serialize IsBiDirectional only if specified
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.Weight">
+            <summary>
+            If specified, the weight of the join for the model
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.ShouldSerializeWeight">
+            <summary>
+            Serialize Weight only if specified
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.AdditionalClause">
+            <summary>
+            If specified, SQL added with an AND to the join clause for the model (SQL joins only). For an outer join, this allows to restrict the outer table without losing the rows of the other table.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.ShouldSerializeAdditionalClause">
+            <summary>
+            Serialize AdditionalClause only if specified
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.UseJoin">
+            <summary>
+            Editor helper: true if the join is used for the model
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.ModelJoinType">
+            <summary>
+            Editor helper: type of join for the model. The default value is the type of the join in the Data Source.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.ModelIsBiDirectional">
+            <summary>
+            Editor helper: bi-directional flag for the model. The default value is the flag of the join in the Data Source.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.ModelWeight">
+            <summary>
+            Editor helper: weight for the model. The default value is the weight of the join in the Data Source.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.LeftTableName">
+            <summary>
+            Editor helper: left table of the join
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.RightTableName">
+            <summary>
+            Editor helper: right table of the join
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.JoinClause">
+            <summary>
+            Editor helper: clause of the join
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.JoinDefinition">
+            <summary>
+            Editor helper: type, bi-directional flag and weight of the join in the Data Source
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.DisplayText">
+            <summary>
+            Editor helper: text displayed in the list of joins
+            </summary>
+        </member>
+        <member name="P:Seal.Model.JoinOverride.IsEmpty">
+            <summary>
+            True if nothing is changed for the join
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.GetJoin(Seal.Model.MetaJoin,System.Boolean)">
+            <summary>
+            Returns a copy of the join with the values changed for the model. The join of the Data Source is never modified as it is shared by all the reports.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinOverride.GetDescription">
+            <summary>
+            Description of the values changed
+            </summary>
+        </member>
+        <member name="T:Seal.Model.JoinTree">
+            <summary>
+            Result of a joins resolution: the tree of joins linking all the tables of a model
+            </summary>
+        </member>
+        <member name="F:Seal.Model.JoinTree.Root">
+            <summary>
+            Root table of the tree
+            </summary>
+        </member>
+        <member name="F:Seal.Model.JoinTree.Joins">
+            <summary>
+            Joins of the tree listed from the root (parent before children). Each join is oriented: LeftTable is the parent and RightTable is the child.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.JoinTree.Weight">
+            <summary>
+            Sum of the weights of the joins
+            </summary>
+        </member>
+        <member name="T:Seal.Model.JoinResolver">
+            <summary>
+            Finds the joins to use to link the tables of a model.
+            Tables are the nodes and joins are the edges of a directed graph: the result is the tree of minimal weight containing all the tables (Steiner tree).
+            </summary>
+        </member>
+        <member name="F:Seal.Model.JoinResolver.MaxExactTables">
+            <summary>
+            Maximum number of tables to link with the exact search. Above it, an approximate search is used.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.JoinResolver.Resolve(System.Collections.Generic.IEnumerable{Seal.Model.MetaJoin},System.Collections.Generic.List{Seal.Model.MetaTable},System.Boolean,System.Text.StringBuilder)">
+            <summary>
+            Returns the tree of joins of minimal weight linking all the tables, null if the tables cannot be linked
+            </summary>
+        </member>
         <member name="T:Seal.Model.MetaJoin">
             <summary>
             A MetaJoin defines how to join 2 MetaTables
@@ -5853,6 +6014,16 @@
         <member name="M:Seal.Model.MetaJoin.ShouldSerializeIsBiDirectional">
             <summary>
             Serialize IsBiDirectional only if not the default value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaJoin.Weight">
+            <summary>
+            Weight of the join (from 1 to 1000) used when the joins of a model are chosen: the joins chosen are the ones linking all the tables with the minimal total weight. A join having a higher weight is avoided when another path exists.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaJoin.ShouldSerializeWeight">
+            <summary>
+            Serialize Weight only if not the default value
             </summary>
         </member>
         <member name="P:Seal.Model.MetaJoin.SQLJoinType">
@@ -10081,24 +10252,34 @@
             Xml serialization helper: serialize JoinsToUse only if not empty
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.JoinsToSelect">
+        <member name="P:Seal.Model.ReportModel.JoinOverrides">
             <summary>
-            Helper to select Join preferences
+            List of the joins of the Data Source changed for the model: join not used, or join type, bi-directional flag, weight changed, or SQL added to the join clause.
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.JoinHashcode">
+        <member name="M:Seal.Model.ReportModel.ShouldSerializeJoinOverrides">
             <summary>
-            If specified and if possible, force the first join used to choose the dynamic SQL joins path used to perform the query.
+            Xml serialization helper: serialize JoinOverrides only if not empty
             </summary>
         </member>
-        <member name="P:Seal.Model.ReportModel.BuildTimeout">
+        <member name="M:Seal.Model.ReportModel.InitJoinOverrides">
             <summary>
-            Timeout in milliseconds to set the maximum duration used to build the SQL (may be used if many joins are defined)
+            Editor helper: init the list with one item per join of the Data Source. Returns true if the former list of joins to use has been converted into joins not used.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.CleanJoinOverrides">
+            <summary>
+            Editor helper: remove the items that do not change their join
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.GetModelJoins">
+            <summary>
+            Joins of the Data Source that can be used to link the tables of the model, with the changes defined for the model
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.HelperViewJoins">
             <summary>
-            Helper to view joins evaluated for the model
+            Helper to view the joins chosen for the model
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.LINQSubModels">

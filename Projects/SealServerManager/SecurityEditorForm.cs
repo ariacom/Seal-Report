@@ -35,6 +35,8 @@ namespace Seal.Forms
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = SystemColors.ControlLight;
             mainPropertyGrid.PropertyValueChanged += mainPropertyGrid_PropertyValueChanged;
+            //The modifications are saved when the form is validated
+            PropertyGridHelper.AddResetMenu(mainPropertyGrid, () => { });
             mainPropertyGrid.SelectedObject = _security;
 
             Text = Repository.SealRootProductName + " Security Editor";

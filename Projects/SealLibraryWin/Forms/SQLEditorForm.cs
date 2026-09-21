@@ -121,7 +121,7 @@ namespace Seal.Forms
             if (sqlTextBox.Modified && WarningOnError)
             {
                 checkSQL();
-                if (!string.IsNullOrEmpty(errorTextBox.Text))
+                if (!string.IsNullOrEmpty(_lastError))
                 {
                     if (MessageBox.Show("The " + (IsLINQ  ? "Script" : "SQL") + " is incorrect. Do you really want to save it and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
                 }
@@ -137,9 +137,15 @@ namespace Seal.Forms
             checkSQL();
         }
 
+        //Description shown when the form is opened: kept after a check
+        string _description = null;
+        //Error of the last check
+        string _lastError = "";
+
         public void checkSQL()
         {
             string error = "";
+            if (_description == null) _description = errorTextBox.Text;
             try
             {
                 if (Instance is ReportModel)
@@ -230,6 +236,26 @@ namespace Seal.Forms
                         join.Clause = initialSQL;
                     }
                 }
+                else if (Instance is JoinOverride)
+                {
+                    //Check a copy of the join having the additional clause
+                    JoinOverride joinOverride = Instance as JoinOverride;
+                    if (joinOverride.Join != null && !sqlTextBox.Text.Contains("{Common"))
+                    {
+                        initialSQL = joinOverride.AdditionalClause;
+                        try
+                        {
+                            joinOverride.AdditionalClause = sqlTextBox.Text;
+                            var join = joinOverride.GetJoin(joinOverride.Join, false);
+                            join.CheckJoin();
+                            error = join.Error;
+                        }
+                        finally
+                        {
+                            joinOverride.AdditionalClause = initialSQL;
+                        }
+                    }
+                }
                 else if (Instance is ReportTask)
                 {
                     ReportTask task = Instance as ReportTask;
@@ -245,7 +271,9 @@ namespace Seal.Forms
                 error = ex.Message;
             }
 
-            errorTextBox.Text = error;
+            //Keep the description after the error
+            _lastError = error;
+            errorTextBox.Text = string.IsNullOrEmpty(error) ? _description : (string.IsNullOrEmpty(_description) ? error : error.TrimEnd() + "\r\n\r\n" + _description);
             if (!string.IsNullOrEmpty(error))
             {
                 toolStripStatusLabel.Text = "Error";

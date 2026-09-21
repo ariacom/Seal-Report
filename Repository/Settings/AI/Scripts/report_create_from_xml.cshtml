@@ -116,6 +116,18 @@
             return;
         }
 
+        // --- Validate join overrides: a JoinGUID that is not a join of the source is silently ignored by the engine ---
+        var badJoins = doc.Descendants("JoinOverride")
+            .Select(jo => jo.Element("JoinGUID") == null ? "" : jo.Element("JoinGUID").Value.Trim())
+            .Where(g => !metaSource.MetaData.Joins.Any(j => string.Equals(j.GUID, g, StringComparison.OrdinalIgnoreCase)))
+            .ToList();
+        if (badJoins.Count > 0)
+        {
+            tool.ExecResult = "Error: these JoinGUID values are not joins of source '" + metaSource.Name + "': " + string.Join("; ", badJoins.Select(g => "'" + g + "'")) +
+                ". Call datasource_get_detail and copy the exact join GUID listed under '## Joins'.";
+            return;
+        }
+
         // --- Validate restrictions (guard against definitions the engine silently ignores) ---
         // An enumerated restriction is applied only when its operator is Equal/NotEqual and
         // <EnumValues> is filled: a <Value1> or a text operator (Contains, StartsWith...) makes

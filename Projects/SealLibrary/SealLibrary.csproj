@@ -86,6 +86,8 @@
 		<Compile Include="..\SealLibraryWin\Model\MetaData.cs" Link="Model\MetaData.cs" />
 		<Compile Include="..\SealLibraryWin\Model\MetaEnum.cs" Link="Model\MetaEnum.cs" />
 		<Compile Include="..\SealLibraryWin\Model\MetaEV.cs" Link="Model\MetaEV.cs" />
+		<Compile Include="..\SealLibraryWin\Model\JoinOverride.cs" Link="Model\JoinOverride.cs" />
+		<Compile Include="..\SealLibraryWin\Model\JoinResolver.cs" Link="Model\JoinResolver.cs" />
 		<Compile Include="..\SealLibraryWin\Model\MetaJoin.cs" Link="Model\MetaJoin.cs" />
 		<Compile Include="..\SealLibraryWin\Model\MetaSource.cs" Link="Model\MetaSource.cs" />
 		<Compile Include="..\SealLibraryWin\Model\MetaTable.cs" Link="Model\MetaTable.cs" />

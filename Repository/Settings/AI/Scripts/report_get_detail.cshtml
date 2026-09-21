@@ -92,6 +92,17 @@
             }
         }
 
+        // Joins changed for the model
+        if (model.JoinOverrides.Count > 0 && model.Source != null)
+        {
+            sb.AppendLine("  Join overrides:");
+            foreach (var jo in model.JoinOverrides)
+            {
+                var join = model.Source.MetaData.Joins.FirstOrDefault(j => j.GUID == jo.JoinGUID);
+                sb.AppendLine($"    {(join != null ? join.Name : jo.JoinGUID)}: {jo.GetDescription()}{(string.IsNullOrWhiteSpace(jo.AdditionalClause) ? "" : $" ({jo.AdditionalClause.Trim()})")}");
+            }
+        }
+
         sb.AppendLine();
     }
 

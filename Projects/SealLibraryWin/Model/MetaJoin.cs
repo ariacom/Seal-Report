@@ -38,6 +38,7 @@ namespace Seal.Model
                 GetProperty("RightTableGUID").SetIsBrowsable(true);
                 GetProperty("Clause").SetIsBrowsable(true);
                 GetProperty("IsBiDirectional").SetIsBrowsable(true);
+                GetProperty("Weight").SetIsBrowsable(true);
                 GetProperty("JoinType").SetIsBrowsable(!Source.IsNoSQL);
 
                 GetProperty("HelperCheckJoin").SetIsBrowsable(true);
@@ -234,6 +235,25 @@ namespace Seal.Model
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeIsBiDirectional() { return !IsBiDirectional; }
+
+        private int _weight = 1;
+        /// <summary>
+        /// Weight of the join (from 1 to 1000) used when the joins of a model are chosen: the joins chosen are the ones linking all the tables with the minimal total weight. A join having a higher weight is avoided when another path exists.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(1)]
+        [Category("Definition"), DisplayName("Weight"), Description("Weight of the join (from 1 to 1000) used when the joins of a model are chosen: the joins chosen are the ones linking all the tables with the minimal total weight. A join having a higher weight is avoided when another path exists."), Id(8, 1)]
+#endif
+        public int Weight
+        {
+            get { return _weight; }
+            set { _weight = Math.Min(1000, Math.Max(1, value)); }
+        }
+        /// <summary>
+        /// Serialize Weight only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeWeight() { return Weight != 1; }
 
         /// <summary>
         /// SQL generated for the join type

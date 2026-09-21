@@ -5,6 +5,7 @@
 using System;
 using System.Windows.Forms;
 using Seal.AI;
+using Seal.Helpers;
 using Seal.Model;
 
 namespace Seal.Forms
@@ -25,6 +26,8 @@ namespace Seal.Forms
             mainPropertyGrid.ToolbarVisible = false;
             mainPropertyGrid.PropertySort = PropertySort.Categorized;
             mainPropertyGrid.LineColor = System.Drawing.SystemColors.ControlLight;
+            //The modifications are saved when the form is validated
+            PropertyGridHelper.AddResetMenu(mainPropertyGrid, () => { });
             mainPropertyGrid.SelectedObject = _configuration;
 
             Text = Repository.SealRootProductName + " AI Configuration Editor";
