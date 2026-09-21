@@ -1262,6 +1262,24 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the picture of a Map view is inserted in the Excel result (option of the Excel renderer of the Map view, true by default): it requires the HTML result and a headless browser
+        /// </summary>
+        [XmlIgnore]
+        public bool HasMapPictureForExcel
+        {
+            get { return AllViews.Exists(i => i.TemplateName == ReportViewTemplate.MapName && i.ExcelRenderer.GetBoolValue(Parameter.MapPictureParameter)); }
+        }
+
+        /// <summary>
+        /// True if the picture of a Gauge view is inserted in the Excel result (option of the Excel renderer of the Gauge view, true by default): it requires the HTML result and a headless browser
+        /// </summary>
+        [XmlIgnore]
+        public bool HasGaugePictureForExcel
+        {
+            get { return AllViews.Exists(i => i.TemplateName == ReportViewTemplate.GaugeName && i.ExcelRenderer.GetBoolValue(Parameter.GaugePictureParameter)); }
+        }
+
+        /// <summary>
         /// True if the report has JS chart
         /// </summary>
         [XmlIgnore]

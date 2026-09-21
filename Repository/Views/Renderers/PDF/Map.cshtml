@@ -1,8 +1,5 @@
-﻿@using PuppeteerSharp
-@using PuppeteerSharp.Media
 @using QuestPDF.Fluent
 @using QuestPDF.Infrastructure
-@using System.IO
 @using Seal.Model
 @using Seal.Renderer
 
@@ -14,20 +11,17 @@
     PDFResult result = report.PDFResult;
     ResultPage page = report.CurrentPage;
 
-    var document = result.Document;
     var container = result.Container;
 
     try
     {
+        //The picture of the map (with its tiles, points and legend) is taken from the HTML result shown in the headless browser
         //The views are parsed in the same order as in the HTML result: the first identifier left is the one of this view
-        var identifiers = page.GetIdentifiers(ResultPageIdentifierType.GaugeCanvas);
+        var identifiers = page.GetIdentifiers(ResultPageIdentifierType.MapContainer);
         foreach (var id in identifiers.Take(1).ToList())
         {
-            string canvasSelector = "#" + id;
-
-            //Picture of the gauge taken from the HTML result shown in the headless browser
             if (result.Page == null) break;
-            var image = await HeadlessBrowser.GetElementPicture(result.Page, canvasSelector);
+            var image = await HeadlessBrowser.GetElementPicture(result.Page, "#" + id);
             if (image == null) continue;
 
             container.Column(column =>
@@ -35,9 +29,9 @@
                 var i = column.Item()
                 .AlignCenter()
                 .AlignMiddle();
-                var w = renderer.GetNumericValue("gauge_width");
+                var w = renderer.GetNumericValue("map_width");
                 if (w > 0) i = i.Width(w, Unit.Millimetre);
-                var h = renderer.GetNumericValue("gauge_height");
+                var h = renderer.GetNumericValue("map_height");
                 if (h > 0) i = i.Height(h, Unit.Millimetre);
                 i.Image(image).FitArea();
 

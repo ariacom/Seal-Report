@@ -28,6 +28,14 @@ namespace Seal.Model
         /// </summary>
         public const string ReportFormatParameter = "report_format";
         /// <summary>
+        /// Name of the Excel renderer parameter of the Map view to insert the picture of the map
+        /// </summary>
+        public const string MapPictureParameter = "map_picture";
+        /// <summary>
+        /// Name of the Excel renderer parameter of the Gauge view to insert the picture of the gauge
+        /// </summary>
+        public const string GaugePictureParameter = "gauge_picture";
+        /// <summary>
         /// Name of the view parameter enabling the Drill navigation
         /// </summary>
         public const string DrillEnabledParameter = "drill_enabled";

@@ -153,13 +153,15 @@ namespace Seal.Model
         {
             get
             {
+                //The page values are used: the PageTable is only built if the model has rows (e.g. not for a model having only Page and Data elements)
                 string result = "";
-                for (int i = 0; i < PageTable.Lines[0].Length; i++)
+                if (Pages == null) return result;
+                foreach (var cell in Pages)
                 {
-                    if (!PageTable.Lines[1][i].IsTotal)
+                    if (cell != null && !cell.IsTotal)
                     {
                         if (!string.IsNullOrEmpty(result)) result += ",";
-                        result += PageTable.Lines[1][i].DisplayValue;
+                        result += cell.DisplayValue;
                     }
                 }
                 return result;

@@ -26,7 +26,15 @@
             result.CurrentRow = 6;
         }
 
-        view.ParseChildren();
+        try
+        {
+            view.ParseChildren();
+        }
+        finally
+        {
+            //Headless browser opened to get the pictures of the maps or gauges
+            await result.CloseHeadlessBrowser();
+        }
 
         result.CleanWorkbook();
 

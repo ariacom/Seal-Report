@@ -1734,6 +1734,10 @@ namespace Seal.Model
         /// Identifier of a Gauge canvas
         /// </summary>
         GaugeCanvas,
+        /// <summary>
+        /// Identifier of a Map container
+        /// </summary>
+        MapContainer,
     }
 
     /// <summary>

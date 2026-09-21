@@ -9,7 +9,7 @@
     if (page == null) { return; }
 
     string gaugeId = "g" + Helper.NewGUID();
-    //The container is identified for the PDF renderer (screenshot of the bounding box)
+    //The container is identified for the PDF and Excel renderers (picture of the gauge)
     page.SetIdentifier(ResultPageIdentifierType.GaugeCanvas, gaugeId);
 
     ResultTable table = page.DataTable;
@@ -59,7 +59,7 @@
     }
 }
 
-<div id="@gaugeId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("gauge_css"), ";"))margin-left:auto;margin-right:auto;width:@(width)px;height:@(height)px;"></div>
+<div id="@gaugeId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("gauge_css"), ";"))margin-left:auto;margin-right:auto;width:@(width)px;max-width:100%;height:@(height)px;"></div>
 
 <script>
 $(document).ready(function () {
@@ -120,6 +120,17 @@ $(document).ready(function () {
     @if (fontSize > 0)
     {
         <text>series.detail.fontSize = @fontSize;</text>
+    }
+
+    //The gauge is never wider than its container (max-width:100%): if it is narrower than the configured width, the texts and the axis line are scaled down
+    var gaugeScale = dom.clientWidth > 0 ? Math.min(1, dom.clientWidth / @width) : 1;
+    if (gaugeScale < 1) {
+        series.detail.fontSize = Math.round((series.detail.fontSize || 30) * gaugeScale);
+        series.title.fontSize = Math.round(16 * gaugeScale);
+        series.axisLabel.fontSize = Math.max(7, Math.round(10 * gaugeScale));
+        series.axisLabel.distance = Math.round(series.axisLabel.distance * gaugeScale);
+        series.axisLine.lineStyle.width = Math.round(series.axisLine.lineStyle.width * gaugeScale);
+        series.progress.width = series.axisLine.lineStyle.width;
     }
 
     //Deep-merge the advanced ECharts gauge options provided by the user

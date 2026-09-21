@@ -6,7 +6,10 @@ using ClosedXML.Excel;
 using Seal.Helpers;
 using Seal.Model;
 using System;
+using System.IO;
 using System.Linq;
+using System.Threading.Tasks;
+using ClosedXML.Excel.Drawings;
 using AngleSharp.Html.Parser;
 using AngleSharp.Dom;
 
@@ -189,12 +192,51 @@ namespace Seal.Renderer
                 foreach (var sheet in Workbook.Worksheets.ToList())
                 {
                     if (Workbook.Worksheets.Count <= 1) break;
-                    if (sheet.LastCellUsed() == null) sheet.Delete();
+                    //A sheet having only pictures (e.g. gauges or a map) is used
+                    if (sheet.LastCellUsed() == null && sheet.Pictures.Count == 0) sheet.Delete();
                 }
             }
             catch (Exception ex)
             {
                 Console.WriteLine(ex.Message);
+            }
+        }
+
+        /// <summary>
+        /// Headless browser showing the HTML result of the report, opened at the first picture got with GetHtmlElementPicture()
+        /// </summary>
+        public HeadlessBrowser HeadlessBrowser;
+
+        /// <summary>
+        /// Returns the picture (PNG) of an element of the HTML result of the report (e.g. a map or a gauge). The HTML result is only generated if a view requires it (refer to ReportExecution.checkHTMLPrintResult), null is returned otherwise.
+        /// </summary>
+        public async Task<byte[]> GetHtmlElementPicture(string selector)
+        {
+            if (string.IsNullOrEmpty(Report.HTMLResultFilePath) || !File.Exists(Report.HTMLResultFilePath)) return null;
+            if (HeadlessBrowser == null) HeadlessBrowser = await HeadlessBrowser.Open(Report.Repository, Report.HTMLResultFilePath);
+            return await HeadlessBrowser.GetElementPicture(HeadlessBrowser.Page, selector);
+        }
+
+        /// <summary>
+        /// Close the headless browser if it has been opened
+        /// </summary>
+        public async Task CloseHeadlessBrowser()
+        {
+            if (HeadlessBrowser != null) await HeadlessBrowser.DisposeAsync();
+            HeadlessBrowser = null;
+        }
+
+        /// <summary>
+        /// Insert a picture at the current position of the current worksheet and move the current row below it. If a width in pixels is given, the picture is resized with its proportions kept.
+        /// </summary>
+        public void AddPicture(byte[] image, int width)
+        {
+            using (var stream = new MemoryStream(image))
+            {
+                var picture = Worksheet.AddPicture(stream, XLPictureFormat.Png).MoveTo(Worksheet.Cell(CurrentRow, CurrentCol));
+                if (width > 0 && picture.OriginalWidth > 0) picture.WithSize(width, (int)Math.Round((double)picture.OriginalHeight * width / picture.OriginalWidth));
+                //Leave room for the picture (a default row is about 20 pixels high)
+                CurrentRow += (int)Math.Ceiling(picture.Height / 20.0) + 1;
             }
         }
 

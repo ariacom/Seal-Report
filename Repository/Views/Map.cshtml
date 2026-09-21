@@ -15,6 +15,8 @@
     if (table == null || table.ColumnCount == 0 || table.BodyStartRow == 0) { return; }
 
     string mapId = "m" + Helper.NewGUID();
+    //The container is identified for the PDF and Excel renderers (picture of the map)
+    page.SetIdentifier(ResultPageIdentifierType.MapContainer, mapId);
     int titleRow = table.BodyStartRow - 1;
 
     //Find a column from its name: translated display name, display name or SQL column name
@@ -218,6 +220,11 @@ $(document).ready(function () {
     var container = document.getElementById('@mapId');
 
     var options = { preferCanvas: true, maxZoom: @maxZoom };
+    @if (report.PrintLayout)
+    {
+        //Print and pictures for the PDF and Excel renderers: no animation, the tiles are fully displayed as soon as they are loaded
+        <text>options.fadeAnimation = false; options.zoomAnimation = false; options.markerZoomAnimation = false; options.zoomControl = false;</text>
+    }
     @if (!string.IsNullOrEmpty(advanced))
     {
         <text>

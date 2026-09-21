@@ -23,54 +23,28 @@
 
     try
     {
-        if (renderer.GetBoolValue("force_charts"))
+        bool forceCharts = renderer.GetBoolValue("force_charts");
+        if (forceCharts)
         {
             //Convert charts to ScottPlot
             convertToScottPlotCharts(report);
-        }
-        else if (!string.IsNullOrEmpty(report.HTMLResultFilePath) && File.Exists(report.HTMLResultFilePath))
-        {
-            //Get charts from JS in html result
-            //Headless browser: an unbranded Chromium build (BSD-3-Clause, no Google Chrome terms of service),
-            //downloaded at first use from the chromium-browser-snapshots bucket into Assemblies\Chromium.
-            //The revision is pinned to the nearest snapshot of the Chrome 153 stable branch point (September 2026).
-            //Keep it in sync with the HTML2PDF renderer view (Renderers\HTML2PDF\Report.cshtml), which documents how to upgrade it.
-            //The download goes through the system default proxy; set fetcher.WebProxy for a specific one.
-            var fetcher = new BrowserFetcher(new BrowserFetcherOptions() { Browser = SupportedBrowser.Chromium, Path = report.Repository.AssembliesFolder });
-            string chromiumRevision = fetcher.Platform == Platform.Linux ? "1681097" : "1681099";
-            string chromePath = fetcher.GetExecutablePath(chromiumRevision);
-            if (!File.Exists(chromePath))
+            //The JavaScript charts of the HTML result are not used
+            foreach (var resultPage in report.Models.SelectMany(i => i.Pages))
             {
-                try
-                {
-                    await fetcher.DownloadAsync(chromiumRevision);
-                    //The snapshot archive also contains a large test executable that is useless here (about 340 MB)
-                    foreach (var testsName in new[] { "interactive_ui_tests.exe", "interactive_ui_tests" })
-                    {
-                        var testsPath = Path.Combine(Path.GetDirectoryName(chromePath), testsName);
-                        if (File.Exists(testsPath)) File.Delete(testsPath);
-                    }
-                }
-                catch (Exception ex)
-                {
-                    //No download possible (server without internet access): use any Chromium-based browser copied under the Assemblies folder
-                    var expectedPath = chromePath;
-                    chromePath = Directory.GetFiles(report.Repository.AssembliesFolder, Path.GetFileName(expectedPath), SearchOption.AllDirectories).FirstOrDefault();
-                    if (string.IsNullOrEmpty(chromePath))
-                    {
-                        var isLinux = fetcher.Platform == Platform.Linux;
-                        var archiveUrl = $"https://storage.googleapis.com/chromium-browser-snapshots/{(isLinux ? "Linux_x64" : "Win_x64")}/{chromiumRevision}/{(isLinux ? "chrome-linux" : "chrome-win")}.zip";
-                        var targetFolder = Path.GetDirectoryName(Path.GetDirectoryName(expectedPath));
-                        throw new Exception($"Unable to download Chromium revision {chromiumRevision} into '{report.Repository.AssembliesFolder}': {ex.Message}\r\nOn a server without internet access, install the browser manually: download {archiveUrl} and unzip it into '{targetFolder}' so that '{expectedPath}' exists.", ex);
-                    }
-                }
+                resultPage.ClearIdentifiers(ResultPageIdentifierType.ChartJSCanvas);
+                resultPage.ClearIdentifiers(ResultPageIdentifierType.ChartEChartsCanvas);
+                resultPage.ClearIdentifiers(ResultPageIdentifierType.ChartPlotlyCanvas);
             }
+        }
 
-            //Print HTML has been generated for JavaScript Charts or Gauge
-            result.Browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = chromePath });
-            result.Page = await result.Browser.NewPageAsync();
-            await result.Page.GoToAsync("file:///" + report.HTMLResultFilePath, null, new WaitUntilNavigation[] { WaitUntilNavigation.Networkidle0, WaitUntilNavigation.DOMContentLoaded });
-            Thread.Sleep(200);
+        //Gauges and maps are always got from the HTML result, JavaScript charts only if they are not converted to ScottPlot
+        if ((!forceCharts || report.HasGauge || report.HasMap) && !string.IsNullOrEmpty(report.HTMLResultFilePath) && File.Exists(report.HTMLResultFilePath))
+        {
+            //Get charts, gauges and maps from JS in html result: the print HTML has been generated and is shown in the headless browser
+            //(Chromium, refer to Seal.Renderer.HeadlessBrowser for the revision and its installation)
+            var browser = await HeadlessBrowser.Open(report.Repository, report.HTMLResultFilePath);
+            result.Browser = browser.Browser;
+            result.Page = browser.Page;
         }
 
         if (renderer.GetBoolValue("show_in_companion") && report.ExecutionContext == ReportExecutionContext.DesignerReport)

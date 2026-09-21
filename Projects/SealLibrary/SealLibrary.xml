@@ -4762,6 +4762,11 @@
             Identifier of a Gauge canvas
             </summary>
         </member>
+        <member name="F:Seal.Model.ResultPageIdentifierType.MapContainer">
+            <summary>
+            Identifier of a Map container
+            </summary>
+        </member>
         <member name="T:Seal.Model.EmailServerType">
             <summary>
             Type of the server used to send emails
@@ -7650,6 +7655,16 @@
             Name of the view parameter defining the report result format
             </summary>
         </member>
+        <member name="F:Seal.Model.Parameter.MapPictureParameter">
+            <summary>
+            Name of the Excel renderer parameter of the Map view to insert the picture of the map
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Parameter.GaugePictureParameter">
+            <summary>
+            Name of the Excel renderer parameter of the Gauge view to insert the picture of the gauge
+            </summary>
+        </member>
         <member name="F:Seal.Model.Parameter.DrillEnabledParameter">
             <summary>
             Name of the view parameter enabling the Drill navigation
@@ -8486,6 +8501,16 @@
         <member name="P:Seal.Model.Report.HasMap">
             <summary>
             True if the report has a Map view (built with Leaflet)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.HasMapPictureForExcel">
+            <summary>
+            True if the picture of a Map view is inserted in the Excel result (option of the Excel renderer of the Map view, true by default): it requires the HTML result and a headless browser
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.HasGaugePictureForExcel">
+            <summary>
+            True if the picture of a Gauge view is inserted in the Excel result (option of the Excel renderer of the Gauge view, true by default): it requires the HTML result and a headless browser
             </summary>
         </member>
         <member name="P:Seal.Model.Report.HasChartJSChart">
@@ -17180,6 +17205,26 @@
             Clean the current Workbook
             </summary>
         </member>
+        <member name="F:Seal.Renderer.ExcelResult.HeadlessBrowser">
+            <summary>
+            Headless browser showing the HTML result of the report, opened at the first picture got with GetHtmlElementPicture()
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.GetHtmlElementPicture(System.String)">
+            <summary>
+            Returns the picture (PNG) of an element of the HTML result of the report (e.g. a map or a gauge). The HTML result is only generated if a view requires it (refer to ReportExecution.checkHTMLPrintResult), null is returned otherwise.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.CloseHeadlessBrowser">
+            <summary>
+            Close the headless browser if it has been opened
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.AddPicture(System.Byte[],System.Int32)">
+            <summary>
+            Insert a picture at the current position of the current worksheet and move the current row below it. If a width in pixels is given, the picture is resized with its proportions kept.
+            </summary>
+        </member>
         <member name="M:Seal.Renderer.ExcelResult.AddWorksheet(System.String)">
             <summary>
             Add a Worksheet to the current Workbook
@@ -17420,6 +17465,67 @@
         <member name="M:Seal.Renderer.CellExtensions.AlignCell(QuestPDF.Infrastructure.IContainer,Seal.Model.ResultCell)">
             <summary>
             Aligns the container from the CSS class or style of the cell, numeric and date time values are aligned right by default
+            </summary>
+        </member>
+        <member name="T:Seal.Renderer.HeadlessBrowser">
+            <summary>
+            Headless browser showing the HTML result of a report: used by the renderers to print the result (HTML to PDF)
+            or to take pictures of the JavaScript views (charts, gauges and maps for the PDF and Excel renderers)
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.HeadlessBrowser.ChromiumRevisionWindows">
+            <summary>
+            Headless browser: an unbranded Chromium build (BSD-3-Clause, no Google Chrome terms of service),
+            downloaded at first use from the chromium-browser-snapshots bucket into Assemblies\Chromium.
+            The revision is pinned to the nearest snapshot of the Chrome 153 stable branch point (September 2026).
+            To upgrade: take chromium_main_branch_position of the current stable release from
+            https://chromiumdash.appspot.com/fetch_releases?channel=Stable&amp;platform=Windows&amp;num=1
+            and use the nearest revision that exists in https://storage.googleapis.com/chromium-browser-snapshots/Win_x64/
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.HeadlessBrowser.ChromiumRevisionLinux">
+            <summary>
+            Chromium revision for Linux (nearest snapshot of the same branch point)
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.HeadlessBrowser.ViewportWidth">
+            <summary>
+            Width in pixels of the browser viewport showing the HTML result
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.HeadlessBrowser.ViewportHeight">
+            <summary>
+            Height in pixels of the browser viewport showing the HTML result
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.HeadlessBrowser.Browser">
+            <summary>
+            The browser
+            </summary>
+        </member>
+        <member name="F:Seal.Renderer.HeadlessBrowser.Page">
+            <summary>
+            The page showing the HTML result
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HeadlessBrowser.GetChromiumPath(Seal.Model.Repository)">
+            <summary>
+            Returns the path of the Chromium executable, the browser is downloaded at first use into the Assemblies folder of the repository
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HeadlessBrowser.Open(Seal.Model.Repository,System.String)">
+            <summary>
+            Launch the browser and show an HTML result file, the page is returned when its resources are loaded and its scripts executed
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HeadlessBrowser.GetElementPicture(PuppeteerSharp.IPage,System.String)">
+            <summary>
+            Returns the picture (PNG) of an element of the page
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.HeadlessBrowser.DisposeAsync">
+            <summary>
+            Close the page and the browser
             </summary>
         </member>
         <member name="T:RazorEngine.Engine">

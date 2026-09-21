@@ -1,0 +1,9 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = Parameter.MapPictureParameter, DisplayName = "Insert map picture", BoolValue = true, Description = "If true, the picture of the map is inserted in the Excel result. The picture is taken with a headless browser (Chromium, downloaded at first use) showing the HTML result of the report: an Internet connection is required on the server to display the background tiles. Set the parameter to false for a faster generation without the picture (the browser is then not used)." });
+    Template.Parameters.Add(new Parameter() { Name = "new_sheet", DisplayName = "New sheet for the map", BoolValue = false, Description = "If true, a new Sheet is created for the map." });
+    Template.Parameters.Add(new Parameter() { Name = "map_width", DisplayName = "Map width", NumericValue = 900, Description = "The map picture width in pixels. The height is set to keep the proportions of the map." });
+}

@@ -1,0 +1,8 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "map_width", NumericValue = 0, DisplayName = "Map width (millimeter)", Description = "The map width in millimeter. If 0 the available page size is used." });
+    Template.Parameters.Add(new Parameter() { Name = "map_height", NumericValue = 0, DisplayName = "Map height (millimeter)", Description = "The map height in millimeter. If 0 the available page size is used." });
+}

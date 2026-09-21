@@ -78,6 +78,7 @@ Listed in alphabetical order.
 | HtmlSanitizer | 9.2.1039 | 2026-08-28 | MIT |
 | jose-jwt | 5.3.0 | 2026-03-27 | MIT |
 | jQuery (bundled in the DataTables build) | 3.7.0 | 2023-05-11 | MIT |
+| Leaflet (Map view; the background tiles are not part of Seal Report, they are downloaded by the browser from the tile provider chosen in the view, subject to its own usage policy) | 1.9.4 | 2023-05-18 | BSD-2-Clause |
 | MailKit / MimeKit | 4.18.0 | 2026-09-13 | MIT |
 | Microsoft.Data.SqlClient | 7.0.3 | 2026-09-10 | MIT |
 | Microsoft.Web.WebView2 (SDK; the WebView2 Runtime is not redistributed and must be installed on the machine) | 1.0.3912.50 | 2026-04-13 | BSD-3-Clause |

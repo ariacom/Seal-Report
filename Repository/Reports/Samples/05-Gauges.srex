@@ -130,175 +130,194 @@
               <Name>Container</Name>
               <Views>
                 <ReportView>
-                  <GUID>8aa7fd80-c29a-405f-9c74-868bb362de9b</GUID>
-                  <Name>Gauge color zones</Name>
-                  <TemplateName>Gauge</TemplateName>
+                  <GUID>f529b443-2615-107f-608f-29e4437a78c7</GUID>
+                  <Name>Default gauge</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>7c0615e8-15fe-496f-8b03-b0492c83aa77</GUID>
+                      <Name>Gauge</Name>
+                      <TemplateName>Gauge</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>gauge_width</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_height</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_max</Name>
+                          <Value>100000</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Widget</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>gauge_width</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_height</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_max</Name>
-                      <Value>100000</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_colors</Name>
-                      <Value>[0.4,'#30B32D'],
-[0.8,'#FFDD00'],
-[1,'#F03E3E']
-</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_value_color</Name>
-                      <Value>green</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_options</Name>
-                      <Value>pointer:{ itemStyle:{ color:'auto' } }
-</Value>
-                    </Parameter>
-                  </Parameters>
-                  <SortOrder>4</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>8c63915e-46c5-4b0e-a123-1f72d299f686</GUID>
-                  <Name>Gauge progress</Name>
-                  <TemplateName>Gauge</TemplateName>
-                  <Parameters>
-                    <Parameter>
-                      <Name>gauge_width</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_height</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_max</Name>
-                      <Value>100000</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_axisline_width</Name>
-                      <Value>10</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_colors</Name>
-                      <Value>[0.5,'#a9d70b'],
-[0.75,'#f9c802'],
-[1,'#ff0000']
-</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_show_progress</Name>
-                      <Value>True</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_show_pointer</Name>
-                      <Value>False</Value>
-                    </Parameter>
-                  </Parameters>
-                  <SortOrder>2</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>7c0615e8-15fe-496f-8b03-b0492c83aa77</GUID>
-                  <Name>Gauge</Name>
-                  <TemplateName>Gauge</TemplateName>
-                  <Parameters>
-                    <Parameter>
-                      <Name>gauge_width</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_height</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_max</Name>
-                      <Value>100000</Value>
+                      <Name>widget_icon</Name>
+                      <Value>fa-solid fa-gauge-high</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>86fde740-ff47-471c-96f3-f0d326ecb033</GUID>
-                  <Name>Text1</Name>
-                  <TemplateName>Free</TemplateName>
-                  <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Default Gauge
-</CustomTemplate>
-                  <SortOrder>5</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>25018d61-5e09-47a2-9bf1-c75201063cce</GUID>
-                  <Name>Text3</Name>
-                  <TemplateName>Free</TemplateName>
-                  <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Half gauge with a title
-</CustomTemplate>
-                  <SortOrder>7</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>1f647a35-b07b-4e5d-9e49-9b67217177c6</GUID>
-                  <Name>Text2</Name>
-                  <TemplateName>Free</TemplateName>
-                  <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Gauge with a progress arc and color zones</CustomTemplate>
-                  <SortOrder>6</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>308de1e3-1c3b-420f-9b9f-66a5cfd92b16</GUID>
-                  <Name>Gauge half</Name>
-                  <TemplateName>Gauge</TemplateName>
+                  <GUID>001899df-878d-8eae-a368-57ad42eadb63</GUID>
+                  <Name>Progress arc and color zones</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>8c63915e-46c5-4b0e-a123-1f72d299f686</GUID>
+                      <Name>Gauge progress</Name>
+                      <TemplateName>Gauge</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>gauge_width</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_height</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_max</Name>
+                          <Value>100000</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_axisline_width</Name>
+                          <Value>10</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_colors</Name>
+                          <Value>[0.5,'#a9d70b'],
+[0.75,'#f9c802'],
+[1,'#ff0000']
+</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_show_progress</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_show_pointer</Name>
+                          <Value>False</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Widget</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>gauge_width</Name>
-                      <Value>300</Value>
+                      <Name>widget_icon</Name>
+                      <Value>fa-solid fa-gauge-high</Value>
                     </Parameter>
+                  </Parameters>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>5472220a-9ece-688e-e79f-7d26fb942529</GUID>
+                  <Name>Half gauge with a title</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>308de1e3-1c3b-420f-9b9f-66a5cfd92b16</GUID>
+                      <Name>Gauge half</Name>
+                      <TemplateName>Gauge</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>gauge_width</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_height</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_max</Name>
+                          <Value>100000</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_start_angle</Name>
+                          <Value>180</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_end_angle</Name>
+                          <Value>0</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_title</Name>
+                          <Value>Sales</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Widget</TemplateName>
+                  <Parameters>
                     <Parameter>
-                      <Name>gauge_height</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_max</Name>
-                      <Value>100000</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_start_angle</Name>
-                      <Value>180</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_end_angle</Name>
-                      <Value>0</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_title</Name>
-                      <Value>Sales</Value>
+                      <Name>widget_icon</Name>
+                      <Value>fa-solid fa-gauge-high</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>3</SortOrder>
                 </ReportView>
                 <ReportView>
-                  <GUID>8aff6912-7271-44b4-bbf1-dc59b7489729</GUID>
-                  <Name>Text4</Name>
-                  <TemplateName>Free</TemplateName>
-                  <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Gauge with color zones
-</CustomTemplate>
-                  <SortOrder>8</SortOrder>
+                  <GUID>cd3ea77c-cc81-1182-458d-ea99236dc068</GUID>
+                  <Name>Color zones</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>8aa7fd80-c29a-405f-9c74-868bb362de9b</GUID>
+                      <Name>Gauge color zones</Name>
+                      <TemplateName>Gauge</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>gauge_width</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_height</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_max</Name>
+                          <Value>100000</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_colors</Name>
+                          <Value>[0.4,'#30B32D'],
+[0.8,'#FFDD00'],
+[1,'#F03E3E']
+</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_value_color</Name>
+                          <Value>green</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_options</Name>
+                          <Value>pointer:{ itemStyle:{ color:'auto' } }
+</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Widget</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>widget_icon</Name>
+                      <Value>fa-solid fa-gauge-high</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>4</SortOrder>
                 </ReportView>
               </Views>
               <TemplateName>Container</TemplateName>
               <Parameters>
                 <Parameter>
                   <Name>grid_layout</Name>
-                  <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;
-col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;
-</Value>
+                  <Value>col-sm-3;col-sm-3;col-sm-3;col-sm-3;</Value>
                 </Parameter>
               </Parameters>
               <SortOrder>1</SortOrder>
@@ -315,6 +334,18 @@ col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-cen
           <SortOrder>1</SortOrder>
         </ReportView>
         <ReportView>
+          <GUID>a77df5bd-23bb-4266-afb4-9f73dbc583e8</GUID>
+          <Name>Separator</Name>
+          <TemplateName>Free</TemplateName>
+          <Parameters>
+            <Parameter>
+              <Name>show_separator</Name>
+              <Value>True</Value>
+            </Parameter>
+          </Parameters>
+          <SortOrder>2</SortOrder>
+        </ReportView>
+        <ReportView>
           <GUID>04a649fa-78ab-4a25-8b20-5035a33e89e7</GUID>
           <Name>Gauge with min, max, animation</Name>
           <Views>
@@ -323,44 +354,57 @@ col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-center;col-sm-3 text-cen
               <Name>Container</Name>
               <Views>
                 <ReportView>
-                  <GUID>92ad5feb-c459-40f3-b4db-d88b8ce33433</GUID>
-                  <Name>Gauge</Name>
-                  <TemplateName>Gauge</TemplateName>
+                  <GUID>3ca099a6-46ea-47a9-25b4-92ab13d7a872</GUID>
+                  <Name>Min, max and animation from the result table</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>92ad5feb-c459-40f3-b4db-d88b8ce33433</GUID>
+                      <Name>Gauge</Name>
+                      <TemplateName>Gauge</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>gauge_width</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_height</Name>
+                          <Value>300</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_show_progress</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>gauge_title</Name>
+                          <Value>Sales</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Widget</TemplateName>
                   <Parameters>
                     <Parameter>
-                      <Name>gauge_width</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_height</Name>
-                      <Value>300</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_show_progress</Name>
-                      <Value>True</Value>
-                    </Parameter>
-                    <Parameter>
-                      <Name>gauge_title</Name>
-                      <Value>Sales</Value>
+                      <Name>widget_icon</Name>
+                      <Value>fa-solid fa-gauge-high</Value>
                     </Parameter>
                   </Parameters>
                   <SortOrder>1</SortOrder>
-                </ReportView>
-                <ReportView>
-                  <GUID>7a87c938-d267-4586-b5e1-a2b19e848a13</GUID>
-                  <Name>Text</Name>
-                  <TemplateName>Free</TemplateName>
-                  <UseCustomTemplate>true</UseCustomTemplate>
-                  <CustomTemplate>Gauge with min, max and animation coming from the result table of the model</CustomTemplate>
-                  <SortOrder>2</SortOrder>
+                  <ExcelRenderer>
+                    <Parameters>
+                      <Parameter>
+                        <Name>new_sheet</Name>
+                        <Value>False</Value>
+                      </Parameter>
+                    </Parameters>
+                  </ExcelRenderer>
                 </ReportView>
               </Views>
               <TemplateName>Container</TemplateName>
               <Parameters>
                 <Parameter>
                   <Name>grid_layout</Name>
-                  <Value>col-sm-6;(col-sm-6)
-col-sm-6 text-center;(col-sm-6)</Value>
+                  <Value>col-sm-3;</Value>
                 </Parameter>
               </Parameters>
               <SortOrder>1</SortOrder>
@@ -375,14 +419,6 @@ col-sm-6 text-center;(col-sm-6)</Value>
             </Parameter>
           </Parameters>
           <SortOrder>3</SortOrder>
-        </ReportView>
-        <ReportView>
-          <GUID>a77df5bd-23bb-4266-afb4-9f73dbc583e8</GUID>
-          <Name>Separator</Name>
-          <TemplateName>Free</TemplateName>
-          <UseCustomTemplate>true</UseCustomTemplate>
-          <CustomTemplate>&lt;hr&gt;</CustomTemplate>
-          <SortOrder>2</SortOrder>
         </ReportView>
       </Views>
       <TemplateName>Report</TemplateName>

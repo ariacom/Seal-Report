@@ -1,0 +1,38 @@
+@using Seal.Model
+@using Seal.Renderer
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ResultPage page = report.CurrentPage;
+
+    ExcelRenderer renderer = view.ExcelRenderer;
+    ExcelResult result = report.ExcelResult;
+
+    if (page != null)
+    {
+        //The views are parsed in the same order as in the HTML result: the first identifier left is the one of this view (it is removed even if no picture is inserted)
+        var identifiers = page.GetIdentifiers(ResultPageIdentifierType.MapContainer);
+        var id = identifiers.FirstOrDefault();
+        if (identifiers.Count > 0) identifiers.RemoveAt(0);
+
+        if (id != null && renderer.GetBoolValue(Parameter.MapPictureParameter))
+        {
+            try
+            {
+                //The picture of the map (with its tiles, points and legend) is taken from the HTML result shown in the headless browser
+                var image = await result.GetHtmlElementPicture("#" + id);
+                if (image != null)
+                {
+                    if (renderer.GetBoolValue("new_sheet")) result.AddWorksheet(modelView.ViewName + " " + view.ViewName);
+                    result.CurrentCol = 1;
+                    result.AddPicture(image, renderer.GetNumericValue("map_width"));
+                }
+            }
+            catch (Exception ex)
+            {
+                report.LogMessage("Map picture: " + ex.Message);
+            }
+        }
+    }
+}

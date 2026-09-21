@@ -173,8 +173,11 @@ namespace Seal.Model
 
             //Check if JavaScript charts are involved, if so render the HTML first, so it can be used in the renderers (HTMLResultFilePath)
             if (Report.Format == ReportFormat.PDF &&
-                (Report.HasEChartsChart || Report.HasChartJSChart || Report.HasPlotlyChart || Report.HasGauge)
+                (Report.HasEChartsChart || Report.HasChartJSChart || Report.HasPlotlyChart || Report.HasGauge || Report.HasMap)
                 ) generatePrintResult = true;
+
+            //Excel: the HTML is only required if the picture of a Map or a Gauge is inserted (option of the Excel renderer of the view)
+            if (Report.Format == ReportFormat.Excel && (Report.HasMapPictureForExcel || Report.HasGaugePictureForExcel)) generatePrintResult = true;
 
             //PDF conversion requires Print Result
             if (Report.Format == ReportFormat.HTML2PDF) generatePrintResult = true;

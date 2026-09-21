@@ -1,0 +1,9 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = Parameter.GaugePictureParameter, DisplayName = "Insert gauge picture", BoolValue = true, Description = "If true, the picture of the gauge is inserted in the Excel result. The picture is taken with a headless browser (Chromium, downloaded at first use) showing the HTML result of the report. Set the parameter to false for a faster generation without the picture (the browser is then not used)." });
+    Template.Parameters.Add(new Parameter() { Name = "new_sheet", DisplayName = "New sheet for the gauge", BoolValue = false, Description = "If true, a new Sheet is created for the gauge." });
+    Template.Parameters.Add(new Parameter() { Name = "gauge_width", DisplayName = "Gauge width", NumericValue = 0, Description = "The gauge picture width in pixels. The height is set to keep the proportions of the gauge. If 0, the size of the gauge in the HTML result is used." });
+}

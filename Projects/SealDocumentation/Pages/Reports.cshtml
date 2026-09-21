@@ -515,7 +515,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Plotly Chart</b>: Render the Plotly series of the page result</li>
                                 <li><b>Chart Scottplot</b>: Render the ScottPlot series of the page result as a static image (PNG or SVG)</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
-                                <li><b>Gauge</b>: Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed.</li>
+                                <li><b>Gauge</b>: Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed. The picture of the gauge is inserted in the PDF and Excel results.</li>
                                 <li><b>Map</b>: Display a Map with one point per row of the data table result, located with a latitude and a longitude column (refer to <a href="~/Reports#lineViews_map">Map View</a>).</li>
                             </ul>
 
@@ -593,7 +593,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 The Leaflet library is part of the report result, but the background tiles are downloaded by the browser from the tile provider: an Internet connection is required to display them.<br />
                                 Check the usage policy of the provider before a production use (<ck>e.g. <a href="https://operations.osmfoundation.org/policies/tiles/" target="_blank">OpenStreetMap Tile Usage Policy</a></ck>), or choose <b>Custom</b> to use your own or a commercial tile server.<br />
                                 <b>OpenStreetMap</b> and <b>OpenHikingMap</b> require an HTTP Referer: their tiles are displayed in the Web Report Server and in the Report Designer, but they are blocked when a result file is opened from the disk in a browser. <b>OpenTopoMap</b> and <b>IGN Plan</b> do not have this limitation.<br />
-                                The map is not rendered in the <b>PDF</b> and <b>Excel</b> formats (only the tables are generated): use the <b>HTML to PDF</b> format to print a report with its map.
+                                In the <b>PDF</b> format, the picture of the map (with its tiles, points and legend) is inserted in the document: its size can be set in the PDF renderer parameters of the view. In the <b>Excel</b> format, the picture is inserted above the data: set the parameter <code>Insert map picture</code> of the Excel renderer of the view to false for a faster generation without the picture (the headless browser is then not used). In both cases the picture is taken by the <b>Chromium</b> browser (see <a href="~/Reports#lineViews_renderers">Renderers</a>) and the server needs an Internet connection to load the tiles.
                             </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Map Sample</h4>
@@ -624,14 +624,14 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Excel</b>: Generate an XLSX file using the <strong>ClosedXML</strong> library (charts are rendered as images with <strong>ScottPlot</strong>).</li>
                                 <li><b>HTML to PDF</b>: Generate a PDF from the HTML Print format using the <strong>PuppeteerSharp</strong> library (a <strong>Chromium</strong> browser is downloaded at the first execution, see the <i>Chromium browser</i> note below).</li>
                                 <li><b>Json</b>: Generate a simple Json file.</li>
-                                <li><b>PDF</b>: Generate a PDF file using the <strong>QuestPDF</strong> library and <strong>PuppeteerSharp</strong> library if JavaScript Charts or Gauge are involved.</li>
+                                <li><b>PDF</b>: Generate a PDF file using the <strong>QuestPDF</strong> library and <strong>PuppeteerSharp</strong> library if JavaScript Charts, Gauges or Maps are involved.</li>
                                 <li><b>Text</b>: Generate a simple text file.</li>
                                 <li><b>XML</b>: Generate a simple XML file.</li>
                             </ul>
 
                             <div class="bs-callout bs-callout-info">
                                 <h4>Chromium browser</h4>
-                                The <b>HTML to PDF</b> renderer, and the <b>PDF</b> renderer if the report contains JavaScript Charts or Gauges, need a headless browser to print the HTML result.<br />
+                                The <b>HTML to PDF</b> renderer, the <b>PDF</b> renderer if the report contains JavaScript Charts, Gauges or Maps, and the <b>Excel</b> renderer if the picture of a Map or a Gauge is inserted (parameters <code>Insert map picture</code> and <code>Insert gauge picture</code> of the Excel renderer of the view, true by default), need a headless browser showing the HTML result.<br />
                                 At the first execution, an unbranded <b>Chromium</b> build (pinned revision, BSD-3-Clause) is downloaded from the Chromium snapshots and installed in the <i>Assemblies\Chromium</i> Repository sub-folder. Nothing has to be installed on the machine.<br />
                                 If the server has no access to the internet, the execution fails with a message giving the URL of the archive and the target folder: download the archive from another machine and unzip it in this folder, then execute the report again.
                             </div>
