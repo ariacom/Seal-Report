@@ -26,6 +26,7 @@
                             <a href="#lineViews">Views</a>
                             <ul class="nav">
                                 <li><a href="#lineViews_template">Templates</a></li>
+                                <li><a href="#lineViews_map">Map View</a></li>
                                 <li><a href="#lineViews_renderers">Renderers</a></li>
                                 <li><a href="#lineViews_rv">Restrictions Views</a></li>
                             </ul>
@@ -515,6 +516,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <li><b>Chart Scottplot</b>: Render the ScottPlot series of the page result as a static image (PNG or SVG)</li>
                                 <li><b>KPI</b>: Display a Key Performance Indicator. The KPI is built from a data table result with at least 2 columns: 1 for the dimension, 1 for the measure (with optional columns to define the goal if the column name has the _GOAL suffix).</li>
                                 <li><b>Gauge</b>: Display a Gauge built from a data table result having at least 1 row and 1 column for the value. 3 optionals columns can be used to set minimum, maximum and animation speed.</li>
+                                <li><b>Map</b>: Display a Map with one point per row of the data table result, located with a latitude and a longitude column (refer to <a href="~/Reports#lineViews_map">Map View</a>).</li>
                             </ul>
 
                             <div class="bs-callout bs-callout-info">
@@ -551,6 +553,53 @@ model.ResultTable = query2.CopyToDataTable2();
                                 <h4>Create your own View Template</h4>
                                 It is easy to create your own view templates.<br />
                                 Just add two  *.cshtml files in the <i>\Views</i> Repository sub-folder: one for the main script and one for the configuration.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+
+                    <div id="lineViews_map" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Map View</h4>
+                            <p>
+                                The <b>Map</b> view displays the result of a model on an interactive map built with the <a href="https://leafletjs.com" target="_blank">Leaflet</a> library.<br />
+                                The view is a child of a <b>Model</b> view: each row of the data table result is a point of the map, located with two numeric columns holding the <b>latitude</b> and the <b>longitude</b> in decimal degrees (WGS84, the coordinates of a GPS).
+                                The rows without coordinates are ignored and counted below the map.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                To define a map, add the latitude and the longitude as <b>Row</b> elements of the model with the other elements to show, then add a <b>Map</b> view to the <b>Model</b> view (or to one of its containers).<br />
+                                The columns are found by their name: the element name displayed in the table or the SQL column name. If the parameters <code>Latitude column</code> and <code>Longitude column</code> are empty, the first columns having a name containing <i>latitude</i> and <i>longitude</i> are used.
+                            </div>
+                            <p>
+                                Main parameters of the view:
+                            </p>
+                            <ul>
+                                <li><code>Label column</code>: column used for the tooltip of the point and the title of its popup. When a point is clicked, the popup shows the other columns of the row and, in the Web Report Server, the navigation links of the cells (drill and sub-reports).</li>
+                                <li><code>Color column</code>: one color per distinct value of the column (<eg>e.g. one color per country or per risk level</eg>). A legend shows the values with their number of points, a click on a value shows or hides its points.</li>
+                                <li><code>Colors</code>: one entry per line, either <i>value=color</i> to set the color of a given value (<eg>e.g. High=#d62728</eg>) or a <i>color</i> added to the palette used for the other values.</li>
+                                <li><code>Size column</code>: numeric column used to size the points between the <code>Point radius</code> and the <code>Point maximum radius</code> (<eg>e.g. the sales amount</eg>).</li>
+                                <li><code>Background map</code>: provider of the background tiles, <b>OpenStreetMap</b> (standard map), <b>OpenTopoMap</b> (topographic map), <b>OpenHikingMap</b> (hiking map with contour lines and trails), <b>IGN Plan</b> (France only) or <b>Custom</b> to use your own tile server with the <code>Tiles URL</code> and <code>Tiles attribution</code> parameters.</li>
+                                <li><code>Fit to the points</code>: by default the map is centered and zoomed to show all the points, otherwise the <code>Center</code> and <code>Zoom</code> parameters are used.</li>
+                                <li><code>Advanced options</code>: any other <a href="https://leafletjs.com/reference.html#map-option" target="_blank">Leaflet map option</a> (<eg>e.g. scrollWheelZoom:false</eg>).</li>
+                            </ul>
+                            <p>
+                                The points are drawn in the reverse order of the rows: the first rows of the table stay visible on top of the others, thus the sort of the model can be used to highlight the most important points.<br />
+                                If the element of a column is changed by a drill navigation (<eg>e.g. from Country to City</eg>), the column parameters of the view follow the new element.<br />
+                                For custom scripts, the Leaflet map object can be got from the <code>sealMap</code> property of the map container.
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Background tiles and Internet connection</h4>
+                                The Leaflet library is part of the report result, but the background tiles are downloaded by the browser from the tile provider: an Internet connection is required to display them.<br />
+                                Check the usage policy of the provider before a production use (<ck>e.g. <a href="https://operations.osmfoundation.org/policies/tiles/" target="_blank">OpenStreetMap Tile Usage Policy</a></ck>), or choose <b>Custom</b> to use your own or a commercial tile server.<br />
+                                <b>OpenStreetMap</b> and <b>OpenHikingMap</b> require an HTTP Referer: their tiles are displayed in the Web Report Server and in the Report Designer, but they are blocked when a result file is opened from the disk in a browser. <b>OpenTopoMap</b> and <b>IGN Plan</b> do not have this limitation.<br />
+                                The map is not rendered in the <b>PDF</b> and <b>Excel</b> formats (only the tables are generated): use the <b>HTML to PDF</b> format to print a report with its map.
+                            </div>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Map Sample</h4>
+                                <a class="btn btn-primary live-sample">Live Sample: 05-Maps</a><br />
+                                Sales per customer city on a map: the points are colored by country and sized by amount.
+                                As the Northwind database has no geographical data, the coordinates of the cities come from a table defined by a SQL statement in the report source and joined to the Customers table.
                             </div>
                         </div>
                         <!-- end col -->
