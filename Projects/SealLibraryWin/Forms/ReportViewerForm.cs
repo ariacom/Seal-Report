@@ -73,6 +73,7 @@ namespace Seal.Forms
             WebBrowserHelper.FixBrowserVersion();
 
             InitializeComponent();
+            webBrowser.CoreWebView2InitializationCompleted += WebBrowser_CoreWebView2InitializationCompleted;
 
             ShowIcon = true;
             Icon = Repository.ProductIcon;
@@ -219,6 +220,15 @@ namespace Seal.Forms
         {
             value = value.Replace("\\", "\\\\");
             await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').{property}('{value}')");
+        }
+
+        private void WebBrowser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
+        {
+            if (!e.IsSuccess) return;
+            //The result is a local file (no HTTP Referer): the application is identified in the User-Agent, as required by the usage policy of
+            //some resource providers (e.g. the OpenStreetMap tiles of the Map view are blocked for an anonymous browser without Referer).
+            var settings = webBrowser.CoreWebView2.Settings;
+            if (!settings.UserAgent.StartsWith("SealReport/")) settings.UserAgent = string.Format("SealReport/{0} (+https://sealreport.org) {1}", Repository.ProductVersion, settings.UserAgent);
         }
 
         private void WebBrowser_NavigationStarting(object sender, CoreWebView2NavigationStartingEventArgs e)
