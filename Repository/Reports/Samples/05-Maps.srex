@@ -1,0 +1,263 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>eb7098e0-baf3-ccff-141c-c67815599a78</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;The Map view displays one point per row of the model: the 'Latitude' and 'Longitude' columns are found by their name.&lt;/li&gt;
+&lt;li&gt;The Northwind database has no coordinates: the report defines its own table 'Cities' (SQL of the table in the report source) joined to the Customers table.&lt;/li&gt;
+&lt;li&gt;The points are colored by 'Customer Country' and sized by 'Amount' (parameters 'Color column' and 'Size column' of the Map view).&lt;/li&gt;
+&lt;li&gt;Click a point to show its popup, click a legend item to show or hide a country.&lt;/li&gt;
+&lt;li&gt;An Internet connection is required to display the background tiles (OpenStreetMap by default, see the 'Tiles URL' parameter).&lt;/li&gt;
+&lt;/ul&gt;</Guide>
+  <ViewGUID>79ccd878-e75d-129b-e265-a4a26844afd5</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>d17a4dd8-ac21-b777-5d13-f1f2364a8d19</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>4a8b45c0-e86a-9dfe-9865-7238c2ec82ef</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>08329128-aa56-4b83-9c73-5826f3a0d368</GUID>
+            <Description>Coordinates of the customer cities (WGS84 decimal degrees), defined in the report as Northwind has no geographical data.</Description>
+            <Sql>SELECT N'Buenos Aires' AS City, -34.6037 AS Latitude, -58.3816 AS Longitude
+UNION ALL SELECT N'Graz', 47.0707, 15.4395
+UNION ALL SELECT N'Salzburg', 47.8095, 13.0550
+UNION ALL SELECT N'Bruxelles', 50.8503, 4.3517
+UNION ALL SELECT N'Charleroi', 50.4108, 4.4446
+UNION ALL SELECT N'Campinas', -22.9056, -47.0608
+UNION ALL SELECT N'Resende', -22.4705, -44.4509
+UNION ALL SELECT N'Rio de Janeiro', -22.9068, -43.1729
+UNION ALL SELECT N'Sao Paulo', -23.5505, -46.6333
+UNION ALL SELECT N'Montréal', 45.5017, -73.5673
+UNION ALL SELECT N'Tsawassen', 49.0177, -123.0827
+UNION ALL SELECT N'Vancouver', 49.2827, -123.1207
+UNION ALL SELECT N'Århus', 56.1629, 10.2039
+UNION ALL SELECT N'Kobenhavn', 55.6761, 12.5683
+UNION ALL SELECT N'Helsinki', 60.1699, 24.9384
+UNION ALL SELECT N'Oulu', 65.0121, 25.4651
+UNION ALL SELECT N'Lille', 50.6292, 3.0573
+UNION ALL SELECT N'Lyon', 45.7640, 4.8357
+UNION ALL SELECT N'Marseille', 43.2965, 5.3698
+UNION ALL SELECT N'Nantes', 47.2184, -1.5536
+UNION ALL SELECT N'Paris', 48.8566, 2.3522
+UNION ALL SELECT N'Reims', 49.2583, 4.0317
+UNION ALL SELECT N'Strasbourg', 48.5734, 7.7521
+UNION ALL SELECT N'Toulouse', 43.6047, 1.4442
+UNION ALL SELECT N'Versailles', 48.8049, 2.1204
+UNION ALL SELECT N'Aachen', 50.7753, 6.0839
+UNION ALL SELECT N'Berlin', 52.5200, 13.4050
+UNION ALL SELECT N'Brandenburg', 52.4125, 12.5316
+UNION ALL SELECT N'Cunewalde', 51.0997, 14.5150
+UNION ALL SELECT N'Frankfurt a.M.', 50.1109, 8.6821
+UNION ALL SELECT N'Köln', 50.9375, 6.9603
+UNION ALL SELECT N'Leipzig', 51.3397, 12.3731
+UNION ALL SELECT N'Mannheim', 49.4875, 8.4660
+UNION ALL SELECT N'München', 48.1351, 11.5820
+UNION ALL SELECT N'Münster', 51.9607, 7.6261
+UNION ALL SELECT N'Stuttgart', 48.7758, 9.1829
+UNION ALL SELECT N'Cork', 51.8985, -8.4756
+UNION ALL SELECT N'Bergamo', 45.6983, 9.6773
+UNION ALL SELECT N'Reggio Emilia', 44.6989, 10.6297
+UNION ALL SELECT N'Torino', 45.0703, 7.6869
+UNION ALL SELECT N'México D.F.', 19.4326, -99.1332
+UNION ALL SELECT N'Stavern', 59.0000, 10.0333
+UNION ALL SELECT N'Warszawa', 52.2297, 21.0122
+UNION ALL SELECT N'Lisboa', 38.7223, -9.1393
+UNION ALL SELECT N'Barcelona', 41.3851, 2.1734
+UNION ALL SELECT N'Madrid', 40.4168, -3.7038
+UNION ALL SELECT N'Sevilla', 37.3891, -5.9845
+UNION ALL SELECT N'Bräcke', 62.7500, 15.4167
+UNION ALL SELECT N'Luleå', 65.5848, 22.1567
+UNION ALL SELECT N'Bern', 46.9480, 7.4474
+UNION ALL SELECT N'Genève', 46.2044, 6.1432
+UNION ALL SELECT N'Cowes', 50.7628, -1.2970
+UNION ALL SELECT N'London', 51.5074, -0.1278
+UNION ALL SELECT N'Albuquerque', 35.0844, -106.6504
+UNION ALL SELECT N'Anchorage', 61.2181, -149.9003
+UNION ALL SELECT N'Boise', 43.6150, -116.2023
+UNION ALL SELECT N'Butte', 46.0038, -112.5348
+UNION ALL SELECT N'Elgin', 45.5649, -117.9174
+UNION ALL SELECT N'Eugene', 44.0521, -123.0868
+UNION ALL SELECT N'Kirkland', 47.6815, -122.2087
+UNION ALL SELECT N'Lander', 42.8330, -108.7307
+UNION ALL SELECT N'Portland', 45.5152, -122.6784
+UNION ALL SELECT N'San Francisco', 37.7749, -122.4194
+UNION ALL SELECT N'Seattle', 47.6062, -122.3321
+UNION ALL SELECT N'Walla Walla', 46.0646, -118.3430
+UNION ALL SELECT N'Barquisimeto', 10.0678, -69.3474
+UNION ALL SELECT N'Caracas', 10.4806, -66.9036
+UNION ALL SELECT N'I. de Margarita', 10.9971, -63.9113
+UNION ALL SELECT N'San Cristóbal', 7.7669, -72.2250</Sql>
+            <Alias>Cities</Alias>
+            <Columns>
+              <MetaColumn>
+                <GUID>1ab86770-940b-a5a6-5639-79307d25e1be</GUID>
+                <Name>Cities.City</Name>
+                <Type>Text</Type>
+                <Category>Cities</Category>
+                <DisplayName>Map City</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e12ad069-475e-8a36-3ae2-7f04292bab75</GUID>
+                <Name>Cities.Latitude</Name>
+                <Type>Numeric</Type>
+                <Category>Cities</Category>
+                <DisplayName>Latitude</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+                <NumericStandardFormat>Custom</NumericStandardFormat>
+                <Format>0.0000</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e49fbe5d-64c9-3991-e5ea-50c27ecee9e0</GUID>
+                <Name>Cities.Longitude</Name>
+                <Type>Numeric</Type>
+                <Category>Cities</Category>
+                <DisplayName>Longitude</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+                <NumericStandardFormat>Custom</NumericStandardFormat>
+                <Format>0.0000</Format>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+        <Joins>
+          <MetaJoin>
+            <GUID>74637bfd-c1b5-c672-ff7c-5e756d8d1bff</GUID>
+            <Name>Customers - Cities</Name>
+            <LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID>
+            <RightTableGUID>08329128-aa56-4b83-9c73-5826f3a0d368</RightTableGUID>
+            <Clause>Customers.City = Cities.City</Clause>
+          </MetaJoin>
+        </Joins>
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>9ef41e04-9897-b746-97d0-01dfe505fa2f</GUID>
+      <Name>Sales per city</Name>
+      <SourceGUID>d17a4dd8-ac21-b777-5d13-f1f2364a8d19</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>637e43a6-7439-ff61-e437-033226c0372e</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>64a4cb58-35f7-d18c-649f-99e69f11cc22</GUID>
+          <Name>Customers.City</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>31d6d29f-584c-bf4e-a0c8-b659484637a7</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <PivotPosition>Data</PivotPosition>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>01498f87-126b-ad04-a9c1-69f6e3d402e8</GUID>
+          <Name>Cities.Latitude</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e12ad069-475e-8a36-3ae2-7f04292bab75</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>07588eb0-f465-c3ee-0464-7738edbe191d</GUID>
+          <Name>Cities.Longitude</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e49fbe5d-64c9-3991-e5ea-50c27ecee9e0</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[252f3692-d4a8-108d-029a-60730a2cca9e]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>252f3692-d4a8-108d-029a-60730a2cca9e</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <EnumValues>
+            <string>France</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>79ccd878-e75d-129b-e265-a4a26844afd5</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>9a295fc5-f329-8323-cdd4-17c7d961e48a</GUID>
+          <Name>Sales per city</Name>
+          <Views>
+            <ReportView>
+              <GUID>ac0ca01c-f6be-bf11-8496-fbdeacc04816</GUID>
+              <Name>Model Container</Name>
+              <Views>
+                <ReportView>
+                  <GUID>16bb7a12-7a6a-486c-243e-f4f4d0c12ecb</GUID>
+                  <Name>Map</Name>
+                  <TemplateName>Map</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>map_label</Name>
+                      <Value>City</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>map_color_column</Name>
+                      <Value>Customer Country</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>map_size_column</Name>
+                      <Value>Amount</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>map_radius_max</Name>
+                      <Value>30</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>e24b5966-ffba-f8ca-8cd4-8b478ffd29cf</GUID>
+                  <Name>Data Table</Name>
+                  <TemplateName>Data Table</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Container</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>9ef41e04-9897-b746-97d0-01dfe505fa2f</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>0</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

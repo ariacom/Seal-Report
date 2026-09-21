@@ -339,6 +339,22 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Set a new value to a parameter of the view and its children if its current value is one of the given values (case insensitive)
+        /// </summary>
+        public void ReplaceParameterValue(string paramName, List<string> currentValues, string newValue)
+        {
+            foreach (var param in Parameters.Where(i => i.Name == paramName && !string.IsNullOrEmpty(i.Value)))
+            {
+                if (currentValues.Exists(i => !string.IsNullOrEmpty(i) && string.Compare(i.Trim(), param.Value.Trim(), true) == 0)) param.Value = newValue;
+            }
+
+            foreach (var child in Views)
+            {
+                child.ReplaceParameterValue(paramName, currentValues, newValue);
+            }
+        }
+
+        /// <summary>
         /// Returns a Parameter
         /// </summary>
         public Parameter GetParameter(string name)

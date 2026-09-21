@@ -1,0 +1,341 @@
+@using Seal.Model
+@using Seal.Helpers
+@using System.Globalization
+@using System.Web
+@using Newtonsoft.Json
+@{
+    Report report = Model;
+    ReportView view = report.CurrentView;
+    ReportView modelView = view.ModelView;
+    ReportModel reportModel = modelView.Model;
+    ResultPage page = report.CurrentPage;
+    if (page == null) { return; }
+
+    ResultTable table = page.DataTable;
+    if (table == null || table.ColumnCount == 0 || table.BodyStartRow == 0) { return; }
+
+    string mapId = "m" + Helper.NewGUID();
+    int titleRow = table.BodyStartRow - 1;
+
+    //Find a column from its name: translated display name, display name or SQL column name
+    Func<string, string, int> findColumn = (name, defaultKeyword) =>
+    {
+        for (int col = 0; col < table.ColumnCount; col++)
+        {
+            var element = table[titleRow, col].Element;
+            if (element == null) { continue; }
+            var names = new List<string>() { element.DisplayNameElTranslated, element.DisplayNameEl };
+            if (element.MetaColumn != null) { names.Add(element.MetaColumn.ColumnName); names.Add(element.MetaColumn.Name); }
+            foreach (var n in names.Where(i => !string.IsNullOrEmpty(i)))
+            {
+                if (!string.IsNullOrEmpty(name) && string.Compare(n.Trim(), name.Trim(), true) == 0) { return col; }
+                if (string.IsNullOrEmpty(name) && !string.IsNullOrEmpty(defaultKeyword) && n.ToLower().Contains(defaultKeyword)) { return col; }
+            }
+        }
+        return -1;
+    };
+
+    int latCol = findColumn(view.GetValue("map_latitude"), "latitude");
+    int lonCol = findColumn(view.GetValue("map_longitude"), "longitude");
+    if (latCol == -1 || lonCol == -1)
+    {
+        throw new Exception("Map view: unable to find the latitude and the longitude columns in the result table of the model. Check the 'Latitude column' and 'Longitude column' parameters of the view.");
+    }
+    int colorCol = view.HasValue("map_color_column") ? findColumn(view.GetValue("map_color_column"), "") : -1;
+    if (view.HasValue("map_color_column") && colorCol == -1) { throw new Exception("Map view: unable to find the color column '" + view.GetValue("map_color_column") + "'."); }
+    int sizeCol = view.HasValue("map_size_column") ? findColumn(view.GetValue("map_size_column"), "") : -1;
+    if (view.HasValue("map_size_column") && sizeCol == -1) { throw new Exception("Map view: unable to find the size column '" + view.GetValue("map_size_column") + "'."); }
+
+    //Columns shown in the popup: all the visible columns but the coordinates
+    var popupCols = new List<int>();
+    for (int col = 0; col < table.ColumnCount; col++)
+    {
+        if (col == latCol || col == lonCol || table.IsColumnHidden(col)) { continue; }
+        popupCols.Add(col);
+    }
+    int labelCol = view.HasValue("map_label") ? findColumn(view.GetValue("map_label"), "") : (popupCols.Count > 0 ? popupCols[0] : -1);
+    if (view.HasValue("map_label") && labelCol == -1) { throw new Exception("Map view: unable to find the label column '" + view.GetValue("map_label") + "'."); }
+
+    Func<ResultCell, double?> getDouble = (cell) =>
+    {
+        if (cell == null || cell.Value == null || cell.Value == DBNull.Value) { return null; }
+        if (cell.DoubleValue != null) { return cell.DoubleValue; }
+        double d;
+        if (double.TryParse(cell.Value.ToString(), NumberStyles.Float, CultureInfo.InvariantCulture, out d)) { return d; }
+        return null;
+    };
+
+    //Points: [latitude, longitude, category index, size value, [popup values], navigation]
+    var categories = new List<string>();
+    var points = new List<object[]>();
+    int missing = 0;
+    bool showPopup = view.GetBoolValue("map_show_popup");
+    for (int row = table.BodyStartRow; row < table.BodyEndRow; row++)
+    {
+        if (table.IsSubTotalRow(row)) { continue; }
+        var lat = getDouble(table[row, latCol]);
+        var lon = getDouble(table[row, lonCol]);
+        if (lat == null || lon == null || lat < -90 || lat > 90 || lon < -180 || lon > 180) { missing++; continue; }
+
+        int category = -1;
+        if (colorCol != -1)
+        {
+            var categoryName = table[row, colorCol].DisplayValue;
+            category = categories.IndexOf(categoryName);
+            if (category == -1) { categories.Add(categoryName); category = categories.Count - 1; }
+        }
+
+        var values = new List<string>();
+        string navigation = "";
+        if (showPopup)
+        {
+            foreach (var col in popupCols)
+            {
+                var cell = table[row, col];
+                values.Add(cell.HTMLValue);
+                if (report.GenerateHTMLDisplay)
+                {
+                    foreach (var link in cell.GetNavigationLinks(view))
+                    {
+                        navigation += string.Format("<li><a href='#' class='map_nav' nav='{0}'>{1}</a></li>", link.FullHref, link.Text);
+                    }
+                }
+            }
+        }
+        else if (labelCol != -1)
+        {
+            values.Add(table[row, labelCol].HTMLValue);
+        }
+        points.Add(new object[] { Math.Round(lat.Value, 6), Math.Round(lon.Value, 6), category, sizeCol != -1 ? getDouble(table[row, sizeCol]) : null, values, navigation });
+    }
+
+    var titles = new List<string>();
+    foreach (var col in (showPopup ? popupCols : (labelCol != -1 ? new List<int>() { labelCol } : new List<int>())))
+    {
+        titles.Add(table[titleRow, col].HTMLValue);
+    }
+    int labelIndex = showPopup ? popupCols.IndexOf(labelCol) : (labelCol != -1 ? 0 : -1);
+
+    //Colors: 'value=color' entries for fixed values, 'color' entries for the palette
+    var fixedColors = new Dictionary<string, string>();
+    var palette = new List<string>();
+    foreach (var entry in view.GetValue("map_colors").Replace("\r", "").Split(new char[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries))
+    {
+        var index = entry.LastIndexOf('=');
+        if (index > 0) { fixedColors[entry.Substring(0, index).Trim()] = entry.Substring(index + 1).Trim(); }
+        else if (!string.IsNullOrWhiteSpace(entry)) { palette.Add(entry.Trim()); }
+    }
+    if (palette.Count == 0) { palette = ReportViewTemplate.GoogleColors.Trim('[', ']').Replace("'", "").Split(',').ToList(); }
+    var categoryColors = new List<string>();
+    int paletteIndex = 0;
+    foreach (var categoryName in categories)
+    {
+        if (fixedColors.ContainsKey(categoryName)) { categoryColors.Add(fixedColors[categoryName]); }
+        else { categoryColors.Add(palette[paletteIndex++ % palette.Count]); }
+    }
+
+    int height = view.GetNumericValue("map_height"); if (height <= 0) { height = 500; }
+    int radius = view.GetNumericValue("map_radius"); if (radius <= 0) { radius = 6; }
+    int radiusMax = Math.Max(radius, view.GetNumericValue("map_radius_max"));
+    double opacity;
+    if (!double.TryParse(view.GetValue("map_opacity"), NumberStyles.Float, CultureInfo.InvariantCulture, out opacity) || opacity <= 0 || opacity > 1) { opacity = 0.75; }
+    int legendWidth = view.GetNumericValue("map_legend_width"); if (legendWidth <= 0) { legendWidth = 250; }
+    int maxZoom = view.GetNumericValue("map_max_zoom"); if (maxZoom <= 0) { maxZoom = 19; }
+    int zoom = view.GetNumericValue("map_zoom"); if (zoom <= 0) { zoom = 6; }
+    double centerLat = 0, centerLon = 0;
+    var center = view.GetValue("map_center").Split(',');
+    if (center.Length == 2)
+    {
+        double.TryParse(center[0].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out centerLat);
+        double.TryParse(center[1].Trim(), NumberStyles.Float, CultureInfo.InvariantCulture, out centerLon);
+    }
+    var advanced = view.GetValue("map_options");
+
+    //Background tiles: URL, attribution and maximum zoom of the provider
+    string osmAttribution = "&copy; <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a> contributors";
+    string tileUrl = "https://tile.openstreetmap.org/{z}/{x}/{y}.png", tileAttribution = osmAttribution;
+    int tileMaxZoom = 19;
+    switch (view.GetValue("map_tile_provider"))
+    {
+        case "opentopomap":
+            tileUrl = "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png";
+            tileAttribution = "Map data: " + osmAttribution + ", SRTM | Map style: &copy; <a href=\"https://opentopomap.org\" target=\"_blank\">OpenTopoMap</a> (CC-BY-SA)";
+            tileMaxZoom = 17;
+            break;
+        case "openhikingmap":
+            tileUrl = "https://tile.openmaps.fr/openhikingmap/{z}/{x}/{y}.png";
+            tileAttribution = osmAttribution + " | <a href=\"https://wiki.openstreetmap.org/wiki/OpenHikingMap\" target=\"_blank\">OpenHikingMap</a> (CC-BY-SA)";
+            tileMaxZoom = 18;
+            break;
+        case "ign":
+            tileUrl = "https://data.geopf.fr/wmts?SERVICE=WMTS&REQUEST=GetTile&VERSION=1.0.0&LAYER=GEOGRAPHICALGRIDSYSTEMS.PLANIGNV2&STYLE=normal&FORMAT=image/png&TILEMATRIXSET=PM&TILEMATRIX={z}&TILEROW={y}&TILECOL={x}";
+            tileAttribution = "&copy; <a href=\"https://www.ign.fr\" target=\"_blank\">IGN</a> - G&eacute;oplateforme";
+            break;
+        case "custom":
+            if (!view.HasValue("map_tile_url")) { throw new Exception("Map view: the 'Tiles URL' parameter must be set when the background map is Custom."); }
+            tileUrl = view.GetValue("map_tile_url");
+            tileAttribution = view.GetValue("map_tile_attribution");
+            tileMaxZoom = maxZoom;
+            break;
+    }
+
+    var data = new
+    {
+        titles = titles,
+        label = labelIndex,
+        categories = categories.Select(i => HttpUtility.HtmlEncode(i)).ToList(),
+        colors = categoryColors,
+        defaultColor = palette[0],
+        points = points
+    };
+}
+
+<div id="@mapId" viewid="@view.ViewId" @Raw(Helper.AddAttribute("class", view.GetValue("map_class"))) style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("map_css"), ";"))width:100%;height:@(height)px;z-index:0;"></div>
+@if (view.GetBoolValue("map_show_information"))
+{
+    <div class="text-muted small">
+        @Raw(report.Translate("{0} point(s) displayed", points.Count.ToString("N0", view.CultureInfo)))@if (missing > 0)
+        {<text>, @Raw(report.Translate("{0} row(s) without coordinates", missing.ToString("N0", view.CultureInfo)))</text>}
+    </div>
+}
+
+<script>
+$(document).ready(function () {
+    //Leaflet is normally attached by the report template. If not (e.g. customized or older report template), it is loaded from the CDN.
+    if (window.L) { initMap(); return; }
+    if (!window.sealLeafletCallbacks) {
+        window.sealLeafletCallbacks = [];
+        $('head').append("<link type='text/css' rel='stylesheet' href='https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.css'/>");
+        var script = document.createElement('script');
+        script.src = 'https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js';
+        script.onload = function () { window.sealLeafletCallbacks.forEach(function (callback) { callback(); }); };
+        document.head.appendChild(script);
+    }
+    window.sealLeafletCallbacks.push(initMap);
+
+    function initMap() {
+    var data = @Raw(Helper.EscapeInlineScript(JsonConvert.SerializeObject(data)));
+    var container = document.getElementById('@mapId');
+
+    var options = { preferCanvas: true, maxZoom: @maxZoom };
+    @if (!string.IsNullOrEmpty(advanced))
+    {
+        <text>
+        var advanced = { @Raw(advanced) };
+        for (var k in advanced) { options[k] = advanced[k]; }
+        </text>
+    }
+    var map = L.map(container, options);
+    //The Leaflet map can be got from the container for custom scripts
+    container.sealMap = map;
+    //A view is required before adding the points: otherwise Leaflet defers their addition and the drawing order is lost
+    map.setView([@centerLat.ToString(CultureInfo.InvariantCulture), @centerLon.ToString(CultureInfo.InvariantCulture)], @zoom);
+    L.tileLayer('@Raw(Helper.ToJS(tileUrl))', {
+        maxZoom: @maxZoom,
+        //Beyond the maximum zoom of the provider, the tiles are enlarged
+        maxNativeZoom: @tileMaxZoom,
+        attribution: '@Raw(Helper.ToJS(tileAttribution))'
+    }).addTo(map);
+
+    //Size scale (square root, so the area of the point is proportional to the value)
+    var sizeMin = null, sizeMax = null;
+    data.points.forEach(function (p) {
+        if (p[3] !== null) {
+            if (sizeMin === null || p[3] < sizeMin) sizeMin = p[3];
+            if (sizeMax === null || p[3] > sizeMax) sizeMax = p[3];
+        }
+    });
+    function pointRadius(v) {
+        if (v === null || sizeMax === null || sizeMax <= sizeMin) return @radius;
+        var ratio = Math.sqrt(Math.max(0, v - sizeMin) / (sizeMax - sizeMin));
+        return @radius + ratio * (@radiusMax - @radius);
+    }
+
+    function popupContent(p) {
+        var html = '';
+        for (var i = 0; i < p[4].length; i++) {
+            if (p[4][i] === '') continue;
+            if (i == data.label) html = '<div class="map_popup_title"><b>' + p[4][i] + '</b></div>' + html;
+            else html += '<div><span class="text-muted">' + data.titles[i] + ':</span> ' + p[4][i] + '</div>';
+        }
+        if (p[5]) html += '<ul class="list-unstyled map_popup_nav" style="margin:6px 0 0 0;">' + p[5] + '</ul>';
+        return html;
+    }
+
+    //One layer per category to show/hide them from the legend
+    var layers = [], counts = [];
+    for (var c = 0; c < Math.max(1, data.categories.length); c++) {
+        layers.push(L.layerGroup().addTo(map));
+        counts.push(0);
+    }
+    var bounds = [];
+    //Drawing order: the last rows first, so that the first rows of the table (sort of the model) stay visible on top
+    data.points.slice().reverse().forEach(function (p) {
+        var c = p[2] < 0 ? 0 : p[2];
+        var color = p[2] < 0 ? data.defaultColor : data.colors[c];
+        var marker = L.circleMarker([p[0], p[1]], { radius: pointRadius(p[3]), color: color, weight: 1, fillColor: color, fillOpacity: @opacity.ToString(CultureInfo.InvariantCulture) });
+        if (data.label >= 0 && p[4][data.label]) marker.bindTooltip(p[4][data.label]);
+        @if (showPopup)
+        {
+            <text>marker.bindPopup(function () { return popupContent(p); }, { maxWidth: 400 });</text>
+        }
+        marker.addTo(layers[c]);
+        counts[c]++;
+        bounds.push([p[0], p[1]]);
+    });
+
+    //Navigation links of the popup
+    $(container).on('click', 'a.map_nav', function (e) {
+        e.preventDefault();
+        executeReportNavigation($(this).attr('nav'), '');
+    });
+
+    //Legend
+    @if (view.GetBoolValue("map_show_legend"))
+    {
+        <text>
+        if (data.categories.length > 0) {
+            var legend = L.control({ position: 'bottomright' });
+            legend.onAdd = function () {
+                var div = L.DomUtil.create('div', 'map_legend');
+                div.style.cssText = 'background:rgba(255,255,255,0.9);padding:6px 10px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.3);max-width:@(legendWidth)px;max-height:' + (@height - 60) + 'px;overflow-y:auto;font-size:12px;line-height:18px;';
+                //Most frequent values first
+                var order = data.categories.map(function (v, i) { return i; }).sort(function (a, b) { return counts[b] - counts[a]; });
+                order.forEach(function (c) {
+                    var name = data.categories[c] === '' ? '-' : data.categories[c];
+                    div.innerHTML += '<div class="map_legend_item" category="' + c + '" title="' + name.replace(/"/g, '&quot;') + '" style="cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:' + data.colors[c] + ';"></span><span class="text-muted">' + counts[c] + '</span> ' + name + '</div>';
+                });
+                L.DomEvent.disableClickPropagation(div);
+                L.DomEvent.disableScrollPropagation(div);
+                return div;
+            };
+            legend.addTo(map);
+            $(container).on('click', '.map_legend_item', function () {
+                var layer = layers[parseInt($(this).attr('category'))];
+                if (map.hasLayer(layer)) { map.removeLayer(layer); $(this).css('opacity', 0.4); }
+                else { map.addLayer(layer); $(this).css('opacity', 1); }
+            });
+        }
+        </text>
+    }
+
+    //Initial position, done when the container is visible (e.g. the map may be in a hidden tab page)
+    //The position is set again when the container is resized, until the first user interaction
+    var positionSize = '', interacted = false;
+    $(container).one('mousedown wheel touchstart keydown', function () { interacted = true; });
+    function refreshMap() {
+        if (container.offsetWidth == 0 || container.offsetHeight == 0) return;
+        map.invalidateSize();
+        var size = container.offsetWidth + 'x' + container.offsetHeight;
+        if (interacted || positionSize == size) return;
+        positionSize = size;
+        if (@view.GetBoolValueJS("map_fit_bounds") && bounds.length > 0) map.fitBounds(bounds, { padding: [20, 20], maxZoom: Math.min(16, @maxZoom) });
+        else map.setView([@centerLat.ToString(CultureInfo.InvariantCulture), @centerLon.ToString(CultureInfo.InvariantCulture)], @zoom);
+    }
+    refreshMap();
+    if (window.ResizeObserver) new ResizeObserver(refreshMap).observe(container);
+    $(document).on('shown.bs.tab shown.bs.collapse', refreshMap);
+    window.addEventListener('resize', refreshMap);
+    }
+});
+</script>

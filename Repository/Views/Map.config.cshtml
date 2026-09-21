@@ -1,0 +1,41 @@
+@using Seal.Model;
+@{
+    ReportViewTemplate Template = Model;
+    Template.Description = "Display a Map built with Leaflet from a data table result having one row per point, with at least a latitude and a longitude column (decimal degrees, WGS84). The other columns are shown in the popup of the point. An Internet connection is required to display the background tiles. Full description of the map options at https://leafletjs.com/reference.html";
+
+    //If true, the view is a child of a report model view
+    Template.IsModelViewChild = true;
+
+    //Parameters for this template
+    Template.Parameters.Add(new Parameter() { Name = "map_class", DisplayName = "CSS class: Container", TextValue = "", Description = "CSS class attribute of the main DIV container.", Enums = new string[] { "border;", "border rounded;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "map_css", DisplayName = "CSS style: Container", TextValue = "page-break-inside:avoid", Description = "CSS style attribute of the main DIV container.", Enums = new string[] { "margin:10px;", "padding:10px;" }, UseOnlyEnumValues = false });
+    Template.Parameters.Add(new Parameter() { Name = "map_height", DisplayName = "Map height", NumericValue = 500, Description = "The map height in pixels. The map takes the full width of its container. If 0, a default height is used." });
+
+    Template.Parameters.Add(new Parameter() { Name = "map_latitude", DisplayName = "Latitude column", TextValue = "", Description = "Name of the column holding the latitude (element display name or SQL column name). If empty, the first column having a name containing 'latitude' is used." });
+    Template.Parameters.Add(new Parameter() { Name = "map_longitude", DisplayName = "Longitude column", TextValue = "", Description = "Name of the column holding the longitude (element display name or SQL column name). If empty, the first column having a name containing 'longitude' is used." });
+    Template.Parameters.Add(new Parameter() { Name = "map_label", DisplayName = "Label column", TextValue = "", Description = "Name of the column used for the tooltip of the point and the title of its popup. If empty, the first column that is not a coordinate is used." });
+    Template.Parameters.Add(new Parameter() { Name = "map_show_popup", DisplayName = "Show popup", BoolValue = true, Description = "If true, a popup showing the other columns of the row (and the navigation links) is displayed when a point is clicked." });
+
+    Template.Parameters.Add(new Parameter() { Name = "map_color_column", DisplayName = "Color column", TextValue = "", Description = "Optional name of the column used to color the points: one color per distinct value." });
+    Template.Parameters.Add(new Parameter() { Name = "map_colors", DisplayName = "Colors", TextValue = "", Description = "Colors of the points, one entry per line. An entry 'value=color' sets the color of a value of the color column, an entry 'color' is added to the palette used for the other values. If empty, a default palette is used.", TextSamples = new string[] { "#1f77b4\r\n#ff7f0e\r\n#2ca02c\r\n#d62728\r\n", "High=#d62728\r\nMedium=#ff7f0e\r\nLow=#2ca02c\r\n#7f7f7f\r\n" } });
+    Template.Parameters.Add(new Parameter() { Name = "map_show_legend", DisplayName = "Show legend", BoolValue = true, Description = "If true and if a color column is defined, a legend is displayed. A click on a legend item shows or hides the points of the value." });
+    Template.Parameters.Add(new Parameter() { Name = "map_legend_width", DisplayName = "Legend width", NumericValue = 250, Description = "The maximum width of the legend in pixels. Longer values are truncated (the full value is shown in a tooltip)." });
+    Template.Parameters.Add(new Parameter() { Name = "map_size_column", DisplayName = "Size column", TextValue = "", Description = "Optional name of a numeric column used to size the points between the radius and the maximum radius." });
+    Template.Parameters.Add(new Parameter() { Name = "map_radius", DisplayName = "Point radius", NumericValue = 6, Description = "The radius of the points in pixels." });
+    Template.Parameters.Add(new Parameter() { Name = "map_radius_max", DisplayName = "Point maximum radius", NumericValue = 20, Description = "The radius in pixels of the point having the highest value when a size column is defined." });
+    Template.Parameters.Add(new Parameter() { Name = "map_opacity", DisplayName = "Point opacity", TextValue = "0.75", Description = "The fill opacity of the points, between 0 and 1.", Enums = new string[] { "0.25", "0.5", "0.75", "1" }, UseOnlyEnumValues = false });
+
+    Template.Parameters.Add(new Parameter() { Name = "map_tile_provider", DisplayName = "Background map", Value = "osm", Description = "Provider of the background tiles: OpenStreetMap (standard map), OpenTopoMap (topographic map), OpenHikingMap (hiking map with contour lines and trails), IGN Plan (France only) or Custom to use the 'Tiles URL' and 'Tiles attribution' parameters. Check the usage policy of the tile provider before a production use. Note: OpenStreetMap and OpenHikingMap require an HTTP Referer, their tiles are blocked when a result file is opened from the disk in a browser (they are displayed in the Web Report Server and in the Report Designer).", Enums = new string[] { "osm|OpenStreetMap", "opentopomap|OpenTopoMap", "openhikingmap|OpenHikingMap", "ign|IGN Plan (France)", "custom|Custom" }, UseOnlyEnumValues = true });
+    Template.Parameters.Add(new Parameter() { Name = "map_tile_url", DisplayName = "Tiles URL", TextValue = "", Description = "URL template of the background tiles, used if the background map is Custom.", TextSamples = new string[] { "https://tile.openstreetmap.org/{z}/{x}/{y}.png", "https://{s}.tile.opentopomap.org/{z}/{x}/{y}.png" } });
+    Template.Parameters.Add(new Parameter() { Name = "map_tile_attribution", DisplayName = "Tiles attribution", TextValue = "", Description = "Attribution (HTML) of the background tiles displayed on the map, used if the background map is Custom.", TextSamples = new string[] { "&copy; <a href=\"https://www.openstreetmap.org/copyright\" target=\"_blank\">OpenStreetMap</a> contributors" } });
+    Template.Parameters.Add(new Parameter() { Name = "map_max_zoom", DisplayName = "Maximum zoom", NumericValue = 19, Description = "The maximum zoom level of the map. Beyond the maximum zoom of the tile provider, the tiles are enlarged." });
+    Template.Parameters.Add(new Parameter() { Name = "map_fit_bounds", DisplayName = "Fit to the points", BoolValue = true, Description = "If true, the map is centered and zoomed to show all the points. Otherwise the center and the zoom are used." });
+    Template.Parameters.Add(new Parameter() { Name = "map_center", DisplayName = "Center", TextValue = "", Description = "Center of the map as 'latitude,longitude', used if the map is not fitted to the points or if there is no point.", TextSamples = new string[] { "46.8,8.2", "46.6,2.4", "39.8,-98.6" } });
+    Template.Parameters.Add(new Parameter() { Name = "map_zoom", DisplayName = "Zoom", NumericValue = 6, Description = "Zoom level of the map, used if the map is not fitted to the points or if there is no point." });
+    Template.Parameters.Add(new Parameter() { Name = "map_show_information", DisplayName = "Show information", BoolValue = true, Description = "If true, the number of points and the number of rows without coordinates are displayed below the map." });
+
+    Template.Parameters.Add(new Parameter() { Name = "map_options", DisplayName = "Advanced options", TextValue = "", Description = "Advanced Leaflet map options (a JavaScript object content) merged into the generated map options. See https://leafletjs.com/reference.html#map-option", TextSamples = new string[] { "scrollWheelZoom:false\r\n", "zoomControl:false,\r\ndragging:false\r\n" } });
+
+    //Allowed template parent names
+    Template.ParentNames = new List<string>() { "Model", "Container", "Container Grid Flex", "Widget", "Tab Page" };
+}

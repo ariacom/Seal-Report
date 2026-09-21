@@ -74,6 +74,10 @@ namespace Seal.Model
         /// </summary>
         public const string GaugeName = "Gauge";
         /// <summary>
+        /// Name of the Map template
+        /// </summary>
+        public const string MapName = "Map";
+        /// <summary>
         /// Name of the Container template
         /// </summary>
         public const string ContainerName = "Container";

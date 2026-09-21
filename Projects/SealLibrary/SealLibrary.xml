@@ -8483,6 +8483,11 @@
             True if the report has a Gauge view (built with ECharts)
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.HasMap">
+            <summary>
+            True if the report has a Map view (built with Leaflet)
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.HasChartJSChart">
             <summary>
             True if the report has JS chart
@@ -12279,6 +12284,11 @@
             Replace a pattern by a text in the parameter values
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportView.ReplaceParameterValue(System.String,System.Collections.Generic.List{System.String},System.String)">
+            <summary>
+            Set a new value to a parameter of the view and its children if its current value is one of the given values (case insensitive)
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportView.GetParameter(System.String)">
             <summary>
             Returns a Parameter
@@ -12844,6 +12854,11 @@
         <member name="F:Seal.Model.ReportViewTemplate.GaugeName">
             <summary>
             Name of the Gauge template
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportViewTemplate.MapName">
+            <summary>
+            Name of the Map template
             </summary>
         </member>
         <member name="F:Seal.Model.ReportViewTemplate.ContainerName">

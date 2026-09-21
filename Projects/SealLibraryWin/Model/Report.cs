@@ -1253,6 +1253,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the report has a Map view (built with Leaflet)
+        /// </summary>
+        [XmlIgnore]
+        public bool HasMap
+        {
+            get { return AllViews.Exists(i => i.TemplateName == ReportViewTemplate.MapName); }
+        }
+
+        /// <summary>
         /// True if the report has JS chart
         /// </summary>
         [XmlIgnore]

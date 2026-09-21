@@ -219,7 +219,14 @@ namespace Seal.Model
         void changeElementGUID(ReportElement element, string newGUID, ReportView view)
         {
             string initialLabel = element.DisplayNameEl;
+            var initialNames = new List<string>() { element.DisplayNameEl, element.DisplayNameElTranslated };
+            if (element.MetaColumn != null) initialNames.AddRange(new string[] { element.MetaColumn.ColumnName, element.MetaColumn.Name });
             element.ChangeColumnGUID(newGUID);
+            //Map view: the columns are referenced by their name
+            foreach (var paramName in new string[] { "map_latitude", "map_longitude", "map_label", "map_color_column", "map_size_column" })
+            {
+                view.ReplaceParameterValue(paramName, initialNames, element.DisplayNameEl);
+            }
             view.ReplaceInParameterValues("echarts_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
             view.ReplaceInParameterValues("chartjs_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
             view.ReplaceInParameterValues("plotly_title", "%" + initialLabel + "%", "%" + element.DisplayNameEl + "%");
