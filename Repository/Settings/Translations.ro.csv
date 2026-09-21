@@ -482,5 +482,7 @@ Report;Show Restrictions;Afișează restricțiile
 Report;Hide Restrictions;Ascunde restricțiile
 Report;Show Guide;Afișează ghidul
 Report;Hide Guide;Ascunde ghidul
+Report;{0} point(s) displayed;{0} punct(e) afișat(e)
+Report;{0} row(s) without coordinates;{0} rând(uri) fără coordonate
 WebJS;Copy for Excel;Copiere pentru Excel
 WebJS;Download CSV;Descărcare CSV

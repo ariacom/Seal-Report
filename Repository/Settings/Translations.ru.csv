@@ -482,5 +482,7 @@ Report;Show Restrictions;Показать ограничения
 Report;Hide Restrictions;Скрыть ограничения
 Report;Show Guide;Показать руководство
 Report;Hide Guide;Скрыть руководство
+Report;{0} point(s) displayed;Отображено точек: {0}
+Report;{0} row(s) without coordinates;Строк без координат: {0}
 WebJS;Copy for Excel;Копировать для Excel
 WebJS;Download CSV;Скачать CSV

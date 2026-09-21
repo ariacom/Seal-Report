@@ -482,5 +482,7 @@ Report;Show Restrictions;Hiện hạn chế
 Report;Hide Restrictions;Ẩn hạn chế
 Report;Show Guide;Hiện hướng dẫn
 Report;Hide Guide;Ẩn hướng dẫn
+Report;{0} point(s) displayed;Hiển thị {0} điểm
+Report;{0} row(s) without coordinates;{0} dòng không có tọa độ
 WebJS;Copy for Excel;Sao chép cho Excel
 WebJS;Download CSV;Tải xuống CSV

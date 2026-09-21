@@ -482,5 +482,7 @@ Report;Show Restrictions;Tampilkan Pembatasan
 Report;Hide Restrictions;Sembunyikan Pembatasan
 Report;Show Guide;Tampilkan Panduan
 Report;Hide Guide;Sembunyikan Panduan
+Report;{0} point(s) displayed;{0} titik ditampilkan
+Report;{0} row(s) without coordinates;{0} baris tanpa koordinat
 WebJS;Copy for Excel;Salin untuk Excel
 WebJS;Download CSV;Unduh CSV

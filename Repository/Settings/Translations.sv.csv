@@ -482,5 +482,7 @@ Report;Show Restrictions;Visa begränsningar
 Report;Hide Restrictions;Dölj begränsningar
 Report;Show Guide;Visa guide
 Report;Hide Guide;Dölj guide
+Report;{0} point(s) displayed;{0} punkt(er) visas
+Report;{0} row(s) without coordinates;{0} rad(er) utan koordinater
 WebJS;Copy for Excel;Kopiera till Excel
 WebJS;Download CSV;Ladda ner CSV

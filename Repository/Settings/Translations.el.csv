@@ -482,5 +482,7 @@ Report;Show Restrictions;Εμφάνιση περιορισμών
 Report;Hide Restrictions;Απόκρυψη περιορισμών
 Report;Show Guide;Εμφάνιση οδηγού
 Report;Hide Guide;Απόκρυψη οδηγού
+Report;{0} point(s) displayed;Εμφανίζονται {0} σημεία
+Report;{0} row(s) without coordinates;{0} γραμμές χωρίς συντεταγμένες
 WebJS;Copy for Excel;Αντιγραφή για το Excel
 WebJS;Download CSV;Λήψη CSV

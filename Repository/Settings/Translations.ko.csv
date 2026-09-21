@@ -482,5 +482,7 @@ Report;Show Restrictions;제한 표시
 Report;Hide Restrictions;제한 숨기기
 Report;Show Guide;가이드 표시
 Report;Hide Guide;가이드 숨기기
+Report;{0} point(s) displayed;{0}개 지점 표시됨
+Report;{0} row(s) without coordinates;좌표가 없는 행 {0}개
 WebJS;Copy for Excel;Excel용 복사
 WebJS;Download CSV;CSV 다운로드

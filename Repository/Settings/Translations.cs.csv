@@ -482,5 +482,7 @@ Report;Show Restrictions;Zobrazit omezení
 Report;Hide Restrictions;Skrýt omezení
 Report;Show Guide;Zobrazit průvodce
 Report;Hide Guide;Skrýt průvodce
+Report;{0} point(s) displayed;Zobrazeno bodů: {0}
+Report;{0} row(s) without coordinates;Řádků bez souřadnic: {0}
 WebJS;Copy for Excel;Kopírovat pro Excel
 WebJS;Download CSV;Stáhnout CSV

@@ -482,5 +482,7 @@ Report;Show Restrictions;Mostra restrizioni
 Report;Hide Restrictions;Nascondi restrizioni
 Report;Show Guide;Mostra guida
 Report;Hide Guide;Nascondi guida
+Report;{0} point(s) displayed;{0} punto/i visualizzato/i
+Report;{0} row(s) without coordinates;{0} riga/righe senza coordinate
 WebJS;Copy for Excel;Copia per Excel
 WebJS;Download CSV;Scarica CSV

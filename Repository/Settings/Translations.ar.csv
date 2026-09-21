@@ -482,5 +482,7 @@ Report;Show Restrictions;إظهار القيود
 Report;Hide Restrictions;إخفاء القيود
 Report;Show Guide;إظهار الدليل
 Report;Hide Guide;إخفاء الدليل
+Report;{0} point(s) displayed;{0} نقطة معروضة
+Report;{0} row(s) without coordinates;{0} صف بدون إحداثيات
 WebJS;Copy for Excel;نسخ إلى Excel
 WebJS;Download CSV;تنزيل CSV

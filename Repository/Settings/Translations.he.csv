@@ -482,5 +482,7 @@ Report;Show Restrictions;הצג מגבלות
 Report;Hide Restrictions;הסתר מגבלות
 Report;Show Guide;הצג מדריך
 Report;Hide Guide;הסתר מדריך
+Report;{0} point(s) displayed;מוצגות {0} נקודות
+Report;{0} row(s) without coordinates;{0} שורות ללא קואורדינטות
 WebJS;Copy for Excel;העתקה ל-Excel
 WebJS;Download CSV;הורדת CSV

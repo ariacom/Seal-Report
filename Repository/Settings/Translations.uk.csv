@@ -482,5 +482,7 @@ Report;Show Restrictions;Показати обмеження
 Report;Hide Restrictions;Сховати обмеження
 Report;Show Guide;Показати посібник
 Report;Hide Guide;Сховати посібник
+Report;{0} point(s) displayed;Відображено точок: {0}
+Report;{0} row(s) without coordinates;Рядків без координат: {0}
 WebJS;Copy for Excel;Копіювати для Excel
 WebJS;Download CSV;Завантажити CSV
