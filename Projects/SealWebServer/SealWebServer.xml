@@ -29,6 +29,11 @@
             Execute a report initiated in a previous execution
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.ActionResetRestrictions(System.String,System.String)">
+            <summary>
+            Reset the prompted restrictions to their initial values without executing the report, returns the HTML of the restrictions panel
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.ActionNavigate(System.String,System.String,System.String)">
             <summary>
             Navigate to a new report execution: Either for Drill or SubReport
@@ -340,6 +345,11 @@
             Selects an AI Agent for the current session by GUID.
             The GUID must belong to one of the agents allowed for the user.
             Clears the active session agent so the next request picks up the new configuration.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWISetAIPanelState(System.Boolean,System.Int32,System.String)">
+            <summary>
+            Remembers the AI Agent chat panel state (open/closed and width) in the user profile.
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetAIAgentResponse(System.String,System.String)">
