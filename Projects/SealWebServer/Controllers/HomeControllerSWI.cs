@@ -1832,6 +1832,16 @@ namespace SealWebServer.Controllers
                         if (!swiPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
                             swiPath += "." + Repository.SealReportFileExtension;
 
+                        // The model may announce a report it never created (no create tool call):
+                        // no button for a file that does not exist, a visible note instead.
+                        var reportExists = false;
+                        try { reportExists = !swiPath.Contains("..") && System.IO.File.Exists(WebUser.GetFullPath(swiPath)); } catch { }
+                        if (!reportExists)
+                        {
+                            WebHelper.WriteLogEntryWeb(EventLogEntryType.Warning, $"AI agent: Execute button removed, report not found '{rawPath}'");
+                            return "\r\n\r\n⚠ " + string.Format(Translate("The report '{0}' was not found: it has not been created or it was moved."), match.Groups[2].Value.Trim());
+                        }
+
                         reportActions.Add(new
                         {
                             path = swiPath,

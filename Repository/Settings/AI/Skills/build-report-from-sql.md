@@ -49,7 +49,10 @@ Follow these steps in order — do not skip the exploration steps.
 - Call `report_create_from_sql` with the validated `sql`, a clear `display_name`,
   the chosen `source_guid`, and a destination `path`.
 - If the user did not specify a folder, ask or use the current working folder.
-- Report back the created report path and a one-line summary of what it contains.
+- **The report exists only once `report_create_from_sql` has returned success in the current turn.**
+  Never tell the user a report was created or saved, and never give a path, before that:
+  validating the SQL creates nothing. If the call returns an error, fix it and call again, or report the error.
+- Report back the created report path (exactly as returned by the tool) and a one-line summary of what it contains.
 
 ## Notes
 

@@ -22,7 +22,12 @@ before deciding which creation tool to use. Follow its recommendation.
 3. For enumerated restriction values, call `database_get_sample_values` to obtain
    the real values to list.
 4. Build the XML from the specification below and call `report_create_from_xml`.
-5. Propose execution with the `[EXECUTE_REPORT:...]` tag (see the system prompt).
+   **The report exists only once this call has returned success in the current turn.**
+   Never tell the user a report was created or saved, and never give a path, before that:
+   running queries or loading this skill creates nothing. If the call returns an error, fix the XML
+   and call it again, or report the error.
+5. Propose execution with the `[EXECUTE_REPORT:...]` tag (see the system prompt), using the path
+   returned by `report_create_from_xml` exactly.
 
 ## Metadata report XML specification
 
