@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;Відображено точок: {0}
 Report;{0} row(s) without coordinates;Рядків без координат: {0}
 WebJS;Copy for Excel;Копіювати для Excel
 WebJS;Download CSV;Завантажити CSV
+Report;Reset restrictions;Скинути обмеження

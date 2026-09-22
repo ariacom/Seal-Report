@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;{0} pont megjelenítve
 Report;{0} row(s) without coordinates;{0} sor koordináták nélkül
 WebJS;Copy for Excel;Másolás Excelbe
 WebJS;Download CSV;CSV letöltése
+Report;Reset restrictions;Korlátozások visszaállítása

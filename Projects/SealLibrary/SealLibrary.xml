@@ -9902,6 +9902,21 @@
             Set restriction values from input 1,2,3,4
             </summary>
         </member>
+        <member name="T:Seal.Model.ReportExecution.RestrictionInitialValues">
+            <summary>
+            Values of a prompted restriction saved before the first user input
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.saveInitialRestrictions">
+            <summary>
+            Save the initial values of the prompted restrictions (only once, before the first user input)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.ResetPromptedRestrictions">
+            <summary>
+            Reset the prompted restrictions of the report to their initial values (without executing the report) and return the HTML of the restrictions panel
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportExecution.CheckInputRestrictions">
             <summary>
             Check the current input restriction values

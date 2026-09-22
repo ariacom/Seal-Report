@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;{0} pistettä näytetään
 Report;{0} row(s) without coordinates;{0} riviä ilman koordinaatteja
 WebJS;Copy for Excel;Kopioi Exceliä varten
 WebJS;Download CSV;Lataa CSV
+Report;Reset restrictions;Palauta rajoitukset

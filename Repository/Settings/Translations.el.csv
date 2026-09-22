@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;Εμφανίζονται {0} σημεία
 Report;{0} row(s) without coordinates;{0} γραμμές χωρίς συντεταγμένες
 WebJS;Copy for Excel;Αντιγραφή για το Excel
 WebJS;Download CSV;Λήψη CSV
+Report;Reset restrictions;Επαναφορά περιορισμών

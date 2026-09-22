@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;显示 {0} 个点
 Report;{0} row(s) without coordinates;{0} 行没有坐标
 WebJS;Copy for Excel;复制到 Excel
 WebJS;Download CSV;下载 CSV
+Report;Reset restrictions;重置限制条件

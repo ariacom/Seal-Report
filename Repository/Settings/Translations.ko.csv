@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;{0}개 지점 표시됨
 Report;{0} row(s) without coordinates;좌표가 없는 행 {0}개
 WebJS;Copy for Excel;Excel용 복사
 WebJS;Download CSV;CSV 다운로드
+Report;Reset restrictions;제한 초기화

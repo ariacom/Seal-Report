@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;{0} बिंदु प्रदर्शित
 Report;{0} row(s) without coordinates;{0} पंक्तियाँ बिना निर्देशांक के
 WebJS;Copy for Excel;Excel के लिए कॉपी करें
 WebJS;Download CSV;CSV डाउनलोड करें
+Report;Reset restrictions;प्रतिबंध रीसेट करें

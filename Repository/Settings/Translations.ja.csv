@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;{0} 個のポイントを表示
 Report;{0} row(s) without coordinates;座標のない行: {0}
 WebJS;Copy for Excel;Excel用にコピー
 WebJS;Download CSV;CSVをダウンロード
+Report;Reset restrictions;制限をリセット

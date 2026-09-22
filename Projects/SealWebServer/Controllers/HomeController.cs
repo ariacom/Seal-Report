@@ -248,6 +248,29 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Reset the prompted restrictions to their initial values without executing the report, returns the HTML of the restrictions panel
+        /// </summary>
+        public ActionResult ActionResetRestrictions(string execution_guid, string sessionId)
+        {
+            writeDebug("ActionResetRestrictions");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                var execution = getReportExecution(execution_guid);
+                if (execution == null) throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
+
+                lock (execution)
+                {
+                    return Content(execution.ResetPromptedRestrictions());
+                }
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
         /// Navigate to a new report execution: Either for Drill or SubReport
         /// </summary>
         public ActionResult ActionNavigate(string execution_guid, string navigation_target, string sessionId)

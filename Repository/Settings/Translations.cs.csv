@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;Zobrazeno bodů: {0}
 Report;{0} row(s) without coordinates;Řádků bez souřadnic: {0}
 WebJS;Copy for Excel;Kopírovat pro Excel
 WebJS;Download CSV;Stáhnout CSV
+Report;Reset restrictions;Obnovit omezení

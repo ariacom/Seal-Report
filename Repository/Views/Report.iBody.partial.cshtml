@@ -227,6 +227,13 @@
             $("#restrictions_button").removeClass("reportview").css("display","none");
         }
 
+        if (@Helper.ToJS(report.ExecutionPromptedRestrictions.Count > 0)) {
+            $("#reset_restrictions_button").addClass("reportview").css("display","inline-block");
+        }
+        else {
+            $("#reset_restrictions_button").removeClass("reportview").css("display","none");
+        }
+
         //A Task report (a job) only shows the execution messages: hide the Report and Information tabs, keep Messages
         if (@Helper.ToJS(view.GetValue("information_mode") != "disabled" && !report.PrintLayout && !report.IsTaskOnly)) {
             $("#information_button").addClass("reportview").css("display","flex");

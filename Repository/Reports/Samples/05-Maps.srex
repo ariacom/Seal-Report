@@ -190,7 +190,12 @@ UNION ALL SELECT N'San Cristóbal', 7.7669, -72.2250</Sql>
           <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <EnumValues>
+            <string>Belgium</string>
             <string>France</string>
+            <string>Germany</string>
+            <string>Ireland</string>
+            <string>Switzerland</string>
+            <string>UK</string>
           </EnumValues>
         </ReportRestriction>
       </Restrictions>

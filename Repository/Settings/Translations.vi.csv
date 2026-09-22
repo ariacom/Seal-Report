@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;Hiển thị {0} điểm
 Report;{0} row(s) without coordinates;{0} dòng không có tọa độ
 WebJS;Copy for Excel;Sao chép cho Excel
 WebJS;Download CSV;Tải xuống CSV
+Report;Reset restrictions;Đặt lại hạn chế

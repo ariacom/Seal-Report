@@ -518,6 +518,31 @@ function executeReport(nav, formName) {
     processShowMsgDuringExec();
 }
 
+//Reset the prompted restrictions to their initial values and re-render the restrictions panel
+function resetRestrictions() {
+    if ($("#restrictions_div").hasClass("disabled")) return; //report is executing
+    if (_urlPrefix != "") {
+        $.post(_urlPrefix + "ActionResetRestrictions", { execution_guid: _executionGUID })
+            .done(function (data) {
+                replaceRestrictions(data);
+            });
+    }
+    else {
+        replaceRestrictions(window.chrome.webview.hostObjects.sync.dotnet.ResetRestrictions(_executionGUID));
+    }
+}
+
+function replaceRestrictions(html) {
+    if (!html || html.indexOf("header_form") < 0) return;
+    $("#restrictions_div .operator_select, #restrictions_div .enum").selectpicker('destroy');
+    $("#header_form").replaceWith(html);
+    initRestrictions("#restrictions_div");
+    initWidgetsRestrictions("#restrictions_div");
+    $("#restrictions_div input").unbind("keydown").on("keydown", function (event) {
+        if (event.keyCode == 13 && !$(this).hasClass("trigger")) $("#execute_button").focus();
+    });
+}
+
 function mainInit() {
     _executionTimer = null;
     _refreshTimer = null;
@@ -535,6 +560,12 @@ function mainInit() {
         collapseNavbar();
         _inExecution = false;
         executeReport();
+    });
+
+    //reset restrictions button: restore the initial values of the prompted restrictions, no execution
+    $("#reset_restrictions_button").unbind("click").on("click", function () {
+        collapseNavbar();
+        resetRestrictions();
     });
 
     //set a toggle button title (Show.../Hide...) according to its visible state

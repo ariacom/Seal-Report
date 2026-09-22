@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;Wyświetlone punkty: {0}
 Report;{0} row(s) without coordinates;Wiersze bez współrzędnych: {0}
 WebJS;Copy for Excel;Kopiuj dla programu Excel
 WebJS;Download CSV;Pobierz CSV
+Report;Reset restrictions;Resetuj ograniczenia

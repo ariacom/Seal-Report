@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;Отображено точек: {0}
 Report;{0} row(s) without coordinates;Строк без координат: {0}
 WebJS;Copy for Excel;Копировать для Excel
 WebJS;Download CSV;Скачать CSV
+Report;Reset restrictions;Сбросить ограничения

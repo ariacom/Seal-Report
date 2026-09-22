@@ -377,6 +377,12 @@ namespace Seal.Forms
                 Container._reportDone = false;
             }
 
+            public string ResetRestrictions(string executionGUID)
+            {
+                Container.setCurrentExecution(executionGUID);
+                return Execution.ResetPromptedRestrictions();
+            }
+
             public void RefreshReport()
             {
                 Container.Icon = (_iconExecuting ? Properties.Resources.reportDesigner2 : Properties.Resources.reportDesigner);

@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;แสดง {0} จุด
 Report;{0} row(s) without coordinates;{0} แถวที่ไม่มีพิกัด
 WebJS;Copy for Excel;คัดลอกสำหรับ Excel
 WebJS;Download CSV;ดาวน์โหลด CSV
+Report;Reset restrictions;รีเซ็ตข้อจำกัด

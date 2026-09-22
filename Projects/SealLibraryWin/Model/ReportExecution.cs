@@ -324,6 +324,7 @@ namespace Seal.Model
                 try
                 {
                     foreach (var restriction in Report.AllRestrictions) restriction.ValidationErrors = "";
+                    saveInitialRestrictions();
                     if (Report.InputRestrictions.Count > 0 && Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.CheckingExecution && !Report.IsNavigating)
                     {
                         //check input restrictions if report has already been executed
@@ -624,6 +625,99 @@ namespace Seal.Model
 
             //Disable Allow API to avoid reset of the values...
             if (restriction.Prompt == PromptType.None && restriction.AllowAPI) restriction.AllowAPI = false;
+        }
+
+        /// <summary>
+        /// Values of a prompted restriction saved before the first user input
+        /// </summary>
+        class RestrictionInitialValues
+        {
+            public Operator Operator;
+            public string Value1, Value2, Value3, Value4;
+            public DateTime Date1, Date2, Date3, Date4;
+            public string Date1Keyword, Date2Keyword, Date3Keyword, Date4Keyword;
+            public List<string> EnumValues;
+        }
+
+        Dictionary<ReportRestriction, RestrictionInitialValues> _initialRestrictions = null;
+
+        /// <summary>
+        /// Save the initial values of the prompted restrictions (only once, before the first user input)
+        /// </summary>
+        void saveInitialRestrictions()
+        {
+            if (_initialRestrictions != null) return;
+            _initialRestrictions = new Dictionary<ReportRestriction, RestrictionInitialValues>();
+            foreach (var restriction in Report.AllRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI).Distinct())
+            {
+                _initialRestrictions[restriction] = new RestrictionInitialValues()
+                {
+                    Operator = restriction.Operator,
+                    Value1 = restriction.Value1,
+                    Value2 = restriction.Value2,
+                    Value3 = restriction.Value3,
+                    Value4 = restriction.Value4,
+                    Date1 = restriction.Date1,
+                    Date2 = restriction.Date2,
+                    Date3 = restriction.Date3,
+                    Date4 = restriction.Date4,
+                    Date1Keyword = restriction.Date1Keyword,
+                    Date2Keyword = restriction.Date2Keyword,
+                    Date3Keyword = restriction.Date3Keyword,
+                    Date4Keyword = restriction.Date4Keyword,
+                    EnumValues = restriction.EnumValues.ToList()
+                };
+            }
+        }
+
+        /// <summary>
+        /// Reset the prompted restrictions of the report to their initial values (without executing the report) and return the HTML of the restrictions panel
+        /// </summary>
+        public string ResetPromptedRestrictions()
+        {
+            if (Report.IsExecuting) throw new Exception("The report is being executed");
+
+            if (_initialRestrictions != null)
+            {
+                //Only the restrictions of the main panel, restrictions of Restriction Views are not re-rendered
+                var htmlIds = Report.ExecutionPromptedRestrictions.Select(i => i.OperatorHtmlId).ToList();
+                foreach (var item in _initialRestrictions.Where(i => htmlIds.Contains(i.Key.OperatorHtmlId)))
+                {
+                    var restriction = item.Key;
+                    var values = item.Value;
+                    restriction.Operator = values.Operator;
+                    restriction.Value1 = values.Value1;
+                    restriction.Value2 = values.Value2;
+                    restriction.Value3 = values.Value3;
+                    restriction.Value4 = values.Value4;
+                    restriction.Date1 = values.Date1;
+                    restriction.Date2 = values.Date2;
+                    restriction.Date3 = values.Date3;
+                    restriction.Date4 = values.Date4;
+                    restriction.Date1Keyword = values.Date1Keyword;
+                    restriction.Date2Keyword = values.Date2Keyword;
+                    restriction.Date3Keyword = values.Date3Keyword;
+                    restriction.Date4Keyword = values.Date4Keyword;
+                    restriction.EnumValues = values.EnumValues.ToList();
+                }
+            }
+
+            foreach (var restriction in Report.ExecutionPromptedRestrictions) restriction.ValidationErrors = "";
+            CurrentEnumValues.Clear();
+
+            //Render the restrictions panel (GenerateHTMLDisplay requires the RenderingDisplay status)
+            var status = Report.Status;
+            try
+            {
+                Report.Status = ReportStatus.RenderingDisplay;
+                var view = Report.ExecutionView;
+                var key = view.GetPartialTemplateKey("Report.iRestrictions", view);
+                return RazorHelper.CompileExecute(view.Template.GetPartialTemplateText("Report.iRestrictions"), view, key);
+            }
+            finally
+            {
+                Report.Status = status;
+            }
         }
 
         /// <summary>
@@ -2453,6 +2547,7 @@ namespace Seal.Model
             if (restriction == null) restriction = Report.AllExecutionRestrictions.OrderBy(i => i.GUID).FirstOrDefault(i => i.OptionValueHtmlId == enumId); //If restriction is part of a View
             if (restriction != null && restriction.EnumRE != null)
             {
+                saveInitialRestrictions();
                 if (!CurrentEnumValues.ContainsKey(restriction.EnumRE)) CurrentEnumValues.Add(restriction.EnumRE, null);
                 //Build the SQL value
                 restriction.EnumValues.Clear();

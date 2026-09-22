@@ -30,6 +30,9 @@
                 <button id="restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Show Restrictions")" data-show-title="@report.Translate("Show Restrictions")" data-hide-title="@report.Translate("Hide Restrictions")">
                     <span class="fa-solid fa-filter"></span>
                 </button>
+                <button id="reset_restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Reset restrictions")">
+                    <span class="fa-solid fa-rotate-left"></span>
+                </button>
                 <button id="execute_button" class="btn btn-success">@report.Translate("Execute")</button>
             }
             @if (report.GenerateHTMLDisplay || !report.PrintLayout)

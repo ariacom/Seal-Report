@@ -258,7 +258,7 @@ class SWIMain {
 
         _main.showTreeView(true);
 
-        $("#reload-nav-item,#execute_button,#restrictions_button").addClass("reportview");
+        $("#reload-nav-item,#execute_button,#restrictions_button,#reset_restrictions_button").addClass("reportview");
 
         $("#search-pattern").val("");
 

@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;מוצגות {0} נקודות
 Report;{0} row(s) without coordinates;{0} שורות ללא קואורדינטות
 WebJS;Copy for Excel;העתקה ל-Excel
 WebJS;Download CSV;הורדת CSV
+Report;Reset restrictions;איפוס מגבלות

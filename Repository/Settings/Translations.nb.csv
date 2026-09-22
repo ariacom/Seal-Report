@@ -486,3 +486,4 @@ Report;{0} point(s) displayed;{0} punkt(er) vist
 Report;{0} row(s) without coordinates;{0} rad(er) uten koordinater
 WebJS;Copy for Excel;Kopier til Excel
 WebJS;Download CSV;Last ned CSV
+Report;Reset restrictions;Tilbakestill begrensninger
