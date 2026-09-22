@@ -242,6 +242,28 @@ namespace Seal.Helpers
         }
 
         /// <summary>
+        /// Escapes a value to be inserted inside a SQL string literal (between single quotes): embedded single quotes are doubled,
+        /// and for MySQL, whose default mode treats the backslash as an escape character, backslashes are doubled too.
+        /// </summary>
+        static public string EscapeSQLStringLiteral(string input, DatabaseType databaseType)
+        {
+            if (input == null) return "";
+            var result = input;
+            if (databaseType == DatabaseType.MySQL) result = result.Replace("\\", "\\\\");
+            return result.Replace("'", "''");
+        }
+
+        /// <summary>
+        /// Returns the input as a C# verbatim string literal (@"..."), safe to insert in a script compiled by Razor:
+        /// only the double quote is special in a verbatim string and it is doubled (a backslash stays a plain character).
+        /// </summary>
+        static public string ToCSharpVerbatimLiteral(string input)
+        {
+            if (input == null) input = "";
+            return "@\"" + input.Replace("\"", "\"\"") + "\"";
+        }
+
+        /// <summary>
         /// Removes all white-space characters from the input string
         /// </summary>
         static public string RemoveWhitespace(string input)

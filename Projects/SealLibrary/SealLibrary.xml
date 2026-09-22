@@ -1686,6 +1686,18 @@
             Returns the input string enclosed in single quotes, doubling any embedded single quote
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.EscapeSQLStringLiteral(System.String,Seal.Model.DatabaseType)">
+            <summary>
+            Escapes a value to be inserted inside a SQL string literal (between single quotes): embedded single quotes are doubled,
+            and for MySQL, whose default mode treats the backslash as an escape character, backslashes are doubled too.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.Helper.ToCSharpVerbatimLiteral(System.String)">
+            <summary>
+            Returns the input as a C# verbatim string literal (@"..."), safe to insert in a script compiled by Razor:
+            only the double quote is special in a verbatim string and it is doubled (a backslash stays a plain character).
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.RemoveWhitespace(System.String)">
             <summary>
             Removes all white-space characters from the input string

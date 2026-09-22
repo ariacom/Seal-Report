@@ -424,7 +424,8 @@ namespace Seal.Model
                 try
                 {
                     var finalSQL = RazorHelper.CompileExecute(SqlDisplay, this);
-                    if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", filter);
+                    //The filter is typed by the end user and inserted in a string literal (e.g. LIKE '%{EnumFilter}%'): escape it to prevent SQL injection
+                    if (HasDynamicDisplay) finalSQL = finalSQL.Replace(Repository.EnumFilterKeyword + "}", Helper.EscapeSQLStringLiteral(filter, _source.Connection != null ? _source.Connection.DatabaseType : DatabaseType.Standard));
                     if (HasDynamicDisplay && dependencies != null)
                     {
                         foreach (var d in dependencies.Keys)
@@ -445,7 +446,8 @@ namespace Seal.Model
             if (!string.IsNullOrEmpty(ScriptDisplay))
             {
                 var finalScript = ScriptDisplay;
-                if (HasDynamicDisplay) finalScript = finalScript.Replace(Repository.EnumFilterKeyword + "}", Helper.QuoteDouble(filter));
+                //The filter is typed by the end user and compiled in the script: a C# verbatim literal cannot be escaped with a backslash (unlike "..." built by QuoteDouble)
+                if (HasDynamicDisplay) finalScript = finalScript.Replace(Repository.EnumFilterKeyword + "}", Helper.ToCSharpVerbatimLiteral(filter));
                 if (HasDynamicDisplay && dependencies != null)
                 {
                     foreach (var d in dependencies.Keys)
