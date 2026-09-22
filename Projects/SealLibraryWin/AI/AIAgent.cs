@@ -107,8 +107,7 @@ namespace Seal.AI
                     $"AI agent '{Configuration.Name}' has no valid provider configuration.");
 
             // Seed conversation with the system prompt if one is defined
-            if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
-                Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
+            seedSystemPrompt();
         }
 
         /// <summary>
@@ -124,8 +123,51 @@ namespace Seal.AI
                 ?? throw new System.Exception(
                     $"AI agent '{Configuration.Name}' has no valid provider configuration.");
 
-            if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
-                Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
+            seedSystemPrompt();
+        }
+
+        /// <summary>
+        /// Instruction appended to the system prompt when <see cref="ChatSuggestions"/> is set:
+        /// the web chat panel renders <c>[[...]]</c> as links that send the suggestion as the next user message.
+        /// </summary>
+        public const string ChatSuggestionsInstruction =
+            "## Clickable suggestions\r\n" +
+            "The chat interface renders `[[text]]` as a clickable link that sends `text` as the user's next message. " +
+            "When you end your reply by offering follow-up options or asking the user to choose between alternatives, " +
+            "write each option as `[[short label]]`, or `[[short label|full message to send]]` when the label alone would be ambiguous out of context. " +
+            "Write the label as the user would phrase the request, in the user's language. " +
+            "Never translate, reword or drop the double brackets. Do not use them for anything else (not for report names, values or links).";
+
+        bool _chatSuggestions = false;
+        /// <summary>
+        /// When true, <see cref="ChatSuggestionsInstruction"/> is appended to the system prompt
+        /// (set by the interactive web chat panel only, so headless callers never get <c>[[...]]</c> tags).
+        /// </summary>
+        public bool ChatSuggestions
+        {
+            get { return _chatSuggestions; }
+            set
+            {
+                if (_chatSuggestions == value) return;
+                _chatSuggestions = value;
+                OverrideSystemPrompt(effectiveSystemPrompt);
+            }
+        }
+
+        string effectiveSystemPrompt
+        {
+            get
+            {
+                var prompt = Configuration.EffectiveSystemPrompt;
+                if (!_chatSuggestions) return prompt;
+                return string.IsNullOrWhiteSpace(prompt) ? ChatSuggestionsInstruction : prompt.TrimEnd() + "\r\n\r\n" + ChatSuggestionsInstruction;
+            }
+        }
+
+        void seedSystemPrompt()
+        {
+            var prompt = effectiveSystemPrompt;
+            if (!string.IsNullOrWhiteSpace(prompt)) Messages.Add(new SystemChatMessage(prompt));
         }
 
         // ----------------------------------------------------------------
@@ -542,8 +584,7 @@ namespace Seal.AI
             Title = null;
             LastChatUsage = new AIUsage();
             TotalUsage = new AIUsage();
-            if (!string.IsNullOrWhiteSpace(Configuration.EffectiveSystemPrompt))
-                Messages.Add(new SystemChatMessage(Configuration.EffectiveSystemPrompt));
+            seedSystemPrompt();
         }
 
         /// <summary>

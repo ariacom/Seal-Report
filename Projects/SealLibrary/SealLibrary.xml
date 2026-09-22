@@ -869,6 +869,18 @@
             <see cref="T:Seal.AI.AIAgentConfiguration"/> instance.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIAgent.ChatSuggestionsInstruction">
+            <summary>
+            Instruction appended to the system prompt when <see cref="P:Seal.AI.AIAgent.ChatSuggestions"/> is set:
+            the web chat panel renders <c>[[...]]</c> as links that send the suggestion as the next user message.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgent.ChatSuggestions">
+            <summary>
+            When true, <see cref="F:Seal.AI.AIAgent.ChatSuggestionsInstruction"/> is appended to the system prompt
+            (set by the interactive web chat panel only, so headless callers never get <c>[[...]]</c> tags).
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIAgent.LoadSkillToolName">
             <summary>
             Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
@@ -16752,6 +16764,16 @@
         <member name="P:Seal.Model.SecurityUserProfile.LastAgentGUID">
             <summary>
             GUID of the last AI Agent selected by the user in the chat panel
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUserProfile.AIPanelOpen">
+            <summary>
+            True if the AI Agent chat panel was left open by the user
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUserProfile.AIPanelWidth">
+            <summary>
+            Width in pixels of the AI Agent chat panel, 0 for the default width
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUserProfile.RecentReports">

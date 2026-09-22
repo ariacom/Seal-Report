@@ -36,6 +36,8 @@ namespace Seal.Model
         public List<SWIMetaSource> sources;
         public string sessionId;
         public bool hasagent;
+        public bool aipanelopen;
+        public int aipanelwidth;
     }
 
 

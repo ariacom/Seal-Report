@@ -1490,6 +1490,23 @@ body.ai-resizing #footer-div {
     font-size: 11px;
 }
 
+/* Clickable follow-up suggestion written by the AI as [[label]] */
+a.ai-suggest {
+    color: var(--bs-link-color, #0d6efd);
+    text-decoration: underline dotted;
+    text-underline-offset: 3px;
+    cursor: pointer;
+}
+
+a.ai-suggest:hover {
+    text-decoration-style: solid;
+}
+
+a.ai-suggest .fa {
+    font-size: 0.8em;
+    margin-right: 2px;
+}
+
 /* Input area */
 .ai-panel-input-area {
     border-top: 1px solid #e0e0e0;

@@ -249,6 +249,12 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public SetAIPanelState(open: boolean, width: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISetAIPanelState", { open: open, width: width })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public ClearAIAgent(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIClearAIAgent", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

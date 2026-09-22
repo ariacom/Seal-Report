@@ -51,6 +51,8 @@
             return 'right';
         return '';
     }
+    // [[label]] or [[label|message]] suggestion links written by the AI (see AIAgent.ChatSuggestionsInstruction)
+    const SuggestionRegex = /\[\[([^\[\]|\r\n]+)(?:\|([^\[\]\r\n]+))?\]\]/g;
     function formatResponse(text) {
         if (!text)
             return '';
@@ -63,6 +65,10 @@
             .replace(/'/g, '&#39;');
         // Inline formatting applied within a single (already escaped) line.
         function inline(s) {
+            // [[label]] or [[label|message]]: clickable suggestion sending the message as the next prompt
+            s = s.replace(SuggestionRegex, function (_m, label, message) {
+                return '<a href="#" class="ai-suggest" data-prompt="' + (message || label).trim() + '"><i class="fa fa-share"></i> ' + label.trim() + '</a>';
+            });
             // `inline code`
             s = s.replace(/`([^`\r\n]+)`/g, '<code>$1</code>');
             // **bold**
@@ -193,6 +199,7 @@
     // ── Markdown → plain text (for copying AI replies) ──────────
     function toPlainText(raw) {
         return (raw || '')
+            .replace(SuggestionRegex, '$1') // keep only the suggestion label
             .replace(/^#{1,6}\s+/gm, '') // strip heading markers
             .replace(/\*\*([^*\r\n]+)\*\*/g, '$1') // strip bold markers
             .replace(/`([^`\r\n]+)`/g, '$1'); // strip inline-code markers
@@ -259,6 +266,16 @@
         else {
             downloadCsv(rowsToCsv(rows, csvSeparator()), sanitizeFileName(SWIUtil.tr2('AI Agent')) + '.csv');
         }
+    });
+    // Suggestion link: send its message as the next prompt (delegated, works for restored chats too)
+    $messages.on('click', 'a.ai-suggest', function (e) {
+        e.preventDefault();
+        e.stopPropagation();
+        if (_requesting)
+            return;
+        $input.val($(this).attr('data-prompt') || '').trigger('input');
+        if (!$send.prop('disabled'))
+            $send.trigger('click');
     });
     // ── Bubble factories with hover action toolbars ─────────────
     function bubbleActionBtn(iconClass, title, handler) {
@@ -345,23 +362,28 @@
     }
     $toggle.on('click', function () {
         $panel.hasClass('ai-panel-open') ? closePanel() : openPanel();
+        savePanelState();
     });
-    $close.on('click', closePanel);
+    $close.on('click', function () {
+        closePanel();
+        savePanelState();
+    });
     // ── Panel resize (drag handle) ──────────────────────────────
     var MIN_PANEL_WIDTH = 300;
-    var MAX_PANEL_WIDTH = 1200;
+    // Space always left to the report area on the right of the panel.
+    var MIN_REPORT_WIDTH = 150;
     var $resizer = $('#ai-panel-resizer');
     function applyPanelWidth(px) {
-        var clamped = Math.max(MIN_PANEL_WIDTH, Math.min(MAX_PANEL_WIDTH, px));
+        var maxWidth = Math.max(MIN_PANEL_WIDTH, window.innerWidth - MIN_REPORT_WIDTH);
+        var clamped = Math.max(MIN_PANEL_WIDTH, Math.min(maxWidth, px));
         document.documentElement.style.setProperty('--ai-panel-width', clamped + 'px');
     }
-    // Restore the saved width on load.
-    try {
-        var saved = window.localStorage.getItem('ai-panel-width');
-        if (saved)
-            applyPanelWidth(parseInt(saved, 10));
+    // Width set by the user (0 = default CSS width), persisted in the user profile.
+    var _panelWidth = 0;
+    // Remembers the panel state (open/closed + width) in the user profile across sessions.
+    function savePanelState() {
+        _gateway.SetAIPanelState($panel.hasClass('ai-panel-open'), _panelWidth, function () { });
     }
-    catch (e) { /* localStorage unavailable */ }
     $resizer.on('mousedown', function (e) {
         e.preventDefault();
         $('body').addClass('ai-resizing');
@@ -374,14 +396,52 @@
             $('body').removeClass('ai-resizing');
             var current = getComputedStyle(document.documentElement)
                 .getPropertyValue('--ai-panel-width').trim();
-            try {
-                window.localStorage.setItem('ai-panel-width', String(parseInt(current, 10)));
+            var width = parseInt(current, 10);
+            if (width > 0 && width !== _panelWidth) {
+                _panelWidth = width;
+                savePanelState();
             }
-            catch (err) { /* localStorage unavailable */ }
         }
         document.addEventListener('mousemove', onMove);
         document.addEventListener('mouseup', onUp);
     });
+    // Called by the main interface after each login: restores the panel state saved in the user profile.
+    window.SWIAIPanel = {
+        applyProfile: function (profile) {
+            // A new login may be another user: reload the agent list on next open.
+            _agentsLoaded = false;
+            if (!profile.hasagent) {
+                closePanel();
+                return;
+            }
+            _panelWidth = profile.aipanelwidth || 0;
+            // One-time migration of the width previously stored in the browser.
+            var migrated = false;
+            try {
+                var legacy = window.localStorage.getItem('ai-panel-width');
+                if (legacy) {
+                    window.localStorage.removeItem('ai-panel-width');
+                    if (!_panelWidth && parseInt(legacy, 10) > 0) {
+                        _panelWidth = parseInt(legacy, 10);
+                        migrated = true;
+                    }
+                }
+            }
+            catch (e) { /* localStorage unavailable */ }
+            if (_panelWidth > 0)
+                applyPanelWidth(_panelWidth);
+            else
+                document.documentElement.style.removeProperty('--ai-panel-width');
+            if (profile.aipanelopen) {
+                openPanel();
+                loadAgents();
+            }
+            else
+                closePanel();
+            if (migrated)
+                savePanelState();
+        }
+    };
     // ── Agent selector ──────────────────────────────────────
     // Fetches the agents available to the current user. Shows the selectpicker
     // in the header always (≥ 1 agent). When only one is available the control
@@ -424,7 +484,7 @@
             // native title attribute first guarantees a tooltip even if Bootstrap's Tooltip
             // is unavailable; Bootstrap's Tooltip then upgrades it to a styled one and
             // consumes the attribute (getOrCreateInstance keeps re-attaching idempotent).
-            $agentSelect.on('shown.bs.select', function () {
+            $agentSelect.off('shown.bs.select').on('shown.bs.select', function () {
                 var $items = $agentSelect.closest('.bootstrap-select').find('.dropdown-menu li a.dropdown-item');
                 $.each(agents, function (i, a) {
                     if (!a.description)

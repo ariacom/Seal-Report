@@ -95,6 +95,16 @@ namespace Seal.Model
         public string LastAgentGUID { get; set; }
 
         /// <summary>
+        /// True if the AI Agent chat panel was left open by the user
+        /// </summary>
+        public bool AIPanelOpen { get; set; } = false;
+
+        /// <summary>
+        /// Width in pixels of the AI Agent chat panel, 0 for the default width
+        /// </summary>
+        public int AIPanelWidth { get; set; } = 0;
+
+        /// <summary>
         /// List of recent reports
         /// </summary>
         public List<RecentFileItem> RecentReports { get; set; } = new List<RecentFileItem>();

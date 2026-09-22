@@ -234,6 +234,8 @@ class SWIMain {
         }
         _main._profile = data;
         SWIUtil.ShowHideControl($("#ai-panel-toggle, #ai-chat-panel"), data.hasagent);
+        //Restore the AI Agent panel state (open/closed, width) saved in the user profile
+        if ((window as any).SWIAIPanel) (window as any).SWIAIPanel.applyProfile(data);
         _main._reportPath = "";
         _main._folder = null;
         _main._searchMode = false;

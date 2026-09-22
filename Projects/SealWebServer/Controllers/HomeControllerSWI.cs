@@ -154,7 +154,9 @@ namespace SealWebServer.Controllers
                 sessionId = HttpContext.Session.GetString(SessionIdKey),
                 changepassword = Repository.Security.EnableChangePassword && WebUser.Login != null,
                 showresetpassword = Repository.Security.ResetPasswordActive,
-                hasagent = WebUser.AgentConfiguration != null
+                hasagent = WebUser.AgentConfiguration != null,
+                aipanelopen = WebUser.Profile.AIPanelOpen,
+                aipanelwidth = WebUser.Profile.AIPanelWidth
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))
@@ -1647,7 +1649,8 @@ namespace SealWebServer.Controllers
 
                     agent = new AIAgent(config)
                     {
-                        SecurityContext = WebUser
+                        SecurityContext = WebUser,
+                        ChatSuggestions = true
                     };
                     setSessionValue(SessionAgent, agent);
                 }
@@ -1707,6 +1710,33 @@ namespace SealWebServer.Controllers
                 if (WebUser.Profile.LastAgentGUID != guid)
                 {
                     WebUser.Profile.LastAgentGUID = guid;
+                    WebUser.SaveProfile();
+                }
+
+                return Json(new { });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Remembers the AI Agent chat panel state (open/closed and width) in the user profile.
+        /// </summary>
+        public ActionResult SWISetAIPanelState(bool open, int width, string sessionId)
+        {
+            writeDebug("SWISetAIPanelState");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+
+                if (width < 0) width = 0;
+                if (WebUser.Profile.AIPanelOpen != open || WebUser.Profile.AIPanelWidth != width)
+                {
+                    WebUser.Profile.AIPanelOpen = open;
+                    WebUser.Profile.AIPanelWidth = width;
                     WebUser.SaveProfile();
                 }
 

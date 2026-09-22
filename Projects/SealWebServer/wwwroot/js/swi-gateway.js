@@ -218,6 +218,11 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    SetAIPanelState(open, width, callback, errorcb) {
+        $.post(_server + "SWISetAIPanelState", { open: open, width: width })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     ClearAIAgent(callback, errorcb) {
         $.post(_server + "SWIClearAIAgent", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
