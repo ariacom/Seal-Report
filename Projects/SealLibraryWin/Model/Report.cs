@@ -2139,9 +2139,6 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// For a Script File, insert the attached script file name or it content according to execution context 
-        /// </summary>
-        /// <summary>
         /// Cache-busting token appended to web asset references (?v=...): changes whenever the file changes,
         /// so browsers do not keep serving a stale cached script/css after an upgrade.
         /// </summary>
@@ -2151,6 +2148,9 @@ namespace Seal.Model
             catch { return Repository.ProductVersion; }
         }
 
+        /// <summary>
+        /// For a Script File, insert the attached script file name or it content according to execution context
+        /// </summary>
         public string AttachScriptFile(string fileName, string cdnPath = "")
         {
             fileName = FileHelper.ConvertOSFilePath(fileName);

@@ -19,10 +19,19 @@ namespace Seal.Helpers
     /// </summary>
     public enum CsvQuoting
     {
+        /// <summary>
+        /// Every value is enclosed in double quotes
+        /// </summary>
         [System.ComponentModel.Description("Always")]
         Always,
+        /// <summary>
+        /// Only values containing the separator, a double quote or a line break are enclosed in double quotes (RFC 4180)
+        /// </summary>
         [System.ComponentModel.Description("When needed (RFC 4180)")]
         WhenNeeded,
+        /// <summary>
+        /// Values are never enclosed in double quotes
+        /// </summary>
         [System.ComponentModel.Description("Never")]
         Never,
     }
@@ -32,8 +41,14 @@ namespace Seal.Helpers
     /// </summary>
     public enum CsvLineEnding
     {
+        /// <summary>
+        /// Carriage return + line feed (Windows)
+        /// </summary>
         [System.ComponentModel.Description("CRLF (Windows)")]
         CrLf,
+        /// <summary>
+        /// Line feed only (Unix)
+        /// </summary>
         [System.ComponentModel.Description("LF (Unix)")]
         Lf,
     }
@@ -43,12 +58,24 @@ namespace Seal.Helpers
     /// </summary>
     public enum CsvEncoding
     {
+        /// <summary>
+        /// UTF-8 with a byte order mark (recognized by Excel)
+        /// </summary>
         [System.ComponentModel.Description("UTF-8 with BOM (Excel)")]
         Utf8Bom,
+        /// <summary>
+        /// UTF-8 without byte order mark
+        /// </summary>
         [System.ComponentModel.Description("UTF-8 without BOM")]
         Utf8,
+        /// <summary>
+        /// UTF-16 little endian with a byte order mark
+        /// </summary>
         [System.ComponentModel.Description("UTF-16 LE with BOM")]
         Utf16,
+        /// <summary>
+        /// Windows-1252 code page (ANSI)
+        /// </summary>
         [System.ComponentModel.Description("Windows-1252 (ANSI)")]
         Windows1252,
     }

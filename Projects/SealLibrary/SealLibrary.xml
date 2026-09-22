@@ -1263,14 +1263,59 @@
             Defines when a CSV value is enclosed in double quotes
             </summary>
         </member>
+        <member name="F:Seal.Helpers.CsvQuoting.Always">
+            <summary>
+            Every value is enclosed in double quotes
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvQuoting.WhenNeeded">
+            <summary>
+            Only values containing the separator, a double quote or a line break are enclosed in double quotes (RFC 4180)
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvQuoting.Never">
+            <summary>
+            Values are never enclosed in double quotes
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.CsvLineEnding">
             <summary>
             Line ending used in a CSV file
             </summary>
         </member>
+        <member name="F:Seal.Helpers.CsvLineEnding.CrLf">
+            <summary>
+            Carriage return + line feed (Windows)
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvLineEnding.Lf">
+            <summary>
+            Line feed only (Unix)
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.CsvEncoding">
             <summary>
             Encoding of a CSV file
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvEncoding.Utf8Bom">
+            <summary>
+            UTF-8 with a byte order mark (recognized by Excel)
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvEncoding.Utf8">
+            <summary>
+            UTF-8 without byte order mark
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvEncoding.Utf16">
+            <summary>
+            UTF-16 little endian with a byte order mark
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.CsvEncoding.Windows1252">
+            <summary>
+            Windows-1252 code page (ANSI)
             </summary>
         </member>
         <member name="T:Seal.Helpers.ExcelHelper">
@@ -8878,11 +8923,13 @@
         </member>
         <member name="M:Seal.Model.Report.GetAssetVersion(System.String)">
             <summary>
-            For a Script File, insert the attached script file name or it content according to execution context 
-            </summary>
-            <summary>
             Cache-busting token appended to web asset references (?v=...): changes whenever the file changes,
             so browsers do not keep serving a stale cached script/css after an upgrade.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.AttachScriptFile(System.String,System.String)">
+            <summary>
+            For a Script File, insert the attached script file name or it content according to execution context
             </summary>
         </member>
         <member name="M:Seal.Model.Report.AttachAssets(System.Collections.Generic.IEnumerable{Seal.Model.ClientAsset})">
