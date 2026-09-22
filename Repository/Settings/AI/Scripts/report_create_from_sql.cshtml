@@ -20,6 +20,9 @@
     var description      = args.TryGetProperty("description",       out var dp)  ? dp.GetString()  : null;
     var keepColumnNames  = args.TryGetProperty("keep_column_names", out var kp)  && kp.GetBoolean();
     var overwrite        = args.TryGetProperty("overwrite",         out var op)  && op.GetBoolean();
+    var noRecordLimit    = args.TryGetProperty("no_record_limit",   out var nlp) && nlp.ValueKind == JsonValueKind.True;
+    // Reports created by the AI agent are limited by default
+    const int defaultMaxNumberOfRecords = 5000;
 
     var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
@@ -78,7 +81,8 @@
         model.Table.KeepColumnNames  = keepColumnNames;
         model.Table.Sql              = sql;
         model.RefreshMetaTable(true);
-        
+        if (!noRecordLimit) model.MaxNumberOfRecords = defaultMaxNumberOfRecords;
+
         //Add elements
         foreach (var col in model.Table.Columns)
         {
@@ -99,6 +103,8 @@
         report.SaveToFile(fullPath);
 
         tool.ExecResult = $"Created: {path}";
+        if (!noRecordLimit)
+            tool.ExecResult += $"\r\nNote: the result is limited to {defaultMaxNumberOfRecords} records (default limit of the reports created by the AI agent). Mention it to the user.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");

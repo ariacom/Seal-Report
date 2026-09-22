@@ -20,7 +20,8 @@ before deciding which creation tool to use. Follow its recommendation.
 2. Call `datasource_get_detail` to get the `MetaColumnGUID` for **every** element
    and restriction. Never guess or fabricate a column GUID.
 3. For enumerated restriction values, call `database_get_sample_values` to obtain
-   the real values to list.
+   the real values to list. It returns at most 50 values: never use them to build a
+   drop-down list on a column without enumerated list, see "Drop-down lists on restrictions" below.
 4. Build the XML from the specification below and call `report_create_from_xml`.
    **The report exists only once this call has returned success in the current turn.**
    Never tell the user a report was created or saved, and never give a path, before that:
@@ -43,7 +44,7 @@ before deciding which creation tool to use. Follow its recommendation.
       <GUID>c</GUID>
       <Name>Source display name</Name>
       <ConnectionGUID>1</ConnectionGUID>
-      <MetaData />         <!-- always empty -->
+      <MetaData />         <!-- empty, except <Enums> for a drop-down list defined in the report (see "Drop-down lists on restrictions") -->
       <MetaSourceGUID>«datasource_list GUID»</MetaSourceGUID>
     </ReportSource>
   </Sources>
@@ -53,7 +54,8 @@ before deciding which creation tool to use. Follow its recommendation.
       <Name>ModelName</Name>
       <SourceGUID>c</SourceGUID>   <!-- matches ReportSource GUID -->
       <Alias>Master</Alias>
-      <MaxNumberOfRecords>0</MaxNumberOfRecords>  <!-- 0 = no limit; set a positive integer ONLY if the user asks to limit records -->
+      <MaxNumberOfRecords>5000</MaxNumberOfRecords>  <!-- default 5000 (applied by the tool when omitted or 0); a smaller value for a Top N;
+                                                         no limit ONLY if the user explicitly asks: then pass no_record_limit=true to the tool -->
       <!-- ShowFirstLine ("Show first header line"): default true; OMIT it for normal tables.
            Add <ShowFirstLine>false</ShowFirstLine> here ONLY when the model is a cross-tab,
            i.e. it has at least one Row element AND at least one Column element. -->
@@ -111,13 +113,17 @@ AND [f3]</Restriction>
                Text (free text):
                  <Value1>search term</Value1>
 
-               Enumerated (the column is marked `enumerated list: …` by datasource_get_detail):
-                 Call database_get_sample_values first, then list ALL returned values as <EnumValues>:
+               Enumerated (the column is marked `enumerated list: …` by datasource_get_detail, or the restriction
+               references a list of the report with <EnumGUIDRE>):
+                 Call database_get_sample_values first, then list ALL returned values as <EnumValues>
+                 (for a list defined in the report, <EnumValues> holds the values selected by default; omit it for no pre-selection):
                  <EnumValues>
                    <string>Argentina</string>
                    <string>France</string>
                  </EnumValues>
                  Do NOT use <Value1> for enumerated columns.
+                 On a column WITHOUT enumerated list, <EnumValues> is ignored and the tool rejects it: a drop-down
+                 list needs an enumerated list (see "Drop-down lists on restrictions").
 
                Numeric / Between:
                  <Value1>100</Value1>  <Value2>500</Value2>
@@ -155,14 +161,15 @@ AND [f3]</Restriction>
               <GUID>i</GUID>
               <Name>Model Container</Name>
               <Views>
-                <!-- Always keep ALL six default sub-views. Never remove or omit any of them. -->
+                <!-- Always keep ALL six default sub-views. Never remove or omit any of them.
+                     For a map, add the Map sub-view described in "Maps" below. -->
                 <ReportView><GUID>j1</GUID><Name>Page Table</Name><TemplateName>Page Table</TemplateName><SortOrder>1</SortOrder></ReportView>
                 <ReportView><GUID>j2</GUID><Name>Chart JS</Name><TemplateName>Chart JS</TemplateName><SortOrder>2</SortOrder></ReportView>
-                <ReportView><GUID>j3</GUID><Name>Chart NVD3</Name><TemplateName>Chart NVD3</TemplateName><SortOrder>3</SortOrder></ReportView>
-                <ReportView><GUID>j4</GUID><Name>Chart Scottplot</Name><TemplateName>Chart Scottplot</TemplateName><SortOrder>4</SortOrder></ReportView>
+                <ReportView><GUID>j3</GUID><Name>Chart Scottplot</Name><TemplateName>Chart Scottplot</TemplateName><SortOrder>3</SortOrder></ReportView>
+                <ReportView><GUID>j4</GUID><Name>Chart Echarts</Name><TemplateName>Chart Echarts</TemplateName><SortOrder>4</SortOrder></ReportView>
                 <ReportView><GUID>j5</GUID><Name>Chart Plotly</Name><TemplateName>Chart Plotly</TemplateName><SortOrder>5</SortOrder></ReportView>
                 <ReportView><GUID>j6</GUID><Name>Data Table</Name><TemplateName>Data Table</TemplateName><SortOrder>6</SortOrder></ReportView>
-                <!-- When the model sets a record limit (<MaxNumberOfRecords> > 0, e.g. Top 10), disable the
+                <!-- When the model sets a Top N record limit (e.g. Top 10, not the default 5000), disable the
                      "maximum number of records reached" warning by adding a <Parameters> block to this Data Table view:
                      <ReportView><GUID>j6</GUID><Name>Data Table</Name>
                        <Parameters><Parameter><Name>data_warning_show</Name><Value>false</Value></Parameter></Parameters>
@@ -206,7 +213,8 @@ AND [f3]</Restriction>
 - `<GUID>`, `<ViewGUID>`, `<SourceGUID>`, `<ModelGUID>` — internal cross-references regenerated automatically. Use any short placeholder (a, b, c…) and keep them consistent within the XML.
 - Every `[key]` in `<Restriction>` must match the `<GUID>` of a `<ReportRestriction>` in `<Restrictions>`. Short placeholders (e.g. `f1`) are fine — the tool remaps them automatically.
 - Paths use the format `Reports\FolderName\report_name.srex`. Available roots: `Reports`, `SubReports`, `Personal`.
-- Do **not** set `overwrite: true` unless the user explicitly asks to replace an existing report.
+- Do **not** set `overwrite: true` unless the user explicitly asks to replace or to modify an existing report.
+- `<EnumGUIDRE>` references the `<GUID>` of a `<MetaEnum>` defined in the report (placeholder, remapped automatically).
 
 ## Key concepts
 
@@ -256,8 +264,96 @@ Always include a `<ShowTotal>` on every `Data` element. Choose by table shape:
 - **Default operator by column type:** Text (free text) → `Contains`; Enumerated → `Equal` (only `Equal`/`NotEqual` allowed); Numeric/Date → `Equal`, `Between`, `Greater`, `Smaller`, etc.
 - **Empty / null checks** — to filter on a missing value, use the dedicated operators: `IsEmpty` / `IsNotEmpty` (text columns) or `IsNull` / `IsNotNull` (any type), with **no** value element. Never use `Equal` with an empty `<Value1>` — a restriction with no value is treated as "not filled" and is silently ignored at execution.
 - **A column is enumerated when `datasource_get_detail` marks it `enumerated list: …`** — judge by that marker, never by the column name.
-- **Enumerated restriction values** — always call `database_get_sample_values` first, then list all returned values as `<EnumValues><string>…</string></EnumValues>`. Never use `<Value1>` for enumerated columns.
+- **Enumerated restriction values** — always call `database_get_sample_values` first, then list all returned values as `<EnumValues><string>…</string></EnumValues>`. Never use `<Value1>` for enumerated columns. This applies only to columns having an enumerated list; for a column without list see "Drop-down lists on restrictions".
 - **Date restrictions** — set `<Prompt>PromptTwoValues</Prompt>` so the user can adjust the range. For a concrete year/date, set literal `<Date1>`/`<Date2>`; never substitute a relative keyword.
+
+### Drop-down lists on restrictions (enumerated lists)
+When the user wants a restriction shown as a list ("liste", "liste déroulante", "enum", "select", "choose from a list"):
+
+- **The column already has an enumerated list** (`datasource_get_detail` marks it `enumerated list: …`): the restriction
+  inherits it automatically. Add nothing, just use `Equal` (and `<EnumValues>` only for default selections).
+- **Otherwise, define the list in the report** and reference it from the restriction with `<EnumGUIDRE>`. Never put
+  values in `<EnumValues>` of a column without list: they are ignored (the prompt stays a text box) and the tool
+  rejects them. Never modify the data source for this (`datasource_manage_enum`) unless the user explicitly asks to
+  add the list to the data source, as it changes every report using the column.
+
+```xml
+<ReportSource>
+  <GUID>c</GUID>
+  <Name>Source display name</Name>
+  <ConnectionGUID>1</ConnectionGUID>
+  <MetaData>
+    <Enums>
+      <MetaEnum>
+        <GUID>en1</GUID>                 <!-- placeholder, regenerated; <EnumGUIDRE> references follow it -->
+        <Name>Cities</Name>
+        <IsDynamic>true</IsDynamic>       <!-- values loaded by the SQL -->
+        <IsDbRefresh>true</IsDbRefresh>   <!-- reloaded before each execution -->
+        <Sql>SELECT DISTINCT fr.v_etablissement.libelle_commune FROM fr.v_etablissement
+WHERE fr.v_etablissement.libelle_commune IS NOT NULL ORDER BY 1</Sql>
+      </MetaEnum>
+    </Enums>
+  </MetaData>
+  <MetaSourceGUID>«datasource_list GUID»</MetaSourceGUID>
+</ReportSource>
+...
+<ReportRestriction>
+  <GUID>f1</GUID>
+  <Name>fr.v_etablissement.libelle_commune</Name>
+  <MetaColumnGUID>«column GUID»</MetaColumnGUID>
+  <EnumGUIDRE>en1</EnumGUIDRE>      <!-- = the <GUID> of the <MetaEnum> above -->
+  <Prompt>Prompt</Prompt>
+  <Operator>Equal</Operator>          <!-- Equal or NotEqual only; no <Value1> -->
+</ReportRestriction>
+```
+
+- **SQL**: first column = the value compared to the restricted column (it must return exactly the values of that
+  column), optional second column = the label displayed. Use the table and column names of `datasource_get_detail`
+  (without a `::type` cast suffix). The tool executes the SQL and rejects the report if it fails.
+- **Large lists** (more than ~500 distinct values, e.g. cities, customers, products — check with
+  `SELECT COUNT(DISTINCT …)` via `database_execute_query`): add a type-ahead filter so the list is built from the first
+  characters typed by the user:
+  ```xml
+  <FilterChars>2</FilterChars>
+  <Message>Type 2 characters</Message>   <!-- in the user's language -->
+  <SqlDisplay>SELECT DISTINCT fr.v_etablissement.libelle_commune FROM fr.v_etablissement
+WHERE fr.v_etablissement.libelle_commune LIKE '{EnumFilter}%' ORDER BY 1</SqlDisplay>
+  ```
+  (`ILIKE` instead of `LIKE` on PostgreSQL for a case-insensitive search.)
+- **Static list** (a few fixed values): `<IsDynamic>` omitted and
+  `<Values><MetaEV><Id>A</Id><Val>Active</Val></MetaEV><MetaEV><Id>C</Id><Val>Closed</Val></MetaEV></Values>`
+  (`Id` = the value in the database, `Val` = the label).
+- A request like "a list on the cities" made right after creating a report that restricts on the cities means a
+  drop-down list on that restriction: **modify that report** (see "Modifying an existing report"), do not create a new report.
+
+### Maps
+A map (Leaflet `Map` view) shows one point per result row from a **latitude** and a **longitude** column (decimal
+degrees, WGS84).
+
+- Check first that the source has latitude/longitude columns (`datasource_get_detail`). If it has none, **tell the
+  user that a map is not possible** with this source, and do not create or describe a map.
+- Add the latitude and longitude columns as `Row` elements, no aggregation (one row per point). The first other
+  column is the point label; the other columns are shown in the point popup.
+- Add a `Map` sub-view in the Container, right after `Page Table` (give it `SortOrder` 2 and shift the following ones):
+  ```xml
+  <ReportView><GUID>j7</GUID><Name>Map</Name>
+    <Parameters>
+      <!-- all optional; column names = element display names -->
+      <Parameter><Name>map_label</Name><Value>Name</Value></Parameter>              <!-- label column -->
+      <Parameter><Name>map_color_column</Name><Value>Activity</Value></Parameter>   <!-- one color per value -->
+      <Parameter><Name>map_size_column</Name><Value>Amount</Value></Parameter>      <!-- numeric: point size -->
+    </Parameters>
+    <TemplateName>Map</TemplateName><SortOrder>2</SortOrder></ReportView>
+  ```
+  The coordinate columns are found automatically when their display names contain "latitude" / "longitude";
+  otherwise set `map_latitude` / `map_longitude` to their display names. Other parameters: `map_height` (pixels,
+  default 500), `map_tile_provider` (`osm`, `opentopomap`, `ign` for France).
+
+### Modifying an existing report
+To change a saved report (add/remove a column or a restriction, add a drop-down list or a map…): call `report_get_xml`,
+change **only** what is asked in the returned XML, then save it with `report_create_from_xml` on the **same path** with
+`overwrite: true` (the user's request to change the report is the explicit request to replace it). Only a change of view
+parameters (chart style, title…) goes through `style-report-view` instead.
 
 ### Join overrides (`<JoinOverrides>` inside `<ReportModel>`)
 The tables of a model are linked automatically with the joins of the data source (listed under `## Joins` by
@@ -357,7 +453,9 @@ Without `<SerieDefinition>Axis</SerieDefinition>` on the Row dimension (and `<Ch
 ## Rules
 - Friendly, human-readable **display names** ("Sales of 1997 per Category", "Top 10 Customers by Revenue"). Never technical identifiers or underscores.
 - **Filenames** lowercase with underscores derived from the display name (e.g. `sales_1997_per_category.srex`).
-- Always include `<MaxNumberOfRecords>` (default `0`). When it is a positive limit (e.g. Top 10), also set `data_warning_show=false` on the `Data Table` view.
+- **Record limit**: reports are limited to **5000 records** by default (`<MaxNumberOfRecords>5000</MaxNumberOfRecords>`, applied by the tool when omitted or 0). Use a smaller value for a Top N, and then also set `data_warning_show=false` on the `Data Table` view. Remove the limit only when the user explicitly asks for it: pass `no_record_limit: true` to `report_create_from_xml`. Tell the user about the limit.
+- Every `<Name>` must be the name of the column whose GUID is in `<MetaColumnGUID>`: check in which table a column really is (a column of another table needs its own table, joined by the source).
+- **Only describe what is really in the saved XML.** If part of the request cannot be done (no coordinates for a map, a feature not covered by this skill…), say so explicitly instead of saving a report that only looks like the request.
 - **Avoid redundant parameters** — never emit a `<Parameter>` whose value equals the template/model default; it is stripped on save and only adds noise.
 - Keep all six default sub-views in every Container; never drop the Model view.
 - Respect the user's access rights: only use sources and folders they can access.

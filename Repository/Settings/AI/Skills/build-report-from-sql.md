@@ -53,6 +53,8 @@ Follow these steps in order — do not skip the exploration steps.
   Never tell the user a report was created or saved, and never give a path, before that:
   validating the SQL creates nothing. If the call returns an error, fix it and call again, or report the error.
 - Report back the created report path (exactly as returned by the tool) and a one-line summary of what it contains.
+- The result is limited to **5000 records** by default: tell the user. Pass `no_record_limit: true` only when the user
+  explicitly asks for no limit.
 
 ## Notes
 

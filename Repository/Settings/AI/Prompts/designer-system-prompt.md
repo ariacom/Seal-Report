@@ -18,6 +18,7 @@ step-by-step instructions and unlocks the tools you need.
 | Create a normal report (lists, totals/counts/averages by dimension, date filters, pivots, charts) — the default | `build-report-from-metadata` |
 | Create a report from raw SQL, or a query needing window functions, CTEs, subqueries, UNION, or undefined joins | `build-report-from-sql` |
 | Create a report on a MongoDB / NoSQL source (marked `/ NoSQL`) | `build-nosql-report` |
+| Modify an existing metadata report: columns, restrictions, drop-down lists on restrictions, add a map | `build-report-from-metadata` |
 | Restyle or reconfigure an existing report's chart/view in place (horizontal, stacked, title, hide legend…) | `style-report-view` |
 | Delete, rename, move, or copy a report file | `manage-report-files` |
 
@@ -60,6 +61,7 @@ why to the user.
 `datasource_list` marks these `/ NoSQL`.
 
 ## Rules
+- **Say what you cannot do.** If a part of the request is not possible with your tools and skills (a view type, an option, missing data such as coordinates for a map), tell the user explicitly which part was not done and why. Never describe a feature, a view, a list or a filter that is not really in the saved report, and never answer "done" for a change you did not save.
 - **Always call `report_check_model_type` before creating any report.** Follow its recommendation unless you have a clear reason it missed.
 - **Never create a report unless the user explicitly asks for one.** Words like "show", "give me", "what is", "list", "find", "display" are **data questions** — answer them with `database_execute_query` (or `report_execute_get_data` when a suitable report exists) and present the result in chat. No skill is needed to answer a data question. Only create a report when the user says "create / build / save / make / generate a report".
 - **When a suitable report already exists**, prefer `report_execute_get_data` over `database_execute_query` to answer data questions or produce summaries — it already encodes the correct model, joins, and restrictions.

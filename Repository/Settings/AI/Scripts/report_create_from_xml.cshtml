@@ -17,6 +17,9 @@
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
     var xml       = args.GetProperty("xml").GetString();
     var overwrite = args.TryGetProperty("overwrite", out var op) && op.GetBoolean();
+    var noRecordLimit = args.TryGetProperty("no_record_limit", out var nlp) && nlp.ValueKind == JsonValueKind.True;
+    // Reports created by the AI agent are limited by default: a model without a positive <MaxNumberOfRecords> gets this value
+    const int defaultMaxNumberOfRecords = 5000;
 
     var roots = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase)
     {
@@ -49,6 +52,7 @@
 
         // --- Validate / resolve metadata column references (guard against fabricated GUIDs) ---
         Func<string, string> norm = s => (s ?? "").Replace("[", "").Replace("]", "").Trim().ToLowerInvariant();
+        Func<string, string> stripCast = s => { var i = s.IndexOf("::"); return i < 0 ? s : s.Substring(0, i).Trim(); };
 
         var msGuid = doc.Descendants("MetaSourceGUID")
                         .Select(e => e.Value == null ? null : e.Value.Trim())
@@ -63,6 +67,9 @@
         var validColGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var colGuidByName = new System.Collections.Generic.Dictionary<string, string>();
         var colNameByGuid = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        // Column Name (Table.Column) -> GUID, used to detect an element whose <Name> designates another column than its <MetaColumnGUID>
+        var colGuidByColName = new System.Collections.Generic.Dictionary<string, string>();
+        var ambiguousColNames = new System.Collections.Generic.HashSet<string>();
         foreach (var table in metaSource.MetaData.Tables)
             foreach (var col in table.Columns)
             {
@@ -70,15 +77,19 @@
                 colGuidByName[norm(col.Name)] = col.GUID;
                 if (!string.IsNullOrEmpty(col.DisplayName)) colGuidByName[norm(col.DisplayName)] = col.GUID;
                 colNameByGuid[col.GUID] = col.Name;
+                var colKey = stripCast(norm(col.Name));
+                if (colGuidByColName.ContainsKey(colKey)) ambiguousColNames.Add(colKey);
+                else colGuidByColName[colKey] = col.GUID;
             }
 
         var badRefs = new System.Collections.Generic.List<string>();
+        var mismatchedRefs = new System.Collections.Generic.List<string>();
         foreach (var mc in doc.Descendants("MetaColumnGUID").ToList())
         {
             var val = mc.Value == null ? "" : mc.Value.Trim();
+            var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
             if (!validColGuids.Contains(val))
             {
-                var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
                 string realGuid;
                 if (refName != null && colGuidByName.TryGetValue(norm(refName), out realGuid))
                 {
@@ -90,6 +101,21 @@
                 {
                     badRefs.Add(refName != null ? $"'{refName.Trim()}' (supplied GUID '{val}')" : $"GUID '{val}'");
                     continue;
+                }
+            }
+            else if (!metaSource.IsNoSQL && !string.IsNullOrWhiteSpace(refName))
+            {
+                // A valid GUID copied from another column: the element shows the wrong column under the expected title.
+                // Names are compared without their SQL cast suffix (e.g. 'fr.v_table.name::citext').
+                var nameKey = stripCast(norm(refName));
+                var guidColKey = stripCast(norm(colNameByGuid[val]));
+                if (nameKey != guidColKey)
+                {
+                    string namedGuid;
+                    if (!ambiguousColNames.Contains(nameKey) && colGuidByColName.TryGetValue(nameKey, out namedGuid))
+                        mismatchedRefs.Add($"'{refName.Trim()}' has the MetaColumnGUID '{val}' of column '{colNameByGuid[val]}' (the GUID of '{refName.Trim()}' is '{namedGuid}')");
+                    else if (nameKey.Contains('.') && guidColKey.Contains('.') && nameKey.Substring(0, nameKey.LastIndexOf('.')) == guidColKey.Substring(0, guidColKey.LastIndexOf('.')))
+                        mismatchedRefs.Add($"'{refName.Trim()}' is not a column of the source, its MetaColumnGUID '{val}' is the one of column '{colNameByGuid[val]}' (check in which table the column really is)");
                 }
             }
 
@@ -113,6 +139,12 @@
             tool.ExecResult = "Error: these MetaColumnGUID values are not columns of source '" + metaSource.Name +
                 "': " + string.Join("; ", badRefs) +
                 ". Call datasource_get_detail and copy the exact column GUIDs - never invent or sequence GUIDs.";
+            return;
+        }
+        if (mismatchedRefs.Count > 0)
+        {
+            tool.ExecResult = "Error: the <Name> and the <MetaColumnGUID> designate different columns: " + string.Join("; ", mismatchedRefs) +
+                ". Each element and restriction must use the GUID of its own column from datasource_get_detail. Fix the XML and call report_create_from_xml again.";
             return;
         }
 
@@ -143,19 +175,90 @@
         var valueLessOperators  = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase)
             { "IsNull", "IsNotNull", "IsEmpty", "IsNotEmpty" };
 
+        // Enumerated lists defined in the report itself (<ReportSource><MetaData><Enums><MetaEnum>), referenced by
+        // <EnumGUIDRE> (restriction) or <EnumGUIDEL> (element). A column enum of the data source is inherited without reference.
+        var reportEnums = doc.Descendants("ReportSource").Elements("MetaData").Elements("Enums").Elements("MetaEnum").ToList();
+        var reportEnumGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        foreach (var re in reportEnums)
+        {
+            var reGuid = re.Element("GUID") == null ? "" : re.Element("GUID").Value.Trim();
+            var reName = re.Element("Name") == null ? "" : re.Element("Name").Value.Trim();
+            var reSql  = re.Element("Sql") == null ? "" : re.Element("Sql").Value.Trim();
+            var reDynamic = re.Element("IsDynamic") != null && re.Element("IsDynamic").Value.Trim().ToLowerInvariant() == "true";
+            var reHasValues = re.Element("Values") != null && re.Element("Values").Elements("MetaEV").Any();
+            if (string.IsNullOrEmpty(reGuid) || string.IsNullOrEmpty(reName))
+                { restrictionErrors.Add("a report enumerated list <MetaEnum> must have a <GUID> and a <Name>"); continue; }
+            reportEnumGuids.Add(reGuid);
+            if (reDynamic && string.IsNullOrEmpty(reSql))
+                { restrictionErrors.Add($"enumerated list '{reName}': a dynamic list (<IsDynamic>true</IsDynamic>) needs a <Sql> select statement"); continue; }
+            if (!reDynamic && !reHasValues)
+                { restrictionErrors.Add($"enumerated list '{reName}': a static list needs <Values><MetaEV><Id>…</Id><Val>…</Val></MetaEV></Values>, or set <IsDynamic>true</IsDynamic> with a <Sql>"); continue; }
+            if (reDynamic && !metaSource.IsNoSQL)
+            {
+                // Check the SQL now: a failing list shows an empty prompt at execution
+                var check = MetaEnum.Create();
+                check.Name = reName;
+                check.IsDynamic = true;
+                check.Sql = reSql;
+                check.Source = metaSource;
+                check.RefreshEnum();
+                if (!string.IsNullOrEmpty(check.Error))
+                    restrictionErrors.Add($"enumerated list '{reName}': the <Sql> failed: {check.Error}");
+                else
+                    tool.CurrentToolCall.LogMessage($"Enumerated list '{reName}': {check.Values.Count} value(s) loaded");
+            }
+        }
+
+        foreach (var el in doc.Descendants("ReportElement").Where(e => e.Element("EnumGUIDEL") != null && !string.IsNullOrWhiteSpace(e.Element("EnumGUIDEL").Value)))
+        {
+            var g = el.Element("EnumGUIDEL").Value.Trim();
+            if (!reportEnumGuids.Contains(g) && !metaSource.MetaData.Enums.Any(e => string.Equals(e.GUID, g, StringComparison.OrdinalIgnoreCase)))
+                restrictionErrors.Add($"element '{(string)el.Element("Name")}': <EnumGUIDEL> '{g}' matches no enumerated list of the report or of the data source");
+        }
+
         foreach (var rest in doc.Descendants("ReportRestriction"))
         {
             var colGuid = rest.Element("MetaColumnGUID") == null ? null : rest.Element("MetaColumnGUID").Value.Trim();
             MetaColumn rcol = null;
             if (colGuid == null || !colByGuid.TryGetValue(colGuid, out rcol)) continue;
-            var menum = string.IsNullOrEmpty(rcol.EnumGUID) ? null : metaSource.MetaData.Enums.FirstOrDefault(e => e.GUID == rcol.EnumGUID);
-            if (menum == null) continue;
 
             var restName = rest.Element("Name") != null && !string.IsNullOrEmpty(rest.Element("Name").Value) ? rest.Element("Name").Value.Trim() : rcol.Name;
             var restOp   = rest.Element("Operator") != null ? rest.Element("Operator").Value.Trim() : "Equal";
             var enumEls  = rest.Element("EnumValues") == null ? new System.Collections.Generic.List<XElement>() : rest.Element("EnumValues").Elements("string").ToList();
             var hasVal1  = rest.Element("Value1") != null && !string.IsNullOrEmpty(rest.Element("Value1").Value);
             var prompted = rest.Element("Prompt") != null && rest.Element("Prompt").Value.Trim() != "None";
+
+            // Enumerated list of the restriction: the report list referenced by <EnumGUIDRE> wins over the column list of the data source
+            MetaEnum menum = null;
+            var isEnum = false;
+            var enumRef = rest.Element("EnumGUIDRE") == null ? "" : rest.Element("EnumGUIDRE").Value.Trim();
+            if (!string.IsNullOrEmpty(enumRef))
+            {
+                if (reportEnumGuids.Contains(enumRef)) isEnum = true;
+                else
+                {
+                    menum = metaSource.MetaData.Enums.FirstOrDefault(e => string.Equals(e.GUID, enumRef, StringComparison.OrdinalIgnoreCase));
+                    if (menum == null)
+                    {
+                        restrictionErrors.Add($"'{restName}': <EnumGUIDRE> '{enumRef}' matches no enumerated list: define it under <ReportSource><MetaData><Enums>");
+                        continue;
+                    }
+                    isEnum = true;
+                }
+            }
+            else if (!string.IsNullOrEmpty(rcol.EnumGUID))
+            {
+                menum = metaSource.MetaData.Enums.FirstOrDefault(e => e.GUID == rcol.EnumGUID);
+                isEnum = menum != null;
+            }
+
+            if (!isEnum)
+            {
+                // <EnumValues> on a column without enumerated list are ignored: the prompt is a text box and the filter is never applied
+                if (enumEls.Count > 0)
+                    restrictionErrors.Add($"'{restName}': the column has no enumerated list, so <EnumValues> is ignored (the prompt stays a text box and the filter is not applied). For a drop-down list, define an enumerated list in the report (<ReportSource><MetaData><Enums>) and reference it with <EnumGUIDRE>; otherwise use <Value1>");
+                continue;
+            }
 
             if (valueLessOperators.Contains(restOp)) continue;
 
@@ -178,7 +281,7 @@
             // EnumValues must contain the enum value ids: map display labels back to their id,
             // and warn about values unknown to the enumerated list (dynamic lists may be stale,
             // so an unknown value is not a hard error).
-            if (enumEls.Count > 0 && menum.Values.Count > 0)
+            if (enumEls.Count > 0 && menum != null && menum.Values.Count > 0)
             {
                 foreach (var vEl in enumEls)
                 {
@@ -221,6 +324,51 @@
             return;
         }
 
+        // A Map view needs a latitude and a longitude column: set by the map_latitude/map_longitude parameters,
+        // or found from the element names. Otherwise the view fails at execution.
+        var mapErrors = new System.Collections.Generic.List<string>();
+        foreach (var mapView in doc.Descendants("ReportView").Where(v => (string)v.Element("TemplateName") == "Map"))
+        {
+            Func<string, string> mapParam = n => mapView.Element("Parameters") == null ? null : mapView.Element("Parameters").Elements("Parameter")
+                .Where(p => (string)p.Element("Name") == n).Select(p => (string)p.Element("Value")).FirstOrDefault();
+            var elementNames = doc.Descendants("ReportElement").SelectMany(e => new[] {
+                (string)e.Element("DisplayName"), (string)e.Element("Name"),
+                e.Element("MetaColumnGUID") != null && colByGuid.ContainsKey(e.Element("MetaColumnGUID").Value.Trim()) ? colByGuid[e.Element("MetaColumnGUID").Value.Trim()].DisplayName : null })
+                .Where(n => !string.IsNullOrEmpty(n)).ToList();
+            foreach (var coord in new[] { "latitude", "longitude" })
+            {
+                if (!string.IsNullOrEmpty(mapParam("map_" + coord))) continue;
+                if (!elementNames.Any(n => n.ToLowerInvariant().Contains(coord)))
+                    mapErrors.Add($"the Map view needs a {coord} column: add it as a Row element (its name must contain '{coord}', or set the 'map_{coord}' parameter to its display name). If the source has no coordinates, do not add a Map view and tell the user that a map is not possible");
+            }
+        }
+        if (mapErrors.Count > 0)
+        {
+            tool.ExecResult = "Error: " + string.Join("; ", mapErrors.Distinct()) + ".";
+            return;
+        }
+
+        // Default record limit of the reports created by the AI agent: a model without a positive limit gets
+        // the default, unless the user explicitly asked for no limit (no_record_limit=true).
+        var limitedModels = 0;
+        if (!noRecordLimit)
+        {
+            foreach (var model in doc.Descendants("ReportModel"))
+            {
+                var maxEl = model.Element("MaxNumberOfRecords");
+                int maxVal;
+                if (maxEl != null && int.TryParse(maxEl.Value.Trim(), out maxVal) && maxVal > 0) continue;
+                if (maxEl != null) maxEl.Value = defaultMaxNumberOfRecords.ToString();
+                else
+                {
+                    var anchor = model.Element("Alias") ?? model.Element("SourceGUID") ?? model.Element("Name") ?? model.Element("GUID");
+                    if (anchor != null) anchor.AddAfterSelf(new XElement("MaxNumberOfRecords", defaultMaxNumberOfRecords));
+                    else model.AddFirst(new XElement("MaxNumberOfRecords", defaultMaxNumberOfRecords));
+                }
+                limitedModels++;
+            }
+        }
+
         // Only regenerate internal cross-reference GUIDs.
         // MetaSourceGUID and MetaColumnGUID must be preserved — they reference
         // actual repository metadata objects and must be supplied correctly by the caller.
@@ -246,6 +394,14 @@
             var val = el.Value?.Trim();
             if (!string.IsNullOrEmpty(val) && guidMap.TryGetValue(val, out var rep))
                 el.Value = rep;
+        }
+
+        // References to an enumerated list defined in the report follow its regenerated GUID
+        // (a reference to a data source list is not in the map and is kept as is).
+        foreach (var el in doc.Descendants().Where(e => e.Name.LocalName == "EnumGUIDRE" || e.Name.LocalName == "EnumGUIDEL").ToList())
+        {
+            var val = el.Value?.Trim();
+            if (!string.IsNullOrEmpty(val) && guidMap.TryGetValue(val, out var rep)) el.Value = rep;
         }
 
         // Rewrite GUID references inside <Restriction> and <AggregateRestriction> text.
@@ -275,6 +431,8 @@
         File.WriteAllText(fullPath, sb.ToString(), System.Text.Encoding.UTF8);
 
         tool.ExecResult = $"Created: {path}";
+        if (limitedModels > 0)
+            tool.ExecResult += $"\r\nNote: the result is limited to {defaultMaxNumberOfRecords} records (default limit of the reports created by the AI agent, <MaxNumberOfRecords>). Mention it to the user.";
         if (restrictionWarnings.Count > 0)
             tool.ExecResult += "\r\nWarning: " + string.Join("; ", restrictionWarnings) +
                 ". Verify the values with database_get_sample_values and recreate the report with overwrite=true if they are wrong.";
