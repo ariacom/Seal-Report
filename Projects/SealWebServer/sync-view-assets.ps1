@@ -16,7 +16,7 @@
       - css\seal.css                                                          shared first-party style
 
     Files that exist only in one tree are left untouched (e.g. wwwroot\js\swi-*.js and the jstree
-    library are web-UI only; Repository\Views\css\site-colors.css and js\custom.js are report only).
+    library and wwwroot\css\site-colors.css are web-UI only; Repository\Views\js\custom.js is report only).
 #>
 $ErrorActionPreference = "Stop"
 $scriptDir = Split-Path -Parent $MyInvocation.MyCommand.Path

@@ -314,7 +314,7 @@
     <string>Vietnamese (Vietnam)</string>
   </WebCultures>
   <CssFiles />
-  <WebCssFiles />
+  <WebCssFiles>site-colors.css</WebCssFiles>
   <ScriptFiles />
   <WebScriptFiles />
   <AlternateTempDirectory />

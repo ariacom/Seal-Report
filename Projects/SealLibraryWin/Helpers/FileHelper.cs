@@ -212,12 +212,16 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Copy the files of a directory to a destination, optionally recursive, with a search pattern and a pattern of file name starts to skip
+        /// Copy the files of a directory to a destination, optionally recursive, with a search pattern and a pattern of file name starts to skip.
+        /// 'keepExistingFiles' is a list of file names (separated by ';', case insensitive, applied to sub-directories too)
+        /// that are copied only when they do not exist yet in the destination, so a customized copy survives a re-publish
+        /// (e.g. site-colors.css).
         /// </summary>
-        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*", string skipStartsPattern = "")
+        public static void CopyDirectory(string source, string destination, bool recursive, ReportExecutionLog log = null, string searchPattern = "*", string skipStartsPattern = "", string keepExistingFiles = "")
         {
             if (log != null) log.LogMessage("Copying directory '{0}' to '{1}'", source, destination);
 
+            var keepExisting = (keepExistingFiles ?? "").Split(new[] { ';', '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(i => i.Trim()).ToList();
             if (!Directory.Exists(destination)) Directory.CreateDirectory(destination);
             foreach (string file in Directory.GetFiles(source, searchPattern))
             {
@@ -226,6 +230,11 @@ namespace Seal.Helpers
                     if (!string.IsNullOrEmpty(skipStartsPattern) && Path.GetFileName(file).ToLower().StartsWith(skipStartsPattern.ToLower())) continue;
 
                     var destinationFile = Path.Combine(destination, Path.GetFileName(file));
+                    if (keepExisting.Exists(i => i.Equals(Path.GetFileName(file), StringComparison.OrdinalIgnoreCase)) && File.Exists(destinationFile))
+                    {
+                        if (log != null) log.LogMessage("Keep existing '{0}'", destinationFile);
+                        continue;
+                    }
                     if (log != null) log.LogMessage("Copy '{0}' to '{1}'", file, destinationFile);
                     File.Copy(file, destinationFile, true);
                 }
@@ -241,7 +250,7 @@ namespace Seal.Helpers
             {
                 foreach (string directory in Directory.GetDirectories(source))
                 {
-                    CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), recursive, log, searchPattern);
+                    CopyDirectory(directory, Path.Combine(destination, Path.GetFileName(directory)), recursive, log, searchPattern, "", keepExistingFiles);
                 }
             }
 

@@ -157,9 +157,10 @@ New parameter values may require a restart of the Report Designer or the Web Ser
 
                 var currentConfig = Path.Combine(publicationDirectory, "appsettings.json");
 
-                //Copy installation directory (appsettings.json is handled below so an existing, possibly customized, config is preserved on re-publish)
+                //Copy installation directory (appsettings.json is handled below so an existing, possibly customized, config is preserved on re-publish;
+                //an existing wwwroot\css\site-colors.css, the customer site colors, is kept too)
                 log.Log("Copying files from '{0}' to '{1}'", sourceDirectory, publicationDirectory);
-                FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true, null, "*", "appsettings.json");
+                FileHelper.CopyDirectory(sourceDirectory, publicationDirectory, true, null, "*", "appsettings.json", "site-colors.css");
 
                 //Create the config only if there is none yet (re-publishing keeps the existing one)
                 if (!File.Exists(currentConfig))
