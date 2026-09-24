@@ -88,7 +88,7 @@ namespace RazorEngine.Templating
         /// <summary>
         /// Constructor from the compiler error details
         /// </summary>
-        public RazorEngineCompilerError(string errorText, string fileName, int line, int column, string errorNumber, bool isWarning)
+        public RazorEngineCompilerError(string errorText, string fileName, int line, int column, string errorNumber, bool isWarning, int templateLine = 0)
         {
             ErrorText = errorText;
             FileName = fileName;
@@ -96,6 +96,7 @@ namespace RazorEngine.Templating
             Column = column;
             ErrorNumber = errorNumber;
             IsWarning = isWarning;
+            TemplateLine = templateLine;
         }
 
         /// <summary>
@@ -107,13 +108,17 @@ namespace RazorEngine.Templating
         /// </summary>
         public string FileName { get; }
         /// <summary>
-        /// Line number of the error
+        /// Line number of the error in the generated C# code (1-based)
         /// </summary>
         public int Line { get; }
         /// <summary>
-        /// Column number of the error
+        /// Column number of the error (1-based)
         /// </summary>
         public int Column { get; }
+        /// <summary>
+        /// Line number of the error in the Razor script given to the engine (1-based, from the #line pragmas of the generated code), 0 if unknown
+        /// </summary>
+        public int TemplateLine { get; }
         /// <summary>
         /// Compiler error number (e.g. CS0103)
         /// </summary>

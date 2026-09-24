@@ -65,7 +65,6 @@ namespace Seal.Forms
             textBox.SelectionEnd = textBox.CurrentPosition;
             textBox.Focus();
 
-            if (end == textBox.CurrentPosition && end < textBox.Text.Length - 1) end++;
             textBox.IndicatorFillRange(textBox.CurrentPosition, end - textBox.CurrentPosition);
             for (int i = textBox.CurrentPosition; i < end; i++)
             {
@@ -107,38 +106,38 @@ namespace Seal.Forms
 
                 RazorHelper.Compile(script, objectForCheckSyntax.GetType(), Guid.NewGuid().ToString());
             }
-            catch (TemplateParsingException ex)
-            {
-                setIndicatorAppearance(textBox, NUM);
-
-                if (ex.Line < textBox.Lines.Count)
-                {
-                    setRazorError(textBox, compilationErrors, textBox.Lines[ex.Line], ex.Column, ex.Message);
-                    error = string.Format("Parsing error:\r\n{0}", ex.Message);
-                    if (ex.InnerException != null) error += "\r\n" + ex.InnerException.Message;
-                }
-            }
             catch (TemplateCompilationException ex)
             {
+                //Note: Razor parsing errors are also reported as TemplateCompilationException by RazorEngineCore
                 setIndicatorAppearance(textBox, NUM);
                 setIndicatorAppearance2(textBox, NUM2);
                 Line firstErrorLine = null;
+                var sourceLines = ex.CompilationData.SourceCode.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
                 foreach (var err in ex.CompilerErrors.OrderBy(i => i.Line))
                 {
-                    var sourceLines = ex.CompilationData.SourceCode.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
-                    if (err.Line > 0 && err.Line < sourceLines.Length)
+                    //err.Line is 1-based (Roslyn line + 1, see RazorCoreEngine), sourceLines is 0-based
+                    if (err.Line > 0 && err.Line <= sourceLines.Length)
                     {
-                        var pattern = sourceLines[err.Line].Trim();
-                        foreach (var line in textBox.Lines)
+                        //Text of the faulty line in the generated code: Razor keeps the indentation of the script, so it matches the editor line
+                        var pattern = sourceLines[err.Line - 1].Trim();
+                        var lines = new List<Line>();
+                        //1) Exact line given by the #line pragmas of the generated code (valid when the editor shows the compiled script,
+                        //which is the common case: the usings appended by GetFullScript do not shift the lines). The text is checked to be safe
+                        //(e.g. the editor shows only a function of the whole script, or the header line count of the engine has changed).
+                        if (err.TemplateLine > 0 && err.TemplateLine <= textBox.Lines.Count)
                         {
-                            var line2 = line.Text.Trim();
-                            if (line2 == pattern)
-                            {
-                                textBox.IndicatorCurrent = (err.IsWarning ? NUM2 : NUM);
-                                setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
+                            var line = textBox.Lines[err.TemplateLine - 1];
+                            if (line.Text.Trim() == pattern) lines.Add(line);
+                        }
+                        //2) Fallback: all the editor lines having the same text (may highlight several lines, e.g. for a '}')
+                        if (lines.Count == 0) lines.AddRange(textBox.Lines.Where(i => i.Text.Trim() == pattern));
 
-                                if (!err.IsWarning && firstErrorLine == null) firstErrorLine = line;
-                            }
+                        foreach (var line in lines)
+                        {
+                            textBox.IndicatorCurrent = (err.IsWarning ? NUM2 : NUM);
+                            setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
+
+                            if (!err.IsWarning && firstErrorLine == null) firstErrorLine = line;
                         }
                     }
                 }

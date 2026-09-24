@@ -149,6 +149,7 @@ namespace Seal.Helpers
                 // 2) compile fresh, referencing every currently loaded assembly (== UseCurrentAssembliesReferenceResolver)
                 RazorHelper.LoadRazorAssemblies();
                 IRazorEngineCompiledTemplate<SealCoreTemplateBase> compiled;
+                int headerLines = 0;
                 try
                 {
                     compiled = NoSyncContext(() => _engine.Compile<SealCoreTemplateBase>(script, b =>
@@ -158,6 +159,9 @@ namespace Seal.Helpers
                         b.AddUsing("System.Collections.Generic");
                         b.AddUsing("System.Linq");
                         b.AddUsing("System.Threading.Tasks");
+                        // RazorEngineCore prepends '@inherits ...' plus one '@using' per DefaultUsings entry to the
+                        // template before parsing it: the #line pragmas of the generated code are shifted by that much.
+                        headerLines = 1 + b.Options.DefaultUsings.Count;
 
                         var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
                         foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
@@ -171,7 +175,7 @@ namespace Seal.Helpers
                 }
                 catch (RazorEngineCompilationException ex)
                 {
-                    throw ToTemplateCompilationException(ex, script);
+                    throw ToTemplateCompilationException(ex, headerLines);
                 }
 
                 _cache[key] = compiled;
@@ -198,22 +202,34 @@ namespace Seal.Helpers
         /// <summary>
         /// Map a RazorEngineCore compilation failure onto the fork's TemplateCompilationException so that
         /// every existing catch site (Helper.GetExceptionMessage, ReportView, SecurityProvider, user scripts, ...) keeps working.
+        /// 'headerLines' is the number of directive lines RazorEngineCore prepended to the template (0 if unknown):
+        /// it is used to map the error back to a line of the script given to Compile (RazorEngineCompilerError.TemplateLine).
         /// </summary>
-        static Exception ToTemplateCompilationException(RazorEngineCompilationException ex, string script)
+        static Exception ToTemplateCompilationException(RazorEngineCompilationException ex, int headerLines)
         {
             try
             {
                 var errors = (ex.Errors ?? new List<Microsoft.CodeAnalysis.Diagnostic>())
                     .Select(d =>
                     {
+                        // Line/Column: position in the generated C# code (CompilationData.SourceCode)
                         var span = d.Location.GetLineSpan();
+                        // TemplateLine: position in the Razor template, resolved by Roslyn through the #line pragmas
+                        // of the generated code, minus the directives prepended by RazorEngineCore
+                        int templateLine = 0;
+                        if (headerLines > 0)
+                        {
+                            var mapped = d.Location.GetMappedLineSpan();
+                            if (mapped.IsValid && mapped.HasMappedPath) templateLine = Math.Max(0, mapped.StartLinePosition.Line + 1 - headerLines);
+                        }
                         return new RazorEngine.Templating.RazorEngineCompilerError(
                             d.GetMessage(),
                             span.Path ?? "",
                             span.StartLinePosition.Line + 1,
                             span.StartLinePosition.Character + 1,
                             d.Id,
-                            d.Severity != Microsoft.CodeAnalysis.DiagnosticSeverity.Error);
+                            d.Severity != Microsoft.CodeAnalysis.DiagnosticSeverity.Error,
+                            templateLine);
                     })
                     .ToList();
                 if (errors.Count == 0)
