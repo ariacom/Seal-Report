@@ -1,0 +1,73 @@
+/* Site colors of the Seal Report Web Report Server (banner, folder tree and primary buttons).
+   Loaded through the 'Web CSS Files' server configuration (Configuration.xml, WebCssFiles)
+   after the Seal Report stylesheets, so the rules below override the defaults.
+   Edit the colors to adapt the site: no rebuild or restart needed, reload the page.
+   The setup and the Web Server publication never overwrite an existing site-colors.css.
+   Palette derived from the primary color #15292f (site-colors-gen.ps1 -Primary #15292f):
+   border #1d3841 | hover #254852 | hover border #305d6b | link hover #2d5764 | selection tint #9fa7aa */
+
+/* Banner background */
+#bar_top {
+    background-color: #15292f !important;
+}
+
+/* Active tab in the banner (Report / Information / Messages) */
+#bar_top .nav-link.sr_tab.active {
+    background-color: #254852 !important;
+}
+
+/* Banner texts and icons */
+.navbar-white {
+    color: white !important;
+}
+
+/* Banner texts and icons on hover */
+.navbar-white:hover {
+    color: #d9d9d9 !important;
+}
+
+/* Selected folder in the folder tree */
+.swi-tree-node.selected {
+    background: #9fa7aa !important;
+}
+
+/* Primary buttons (reports menu button, toolbar and dialog buttons): normal and disabled state.
+   The background needs !important to win over the dialog-specific rules of sealweb.css. */
+.btn-primary, .btn-primary:disabled, .btn-primary.disabled {
+    background-color: #15292f !important;
+    border-color: #1d3841;
+}
+
+/* Primary buttons on hover, focus or when pressed */
+.btn-primary:hover, .btn-primary:focus, .btn-primary:active, .btn-primary.active, .show > .btn-primary.dropdown-toggle {
+    background-color: #254852 !important;
+    border-color: #305d6b;
+}
+
+/* Outline primary buttons */
+.btn-outline-primary {
+    color: #15292f !important;
+    border-color: #15292f;
+}
+
+.btn-outline-primary:hover, .btn-outline-primary:focus, .btn-outline-primary:active, .btn-outline-primary.active {
+    background-color: #15292f !important;
+    border-color: #15292f;
+    color: white !important;
+}
+
+/* Table pagination: current page */
+.pagination .page-item.active .page-link {
+    background-color: #15292f !important;
+    border-color: #15292f !important;
+    color: white;
+}
+
+/* Table pagination: other page links and their hover color */
+.pagination .page-item:not(.disabled):not(.active) .page-link {
+    color: #15292f;
+}
+
+.pagination .page-item:not(.disabled):not(.active) .page-link:hover {
+    color: #2d5764;
+}
