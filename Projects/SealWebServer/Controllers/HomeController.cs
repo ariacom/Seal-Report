@@ -57,6 +57,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Translate text using the current Repository Locale
         /// </summary>
+        [NonAction] // helper, not a routable MVC action (CodeQL: its parameter would be a remote source)
         public string Translate(string reference)
         {
             if (Repository == null) return reference;

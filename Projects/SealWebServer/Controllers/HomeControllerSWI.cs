@@ -1942,7 +1942,8 @@ namespace SealWebServer.Controllers
             }
         }
 
-        public void LogMessage(string message, params object[] args)
+        // Explicit interface implementation: not public, so not a routable MVC action
+        void ReportExecutionLog.LogMessage(string message, params object[] args)
         {
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, message);
         }
