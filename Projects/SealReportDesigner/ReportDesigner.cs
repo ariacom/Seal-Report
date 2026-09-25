@@ -694,13 +694,18 @@ namespace Seal
                 init();
                 selectAfterLoad();
 
-                if (!string.IsNullOrEmpty(_report.LoadErrors))
+                if (!string.IsNullOrEmpty(_report.LoadErrors) || !string.IsNullOrEmpty(_report.UpgradeWarnings))
                 {
-                    MessageBox.Show(string.Format("Error loading the report:\r\n{0}", _report.LoadErrors), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
-                }
-                if (!string.IsNullOrEmpty(_report.UpgradeWarnings))
-                {
-                    MessageBox.Show(_report.UpgradeWarnings, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    //The report may be opened at startup (MRU or command line): close the TopMost splash screen before showing a modal dialog, otherwise the dialog is hidden behind it
+                    _isInitialized = true;
+                    if (!string.IsNullOrEmpty(_report.LoadErrors))
+                    {
+                        MessageBox.Show(string.Format("Error loading the report:\r\n{0}", _report.LoadErrors), "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
+                    if (!string.IsNullOrEmpty(_report.UpgradeWarnings))
+                    {
+                        MessageBox.Show(_report.UpgradeWarnings, "Warning", MessageBoxButtons.OK, MessageBoxIcon.Warning);
+                    }
                 }
             }
             if (_reportViewer != null && _reportViewer.Visible) _reportViewer.Close();

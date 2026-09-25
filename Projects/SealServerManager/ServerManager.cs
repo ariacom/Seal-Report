@@ -131,6 +131,8 @@ namespace Seal
             }
             catch (Exception ex)
             {
+                //Close the TopMost splash screen before showing a modal dialog, otherwise the dialog is hidden behind it
+                _isInitialized = true;
                 MessageBox.Show(ex.Message, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
             }
 
