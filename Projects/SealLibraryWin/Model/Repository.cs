@@ -554,23 +554,25 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Creates a basic repository
+        /// Creates a basic repository from the configured repository path, the first one created becomes the default Instance
         /// </summary>
         public static Repository Create()
         {
-            Repository result = null;
+            var result = Create(FindRepository());
+            //Assign default instance
+            if (_instance == null) _instance = result;
+            return result;
+        }
 
-            string path = FindRepository();
-            if (Directory.Exists(path))
-            {
-                result = new Repository();
-                result.Init(path);
+        /// <summary>
+        /// Creates a basic repository from a given path. The default Instance is not assigned: several repositories can be handled by the same process.
+        /// </summary>
+        public static Repository Create(string path)
+        {
+            if (string.IsNullOrEmpty(path) || !Directory.Exists(path)) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file or copy your repository files in '{1}'.", string.IsNullOrEmpty(path) ? RepositoryConfigurationPath : path, Repository.DefaultRepository));
 
-                //Assign default instance
-                if (_instance == null) _instance = result;
-            }
-            if (result == null) throw new Exception(string.Format("Unable to find or create a Repository from '{0}'. Please check your configuration file or copy your repository files in '{1}'.", RepositoryConfigurationPath, Repository.DefaultRepository));
-
+            var result = new Repository();
+            result.Init(path);
             return result;
         }
 
@@ -580,11 +582,11 @@ namespace Seal.Model
         public Repository CreateFast()
         {
             //check if some files have changed, in this case -> full reload
-            if (MustReload()) return Create();
+            if (MustReload()) return Create(RepositoryPath);
 
             //Fast load
             Repository result = null;
-            string path = FindRepository();
+            string path = RepositoryPath;
             if (Directory.Exists(path))
             {
                 result = new Repository();
