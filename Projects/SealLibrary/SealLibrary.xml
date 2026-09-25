@@ -13618,7 +13618,12 @@
         </member>
         <member name="M:Seal.Model.Repository.Create">
             <summary>
-            Creates a basic repository
+            Creates a basic repository from the configured repository path, the first one created becomes the default Instance
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.Create(System.String)">
+            <summary>
+            Creates a basic repository from a given path. The default Instance is not assigned: several repositories can be handled by the same process.
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.CreateFast">

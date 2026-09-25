@@ -31,7 +31,8 @@
 		<DefineConstants></DefineConstants>
 		<PlatformTarget>x64</PlatformTarget>
 		<DocumentationFile>C:\_dev\Seal-Report\Projects\SealWebServer\SealWebServer.xml</DocumentationFile>
-		<NoWarn>CA1416</NoWarn>
+		<!-- CS1591/CS1573: the XML documentation file only covers the documented members (controllers, models, startup are not) -->
+		<NoWarn>CA1416;CS1591;CS1573</NoWarn>
 	</PropertyGroup>
 
 	<PropertyGroup Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
