@@ -7,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Diagnostics;
+using System.Globalization;
 using System.Text;
 using System.Web;
 
@@ -62,9 +63,23 @@ namespace Seal.Model
         /// </summary>
         public object Tag3;
 
+        /// <summary>
+        /// If set (>= 0), the culture invariant value of this column is appended as a last element to each row returned by GetLoadTableData (server pagination).
+        /// Used by view templates or extensions to identify a row in the browser (e.g. a primary key), the column may be hidden.
+        /// </summary>
+        public int RowKeyColumn = -1;
+
         private string _lastSearch = "";
         private string _lastSort = "";
         private List<ResultCell[]> _filteredLines = null;
+
+        /// <summary>
+        /// Clears the cache used by the server pagination (GetLoadTableData), to call after the Lines have been modified
+        /// </summary>
+        public void InvalidateLoadCache()
+        {
+            _filteredLines = null;
+        }
 
         /// <summary>
         /// Function to return partial table data to the report result
@@ -200,6 +215,11 @@ namespace Seal.Model
                     var cellValue = cell.HTMLValue;
                     var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(view, cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
                     sb.AppendFormat("\"{0}\",", fullValue);
+                }
+                if (RowKeyColumn >= 0 && RowKeyColumn < line.Length)
+                {
+                    var keyValue = line[RowKeyColumn].Value;
+                    sb.AppendFormat("\"{0}\",", HttpUtility.JavaScriptStringEncode(keyValue == null || keyValue == DBNull.Value ? "" : Convert.ToString(keyValue, CultureInfo.InvariantCulture)));
                 }
                 sb.Length = sb.Length - 1;
                 sb.Append("]");

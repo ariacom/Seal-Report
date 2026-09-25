@@ -1466,9 +1466,12 @@
             Returns the content of a file as a string
             </summary>
         </member>
-        <member name="M:Seal.Helpers.FileHelper.CopyDirectory(System.String,System.String,System.Boolean,Seal.Model.ReportExecutionLog,System.String,System.String)">
+        <member name="M:Seal.Helpers.FileHelper.CopyDirectory(System.String,System.String,System.Boolean,Seal.Model.ReportExecutionLog,System.String,System.String,System.String)">
             <summary>
-            Copy the files of a directory to a destination, optionally recursive, with a search pattern and a pattern of file name starts to skip
+            Copy the files of a directory to a destination, optionally recursive, with a search pattern and a pattern of file name starts to skip.
+            'keepExistingFiles' is a list of file names (separated by ';', case insensitive, applied to sub-directories too)
+            that are copied only when they do not exist yet in the destination, so a customized copy survives a re-publish
+            (e.g. site-colors.css).
             </summary>
         </member>
         <member name="M:Seal.Helpers.FileHelper.FtpCopyDirectory(FluentFTP.FtpClient,System.String,System.String,System.Boolean,Seal.Model.ReportExecutionLog)">
@@ -2304,10 +2307,12 @@
             Run the compiled template cached under 'key' with the given model and ViewBag, and return the rendered result
             </summary>
         </member>
-        <member name="M:Seal.Helpers.RazorCoreEngine.ToTemplateCompilationException(RazorEngineCore.RazorEngineCompilationException,System.String)">
+        <member name="M:Seal.Helpers.RazorCoreEngine.ToTemplateCompilationException(RazorEngineCore.RazorEngineCompilationException,System.Int32)">
             <summary>
             Map a RazorEngineCore compilation failure onto the fork's TemplateCompilationException so that
             every existing catch site (Helper.GetExceptionMessage, ReportView, SecurityProvider, user scripts, ...) keeps working.
+            'headerLines' is the number of directive lines RazorEngineCore prepended to the template (0 if unknown):
+            it is used to map the error back to a line of the script given to Compile (RazorEngineCompilerError.TemplateLine).
             </summary>
         </member>
         <member name="T:Seal.Helpers.CustomGetTableCreateCommand">
@@ -7139,6 +7144,12 @@
             Current Request that can be used in the Navigation Script (e.g. getting a file upload) 
             </summary>
         </member>
+        <member name="F:Seal.Model.NavigationLink.ScriptHandler">
+            <summary>
+            Optional server handler of a Report Script link: if set, it is called instead of the Report or Element Navigation Script and its result is returned to the browser.
+            Used by view templates or extensions to process custom requests sent with the navigation parameters.
+            </summary>
+        </member>
         <member name="T:Seal.Model.OutputDevice">
             <summary>
             Abstract Class to implement an OutputDevice
@@ -8351,6 +8362,12 @@
         <member name="M:Seal.Model.Report.GetReportNavigationScriptLink(System.String,System.String)">
             <summary>
             Get the hyperlink string to execute the report navigation script.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.GetReportNavigationScriptHandlerLink(System.Func{Seal.Model.NavigationLink,System.String},System.String)">
+            <summary>
+            Register a Report Script link processed by a server handler instead of the report navigation script and returns its hyperlink string (e.g. 'RS:guid').
+            The browser posts the link with the navigation parameters to 'ActionNavigate', the handler result is returned as JSON.
             </summary>
         </member>
         <member name="M:Seal.Model.Report.GetReportNavigationFileDownloadLink(System.String,System.String)">
@@ -13754,6 +13771,16 @@
             Dynamic assemblies folder for Windows applications: holds the compiled assemblies.
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.ExtensionsNetFolder">
+            <summary>
+            Extension assemblies built against SealLibrary (Web Server, .NET runtime), loaded at the repository initialization.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.ExtensionsWinFolder">
+            <summary>
+            Extension assemblies built against SealLibraryWin (Windows applications), loaded at the repository initialization.
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.RazorCacheFolder">
             <summary>
             Razor cache parent folder. Compiled assemblies are stored in the Net/Win sub-folders.
@@ -14794,6 +14821,17 @@
         <member name="F:Seal.Model.ResultTable.Tag3">
             <summary>
             Custom Tag the can be used at execution time to store any object
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ResultTable.RowKeyColumn">
+            <summary>
+            If set (>= 0), the culture invariant value of this column is appended as a last element to each row returned by GetLoadTableData (server pagination).
+            Used by view templates or extensions to identify a row in the browser (e.g. a primary key), the column may be hidden.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ResultTable.InvalidateLoadCache">
+            <summary>
+            Clears the cache used by the server pagination (GetLoadTableData), to call after the Lines have been modified
             </summary>
         </member>
         <member name="M:Seal.Model.ResultTable.GetLoadTableData(Seal.Model.ReportView,System.String)">
@@ -17855,7 +17893,7 @@
         <member name="T:RazorEngine.Templating.RazorEngineCompilerError">
             <summary>Compatibility shim describing a single compiler error.</summary>
         </member>
-        <member name="M:RazorEngine.Templating.RazorEngineCompilerError.#ctor(System.String,System.String,System.Int32,System.Int32,System.String,System.Boolean)">
+        <member name="M:RazorEngine.Templating.RazorEngineCompilerError.#ctor(System.String,System.String,System.Int32,System.Int32,System.String,System.Boolean,System.Int32)">
             <summary>
             Constructor from the compiler error details
             </summary>
@@ -17872,12 +17910,17 @@
         </member>
         <member name="P:RazorEngine.Templating.RazorEngineCompilerError.Line">
             <summary>
-            Line number of the error
+            Line number of the error in the generated C# code (1-based)
             </summary>
         </member>
         <member name="P:RazorEngine.Templating.RazorEngineCompilerError.Column">
             <summary>
-            Column number of the error
+            Column number of the error (1-based)
+            </summary>
+        </member>
+        <member name="P:RazorEngine.Templating.RazorEngineCompilerError.TemplateLine">
+            <summary>
+            Line number of the error in the Razor script given to the engine (1-based, from the #line pragmas of the generated code), 0 if unknown
             </summary>
         </member>
         <member name="P:RazorEngine.Templating.RazorEngineCompilerError.ErrorNumber">

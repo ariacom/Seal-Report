@@ -373,7 +373,10 @@
                             </p>
                             <ul>
                                 <li>
-                                    <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task).
+                                    <strong>Assemblies:</strong> additional DLL (*.dll) that can be referenced in all Razor scripts. You can add your own assemblies in this folder and call them from any script compiled and executed during a report execution (e.g. in a Task). Only assemblies that do not reference the Seal library itself (e.g. a third-party or business library) should be stored here, as they are loaded by all Seal applications.
+                                </li>
+                                <li>
+                                    <strong>Assemblies\Extensions\Net</strong> and <strong>Assemblies\Extensions\Win:</strong> extension assemblies built against a Seal library: <b>Net</b> for the assemblies referencing <i>SealLibrary</i> (Web Server, Scheduler, non-Windows runtime) and <b>Win</b> for those referencing <i>SealLibraryWin</i> (Windows applications). Only the sub-folder matching the running application is loaded at the repository initialization. Private dependencies of an extension can be copied next to it in the same sub-folder.
                                 </li>
                                 <li>
                                     <strong>Assemblies\Dynamics:</strong> additional source code files (*.cs) to be compiled and loaded. You can then reference the <b>Classes</b> compiled from any script (e.g. in a Task). The compiled assemblies are stored in the <b>Net</b> (non-Windows runtime) and <b>Win</b> (Windows applications) sub-folders.

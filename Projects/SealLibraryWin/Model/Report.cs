@@ -370,6 +370,18 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Register a Report Script link processed by a server handler instead of the report navigation script and returns its hyperlink string (e.g. 'RS:guid').
+        /// The browser posts the link with the navigation parameters to 'ActionNavigate', the handler result is returned as JSON.
+        /// </summary>
+        public string GetReportNavigationScriptHandlerLink(Func<NavigationLink, string> handler, string linkTag = "")
+        {
+            var guid = Guid.NewGuid().ToString();
+            var link = new NavigationLink() { Type = NavigationType.ReportScript, Href = guid, Report = this, Tag = linkTag, ScriptHandler = handler };
+            NavigationLinks.Add(guid, link);
+            return link.FullHref;
+        }
+
+        /// <summary>
         /// Get the hyperlink string to execute the report navigation script to download a file.
         /// </summary>
         public string GetReportNavigationFileDownloadLink(string text = "", string linkTag = "")

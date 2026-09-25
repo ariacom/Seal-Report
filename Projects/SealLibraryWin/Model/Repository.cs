@@ -716,8 +716,10 @@ namespace Seal.Model
             {
                 if (!AssembliesLoaded)
                 {
-                    //Load extra assemblies defined in Repository
-                    var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll");
+                    //Load extra assemblies defined in Repository, then the extensions built for the current Seal library (Extensions\Net for the Web Server, Extensions\Win for the Windows applications)
+                    var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll").ToList();
+                    var extensionsFolder = Configuration.IsUsingSealLibraryWin ? ExtensionsWinFolder : ExtensionsNetFolder;
+                    if (Directory.Exists(extensionsFolder)) assemblies.AddRange(Directory.GetFiles(extensionsFolder, "*.dll"));
                     foreach (var assembly in assemblies)
                     {
                         try
@@ -833,6 +835,8 @@ namespace Seal.Model
         {
             var name = new AssemblyName(args.Name).Name + ".dll";
             string assemblyPath = Path.Combine(AssembliesFolder, name);
+            //Extension assemblies and their private dependencies live in the runtime sub-folder (Extensions\Net or Extensions\Win)
+            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(Configuration.IsUsingSealLibraryWin ? ExtensionsWinFolder : ExtensionsNetFolder, name);
             //Dynamic assemblies live in the runtime sub-folder (Net/Win); fall back to the Dynamics root for back-compat
             if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsNetFolder, name);
             if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(DynamicsFolder, name);
@@ -893,6 +897,8 @@ namespace Seal.Model
                 if (!Directory.Exists(DynamicsFolder)) Directory.CreateDirectory(DynamicsFolder);
                 if (!Directory.Exists(DynamicsNetFolder)) Directory.CreateDirectory(DynamicsNetFolder);
                 if (!Directory.Exists(DynamicsWinFolder)) Directory.CreateDirectory(DynamicsWinFolder);
+                if (!Directory.Exists(ExtensionsNetFolder)) Directory.CreateDirectory(ExtensionsNetFolder);
+                if (!Directory.Exists(ExtensionsWinFolder)) Directory.CreateDirectory(ExtensionsWinFolder);
                 if (!Directory.Exists(RazorCacheNetFolder)) Directory.CreateDirectory(RazorCacheNetFolder);
                 if (!Directory.Exists(RazorCacheWinFolder)) Directory.CreateDirectory(RazorCacheWinFolder);
                 if (!Directory.Exists(SubReportsFolder)) Directory.CreateDirectory(SubReportsFolder);
@@ -1108,6 +1114,28 @@ namespace Seal.Model
             get
             {
                 return Path.Combine(AssembliesFolder, "Dynamics\\Win");
+            }
+        }
+
+        /// <summary>
+        /// Extension assemblies built against SealLibrary (Web Server, .NET runtime), loaded at the repository initialization.
+        /// </summary>
+        public string ExtensionsNetFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Extensions", "Net");
+            }
+        }
+
+        /// <summary>
+        /// Extension assemblies built against SealLibraryWin (Windows applications), loaded at the repository initialization.
+        /// </summary>
+        public string ExtensionsWinFolder
+        {
+            get
+            {
+                return Path.Combine(AssembliesFolder, "Extensions", "Win");
             }
         }
 

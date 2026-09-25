@@ -4,6 +4,7 @@
 //
 
 using Microsoft.AspNetCore.Http;
+using System;
 using System.Collections.Specialized;
 
 namespace Seal.Model
@@ -84,5 +85,11 @@ namespace Seal.Model
         /// Current Request that can be used in the Navigation Script (e.g. getting a file upload) 
         /// </summary>
         public HttpRequest Request;
+
+        /// <summary>
+        /// Optional server handler of a Report Script link: if set, it is called instead of the Report or Element Navigation Script and its result is returned to the browser.
+        /// Used by view templates or extensions to process custom requests sent with the navigation parameters.
+        /// </summary>
+        public Func<NavigationLink, string> ScriptHandler;
     }
 }

@@ -154,7 +154,11 @@ namespace Seal.Model
                 var link = report.NavigationLinks[linkGUID];
                 link.Parameters = parameters;
                 link.Request = request;
-                if (link.Cell != null && link.Cell.Element != null) //Cell navigation script
+                if (link.ScriptHandler != null) //Handler registered by a view or an extension
+                {
+                    result = link.ScriptHandler(link);
+                }
+                else if (link.Cell != null && link.Cell.Element != null) //Cell navigation script
                 {
                     RazorHelper.CompileExecute(link.Cell.Element.NavigationScript, link);
                     result = link.ScriptResult;
