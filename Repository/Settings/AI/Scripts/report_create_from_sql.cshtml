@@ -1,5 +1,7 @@
 @using System.IO
 @using System.Linq
+@using System.Text
+@using System.Threading
 @using System.Text.Json
 @using Seal.Model
 @using Seal.AI
@@ -105,6 +107,61 @@
         tool.ExecResult = $"Created: {path}";
         if (!noRecordLimit)
             tool.ExecResult += $"\r\nNote: the result is limited to {defaultMaxNumberOfRecords} records (default limit of the reports created by the AI agent). Mention it to the user.";
+
+        // --- Test execution: run the saved report with its default criteria values, so that the caller sees
+        // what the user will get (row count, errors) before announcing it: a saved report is not a working report ---
+        const int testTimeoutSeconds = 30;
+        var test = new StringBuilder();
+        try
+        {
+            var testReport = Report.LoadFromFile(fullPath, repo);
+            if (!string.IsNullOrEmpty(testReport.LoadErrors))
+                test.Append($"TEST FAILED: the report does not load: {testReport.LoadErrors}");
+            else
+            {
+                testReport.SkipExternalViewer = true;
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                new ReportExecution() { Report = testReport }.Execute();
+                var timedOut = false;
+                while (testReport.Status != ReportStatus.Executed && !testReport.HasErrors && !testReport.Cancel)
+                {
+                    if (tool.CurrentToolCall.CancelOperation?.Cancel == true) { testReport.Cancel = true; break; }
+                    if (watch.Elapsed.TotalSeconds > testTimeoutSeconds) { testReport.Cancel = true; timedOut = true; break; }
+                    Thread.Sleep(200);
+                }
+
+                if (timedOut)
+                    test.Append($"TEST WARNING: the execution was still running after {testTimeoutSeconds} s and was cancelled: the query is too broad (or too slow). Restrict it, then call the tool again with overwrite=true.");
+                else if (testReport.HasErrors)
+                    test.Append($"TEST FAILED: the report does not execute: {testReport.ExecutionErrors}\r\nThe file is saved but broken: fix the SQL and call the tool again with overwrite=true. Never present this report as working.");
+                else if (!testReport.Cancel)
+                {
+                    test.Append($"Test execution ({watch.Elapsed.TotalSeconds:0.0} s):");
+                    var noRow = false;
+                    foreach (var m in testReport.ExecutionModels)
+                    {
+                        var rows = m.ResultTable == null ? 0 : m.ResultTable.Rows.Count;
+                        test.Append($"\r\n- model '{m.Name}': {rows} row(s)");
+                        if (m.MaxNumberOfRecords > 0 && rows >= m.MaxNumberOfRecords) test.Append($" (the limit of {m.MaxNumberOfRecords} records is reached: the real result is larger)");
+                        if (rows == 0) noRow = true;
+                        else
+                        {
+                            // Sample only: drop the truncation note, which would invite to add restrictions
+                            var sample = System.Text.Json.Nodes.JsonNode.Parse(m.GetResultTableTranslatedJson(3).Item1);
+                            if (sample is System.Text.Json.Nodes.JsonObject sampleObj) { sampleObj.Remove("note"); sampleObj.Remove("row_count"); sampleObj.Remove("rows_shown"); }
+                            test.Append(", first rows: " + sample?.ToJsonString());
+                        }
+                    }
+                    if (noRow)
+                        test.Append("\r\nTEST WARNING: the query returns no row. Check the filter values (spelling, case) with database_execute_query; if no row is really the expected answer, tell the user.");
+                    var warnings = (testReport.ExecutionMessages ?? "").Split('\n').Select(l => l.Trim()).Where(l => l.Contains("Warning", StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
+                    if (warnings.Count > 0) test.Append("\r\nTEST WARNING: " + string.Join(" ", warnings));
+                }
+            }
+        }
+        catch (Exception ex) { test.Append($"TEST FAILED: {ex.Message}"); }
+        tool.ExecResult += "\r\n" + test.ToString() +
+            "\r\nReport these test results to the user (row count; an error or a warning to fix first) and compare the row count with any figure already given in the conversation: explain a difference before concluding.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");

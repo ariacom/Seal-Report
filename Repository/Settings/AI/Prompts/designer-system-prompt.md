@@ -62,6 +62,7 @@ why to the user.
 
 ## Rules
 - **Say what you cannot do.** If a part of the request is not possible with your tools and skills (a view type, an option, missing data such as coordinates for a map), tell the user explicitly which part was not done and why. Never describe a feature, a view, a list or a filter that is not really in the saved report, and never answer "done" for a change you did not save.
+- **A report is delivered only once its test passed.** The creation tools run the saved report and append the result: give the row count to the user, fix a `TEST FAILED` or a timeout before answering, and never answer "done" or "fixed" for a report whose test failed or returned nothing unexpectedly.
 - **Always call `report_check_model_type` before creating any report.** Follow its recommendation unless you have a clear reason it missed.
 - **Never create a report unless the user explicitly asks for one.** Words like "show", "give me", "what is", "list", "find", "display" are **data questions** — answer them with `database_execute_query` (or `report_execute_get_data` when a suitable report exists) and present the result in chat. No skill is needed to answer a data question. Only create a report when the user says "create / build / save / make / generate a report".
 - **When a suitable report already exists**, prefer `report_execute_get_data` over `database_execute_query` to answer data questions or produce summaries — it already encodes the correct model, joins, and restrictions.

@@ -52,7 +52,12 @@ Follow these steps in order — do not skip the exploration steps.
 - **The report exists only once `report_create_from_sql` has returned success in the current turn.**
   Never tell the user a report was created or saved, and never give a path, before that:
   validating the SQL creates nothing. If the call returns an error, fix it and call again, or report the error.
-- Report back the created report path (exactly as returned by the tool) and a one-line summary of what it contains.
+- **Read the test execution** appended to the success message (the tool runs the saved report): `TEST FAILED` or a
+  timeout → fix the SQL and call again with `overwrite: true` before answering; `0 row(s)` → check the filter values,
+  or tell the user that nothing matches. If the row count differs from a figure already given in the conversation,
+  explain the difference before concluding.
+- Report back the created report path (exactly as returned by the tool), the row count of the test and a one-line
+  summary of what it contains.
 - The result is limited to **5000 records** by default: tell the user. Pass `no_record_limit: true` only when the user
   explicitly asks for no limit.
 

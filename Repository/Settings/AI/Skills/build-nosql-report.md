@@ -54,8 +54,12 @@ correctly.
 6. Adapt that template: set the `<MetaSourceGUID>` to the Mongo DB source, replace
    the elements with yours (each `<MetaColumnGUID>` from `datasource_get_detail`,
    each `<Name>` the **raw field name**, correct `<PivotPosition>` and
-   `<AggregateFunction>`), then call `report_create_from_xml`.
-7. Propose execution with the `[EXECUTE_REPORT:...]` tag.
+   `<AggregateFunction>`), then call `report_create_from_xml`. Keep the template's
+   internal references consistent: every `<ModelGUID>` must be the `<GUID>` of a
+   `<ReportModel>` of the same XML (all real GUIDs or all short placeholders, never a mix).
+7. Read the test execution appended to the success message: `TEST FAILED` or a
+   timeout → fix and call again with `overwrite: true`; give the row count in your answer.
+8. Propose execution with the `[EXECUTE_REPORT:...]` tag.
 
 Everything else (the XML structure, view nesting, totals, sorting, restriction
 operators, charts) is identical to a SQL-source metadata report — copy it from the

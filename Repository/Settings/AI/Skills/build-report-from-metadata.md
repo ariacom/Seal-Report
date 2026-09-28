@@ -27,6 +27,12 @@ before deciding which creation tool to use. Follow its recommendation.
    Never tell the user a report was created or saved, and never give a path, before that:
    running queries or loading this skill creates nothing. If the call returns an error, fix the XML
    and call it again, or report the error.
+   **Read the test execution** appended to the success message (the tool runs the saved report with its
+   default criteria values): `TEST FAILED` or a timeout → fix the XML and call again with `overwrite: true`
+   before answering; `0 row(s)` → check the filter values, or tell the user that nothing matches. Give the
+   row count in your answer. If it differs from a figure already given in the conversation (a count or a
+   list shown in the chat), explain the difference before concluding — a report must apply exactly the
+   filters of the search the user validated, never an extra one.
 5. Propose execution with the `[EXECUTE_REPORT:...]` tag (see the system prompt), using the path
    returned by `report_create_from_xml` exactly.
 
@@ -357,6 +363,12 @@ To change a saved report (add/remove a column or a restriction, add a drop-down 
 change **only** what is asked in the returned XML, then save it with `report_create_from_xml` on the **same path** with
 `overwrite: true` (the user's request to change the report is the explicit request to replace it). Only a change of view
 parameters (chart style, title…) goes through `style-report-view` instead.
+- Keep the **real GUIDs** of the returned XML everywhere: every `<ModelGUID>` must stay the `<GUID>` of its
+  `<ReportModel>`. Never replace some of them by short placeholders (`a`, `d`, `f1`…): a view whose `<ModelGUID>` no
+  longer matches its model shows nothing (the tool rejects it).
+- Making criteria editable ("editable filters", "let me change the filters") means setting `<Prompt>Prompt</Prompt>`
+  and **keeping the current values as default values**. Remove a value only when the user asks for it: a prompted
+  criterion without value is not applied, and the report may then return the whole table.
 
 ### Join overrides (`<JoinOverrides>` inside `<ReportModel>`)
 The tables of a model are linked automatically with the joins of the data source (listed under `## Joins` by

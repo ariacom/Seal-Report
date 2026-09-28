@@ -39,32 +39,32 @@
           <Name>Orders.OrderID</Name>
           <Category>Master</Category>
           <Format>N0</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
         <ReportElement>
           <GUID>c6f17712-4e06-47e8-a3a8-79f0c263c788</GUID>
           <Name>Orders.OrderDate</Name>
           <Category>Master</Category>
           <Format>d</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
         <ReportElement>
           <GUID>91c9d310-6b24-45c5-be2d-ce735c5404bb</GUID>
           <Name>Customers.CompanyName</Name>
           <Category>Master</Category>
           <DisplayName>Customer Name</DisplayName>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
         <ReportElement>
           <GUID>54eca5b1-9b70-4bac-a0a0-a784d6e562cf</GUID>
@@ -72,11 +72,11 @@
           <Category>Master</Category>
           <DisplayName>Amount</DisplayName>
           <Format>N0</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
       </Elements>
       <Restriction>[5dd998d4-d785-4e32-8873-41e5c4f8f365]
@@ -90,11 +90,11 @@ AND [1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8]</Restriction>
           <NumericStandardFormat>Numeric0</NumericStandardFormat>
           <DateTimeStandardFormat>ShortDate</DateTimeStandardFormat>
           <Format>d</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
           <Prompt>Prompt</Prompt>
           <Operator>Between</Operator>
           <Date1>1990-01-01T00:00:00</Date1>
@@ -102,7 +102,7 @@ AND [1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8]</Restriction>
           <DateTimeStandardFormatRe>ShortDate</DateTimeStandardFormatRe>
           <NumericStandardFormatRe>Numeric0</NumericStandardFormatRe>
           <FormatRe>d</FormatRe>
-          <EnumGUIDRE>&lt;No Enumerated List&gt;</EnumGUIDRE>
+          
         </ReportRestriction>
         <ReportRestriction>
           <GUID>1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8</GUID>
@@ -137,11 +137,11 @@ AND [1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8]</Restriction>
           <Category>Master</Category>
           <DisplayName>Amount</DisplayName>
           <Format>N0</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
       </Elements>
       <Restriction>[3080bf32-5565-43e9-a876-a200713e2c71]</Restriction>
@@ -175,10 +175,10 @@ AND [1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8]</Restriction>
           <Category>Master</Category>
           <DisplayName />
           <Format>N0</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
         <ReportElement>
           <GUID>03bd6b18-a3ba-4b3f-9cec-1b06ca2fbf3b</GUID>
@@ -186,22 +186,22 @@ AND [1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8]</Restriction>
           <Category>Master</Category>
           <DisplayName />
           <Format>d</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>4a3f4d69-3781-4679-8797-f425478de0d9</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
         <ReportElement>
           <GUID>8545dd7a-2ba4-4c64-98dd-e487dc25df71</GUID>
           <Name>Customers.CompanyName</Name>
           <Category>Master</Category>
           <DisplayName>Customer Name</DisplayName>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>86d0b9e4-beb4-40bd-adae-c865e6b17d9b</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
         <ReportElement>
           <GUID>2bb6f2a1-922a-403e-82d3-8fa339709a80</GUID>
@@ -209,11 +209,11 @@ AND [1ffc4ff5-ca22-4419-a8eb-5009d7aeccb8]</Restriction>
           <Category>Master</Category>
           <DisplayName>Amount</DisplayName>
           <Format>N0</Format>
-          <EnumGUID>&lt;No Enumerated List&gt;</EnumGUID>
+          
           <PivotPosition>Data</PivotPosition>
           <ShowTotal>Column</ShowTotal>
           <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
-          <EnumGUIDEL>&lt;No Enumerated List&gt;</EnumGUIDEL>
+          
         </ReportElement>
       </Elements>
       <Restriction>[5edc8fa8-07c6-4fae-935c-a39826b2d270]

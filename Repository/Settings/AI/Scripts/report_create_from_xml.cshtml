@@ -3,6 +3,7 @@
 @using System.Text
 @using System.Text.Json
 @using System.Text.RegularExpressions
+@using System.Threading
 @using System.Xml.Linq
 @using Seal.Model
 @using Seal.AI
@@ -90,6 +91,23 @@
                 else colGuidByColName[colKey] = col.GUID;
             }
 
+        // Elements and restrictions already saved in the report being replaced (element GUID -> MetaColumnGUID): when the
+        // designer changed their column, their <Name> may be stale; such a Name is corrected instead of being rejected
+        var existingColByElement = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+        if (overwrite && File.Exists(fullPath))
+        {
+            try
+            {
+                foreach (var e in XDocument.Load(fullPath).Descendants().Where(x => x.Name.LocalName == "ReportElement" || x.Name.LocalName == "ReportRestriction"))
+                {
+                    var eGuid = ((string)e.Element("GUID") ?? "").Trim();
+                    var eCol  = ((string)e.Element("MetaColumnGUID") ?? "").Trim();
+                    if (eGuid != "" && eCol != "") existingColByElement[eGuid] = eCol;
+                }
+            }
+            catch { }
+        }
+
         var badRefs = new System.Collections.Generic.List<string>();
         var mismatchedRefs = new System.Collections.Generic.List<string>();
         foreach (var mc in doc.Descendants("MetaColumnGUID").ToList())
@@ -117,7 +135,15 @@
                 // Names are compared without their SQL cast suffix (e.g. 'fr.v_table.name::citext').
                 var nameKey = stripCast(norm(refName));
                 var guidColKey = stripCast(norm(colNameByGuid[val]));
-                if (nameKey != guidColKey)
+                var elementGuid = ((string)mc.Parent.Element("GUID") ?? "").Trim();
+                string savedCol;
+                if (nameKey != guidColKey && elementGuid != "" && existingColByElement.TryGetValue(elementGuid, out savedCol) && string.Equals(savedCol, val, StringComparison.OrdinalIgnoreCase))
+                {
+                    // Same element with the same column as in the saved report: only its <Name> is stale
+                    tool.CurrentToolCall.LogMessage($"Corrected stale Name '{refName.Trim()}' -> '{colNameByGuid[val]}'");
+                    mc.Parent.Element("Name").Value = colNameByGuid[val];
+                }
+                else if (nameKey != guidColKey)
                 {
                     string namedGuid;
                     if (!ambiguousColNames.Contains(nameKey) && colGuidByColName.TryGetValue(nameKey, out namedGuid))
@@ -217,7 +243,11 @@
             }
         }
 
-        foreach (var el in doc.Descendants("ReportElement").Where(e => e.Element("EnumGUIDEL") != null && !string.IsNullOrWhiteSpace(e.Element("EnumGUIDEL").Value)))
+        // 'No enumerated list' choice of the Designer: CLEAR (ReportElement.kClearEnumGUID), or its label saved by older versions.
+        // Not a reference to a list: the engine then uses the list of the column, if any (an element with CLEAR has none)
+        Func<string, bool> isNoListValue = v => v == ReportElement.kClearEnumGUID || v == "<No Enumerated List>";
+
+        foreach (var el in doc.Descendants("ReportElement").Where(e => e.Element("EnumGUIDEL") != null && !string.IsNullOrWhiteSpace(e.Element("EnumGUIDEL").Value) && !isNoListValue(e.Element("EnumGUIDEL").Value.Trim())))
         {
             var g = el.Element("EnumGUIDEL").Value.Trim();
             if (!reportEnumGuids.Contains(g) && !metaSource.MetaData.Enums.Any(e => string.Equals(e.GUID, g, StringComparison.OrdinalIgnoreCase)))
@@ -240,6 +270,7 @@
             MetaEnum menum = null;
             var isEnum = false;
             var enumRef = rest.Element("EnumGUIDRE") == null ? "" : rest.Element("EnumGUIDRE").Value.Trim();
+            if (isNoListValue(enumRef)) enumRef = "";  // the restriction then uses the list of the column (ReportRestriction.EnumRE)
             if (!string.IsNullOrEmpty(enumRef))
             {
                 if (reportEnumGuids.Contains(enumRef)) isEnum = true;
@@ -430,6 +461,24 @@
                 });
         }
 
+        // --- Validate internal references: a view pointing to no model (e.g. real GUIDs copied from report_get_xml
+        // mixed with placeholders) loses its model and the report shows nothing ---
+        var modelGuids  = doc.Descendants("ReportModel").Select(m => (string)m.Element("GUID")).Where(g => !string.IsNullOrEmpty(g)).ToList();
+        var sourceGuids = doc.Descendants("ReportSource").Select(s => (string)s.Element("GUID")).Where(g => !string.IsNullOrEmpty(g)).ToList();
+        var refErrors = new System.Collections.Generic.List<string>();
+        foreach (var view in doc.Descendants("ReportView").Where(v => !string.IsNullOrWhiteSpace((string)v.Element("ModelGUID"))))
+            if (!modelGuids.Contains(view.Element("ModelGUID").Value.Trim()))
+                refErrors.Add($"view '{(string)view.Element("Name")}' has a <ModelGUID> that is the <GUID> of no <ReportModel>");
+        foreach (var model in doc.Descendants("ReportModel").Where(m => !string.IsNullOrWhiteSpace((string)m.Element("SourceGUID"))))
+            if (!sourceGuids.Contains(model.Element("SourceGUID").Value.Trim()))
+                refErrors.Add($"model '{(string)model.Element("Name")}' has a <SourceGUID> that is the <GUID> of no <ReportSource>");
+        if (refErrors.Count > 0)
+        {
+            tool.ExecResult = "Error: broken internal references: " + string.Join("; ", refErrors) +
+                ". Each <ModelGUID> must be the exact <GUID> of a <ReportModel> and each <SourceGUID> the <GUID> of a <ReportSource> of the same XML: use either the real GUIDs everywhere (as returned by report_get_xml) or short placeholders everywhere, never a mix. Fix the XML and call report_create_from_xml again.";
+            return;
+        }
+
         var sb = new StringBuilder();
         if (doc.Declaration != null) { sb.Append(doc.Declaration).Append("\r\n"); }
         sb.Append(doc.ToString());
@@ -444,6 +493,68 @@
         if (restrictionWarnings.Count > 0)
             tool.ExecResult += "\r\nWarning: " + string.Join("; ", restrictionWarnings) +
                 ". Verify the values with database_get_sample_values and recreate the report with overwrite=true if they are wrong.";
+
+        // --- Test execution: run the saved report with its default criteria values, so that the caller sees
+        // what the user will get (row count, errors) before announcing it: a saved report is not a working report ---
+        const int testTimeoutSeconds = 30;
+        var test = new StringBuilder();
+        try
+        {
+            var testReport = Report.LoadFromFile(fullPath, repo);
+            if (!string.IsNullOrEmpty(testReport.LoadErrors))
+                test.Append($"TEST FAILED: the report does not load: {testReport.LoadErrors}");
+            else
+            {
+                testReport.SkipExternalViewer = true;
+                var notDisplayed = testReport.Models.Where(m => m.Elements.Count > 0 && !testReport.ExecutionModels.Contains(m)).Select(m => m.Name).ToList();
+                var emptyCriteria = testReport.ExecutionModels.SelectMany(m => m.Restrictions.Concat(m.AggregateRestrictions))
+                    .Where(r => r.Prompt != PromptType.None && !r.HasValue).Select(r => r.DisplayNameEl).Distinct().ToList();
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                new ReportExecution() { Report = testReport }.Execute();
+                var timedOut = false;
+                while (testReport.Status != ReportStatus.Executed && !testReport.HasErrors && !testReport.Cancel)
+                {
+                    if (tool.CurrentToolCall.CancelOperation?.Cancel == true) { testReport.Cancel = true; break; }
+                    if (watch.Elapsed.TotalSeconds > testTimeoutSeconds) { testReport.Cancel = true; timedOut = true; break; }
+                    Thread.Sleep(200);
+                }
+
+                if (timedOut)
+                    test.Append($"TEST WARNING: the execution was still running after {testTimeoutSeconds} s and was cancelled: with its default criteria values the report is too broad (or too slow). Set default values that restrict the result, then call the tool again with overwrite=true.");
+                else if (testReport.HasErrors)
+                    test.Append($"TEST FAILED: the report does not execute: {testReport.ExecutionErrors}\r\nThe file is saved but broken: fix the XML and call the tool again with overwrite=true. Never present this report as working.");
+                else if (!testReport.Cancel)
+                {
+                    test.Append($"Test execution with the default criteria values ({watch.Elapsed.TotalSeconds:0.0} s):");
+                    var noRow = false;
+                    foreach (var m in testReport.ExecutionModels)
+                    {
+                        var rows = m.ResultTable == null ? 0 : m.ResultTable.Rows.Count;
+                        test.Append($"\r\n- model '{m.Name}': {rows} row(s)");
+                        if (m.MaxNumberOfRecords > 0 && rows >= m.MaxNumberOfRecords) test.Append($" (the limit of {m.MaxNumberOfRecords} records is reached: the real result is larger)");
+                        if (rows == 0) noRow = true;
+                        else
+                        {
+                            // Sample only: drop the truncation note, which would invite to add restrictions
+                            var sample = System.Text.Json.Nodes.JsonNode.Parse(m.GetResultTableTranslatedJson(3).Item1);
+                            if (sample is System.Text.Json.Nodes.JsonObject sampleObj) { sampleObj.Remove("note"); sampleObj.Remove("row_count"); sampleObj.Remove("rows_shown"); }
+                            test.Append(", first rows: " + sample?.ToJsonString());
+                        }
+                    }
+                    if (noRow)
+                        test.Append("\r\nTEST WARNING: no row with the default criteria values. Check the filter values (spelling, case, enumerated ids) with database_get_sample_values or database_execute_query; if no row is really the expected answer, tell the user.");
+                    var warnings = (testReport.ExecutionMessages ?? "").Split('\n').Select(l => l.Trim()).Where(l => l.Contains("Warning", StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
+                    if (warnings.Count > 0) test.Append("\r\nTEST WARNING: " + string.Join(" ", warnings));
+                }
+                if (notDisplayed.Count > 0)
+                    test.Append($"\r\nTEST WARNING: model(s) {string.Join(", ", notDisplayed.Select(n => "'" + n + "'"))} are displayed by no view, so they are never executed.");
+                if (emptyCriteria.Count > 0)
+                    test.Append($"\r\nNote: prompted criteria without default value (not applied until the user fills them): {string.Join(", ", emptyCriteria)}.");
+            }
+        }
+        catch (Exception ex) { test.Append($"TEST FAILED: {ex.Message}"); }
+        tool.ExecResult += "\r\n" + test.ToString() +
+            "\r\nReport these test results to the user (row count; an error or a warning to fix first) and compare the row count with any figure already given in the conversation: explain a difference before concluding.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
