@@ -64,7 +64,15 @@
             return;
         }
 
-        var validColGuids = new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        // --- Restrictions are editable criteria by default: a restriction without <Prompt> is prompted ---
+        foreach (var rest in doc.Descendants("ReportRestriction").Where(r => r.Element("Prompt") == null || string.IsNullOrWhiteSpace(r.Element("Prompt").Value)))
+        {
+            if (rest.Element("Prompt") != null) rest.Element("Prompt").Value = "Prompt";
+            else if (rest.Element("Name") != null) rest.Element("Name").AddAfterSelf(new XElement("Prompt", "Prompt"));
+            else rest.Add(new XElement("Prompt", "Prompt"));
+        }
+
+        var validColGuids =new System.Collections.Generic.HashSet<string>(StringComparer.OrdinalIgnoreCase);
         var colGuidByName = new System.Collections.Generic.Dictionary<string, string>();
         var colNameByGuid = new System.Collections.Generic.Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
         // Column Name (Table.Column) -> GUID, used to detect an element whose <Name> designates another column than its <MetaColumnGUID>

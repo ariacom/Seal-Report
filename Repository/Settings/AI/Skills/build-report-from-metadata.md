@@ -93,7 +93,9 @@ AND [f3]</Restriction>
           <GUID>f1</GUID>           <!-- matches [f1] in <Restriction> above -->
           <Name>Table.Column</Name>
           <MetaColumnGUID>«datasource_get_detail GUID»</MetaColumnGUID>
-          <Prompt>Prompt</Prompt>   <!-- Prompt | PromptOneValue | PromptTwoValues | None -->
+          <Prompt>Prompt</Prompt>   <!-- Prompt | PromptOneValue | PromptTwoValues | None.
+                                         DEFAULT Prompt: every filter is an editable criterion, pre-filled with the
+                                         requested value. None ONLY when the user explicitly asks for a fixed/hidden filter. -->
           <Operator>Contains</Operator>  <!-- Default by column type:
                                               Text (free text)  → Contains
                                               Enumerated values → Equal (default; only Equal or NotEqual are allowed, never Contains/StartsWith/etc.)
@@ -260,6 +262,7 @@ Always include a `<ShowTotal>` on every `Data` element. Choose by table shape:
 
 ### Restrictions
 - `Prompt` → user is asked for a value at execution time. `None` → static filter, no interaction.
+- **Filters are editable criteria by default** — every restriction the user requests ("in France", "département 74", "active only"…) is created **prompted** (`Prompt`, or `PromptTwoValues` for date ranges) and pre-filled with the requested value, so the user can change it when running the report. Use `None` only when the user explicitly asks for a fixed / non-editable / hidden filter, or for a technical filter that must never change (put such conditions in `<AdditionalClause>` when they are not user criteria). A restriction without `<Prompt>` is created prompted.
 - `Required` → **defaults to `false`; keep it `false`.** "Prompted" and "required" are independent. Set `Required=true` only when the user explicitly says the value is mandatory.
 - **Default operator by column type:** Text (free text) → `Contains`; Enumerated → `Equal` (only `Equal`/`NotEqual` allowed); Numeric/Date → `Equal`, `Between`, `Greater`, `Smaller`, etc.
 - **Empty / null checks** — to filter on a missing value, use the dedicated operators: `IsEmpty` / `IsNotEmpty` (text columns) or `IsNull` / `IsNotNull` (any type), with **no** value element. Never use `Equal` with an empty `<Value1>` — a restriction with no value is treated as "not filled" and is silently ignored at execution.
