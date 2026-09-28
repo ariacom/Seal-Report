@@ -236,7 +236,9 @@
         //formats
         var decimalSeparator = '@Html.Raw(repository.CultureInfo.NumberFormat.NumberDecimalSeparator)';
         var thousandSeparator = '@Html.Raw(Helper.ToJS(repository.CultureInfo.NumberFormat.NumberGroupSeparator))';
-        var dirSeparator = '@(System.IO.Path.DirectorySeparatorChar == '\\' ? "\\\\" : System.IO.Path.DirectorySeparatorChar.ToString())';
+        //same rule as the CSV renderer: configured separator, else the culture list separator
+        var csvListSeparator = '@Html.Raw(Helper.ToJS(string.IsNullOrEmpty(repository.Configuration.CsvSeparator) ? repository.CultureInfo.TextInfo.ListSeparator : repository.Configuration.CsvSeparator))';
+        var dirSeparator ='@(System.IO.Path.DirectorySeparatorChar == '\\' ? "\\\\" : System.IO.Path.DirectorySeparatorChar.ToString())';
         //for datepicker
         var languageName = '@repository.CultureInfo.TwoLetterISOLanguageName';
         var shortDateFormat = '@repository.MomentJSShortDateFormat';

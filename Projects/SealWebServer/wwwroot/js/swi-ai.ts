@@ -217,9 +217,11 @@
         return rows;
     }
 
-    // Excel's own rule: locales using a decimal comma expect ';' as the CSV separator.
-    // The Seal profile language drives the choice, falling back to the browser locale.
+    // Same rule as the server CSV renderer: Server Configuration CsvSeparator, else the list
+    // separator of the Seal culture. Fallback (older Main view): locales using a decimal comma
+    // expect ';' in Excel.
     function csvSeparator(): string {
+        if (typeof csvListSeparator !== 'undefined' && csvListSeparator) return csvListSeparator;
         const locale = (typeof languageName !== 'undefined' && languageName) ? languageName : (navigator.language || 'en');
         try {
             return new Intl.NumberFormat(locale).format(1.1).indexOf(',') >= 0 ? ';' : ',';

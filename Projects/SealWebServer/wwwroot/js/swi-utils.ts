@@ -1,5 +1,6 @@
 ﻿declare var tra: Record<string, string>;
 declare var languageName: string;
+declare var csvListSeparator: string;
 
 namespace SWIUtil {
     // Native Bootstrap 5 helpers. Bootstrap 5 dropped the jQuery plugin API
