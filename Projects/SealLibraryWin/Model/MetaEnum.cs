@@ -281,7 +281,7 @@ namespace Seal.Model
         /// Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL is used only if the list is dynamic, refreshed before report execution.
         /// </summary>
 #if WINDOWS
-        [Category("Dynamic display"), DisplayName("SQL Select Statement for prompted restriction"), Description("Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL can return 1 to 5 columns and follows the definition of 'SQL Select Statement' property. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The SQL is used only if the list is dynamic, refreshed before report execution."), Id(3, 2)]
+        [Category("Dynamic display"), DisplayName("SQL Select Statement for prompted restriction"), Description("Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL can return 1 to 5 columns and follows the definition of 'SQL Select Statement' property. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. '{EnumValues_<Name>}' is replaced by the values checked in the other list only, the operator chosen for that restriction is not taken into account (e.g. use it with 'IN (...)'). The SQL is used only if the list is dynamic, refreshed before report execution."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         public string SqlDisplay { get; set; }
@@ -290,7 +290,7 @@ namespace Seal.Model
         /// Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution. It can contain either the '{EnumFilter}' and/or '{EnumValues_&lt;Name>}' keywords where &lt;Name> is the name of another prompted enumerated list.
         /// </summary>
 #if WINDOWS
-        [Category("Dynamic display"), DisplayName("Script for prompted restriction"), Description("Optional Script used to build the values displayed in a prompted restriction. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. The Script is used only if the list is dynamic, refreshed before report execution."), Id(4, 2)]
+        [Category("Dynamic display"), DisplayName("Script for prompted restriction"), Description("Optional Script used to build the values displayed in a prompted restriction. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. '{EnumValues_<Name>}' is replaced by the values checked in the other list only, the operator chosen for that restriction is not taken into account. The Script is used only if the list is dynamic, refreshed before report execution."), Id(4, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ScriptDisplay { get; set; }

@@ -537,6 +537,7 @@ namespace Seal.Forms
 
     //The Script may contain the filter tag by using the keyword '{EnumFilter}' to build the enum with filters got from the user.
     //The script may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.
+    //The keyword is replaced by the values checked only, the operator chosen for the other restriction is not taken into account.
     string filter = {EnumFilter};
     List<string> enumValuesCountry = {EnumValues_Country};
 

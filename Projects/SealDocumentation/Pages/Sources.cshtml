@@ -351,7 +351,8 @@
                             <p>
                                 For huge list of values or for list having dependencies with other enums, a dynamic display is possible to allow the server to query live the database before showing the values to the user.<br />
                                 In this case, you must define the <code>SQL Select Statement for prompted restriction</code> property.<br />
-                                This dedicated SQL can contain the keyword <b>'{EnumFilter}'</b> to specify the text typed by the user and/or <b>'{EnumValues_&#60;OtherEnumName&#62;}'</b> to use the values checked for another enumerated list.
+                                This dedicated SQL can contain the keyword <b>'{EnumFilter}'</b> to specify the text typed by the user and/or <b>'{EnumValues_&#60;OtherEnumName&#62;}'</b> to use the values checked for another enumerated list.<br />
+                                Note that <b>'{EnumValues_&#60;OtherEnumName&#62;}'</b> is replaced only by the values checked: the operator chosen for the other restriction (e.g. 'Is different from') is not taken into account, so the dependency is typically written with <code>IN (...)</code>.
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Filter on the name of the product</h4>
