@@ -114,13 +114,15 @@ namespace SWIUtil {
     }
     export function StartSpinning() {
         //own 'spinning' class: FA6's fa-spin is frozen by its prefers-reduced-motion rule
+        //no inline display here: the link is a flex box (seal.css "#bar_top .navbar-nav .nav-link"),
+        //which is already transformable and keeps the icon vertically centered like its neighbors
         $("#refresh-nav-item").addClass("spinning");
-        $("#refresh-nav-item").css("display", "inline-block");
     }
 
     export function StopSpinning() {
         $("#refresh-nav-item").removeClass("spinning");
-        $("#refresh-nav-item").css("display", "block");
+        //clear any inline display (legacy "block") so the stylesheet flex centering applies again
+        $("#refresh-nav-item").css("display", "");
     }
 
     export function GatewayCallbackHandler(data: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
