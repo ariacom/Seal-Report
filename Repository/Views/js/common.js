@@ -631,7 +631,7 @@ function mainInit() {
 
     //print layout
     if (_printLayout) {
-        $("nav").removeClass("navbar-fixed-top");
+        $("#bar_top").removeClass("fixed-top");
         $("#report_body_container").css("padding-top", "0px");
     }
 
