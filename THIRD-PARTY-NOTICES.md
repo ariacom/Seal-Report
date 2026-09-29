@@ -10,7 +10,7 @@ packages that are distributed under their own licenses. Most are permissive
 The following are freely redistributable but distributed under Microsoft's own
 (non-open-source) license terms, not an OSI license:
 - **Microsoft.AnalysisServices.AdomdClient** 19.117.0 (released 2026-09-09) — Analysis Services / MSAS driver
-- **Microsoft.Data.SqlClient.SNI.runtime** 6.0.3 (released 2026-08-14) — native SQL Server network library pulled in by Microsoft.Data.SqlClient on Windows
+- **Microsoft.Data.SqlClient.SNI.runtime** 7.1.0 (released 2026-09-16) — native SQL Server network library pulled in by Microsoft.Data.SqlClient on Windows
 - **Microsoft.Web.Administration** 11.1.0 (released 2018-01-23) — IIS administration
 
 ### Oracle.ManagedDataAccess.Core (Oracle database driver)
@@ -60,6 +60,7 @@ Listed in alphabetical order.
 | AngleSharp.Css (pulled in by HtmlSanitizer) | 1.0.2 | 2026-08-21 | MIT |
 | Azure SDKs / Microsoft.* packages | various | various | MIT |
 | Azure.AI.OpenAI | 2.1.0 | 2024-12-06 | MIT |
+| BouncyCastle.Cryptography (dependency of MailKit / MimeKit) | 2.7.0 | 2026-07-30 | MIT |
 | Bootstrap | 5.3.8 | 2025-08-26 | MIT |
 | bootstrap-select | 1.14.0-beta3 | 2022-04-20 | MIT |
 | Chart.js | 4.5.1 | 2025-10-13 | MIT |
