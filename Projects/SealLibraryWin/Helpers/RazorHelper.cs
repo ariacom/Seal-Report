@@ -140,6 +140,9 @@ namespace Seal.Helpers
                     _ = ColorTranslator.FromHtml("#00000");
                     _ = new Plot();
                     _ = new Workbook();
+                    //StringValues (Microsoft.Extensions.Primitives, skipped by the folder scan above) is returned by
+                    //HttpRequest.Headers/Query/Form: needed to compile e.g. the JWT security provider script
+                    _ = Microsoft.Extensions.Primitives.StringValues.Empty;
                     //Use a MemoryStream (not a temp file): forces the DocumentFormat.OpenXml assembly load
                     //without leaving a locked temp file behind, which caused "being used by another process"
                     //when several Seal processes start at the same time (e.g. web server + scheduler on first run).
