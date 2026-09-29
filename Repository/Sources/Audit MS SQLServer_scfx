@@ -543,22 +543,22 @@ ORDER BY 1</Sql>
           <MetaEV>
             <Id>Success</Id>
             <Val>Success</Val>
-            <Class>success</Class>
+            <Class>table-success</Class>
           </MetaEV>
           <MetaEV>
             <Id>Error</Id>
             <Val>Error</Val>
-            <Class>danger</Class>
+            <Class>table-danger</Class>
           </MetaEV>
           <MetaEV>
             <Id>Warning</Id>
             <Val>Warning</Val>
-            <Class>warning</Class>
+            <Class>table-warning</Class>
           </MetaEV>
           <MetaEV>
             <Id>LoadError</Id>
             <Val>Load Error</Val>
-            <Class>warning</Class>
+            <Class>table-danger</Class>
           </MetaEV>
         </Values>
       </MetaEnum>
