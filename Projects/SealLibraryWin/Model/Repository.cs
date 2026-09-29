@@ -592,6 +592,14 @@ namespace Seal.Model
                 result = new Repository();
                 //Just clone the sources as connections and enums can be updated
                 result.Sources = (List<MetaSource>)Helper.Clone(Sources);
+                for (int i = 0; i < result.Sources.Count && i < Sources.Count; i++)
+                {
+                    //Not serialized by the clone ([XmlIgnore]): keep them to save or reload the source from the fast repository
+                    var source = result.Sources[i];
+                    source.FilePath = Sources[i].FilePath;
+                    source.LastModification = Sources[i].LastModification;
+                    source.LastMetadataModification = Sources[i].LastMetadataModification;
+                }
                 foreach (var source in result.Sources) source.InitReferences(result);
                 //Others collections should remain static/unchanged an can be shared...
                 result._translations = Translations;
