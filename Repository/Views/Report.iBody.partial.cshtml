@@ -321,7 +321,7 @@
 
 @if (report.HasPlotlyChart)
 {
-    @Raw(report.AttachScriptPath("lib/plotly/plotly-latest.min.js", "https://cdn.plot.ly/plotly-3.7.0.min.js"))
+    @Raw(report.AttachScriptPath("lib/plotly/plotly-latest.min.js", "https://cdn.plot.ly/plotly-4.1.1.min.js"))
     if (view.CultureInfo.TwoLetterISOLanguageName != "en")
     {
         @Raw(report.AttachScriptPath("lib/plotly/i18n/plotly-locale-" + view.CultureInfo.TwoLetterISOLanguageName + ".js"))

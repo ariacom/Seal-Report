@@ -124,6 +124,8 @@
                         title: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("plotly_yaxis2_title"))))',
                         tickformat: '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))',
                         overlaying: 'y',
+                        //Plotly 4 syncs the ticks of an overlaying axis with the primary axis by default: keep independent ticks
+                        tickmode: 'auto',
                         side:'right',
                     },
                     showlegend: @view.GetBoolValueJS("plotly_show_legend"),
@@ -155,7 +157,8 @@
                 Plotly.newPlot(@chartId,
                     data,
                     layout,
-                    { locale: 'fr' }
+                    //showSendToCloud: Plotly 4 adds a modebar button sending the chart data to cloud.plotly.com, never expose report data to it
+                    { locale: '@(view.CultureInfo.TwoLetterISOLanguageName == "pt" ? "pt-BR" : view.CultureInfo.TwoLetterISOLanguageName)', showSendToCloud: false }
                     );
 
                 if (@Helper.ToJS(report.GenerateHTMLDisplay)) {

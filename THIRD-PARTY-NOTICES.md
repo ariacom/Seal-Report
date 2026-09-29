@@ -87,7 +87,7 @@ Listed in alphabetical order.
 | MySqlConnector | 2.6.2 | 2026-08-11 | MIT |
 | Newtonsoft.Json | 13.0.4 | 2025-09-16 | MIT |
 | Npgsql (PostgreSQL) | 10.0.3 | 2026-05-27 | PostgreSQL License (MIT-like) |
-| Plotly.js | 3.7.0 | 2026-07-03 | MIT |
+| Plotly.js | 4.1.1 | 2026-09-14 | MIT |
 | Popper (@popperjs/core) | 2.11.8 | 2023-05-26 | MIT |
 | PuppeteerSharp (pulls in WebDriverBiDi 0.0.61 and ReactiveExtensionsSharp 0.3.0, both MIT) | 25.12.0 | 2026-09-24 | MIT |
 | RazorEngineCore | 2026.1.1 | 2026-01-17 | MIT |
