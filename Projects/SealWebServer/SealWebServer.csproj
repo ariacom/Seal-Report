@@ -3,11 +3,15 @@
 	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Debug|AnyCPU'">
 	  <TypeScriptTarget>ES2021</TypeScriptTarget>
 	  <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+	  <!-- TypeScript 7 turns strict on by default: keep the historical non-strict checking -->
+	  <TypeScriptAdditionalFlags>--strict false</TypeScriptAdditionalFlags>
 	</PropertyGroup>
 
 	<PropertyGroup Label="Configuration" Condition="'$(Configuration)|$(Platform)'=='Release|AnyCPU'">
 	  <TypeScriptTarget>ES2021</TypeScriptTarget>
 	  <TypeScriptNoImplicitAny>False</TypeScriptNoImplicitAny>
+	  <!-- TypeScript 7 turns strict on by default: keep the historical non-strict checking -->
+	  <TypeScriptAdditionalFlags>--strict false</TypeScriptAdditionalFlags>
 	</PropertyGroup>
 
 	<PropertyGroup>
@@ -53,7 +57,7 @@
 		<PackageReference Include="Microsoft.AspNetCore.Authentication.OpenIdConnect" Version="10.0.12" />
 		<PackageReference Include="Microsoft.AspNetCore.Mvc.NewtonsoftJson" Version="10.0.12" />
 		<PackageReference Include="Microsoft.Extensions.Caching.SqlServer" Version="10.0.12" />
-		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="6.0.3">
+		<PackageReference Include="Microsoft.TypeScript.MSBuild" Version="7.0.1">
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>

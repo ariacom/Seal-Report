@@ -114,7 +114,8 @@
                     return data;
                 }
 
-                var legend = showLegend ? { type: 'scroll', orient: legendOrient, top: title ? 30 : 5 } : null;
+                //ECharts 6 draws a taller title: keep the legend below it and the grid below the legend (the Y axis top label would otherwise touch the legend)
+                var legend = showLegend ? { type: 'scroll', orient: legendOrient, top: title ? 36 : 5 } : null;
                 var toolbox = showToolbox ? { feature: { dataZoom: { yAxisIndex: 'none' }, dataView: { readOnly: true }, restore: {}, saveAsImage: {} } } : null;
 
                 var option = {
@@ -166,7 +167,7 @@
                     //Horizontal bar: category on the Y Axis, value on the X Axis (orientation set via the echarts_bar_horizontal flag)
                     if (legend) legend.data = rawSeries.map(function (s) { return s.name; });
                     option.tooltip = { trigger: 'axis', axisPointer: { type: 'shadow' }, valueFormatter: function (v) { return fmtY(v); } };
-                    option.grid = { containLabel: true, left: '2%', right: '3%', bottom: '2%', top: (title || showLegend) ? 60 : 20 };
+                    option.grid = { containLabel: true, left: '2%', right: '3%', bottom: '2%', top: (title && showLegend) ? 75 : (title || showLegend) ? 50 : 20 };
                     option.xAxis = { type: 'value', name: xTitle || undefined, axisLabel: { formatter: function (v) { return fmtY(v); } } };
                     option.yAxis = { type: 'category', data: xLabels, name: yTitle || undefined };
                     option.series = rawSeries.map(function (s) {
@@ -184,7 +185,7 @@
                         { trigger: 'axis', valueFormatter: function (v) { return fmtY(v); } };
 
                     //containLabel:true makes ECharts reserve room for the rotated X labels, but the grid's default bottom/left/right (60px / 10%) is then ADDED below/around that label box, leaving a large empty gap under the labels. Use small explicit margins so the chart fills the height; top keeps room for the title/legend.
-                    option.grid = { containLabel: true, left: '2%', right: '3%', bottom: '2%', top: (title || showLegend) ? 60 : 20 };
+                    option.grid = { containLabel: true, left: '2%', right: '3%', bottom: '2%', top: (title && showLegend) ? 75 : (title || showLegend) ? 50 : 20 };
                     option.xAxis = {
                         type: xAxisType,
                         data: xAxisType === 'category' ? xLabels : undefined,

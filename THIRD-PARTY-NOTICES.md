@@ -71,9 +71,9 @@ Listed in alphabetical order.
 | DataTables (core, with Buttons, DateTime, FixedColumns, FixedHeader, Responsive, Scroller and Select) | 2.3.8 | 2026-04-27 | MIT |
 | DiffPlex / DiffPlex.Wpf | 1.9.0 / 1.9.1 | 2025-09-13 / 2025-10-30 | Apache-2.0 |
 | DocumentFormat.OpenXml | 3.5.1 | 2026-03-18 | MIT |
-| ECharts | 5.6.0 | 2024-12-28 | Apache-2.0 |
+| ECharts | 6.1.0 | 2026-05-19 | Apache-2.0 |
 | flatpickr | 4.6.13 | 2022-04-14 | MIT |
-| FluentFTP | 54.2.1 | 2026-09-08 | MIT |
+| FluentFTP | 55.0.0 | 2026-09-17 | MIT |
 | Font Awesome (Free) | 6.7.2 | 2024-12-16 | CC BY 4.0 (icons), OFL (fonts), MIT (code) |
 | HtmlSanitizer | 9.2.1039 | 2026-08-28 | MIT |
 | jose-jwt | 5.3.0 | 2026-03-27 | MIT |
@@ -89,7 +89,7 @@ Listed in alphabetical order.
 | Npgsql (PostgreSQL) | 10.0.3 | 2026-05-27 | PostgreSQL License (MIT-like) |
 | Plotly.js | 3.7.0 | 2026-07-03 | MIT |
 | Popper (@popperjs/core) | 2.11.8 | 2023-05-26 | MIT |
-| PuppeteerSharp | 24.40.0 | 2026-03-20 | MIT |
+| PuppeteerSharp (pulls in WebDriverBiDi 0.0.61 and ReactiveExtensionsSharp 0.3.0, both MIT) | 25.12.0 | 2026-09-24 | MIT |
 | RazorEngineCore | 2026.1.1 | 2026-01-17 | MIT |
 | ScintillaNET.Core | 3.6.51 | 2020-08-30 | MIT (Scintilla license for the native component) |
 | ScottPlot | 5.1.59 | 2026-06-22 | MIT |
@@ -100,7 +100,7 @@ Listed in alphabetical order.
 | SSH.NET | 2026.0.0 | 2026-08-09 | MIT |
 | System.Data.SQLite | 1.0.119 | 2024-09-29 | Public Domain |
 | TaskScheduler | 2.12.2 | 2025-07-08 | MIT |
-| Twilio | 7.14.7 | 2026-04-14 | MIT |
+| Twilio | 8.0.2 | 2026-09-28 | MIT |
 
 Versions and release dates are those shipped with the current Seal Report release.
 This list covers the main dependencies; each NuGet package and web asset retains its own

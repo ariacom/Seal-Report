@@ -1,5 +1,11 @@
 // Type definitions for Seal
 
+// jQuery global declarations ($, jQuery, JQuery namespace), referenced explicitly: TypeScript 7 no longer resolves them through the relative reference types directive of the DataTables typings
+/// <reference path="jquery/JQueryStatic.d.ts" />
+/// <reference path="jquery/JQuery.d.ts" />
+/// <reference path="jquery/misc.d.ts" />
+/// <reference path="jquery/legacy.d.ts" />
+
 interface MenuItem {
     name: string;
     path?: string;
