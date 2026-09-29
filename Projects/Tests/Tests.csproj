@@ -19,8 +19,8 @@
   <ItemGroup>
     <PackageReference Include="Microsoft.NET.Test.Sdk" Version="18.10.1" />
     <!-- The MSTest meta-package replaces the deprecated MSTest.TestAdapter / MSTest.TestFramework pair -->
-    <PackageReference Include="MSTest" Version="4.4.0" />
-    <PackageReference Include="coverlet.collector" Version="10.0.1">
+    <PackageReference Include="MSTest" Version="4.4.1" />
+    <PackageReference Include="coverlet.collector" Version="10.1.0">
       <PrivateAssets>all</PrivateAssets>
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>

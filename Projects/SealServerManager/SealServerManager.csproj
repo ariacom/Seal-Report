@@ -32,7 +32,7 @@
 
   <ItemGroup>
     <PackageReference Include="Microsoft.Windows.Compatibility" Version="10.0.12" />
-    <PackageReference Include="System.ClientModel" Version="1.15.0" />
+    <PackageReference Include="System.ClientModel" Version="1.16.0" />
   </ItemGroup>
   
   <ItemGroup>

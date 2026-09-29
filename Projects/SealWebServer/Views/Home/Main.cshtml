@@ -210,15 +210,15 @@
     <script src="~/js/datetime-moment.js" asp-append-version="true"></script>
 
     <!-- common libraries -->
-    <script src="~/js/helpers.js" asp-append-version="true"></script>
-    <script src="~/js/common.js" asp-append-version="true"></script>
-    <script src="~/lib/d3/d3.min.js" asp-append-version="true"></script>
+    <script src="~/lib/d3/d3-format.min.js" asp-append-version="true"></script>
+    <script src="~/lib/d3/d3-time.min.js" asp-append-version="true"></script>
+    <script src="~/lib/d3/d3-time-format.min.js" asp-append-version="true"></script>
     @if (repository.CultureInfo.TwoLetterISOLanguageName != "en")
     {
-        <script src="~/lib/d3/d3-time.v1.min.js" asp-append-version="true"></script>
-        <script src="~/lib/d3/d3-time-format.v2.min.js" asp-append-version="true"></script>
         <script src="~/lib/d3/@("i18n/" + repository.CultureInfo.TwoLetterISOLanguageName + ".js")" asp-append-version="true"></script>
     }
+    <script src="~/js/helpers.js" asp-append-version="true"></script>
+    <script src="~/js/common.js" asp-append-version="true"></script>
 
     @foreach (var fileName in Helper.GetStringList(repository.Configuration.WebScriptFiles))
     {

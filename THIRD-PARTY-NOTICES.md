@@ -20,7 +20,7 @@ Distributed by Oracle under the
 Free to use and redistribute, but not an open-source license.
 
 ### QuestPDF (PDF generation)
-Version 2026.2.4 (released 2026-03-20), with the companion package QuestPDF.Barcodes 2024.10.3.
+Version 2026.9.1 (released 2026-09-25), with the companion package QuestPDF.Barcodes 2024.10.3.
 [QuestPDF](https://www.questpdf.com/) is dual-licensed. Seal Report uses it under the
 [QuestPDF Community License](https://www.questpdf.com/license/community.html), which is
 free for open-source projects distributed under an OSI-approved license (Seal Report
@@ -56,19 +56,19 @@ Listed in alphabetical order.
 
 | Package | Version | Release date | License |
 |---|---|---|---|
-| AngleSharp | 1.8.1 | 2026-09-10 | MIT |
+| AngleSharp | 1.8.2 | 2026-09-18 | MIT |
 | AngleSharp.Css (pulled in by HtmlSanitizer) | 1.0.2 | 2026-08-21 | MIT |
 | Azure SDKs / Microsoft.* packages | various | various | MIT |
 | Azure.AI.OpenAI | 2.1.0 | 2024-12-06 | MIT |
-| Bootstrap | 5.3.3 | 2024-02-20 | MIT |
+| Bootstrap | 5.3.8 | 2025-08-26 | MIT |
 | bootstrap-select | 1.14.0-beta3 | 2022-04-20 | MIT |
 | Chart.js | 4.5.1 | 2025-10-13 | MIT |
 | chartjs-adapter-date-fns (bundles date-fns) | 3.0.0 | 2022-12-11 | MIT |
 | chartjs-plugin-datalabels | 2.2.0 | 2022-12-15 | MIT |
 | ClosedXML (Excel processing) | 0.105.1 | 2026-07-25 | MIT |
 | Chromium (unbranded snapshot build used as headless browser for HTML-to-PDF and chart snapshots; not shipped, downloaded at first use by PuppeteerSharp into the repository Assemblies folder; embeds third-party libraries under their own licenses, see above) | revision 1681099 (Windows) / 1681097 (Linux), Chrome 153 branch point | 2026-08 | BSD-3-Clause |
-| D3 (incl. d3-time v1, d3-time-format v2) | 3.5.9 | 2015-11-16 | BSD-3-Clause |
-| DataTables (core, with Buttons, DateTime, FixedColumns, FixedHeader, Responsive, Scroller and Select) | 2.3.7 | 2026-01-30 | MIT |
+| D3 modules d3-format / d3-time / d3-time-format (chart value and date formatting) | 3.1.2 / 3.1.0 / 4.1.0 | 2026-01-14 / 2022-12-02 / 2021-12-04 | BSD-3-Clause |
+| DataTables (core, with Buttons, DateTime, FixedColumns, FixedHeader, Responsive, Scroller and Select) | 2.3.8 | 2026-04-27 | MIT |
 | DiffPlex / DiffPlex.Wpf | 1.9.0 / 1.9.1 | 2025-09-13 / 2025-10-30 | Apache-2.0 |
 | DocumentFormat.OpenXml | 3.5.1 | 2026-03-18 | MIT |
 | ECharts | 5.6.0 | 2024-12-28 | Apache-2.0 |
@@ -79,15 +79,15 @@ Listed in alphabetical order.
 | jose-jwt | 5.3.0 | 2026-03-27 | MIT |
 | jQuery (bundled in the DataTables build) | 3.7.0 | 2023-05-11 | MIT |
 | Leaflet (Map view; the background tiles are not part of Seal Report, they are downloaded by the browser from the tile provider chosen in the view, subject to its own usage policy) | 1.9.4 | 2023-05-18 | BSD-2-Clause |
-| MailKit / MimeKit | 4.18.0 | 2026-09-13 | MIT |
-| Microsoft.Data.SqlClient | 7.0.3 | 2026-09-10 | MIT |
-| Microsoft.Web.WebView2 (SDK; the WebView2 Runtime is not redistributed and must be installed on the machine) | 1.0.3912.50 | 2026-04-13 | BSD-3-Clause |
-| moment | 2.30.1 | 2023-12-26 | MIT |
-| MongoDB.Driver | 3.11.2 | 2026-09-10 | Apache-2.0 |
+| MailKit / MimeKit | 4.18.1 | 2026-09-27 | MIT |
+| Microsoft.Data.SqlClient | 7.1.0 | 2026-09-18 | MIT |
+| Microsoft.Web.WebView2 (SDK; the WebView2 Runtime is not redistributed and must be installed on the machine) | 1.0.4258.31 | 2026-09-28 | BSD-3-Clause |
+| moment | 2.31.0 | 2026-09-15 | MIT |
+| MongoDB.Driver | 3.12.0 | 2026-09-17 | Apache-2.0 |
 | MySqlConnector | 2.6.2 | 2026-08-11 | MIT |
 | Newtonsoft.Json | 13.0.4 | 2025-09-16 | MIT |
 | Npgsql (PostgreSQL) | 10.0.3 | 2026-05-27 | PostgreSQL License (MIT-like) |
-| Plotly.js | 3.1.1 | 2025-09-29 | MIT |
+| Plotly.js | 3.7.0 | 2026-07-03 | MIT |
 | Popper (@popperjs/core) | 2.11.8 | 2023-05-26 | MIT |
 | PuppeteerSharp | 24.40.0 | 2026-03-20 | MIT |
 | RazorEngineCore | 2026.1.1 | 2026-01-17 | MIT |

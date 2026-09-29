@@ -26,9 +26,9 @@
             $(document).ready(function () {
                 var colorsDef = "@view.GetValue("plotly_colors")";
                 var colors = null;
-                if (colorsDef == "d3") colors = d3.scale.category@((reportModel.ExecPlotlyChartType == "pie" ? page.PrimaryXDimensions.Count : series.Count()) <= 10 ? "1" : "2")0().range();
-                else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
-                else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
+                if (colorsDef == "d3") colors = d3Palettes.category@((reportModel.ExecPlotlyChartType == "pie" ? page.PrimaryXDimensions.Count : series.Count()) <= 10 ? "1" : "2")0.slice();
+                else if (colorsDef == "d3b") colors = d3Palettes.category20b.slice();
+                else if (colorsDef == "d3c") colors = d3Palettes.category20c.slice();
                 else colors = @Raw(view.GetValue("plotly_colors"));
 
                 var colorMappings = {@Raw(view.GetValue("plotly_color_mappings"))};
@@ -92,7 +92,7 @@
                     var text = data[0].values.map(function (v, i) {
                         var valStr = "";
                         if (@Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime)) valStr = d3.timeFormat('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(new Date(v));
-                        else valStr = d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(v).valueFormat() + '<br>' + d3.format('Raw(Helper.ToJS(@reportModel.ExecD3PrimaryYAxisFormat))')((v / total * 100).toFixed(2)).valueFormat() + '%';
+                        else valStr = d3.format('@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))')(v).valueFormat() + '<br>' + d3.format(',.2f')(v / total * 100).valueFormat() + '%';
                         return data[0].labels[i] + '<br>' + valStr;
                     });
                     data[0].text = text;

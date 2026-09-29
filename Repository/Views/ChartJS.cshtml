@@ -49,9 +49,9 @@
                 var ctx = $("#@chartId");
                 var colorsDef = "@view.GetValue("chartjs_colors")";
                 var colors = null;
-                if (colorsDef == "d3") colors = d3.scale.category@((chartType == "pie" || chartType == "polarArea" ? page.PrimaryXDimensions.Count : series.Count()) <= 10 ? "1" : "2")0().range();
-                else if (colorsDef == "d3b") colors = d3.scale.category20b().range();
-                else if (colorsDef == "d3c") colors = d3.scale.category20c().range();
+                if (colorsDef == "d3") colors = d3Palettes.category@((chartType == "pie" || chartType == "polarArea" ? page.PrimaryXDimensions.Count : series.Count()) <= 10 ? "1" : "2")0.slice();
+                else if (colorsDef == "d3b") colors = d3Palettes.category20b.slice();
+                else if (colorsDef == "d3c") colors = d3Palettes.category20c.slice();
                 else colors = @Raw(view.GetValue("chartjs_colors"));
 
                 var colorMappings = {@Raw(view.GetValue("chartjs_color_mappings"))};

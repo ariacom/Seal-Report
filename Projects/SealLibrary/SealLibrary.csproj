@@ -158,7 +158,7 @@
 	</ItemGroup>
 
 	<ItemGroup>
-		<PackageReference Include="Azure.Core" Version="1.62.0" />
+		<PackageReference Include="Azure.Core" Version="1.63.0" />
 		<PackageReference Include="Azure.Identity" Version="1.21.0" />
 		<PackageReference Include="Azure.Storage.Blobs" Version="12.29.2" />
 		<PackageReference Include="Azure.Storage.Common" Version="12.28.0" />
@@ -178,23 +178,23 @@
 		     The 2.3.x Http packages above bring the features types transitively, and the web server gets
 		     them from the ASP.NET Core shared framework. -->
 		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.12" />
-		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.0.3" />
-		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.0.3" />
+		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
+		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.1.0" />
 		<!-- Graph 6.x pulls Graph.Core 4.x -> Kiota 2.x, which is already above the GHSA-7j59-v9qr-6fq9 fix (1.22.0); no Kiota pin needed -->
-		<PackageReference Include="Microsoft.Graph" Version="6.6.0" />
-		<PackageReference Include="MongoDB.Driver" Version="3.11.2" />
+		<PackageReference Include="Microsoft.Graph" Version="6.7.0" />
+		<PackageReference Include="MongoDB.Driver" Version="3.12.0" />
 		<PackageReference Include="MySqlConnector" Version="2.6.2" />
 		<PackageReference Include="Oracle.ManagedDataAccess.Core" Version="23.26.301" />
 		<PackageReference Include="Npgsql" Version="10.0.3" />
 		<PackageReference Include="PuppeteerSharp" Version="24.40.0" />
-		<PackageReference Include="QuestPDF" Version="2026.2.4" />
+		<PackageReference Include="QuestPDF" Version="2026.9.1" />
 		<PackageReference Include="QuestPDF.Barcodes" Version="2024.10.3" />
 		<PackageReference Include="ScottPlot" Version="5.1.59" />
 		<PackageReference Include="SendGrid" Version="9.29.3" />
 		<PackageReference Include="SharpZipLib" Version="1.4.2" />
 		<PackageReference Include="SkiaSharp.NativeAssets.Linux.NoDependencies" Version="3.119.2" />
 		<PackageReference Include="SSH.NET" Version="2026.0.0" />
-		<PackageReference Include="System.ClientModel" Version="1.15.0" />
+		<PackageReference Include="System.ClientModel" Version="1.16.0" />
 		<PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
 		<PackageReference Include="System.IO.FileSystem.AccessControl" Version="5.0.0" />
 		<PackageReference Include="System.IO.Packaging" Version="10.0.12" />
@@ -212,9 +212,9 @@
 		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.12" />
 		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.12" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.12" />
-		<PackageReference Include="AngleSharp" Version="1.8.1" />
-		<PackageReference Include="MailKit" Version="4.18.0" />
-		<PackageReference Include="MimeKit" Version="4.18.0" />
+		<PackageReference Include="AngleSharp" Version="1.8.2" />
+		<PackageReference Include="MailKit" Version="4.18.1" />
+		<PackageReference Include="MimeKit" Version="4.18.1" />
 		<PackageReference Include="Azure.AI.OpenAI" Version="2.1.0" />
 		<PackageReference Include="RazorEngineCore" Version="2026.1.1" />
 		<PackageReference Include="Microsoft.AspNetCore.Html.Abstractions" Version="2.3.13" />

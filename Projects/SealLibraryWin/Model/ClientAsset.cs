@@ -63,7 +63,7 @@ namespace Seal.Model
         public static readonly List<ClientAsset> BootstrapCss = new List<ClientAsset>
         {
             new ClientAsset(ClientAssetType.CSS, "lib/bootstrap/css/bootstrap.min.css",
-                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/css/bootstrap.min.css")
+                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/css/bootstrap.min.css")
         };
 
         /// <summary>
@@ -76,7 +76,7 @@ namespace Seal.Model
         public static readonly List<ClientAsset> BootstrapJs = new List<ClientAsset>
         {
             new ClientAsset(ClientAssetType.Script, "lib/bootstrap/js/bootstrap.bundle.min.js",
-                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.3/js/bootstrap.bundle.min.js"),
+                "https://cdnjs.cloudflare.com/ajax/libs/bootstrap/5.3.8/js/bootstrap.bundle.min.js"),
             new ClientAsset(ClientAssetType.Script, "lib/bootstrap-select/bootstrap-select-bs5.js")
         };
 

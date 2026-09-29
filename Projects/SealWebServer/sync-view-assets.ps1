@@ -12,7 +12,7 @@
 
     Scope of the sync (wwwroot -> Repository\Views):
       - lib\*            ALL third-party libraries, EXCEPT jstree (web-UI only, not used by reports)
-      - js\common.js, js\helpers.js, js\chartNVD3.js, js\datetime-moment.js   shared first-party scripts
+      - js\common.js, js\helpers.js, js\chartEcharts.js, js\datetime-moment.js shared first-party scripts
       - css\seal.css                                                          shared first-party style
 
     Files that exist only in one tree are left untouched (e.g. wwwroot\js\swi-*.js and the jstree
