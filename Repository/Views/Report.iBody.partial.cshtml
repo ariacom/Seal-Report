@@ -8,15 +8,17 @@
 
 <script type="text/javascript">
 
+    //show one tab pane (report view, information or messages) and highlight its tab button (Bootstrap 5: active on the nav-link)
+    function processShowTab(buttonId, paneId) {
+        $("#report_button,#information_button,#message_button").removeClass("active");
+        $("#@(view.ViewId)_div,#information_div,#message_div").removeClass("active show");
+        $(buttonId).addClass("active");
+        $(paneId).addClass("active show");
+    }
+
     function processShowMsgDuringExec() {
         var showMsgDuringExec = @Helper.ToJS(view.GetValue("messages_mode") == "enabledshownexec");
-        if (showMsgDuringExec) {
-            $("#@view.ViewId").removeClass("active show");
-            $("#report_button").parent().removeClass("active");
-            $("#information_button").parent().removeClass("active");
-            $("#message_div").addClass("active show");
-            $("#message_button").parent().addClass("active");
-        }
+        if (showMsgDuringExec) processShowTab("#message_button", "#message_div");
     }
 
     function processOpenMessagesInNewWindow() {
@@ -53,21 +55,9 @@
             var showMessages = @Helper.ToJS(report.ShowExecutionMessages);
             var showInformation = @Helper.ToJS(!report.ShowExecutionMessages && view.GetValue("information_mode") == "enabledshown");
 
-            $("#report_button").parent().removeClass("active");
-            $("#information_button").parent().removeClass("active");
-            $("#message_button").parent().removeClass("active");
-            if (showMessages) {
-                $("#message_button").parent().addClass("active");
-                $("#message_div").addClass("active show");
-            }
-            else if (showInformation) {
-                $("#information_button").parent().addClass("active");
-                $("#information_div").addClass("active show");
-            }
-            else {
-                $("#report_button").parent().addClass("active");
-                $("#@view.ViewId").addClass("active show");
-            }
+            if (showMessages) processShowTab("#message_button", "#message_div");
+            else if (showInformation) processShowTab("#information_button", "#information_div");
+            else processShowTab("#report_button", "#@(view.ViewId)_div");
         }
 
         function processReportExecuted() {

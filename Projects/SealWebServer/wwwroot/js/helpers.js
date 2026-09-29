@@ -162,8 +162,20 @@ function setMessageHeight() {
         //in the left/right layout (#content_div present) the restrictions panel is a side column and does not reduce the vertical space
         var restrictionsOffset = $("#content_div").length ? 0 : visibleHeight("#restrictions_div");
         var offset = visibleHeight("#progress_panel") + visibleHeight("#alert_status") + restrictionsOffset + 110;
-        var height = (Math.max(document.documentElement.clientHeight, window.innerHeight || 0) - offset);
-        $("#execution_messages").css("height", height + "px");
+        var viewHeight = Math.max(document.documentElement.clientHeight, window.innerHeight || 0);
+        var height = viewHeight - offset;
+        var $messages = $("#execution_messages");
+        if ($messages.is(":visible")) {
+            //size from the real position of the box: its top plus the bottom margins/paddings/borders of its ancestors must fit in the viewport (no page scroll bar)
+            var bottom = parseFloat($messages.css("margin-bottom")) || 0;
+            $messages.parents().each(function () {
+                if (this === document.documentElement) return false;
+                var $p = $(this);
+                bottom += (parseFloat($p.css("padding-bottom")) || 0) + (parseFloat($p.css("border-bottom-width")) || 0) + (parseFloat($p.css("margin-bottom")) || 0);
+            });
+            height = Math.floor(viewHeight - $messages.offset().top - bottom) - 2;
+        }
+        $messages.css("height", height + "px");
     }, 100);
 }
 
