@@ -118,8 +118,13 @@ namespace Seal.AI
                 return string.Empty;
             }
 
+            if (choice.FinishReason == "content_filter")
+                throw new Exception("OpenAI: the reply was blocked by the content filter. Rephrase the request.");
+
             var result = choice.Message?.Content
-                ?? throw new Exception("Failed to get response from OpenAI");
+                ?? throw new Exception(choice.FinishReason == "length"
+                    ? "OpenAI: the reply was truncated because the maximum number of output tokens was reached. Increase the Max Tokens of the provider."
+                    : $"Failed to get response from OpenAI (finish reason: {choice.FinishReason}).");
 
             messages.Add(new AssistantChatMessage(result));
             return result;

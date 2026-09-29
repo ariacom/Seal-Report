@@ -380,6 +380,12 @@
         <member name="M:Seal.AI.AzureProvider.HandleChatWithTools(System.Collections.Generic.List{OpenAI.Chat.ChatMessage},System.Collections.Generic.IList{Seal.AI.AITool},System.Collections.Generic.IList{Seal.AI.AIToolCall}@)">
             <inheritdoc/>
         </member>
+        <member name="M:Seal.AI.AzureProvider.IncompleteReplyException(OpenAI.Chat.ChatCompletion)">
+            <summary>
+            Exception for a completion that ended neither with a reply nor with tool calls
+            (content filter, max output tokens...), instead of silently returning an empty reply.
+            </summary>
+        </member>
         <member name="T:Seal.AI.OllamaProvider">
             <summary>
             AI provider implementation for an Ollama server (local models) using its /api/chat REST API.

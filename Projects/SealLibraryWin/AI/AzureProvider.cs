@@ -62,7 +62,7 @@ namespace Seal.AI
                 return result;
             }
 
-            return string.Empty;
+            throw IncompleteReplyException(completion);
         }
 
         /// <inheritdoc/>
@@ -103,7 +103,20 @@ namespace Seal.AI
                 return result;
             }
 
-            return string.Empty;
+            throw IncompleteReplyException(completion);
+        }
+
+        /// <summary>
+        /// Exception for a completion that ended neither with a reply nor with tool calls
+        /// (content filter, max output tokens...), instead of silently returning an empty reply.
+        /// </summary>
+        private static Exception IncompleteReplyException(ChatCompletion completion)
+        {
+            if (completion.FinishReason == ChatFinishReason.ContentFilter)
+                return new Exception("Azure OpenAI: the reply was blocked by the Azure content filter. Rephrase the request or review the content filter settings of the deployment.");
+            if (completion.FinishReason == ChatFinishReason.Length)
+                return new Exception("Azure OpenAI: the reply was truncated because the maximum number of output tokens was reached. Increase the Max Tokens of the provider.");
+            return new Exception($"Azure OpenAI: the model returned no reply (finish reason: {completion.FinishReason}).");
         }
     }
 }

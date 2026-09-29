@@ -262,6 +262,7 @@ Always include a `<ShowTotal>` on every `Data` element. Choose by table shape:
 - **Do not force a sort the user didn't ask for.** Omit `<SortOrder>` on every element when nothing about ordering is requested. Never assign sequential `1, 2, 3…` just to fill a value.
 - Top-N / "best/worst" → set the measure (Data) to `1 Descendant` (or `1 Ascendant` for bottom); leave others default.
 - Sort by a dimension ("alphabetical", "by date") → set that dimension to `1 Ascendant`; leave others default.
+- A sort requested **for the chart only** ("sort chart by…") is **not** a `<SortOrder>`: use only the chart series sorting (`<SerieSortType>`/`<SerieSortOrder>`, see Charts) and leave `<SortOrder>` omitted on the axis dimension.
 - Use explicit `1`, `2`, `3`… only when more than one element contributes to a requested sort.
 
 **Column display order (`<DisplayOrder>`):** consecutive integers from 1, left to right. Dimension (Row) columns typically before measure (Data) columns.
@@ -449,6 +450,7 @@ Without `<SerieDefinition>Axis</SerieDefinition>` on the Row dimension (and `<Ch
 - `<SerieSortType>` = `None` (keep query order) · `Y` (by point/value) · `AxisLabel` (by dimension)
 - `<SerieSortOrder>` = `Ascending` · `Descending` (defaults: `Y` + `Ascending`)
 - "biggest first" → `Y` + `Descending`; "alphabetical/date order" → `AxisLabel` + the requested direction.
+- A chart-only sort sets **only** these two fields — never add a `<SortOrder>` on the axis dimension for it.
 
 **Chart view options** — add a `<Parameters>` block to the `Chart JS` sub-view (bars are vertical & clustered by default):
 | User asks for | Parameter | Value |
