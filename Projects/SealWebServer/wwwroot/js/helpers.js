@@ -176,13 +176,21 @@ function setMessageHeight() {
             height = Math.floor(viewHeight - $messages.offset().top - bottom) - 2;
         }
         $messages.css("height", height + "px");
+        if ($messages.is(":visible")) {
+            //safety net: shrink by any remaining page overflow (collapsed margins, late layout changes)
+            var overflow = document.documentElement.scrollHeight - document.documentElement.clientHeight;
+            if (overflow > 0) $messages.css("height", (height - overflow) + "px");
+        }
     }, 100);
 }
 
 function resize(printLayout) {
     if (!printLayout) {
-        setTimeout(function () { $("#report_body_container").css("padding-top", $("#bar_top").height() + 15); }, 200);
-        setMessageHeight();
+        //size the messages once the top padding is set: it moves the messages box down
+        setTimeout(function () {
+            $("#report_body_container").css("padding-top", $("#bar_top").height() + 15);
+            setMessageHeight();
+        }, 200);
     }
     redrawDataTables();
 }
