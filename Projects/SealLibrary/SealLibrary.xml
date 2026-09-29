@@ -15985,31 +15985,6 @@
             The value of the key
             </summary>
         </member>
-        <member name="T:Seal.Model.SealServerConfiguration.FileReplacePattern">
-            <summary>
-            Defines a pattern to replace in a file 
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealServerConfiguration.FileReplacePattern.ToString">
-            <summary>
-            Display name of the pattern
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.FileReplacePattern.FileName">
-            <summary>
-            The name of the attached file
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.FileReplacePattern.OldValue">
-            <summary>
-            The pattern to replace
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SealServerConfiguration.FileReplacePattern.NewValue">
-            <summary>
-            The new value
-            </summary>
-        </member>
         <member name="T:Seal.Model.SecurityFolder">
             <summary>
             A SecurityFolder defines the security applied to a published folder

@@ -143,13 +143,6 @@ namespace Seal.Forms
             {
                 frmCollectionEditorForm.Text = "Joins of the Model Collection Editor";
             }
-            else if (CollectionItemType == typeof(SealServerConfiguration.FileReplacePattern))
-            {
-                frmCollectionEditorForm.Text = "File Pattern Collection Editor";
-                allowAdd = true;
-                allowRemove = true;
-                _useHandlerInterface = false;
-            }
             else if (CollectionItemType == typeof(SealServerConfiguration.KeyValue))
             {
                 frmCollectionEditorForm.Text = "Key Value Collection Editor";
@@ -346,7 +339,6 @@ namespace Seal.Forms
             else if (value is SubReport) result = ((SubReport)value).Name;
             else if (value is JoinOverride) result = ((JoinOverride)value).DisplayText;
             else if (value is ReportComponent) result = ((ReportComponent)value).Name;
-            else if (value is SealServerConfiguration.FileReplacePattern) result = ((SealServerConfiguration.FileReplacePattern)value).ToString();
             else if (value is MetaEV)
             {
                 var item = value as MetaEV;

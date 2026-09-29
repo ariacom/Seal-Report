@@ -1005,43 +1005,6 @@ namespace Seal.Model
 #endif
             public string Value { get; set; }
         }
-
-
-        /// <summary>
-        /// Defines a pattern to replace in a file 
-        /// </summary>
-        public class FileReplacePattern
-        {
-            /// <summary>
-            /// Display name of the pattern
-            /// </summary>
-            public override string ToString()
-            {
-                return FileName + " " + OldValue;
-            }
-
-            /// <summary>
-            /// The name of the attached file
-            /// </summary>
-#if WINDOWS
-            [Category("Pattern Definition"), DisplayName("\tFile Name"), Description("The name of the attached file.")]
-#endif
-            public string FileName { get; set; } = "filename.css";
-            /// <summary>
-            /// The pattern to replace
-            /// </summary>
-#if WINDOWS
-            [Category("Pattern Definition"), DisplayName("\tOld Value"), Description("The pattern to replace.")]
-#endif
-            public string OldValue { get; set; }
-            /// <summary>
-            /// The new value
-            /// </summary>
-#if WINDOWS
-            [Category("Pattern Definition"), DisplayName("New Value"), Description("The new value.")]
-#endif
-            public string NewValue { get; set; }
-        }
     }
 }
 
