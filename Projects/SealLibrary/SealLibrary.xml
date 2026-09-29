@@ -318,6 +318,12 @@
             with automatic retry on rate limit (429) and overload (529) responses.
             </summary>
         </member>
+        <member name="F:Seal.AI.AnthropicProvider.DefaultMaxTokens">
+            <summary>
+            Output ceiling sent when no max tokens is configured: large enough for a full report XML
+            in one tool call (only the tokens actually generated are billed).
+            </summary>
+        </member>
         <member name="M:Seal.AI.AnthropicProvider.#ctor">
             <summary>
             Initializes a new Anthropic provider.
@@ -331,6 +337,20 @@
         </member>
         <member name="M:Seal.AI.AnthropicProvider.HandleChatWithTools(System.Collections.Generic.List{OpenAI.Chat.ChatMessage},System.Collections.Generic.IList{Seal.AI.AITool},System.Collections.Generic.IList{Seal.AI.AIToolCall}@)">
             <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.AnthropicProvider.AddModelOptions(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Sampling and thinking options by model generation.
+            Claude Opus 4.7+, Opus 5.x, Sonnet 5, Fable and Mythos reject temperature/top_p (400).
+            Sonnet 5, Opus 4.7/4.8 and Opus 5 accept <c>thinking: disabled</c>: the provider does not keep
+            thinking blocks between tool calls, so thinking is turned off where the model allows it
+            (Fable, Mythos and Opus 5.5 always think and reject it).
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AnthropicProvider.GetText(Seal.AI.AnthropicProvider.AnthropicResponse)">
+            <summary>
+            Text of a response: its text blocks (a response may start with a thinking block).
+            </summary>
         </member>
         <member name="M:Seal.AI.AnthropicProvider.SerializeMessages(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
             <summary>
@@ -970,7 +990,8 @@
             <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
             whitespace the existing system message (if any) is simply removed.
             Call this before <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> to inject a parameter-driven system
-            prompt that overrides the one from <see cref="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt"/>.
+            prompt that overrides the one from <see cref="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt"/>
+            (kept until <see cref="M:Seal.AI.AIAgent.Clear"/>: the configuration prompt is no longer re-applied at each turn).
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.RewindToUserMessage(System.Int32)">

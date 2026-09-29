@@ -136,6 +136,8 @@ namespace Seal.AI
             "When you end your reply by offering follow-up options or asking the user to choose between alternatives, " +
             "write each option as `[[short label]]`, or `[[short label|full message to send]]` when the label alone would be ambiguous out of context. " +
             "Write the label as the user would phrase the request, in the user's language. " +
+            "Each suggestion must stand on its own: when it refers to the current search or list, the full message restates its criteria in business terms " +
+            "(e.g. activity, area, size, period), never just \"this search\", \"this list\" or \"this report\". " +
             "Never translate, reword or drop the double brackets. Do not use them for anything else (not for report names, values or links).";
 
         bool _chatSuggestions = false;
@@ -150,9 +152,13 @@ namespace Seal.AI
             {
                 if (_chatSuggestions == value) return;
                 _chatSuggestions = value;
-                OverrideSystemPrompt(effectiveSystemPrompt);
+                if (!_customSystemPrompt) setSystemMessage(effectiveSystemPrompt);
             }
         }
+
+        // True once a caller has injected its own prompt with OverrideSystemPrompt: the configuration
+        // prompt is then no longer re-applied before each chat turn.
+        bool _customSystemPrompt = false;
 
         string effectiveSystemPrompt
         {
@@ -214,6 +220,11 @@ namespace Seal.AI
         /// </remarks>
         public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10, Action<string> progress = null)
         {
+            // Chat with the current system prompt of the configuration: a conversation reloaded from a
+            // saved chat (or rewound, or kept in a long-lived web session) otherwise keeps the prompt it
+            // was started with, and prompt file changes are silently ignored.
+            if (!_customSystemPrompt) setSystemMessage(effectiveSystemPrompt);
+
             var messageCountBefore = Messages.Count;
             LastChatUsage = new AIUsage();
             void addUsage()
@@ -533,9 +544,16 @@ namespace Seal.AI
         /// <paramref name="prompt"/>.  If <paramref name="prompt"/> is null or
         /// whitespace the existing system message (if any) is simply removed.
         /// Call this before <see cref="Chat"/> to inject a parameter-driven system
-        /// prompt that overrides the one from <see cref="AIAgentConfiguration.EffectiveSystemPrompt"/>.
+        /// prompt that overrides the one from <see cref="AIAgentConfiguration.EffectiveSystemPrompt"/>
+        /// (kept until <see cref="Clear"/>: the configuration prompt is no longer re-applied at each turn).
         /// </summary>
         public void OverrideSystemPrompt(string prompt)
+        {
+            _customSystemPrompt = true;
+            setSystemMessage(prompt);
+        }
+
+        void setSystemMessage(string prompt)
         {
             if (Messages.Count > 0 && Messages[0] is SystemChatMessage)
                 Messages.RemoveAt(0);
@@ -584,6 +602,7 @@ namespace Seal.AI
             Title = null;
             LastChatUsage = new AIUsage();
             TotalUsage = new AIUsage();
+            _customSystemPrompt = false;
             seedSystemPrompt();
         }
 

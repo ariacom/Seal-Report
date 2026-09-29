@@ -21,6 +21,12 @@ namespace Seal.AI
         };
 
         /// <summary>
+        /// Output ceiling sent when no max tokens is configured: large enough for a full report XML
+        /// in one tool call (only the tokens actually generated are billed).
+        /// </summary>
+        const int DefaultMaxTokens = 16000;
+
+        /// <summary>
         /// Initializes a new Anthropic provider.
         /// </summary>
         public AnthropicProvider() { }
@@ -48,14 +54,12 @@ namespace Seal.AI
                 ["model"] = _model,
                 ["messages"] = SerializeMessages(messages),
                 ["system"] = systemMessage,
-                ["max_tokens"] = _maxTokens > 0 ? _maxTokens : 4096,  // required by Anthropic
+                ["max_tokens"] = _maxTokens > 0 ? _maxTokens : DefaultMaxTokens,  // required by Anthropic
             };
-            // Send temperature OR top_p, never both: Sonnet 4.5+ returns 400 when both are specified.
-            if (_topP != 1.0f) body["top_p"] = _topP;
-            else body["temperature"] = _temperature;
+            AddModelOptions(body);
 
             var response = SendRequest(body);
-            var result = response?.Content?[0]?.Text
+            var result = GetText(response)
                 ?? throw new Exception("Failed to get response from Anthropic");
 
             messages.Add(new AssistantChatMessage(result));
@@ -76,7 +80,7 @@ namespace Seal.AI
                 ["model"] = _model,
                 ["messages"] = SerializeMessages(messages),
                 ["system"] = systemMessage,
-                ["max_tokens"] = _maxTokens > 0 ? _maxTokens : 4096,
+                ["max_tokens"] = _maxTokens > 0 ? _maxTokens : DefaultMaxTokens,
                 ["tools"] = tools.Select(t => (object)new
                 {
                     name = t.Name,
@@ -86,9 +90,7 @@ namespace Seal.AI
                         : JsonSerializer.Deserialize<JsonElement>(t.ParametersSchema)
                 }).ToList()
             };
-            // Send temperature OR top_p, never both: Sonnet 4.5+ returns 400 when both are specified.
-            if (_topP != 1.0f) body["top_p"] = _topP;
-            else body["temperature"] = _temperature;
+            AddModelOptions(body);
 
             var response = SendRequest(body);
 
@@ -110,16 +112,50 @@ namespace Seal.AI
                 toolCalls = calls;
 
                 // Capture any interstitial text the model produced alongside the tool calls.
-                var textBlock = response.Content.FirstOrDefault(b => b.Type == "text");
-                messages.Add(new AssistantToolCallsChatMessage(calls, textBlock?.Text));
+                messages.Add(new AssistantToolCallsChatMessage(calls, GetText(response)));
                 return string.Empty;
             }
 
-            var result = response?.Content?[0]?.Text
+            var result = GetText(response)
                 ?? throw new Exception("Failed to get response from Anthropic");
 
             messages.Add(new AssistantChatMessage(result));
             return result;
+        }
+
+        /// <summary>
+        /// Sampling and thinking options by model generation.
+        /// Claude Opus 4.7+, Opus 5.x, Sonnet 5, Fable and Mythos reject temperature/top_p (400).
+        /// Sonnet 5, Opus 4.7/4.8 and Opus 5 accept <c>thinking: disabled</c>: the provider does not keep
+        /// thinking blocks between tool calls, so thinking is turned off where the model allows it
+        /// (Fable, Mythos and Opus 5.5 always think and reject it).
+        /// </summary>
+        private void AddModelOptions(Dictionary<string, object> body)
+        {
+            var model = (_model ?? "").ToLowerInvariant();
+            bool alwaysThinking = model.StartsWith("claude-fable") || model.StartsWith("claude-mythos") || model.StartsWith("claude-opus-5-5");
+            bool noSampling = alwaysThinking || model.StartsWith("claude-sonnet-5") || model.StartsWith("claude-opus-5")
+                || model.StartsWith("claude-opus-4-7") || model.StartsWith("claude-opus-4-8");
+
+            if (noSampling)
+            {
+                if (!alwaysThinking) body["thinking"] = new { type = "disabled" };
+                return;
+            }
+            // Send temperature OR top_p, never both: Sonnet 4.5+ returns 400 when both are specified.
+            if (_topP != 1.0f) body["top_p"] = _topP;
+            else body["temperature"] = _temperature;
+        }
+
+        /// <summary>
+        /// Text of a response: its text blocks (a response may start with a thinking block).
+        /// </summary>
+        private static string GetText(AnthropicResponse response)
+        {
+            if (response?.StopReason == "refusal")
+                throw new Exception("Anthropic: the model declined to answer this request (refusal).");
+            var texts = response?.Content?.Where(b => b.Type == "text").Select(b => b.Text).ToList();
+            return texts == null || texts.Count == 0 ? null : string.Concat(texts);
         }
 
         private AnthropicResponse SendRequest(Dictionary<string, object> body)
