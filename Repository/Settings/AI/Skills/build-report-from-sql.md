@@ -37,6 +37,10 @@ Follow these steps in order — do not skip the exploration steps.
 ### Hard rules for the report SQL
 - **Never put `ORDER BY` in the SQL source** — Seal Report sorts at the view
   level; an `ORDER BY` in the source SQL breaks subqueries and CTEs.
+  **Exception — top-N queries:** when the SQL keeps only the first N rows (`TOP N`, `LIMIT N`,
+  `FETCH FIRST N ROWS`), the `ORDER BY` defines **which** rows are kept and is **mandatory**
+  (e.g. `SELECT TOP 5 … GROUP BY … ORDER BY SUM(…) DESC`). Without it the database returns
+  N arbitrary rows. An `ORDER BY` combined with a row limit is valid inside the runtime subquery.
 - **Never end the SQL with a semicolon** — the query is wrapped inside a
   `FROM (…) AS sub` at runtime; a trailing `;` causes a syntax error.
 - **Computed column aliases must use CamelCase** — write `SUM(x) AS TotalSales`,

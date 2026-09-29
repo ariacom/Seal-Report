@@ -189,7 +189,7 @@ Reports, Personal.
 Access is restricted to files within these roots and to folders the current user has rights on.
 Always call file_list first to discover and confirm the exact source path before performing any file_manage operation.</Description>
       <ProgressLabel>Managing file {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"action":{"type":"string","enum":["delete","rename","move","copy"],"description":"Operation to perform"},"path":{"type":"string","description":"Relative path of the source report (e.g. Reports\\Sales\\monthly.srex)"},"destination":{"type":"string","description":"Target relative path for rename/move/copy (e.g. Reports\\Archive\\monthly.srex). Not used for delete."}},"required":["action","path"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"action":{"type":"string","enum":["delete","rename","move","copy"],"description":"Operation to perform"},"path":{"type":"string","description":"Relative path of the source report (e.g. Reports\\Sales\\monthly.srex)"},"destination":{"type":"string","description":"Target relative path for rename/move/copy (e.g. Reports\\Archive\\monthly.srex). For rename, a bare file name (e.g. monthly_v2.srex) keeps the file in its folder. Not used for delete."}},"required":["action","path"]}</ParametersSchema>
       <ExecutionScriptFile>file_manage.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>

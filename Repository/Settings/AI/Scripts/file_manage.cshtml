@@ -89,7 +89,11 @@
 
         if (string.IsNullOrWhiteSpace(dest)) { tool.ExecResult = "Error: 'destination' is required for this action."; return; }
 
-        var destFull = ResolveDestination(dest, GetSourceRoot(sourceFull));
+        // Rename with a bare file name: keep the file in its folder
+        var destFull = (action == "rename" && string.IsNullOrEmpty(Path.GetDirectoryName(dest)))
+            ? Path.Combine(sourceDir, dest)
+            : ResolveDestination(dest, GetSourceRoot(sourceFull));
+        if (!IsWithinRoots(destFull)) { tool.ExecResult = $"Error: destination '{dest}' is outside the Reports and Personal folders."; return; }
         var destDir  = Path.GetDirectoryName(destFull);
 
         if (action == "rename" || action == "move")
