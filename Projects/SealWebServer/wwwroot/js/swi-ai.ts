@@ -421,8 +421,12 @@
     // Called by the main interface after each login: restores the panel state saved in the user profile.
     (window as any).SWIAIPanel = {
         applyProfile: function (profile: any): void {
-            // A new login may be another user: reload the agent list on next open.
+            // A new login may be another user: reload the agent list on next open
+            // and drop the conversation displayed for the previous session.
             _agentsLoaded = false;
+            clearConversation();
+            _panelChatFileName = '';
+            setFavorite(false);
             if (!profile.hasagent) {
                 closePanel();
                 return;
@@ -447,7 +451,7 @@
 
             if (profile.aipanelopen) {
                 openPanel();
-                loadAgents();
+                loadAgents(restoreLastChat);
             }
             else closePanel();
 
@@ -461,7 +465,8 @@
     // is disabled so it acts as a plain title label.
     var _agentsLoaded: boolean = false;
 
-    function loadAgents(): void {
+    // onReady is called once the current agent is selected on the server.
+    function loadAgents(onReady?: () => void): void {
         if (_agentsLoaded) return;
         _agentsLoaded = true;
         _gateway.GetUserAgents(function (data: any) {
@@ -488,8 +493,9 @@
             if (!selectedGuid || !agents.some(function (a) { return a.guid === selectedGuid; })) {
                 selectedGuid = agents[0].guid;
                 // Persist the default selection on the server so the next request uses it.
-                _gateway.SelectAgent(selectedGuid, function () { });
+                _gateway.SelectAgent(selectedGuid, function () { if (onReady) onReady(); });
             }
+            else if (onReady) onReady();
             $agentSelect.val(selectedGuid);
 
             // Apply description tooltips to the dropdown items. bootstrap-select renders
@@ -856,6 +862,40 @@
         });
     }
 
+    // ── Helper: load a saved chat and replay it in the panel ────
+    function loadChat(path: string, isFavorite: boolean): void {
+        _gateway.LoadAIAgentChat(path, isFavorite, function (session: any) {
+            clearConversation();
+            _panelChatFileName = path;
+            setFavorite(isFavorite);
+            if (session && session.Messages) {
+                $.each(session.Messages, function (_: any, msg: any) {
+                    if (msg.Type === 'UserChatMessage' && msg.Content) {
+                        $messages.append(makeUserBubble(msg.Content as string));
+                    } else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
+                        const { cleaned, $actions } = parseReportActions(msg.Content as string);
+                        if (cleaned) {
+                            $messages.append(makeAIBubble(formatResponse(cleaned), cleaned));
+                        }
+                        if ($actions.children().length > 0) {
+                            $messages.append($actions);
+                        }
+                    }
+                });
+                $messages[0].scrollTop = $messages[0].scrollHeight;
+            }
+        });
+    }
+
+    // Reselects the last conversation (most recently saved chat of the current agent) after a login.
+    function restoreLastChat(): void {
+        _gateway.GetAIAgentChats(function (data: any) {
+            if (data.last && data.last.FileName && !_requesting) {
+                loadChat(data.last.FileName as string, data.last.IsFavorite === true);
+            }
+        });
+    }
+
     // ── Helper: build a list of <li> items ──────────────────────
     function buildList($ul: JQuery, items: MenuItem[], emptyMsg: string, isFavorite: boolean): void {
         $ul.empty();
@@ -871,27 +911,7 @@
             $label.on('click', function () {
                 closeDropdown();
                 if (!item.path) return;
-                _gateway.LoadAIAgentChat(item.path, isFavorite, function (session: any) {
-                    clearConversation();
-                    _panelChatFileName = item.path as string;
-                    setFavorite(isFavorite);
-                    if (session && session.Messages) {
-                        $.each(session.Messages, function (_: any, msg: any) {
-                            if (msg.Type === 'UserChatMessage' && msg.Content) {
-                                $messages.append(makeUserBubble(msg.Content as string));
-                            } else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
-                                const { cleaned, $actions } = parseReportActions(msg.Content as string);
-                                if (cleaned) {
-                                    $messages.append(makeAIBubble(formatResponse(cleaned), cleaned));
-                                }
-                                if ($actions.children().length > 0) {
-                                    $messages.append($actions);
-                                }
-                            }
-                        });
-                        $messages[0].scrollTop = $messages[0].scrollHeight;
-                    }
-                });
+                loadChat(item.path, isFavorite);
             });
 
             // Rename button

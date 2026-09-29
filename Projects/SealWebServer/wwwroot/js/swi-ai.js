@@ -411,8 +411,12 @@
     // Called by the main interface after each login: restores the panel state saved in the user profile.
     window.SWIAIPanel = {
         applyProfile: function (profile) {
-            // A new login may be another user: reload the agent list on next open.
+            // A new login may be another user: reload the agent list on next open
+            // and drop the conversation displayed for the previous session.
             _agentsLoaded = false;
+            clearConversation();
+            _panelChatFileName = '';
+            setFavorite(false);
             if (!profile.hasagent) {
                 closePanel();
                 return;
@@ -437,7 +441,7 @@
                 document.documentElement.style.removeProperty('--ai-panel-width');
             if (profile.aipanelopen) {
                 openPanel();
-                loadAgents();
+                loadAgents(restoreLastChat);
             }
             else
                 closePanel();
@@ -450,7 +454,8 @@
     // in the header always (≥ 1 agent). When only one is available the control
     // is disabled so it acts as a plain title label.
     var _agentsLoaded = false;
-    function loadAgents() {
+    // onReady is called once the current agent is selected on the server.
+    function loadAgents(onReady) {
         if (_agentsLoaded)
             return;
         _agentsLoaded = true;
@@ -476,8 +481,11 @@
             if (!selectedGuid || !agents.some(function (a) { return a.guid === selectedGuid; })) {
                 selectedGuid = agents[0].guid;
                 // Persist the default selection on the server so the next request uses it.
-                _gateway.SelectAgent(selectedGuid, function () { });
+                _gateway.SelectAgent(selectedGuid, function () { if (onReady)
+                    onReady(); });
             }
+            else if (onReady)
+                onReady();
             $agentSelect.val(selectedGuid);
             // Apply description tooltips to the dropdown items. bootstrap-select renders
             // the menu rows LAZILY on first open (the <ul> is empty until then), so the
@@ -835,6 +843,39 @@
             window.aiPanel.setFavorites(toMenuItems(data.favorites));
         });
     }
+    // ── Helper: load a saved chat and replay it in the panel ────
+    function loadChat(path, isFavorite) {
+        _gateway.LoadAIAgentChat(path, isFavorite, function (session) {
+            clearConversation();
+            _panelChatFileName = path;
+            setFavorite(isFavorite);
+            if (session && session.Messages) {
+                $.each(session.Messages, function (_, msg) {
+                    if (msg.Type === 'UserChatMessage' && msg.Content) {
+                        $messages.append(makeUserBubble(msg.Content));
+                    }
+                    else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
+                        const { cleaned, $actions } = parseReportActions(msg.Content);
+                        if (cleaned) {
+                            $messages.append(makeAIBubble(formatResponse(cleaned), cleaned));
+                        }
+                        if ($actions.children().length > 0) {
+                            $messages.append($actions);
+                        }
+                    }
+                });
+                $messages[0].scrollTop = $messages[0].scrollHeight;
+            }
+        });
+    }
+    // Reselects the last conversation (most recently saved chat of the current agent) after a login.
+    function restoreLastChat() {
+        _gateway.GetAIAgentChats(function (data) {
+            if (data.last && data.last.FileName && !_requesting) {
+                loadChat(data.last.FileName, data.last.IsFavorite === true);
+            }
+        });
+    }
     // ── Helper: build a list of <li> items ──────────────────────
     function buildList($ul, items, emptyMsg, isFavorite) {
         $ul.empty();
@@ -850,28 +891,7 @@
                 closeDropdown();
                 if (!item.path)
                     return;
-                _gateway.LoadAIAgentChat(item.path, isFavorite, function (session) {
-                    clearConversation();
-                    _panelChatFileName = item.path;
-                    setFavorite(isFavorite);
-                    if (session && session.Messages) {
-                        $.each(session.Messages, function (_, msg) {
-                            if (msg.Type === 'UserChatMessage' && msg.Content) {
-                                $messages.append(makeUserBubble(msg.Content));
-                            }
-                            else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
-                                const { cleaned, $actions } = parseReportActions(msg.Content);
-                                if (cleaned) {
-                                    $messages.append(makeAIBubble(formatResponse(cleaned), cleaned));
-                                }
-                                if ($actions.children().length > 0) {
-                                    $messages.append($actions);
-                                }
-                            }
-                        });
-                        $messages[0].scrollTop = $messages[0].scrollHeight;
-                    }
-                });
+                loadChat(item.path, isFavorite);
             });
             // Rename button
             var $renameBtn = $('<button>').addClass('ai-chat-item-btn').attr('title', SWIUtil.tr2('Rename'))

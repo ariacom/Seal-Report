@@ -1438,38 +1438,52 @@ namespace SealWebServer.Controllers
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
 
+                ChatSessionInfo last = null;
+                DateTime lastTime = DateTime.MinValue;
+
                 List<ChatSessionInfo> ReadFolder(string subFolder, bool isFavorite)
                 {
                     var folder = GetAgentSubFolder(subFolder);
                     return Directory.GetFiles(folder, "*" + AgentFolders.FileExt)
-                        .Select(f =>
+                        .Select(f => new FileInfo(f))
+                        .OrderByDescending(f => f.LastWriteTime)
+                        .Select(fi =>
                         {
                             try
                             {
-                                var raw = System.IO.File.ReadAllText(f, System.Text.Encoding.UTF8);
+                                var raw = System.IO.File.ReadAllText(fi.FullName, System.Text.Encoding.UTF8);
                                 var session = JsonConvert.DeserializeObject<ChatSessionFile>(raw);
-                                return new ChatSessionInfo
+                                var info = new ChatSessionInfo
                                 {
-                                    FileName = Path.GetFileNameWithoutExtension(f),
-                                    Name = session?.GetInfo("Name") ?? Path.GetFileNameWithoutExtension(f),
+                                    FileName = Path.GetFileNameWithoutExtension(fi.Name),
+                                    Name = session?.GetInfo("Name") ?? Path.GetFileNameWithoutExtension(fi.Name),
                                     Type = session?.GetInfo("Type") ?? string.Empty,
                                     Description = session?.GetInfo("Description") ?? string.Empty,
                                     Instance = session?.GetInfo("Instance") ?? string.Empty,
                                     IsFavorite = isFavorite,
-                                    LastModified = System.IO.File.GetLastWriteTime(f).ToString("G", Repository.CultureInfo)
+                                    LastModified = fi.LastWriteTime.ToString("G", Repository.CultureInfo)
                                 };
+                                if (fi.LastWriteTime > lastTime)
+                                {
+                                    lastTime = fi.LastWriteTime;
+                                    last = info;
+                                }
+                                return info;
                             }
                             catch { return null; }
                         })
                         .Where(i => i != null)
-                        .OrderByDescending(i => i.LastModified)
                         .ToList();
                 }
 
+                var recents = ReadFolder(AgentFolders.Recents, false);
+                var favorites = ReadFolder(AgentFolders.Favorites, true);
                 return Json(new
                 {
-                    recents = ReadFolder(AgentFolders.Recents, false),
-                    favorites = ReadFolder(AgentFolders.Favorites, true)
+                    recents = recents,
+                    favorites = favorites,
+                    // Most recently saved chat (Recents or Favorites), used to restore the conversation after a login
+                    last = last
                 });
             }
             catch (Exception ex)
