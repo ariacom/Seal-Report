@@ -386,6 +386,11 @@
             (content filter, max output tokens...), instead of silently returning an empty reply.
             </summary>
         </member>
+        <member name="M:Seal.AI.AzureProvider.FilteredCategories(OpenAI.Chat.ChatCompletion)">
+            <summary>
+            Returns the content filter categories flagged as filtered for the completion (e.g. " (filtered: Violence severity Medium)"), or an empty string.
+            </summary>
+        </member>
         <member name="T:Seal.AI.OllamaProvider">
             <summary>
             AI provider implementation for an Ollama server (local models) using its /api/chat REST API.

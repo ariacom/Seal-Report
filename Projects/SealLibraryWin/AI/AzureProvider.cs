@@ -2,6 +2,7 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using Azure.AI.OpenAI;
+using Azure.AI.OpenAI.Chat;
 using OpenAI.Chat;
 
 namespace Seal.AI
@@ -113,10 +114,35 @@ namespace Seal.AI
         private static Exception IncompleteReplyException(ChatCompletion completion)
         {
             if (completion.FinishReason == ChatFinishReason.ContentFilter)
-                return new Exception("Azure OpenAI: the reply was blocked by the Azure content filter. Rephrase the request or review the content filter settings of the deployment.");
+                return new Exception($"Azure OpenAI: the reply was blocked by the Azure content filter{FilteredCategories(completion)}. Rephrase the request or review the content filter settings of the deployment.");
             if (completion.FinishReason == ChatFinishReason.Length)
                 return new Exception("Azure OpenAI: the reply was truncated because the maximum number of output tokens was reached. Increase the Max Tokens of the provider.");
             return new Exception($"Azure OpenAI: the model returned no reply (finish reason: {completion.FinishReason}).");
+        }
+
+        /// <summary>
+        /// Returns the content filter categories flagged as filtered for the completion (e.g. " (filtered: Violence severity Medium)"), or an empty string.
+        /// </summary>
+        private static string FilteredCategories(ChatCompletion completion)
+        {
+            try
+            {
+#pragma warning disable AOAI001
+                var result = completion.GetResponseContentFilterResult();
+#pragma warning restore AOAI001
+                if (result == null) return string.Empty;
+                // Each category result exposes a Filtered flag (and a Severity for the harm categories)
+                var filtered = result.GetType().GetProperties()
+                    .Select(p => (p.Name, Value: p.GetIndexParameters().Length == 0 ? p.GetValue(result) : null))
+                    .Where(c => c.Value != null && c.Value.GetType().GetProperty("Filtered")?.GetValue(c.Value) is true)
+                    .Select(c => c.Name + (c.Value.GetType().GetProperty("Severity")?.GetValue(c.Value) is object severity ? $" severity {severity}" : ""))
+                    .ToList();
+                return filtered.Count > 0 ? $" (filtered: {string.Join(", ", filtered)})" : " (no category reported as filtered)";
+            }
+            catch
+            {
+                return string.Empty;
+            }
         }
     }
 }
