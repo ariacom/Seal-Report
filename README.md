@@ -1,15 +1,30 @@
-# Seal Report & Task
+# Seal Report
 
-<a href="https://sealreport.org" target=_blank>Seal Report & Task</a> is a complete **open source** framework
-for producing reports from any database or NoSQL source, and for performing complex tasks (ETL, batch).
-Entirely written in C# for Microsoft .NET, and **free for everyone under the [MIT License](LICENSE)**.
+**Open-source reporting and BI for .NET — MIT-licensed, with built-in AI agents.**
 
-The product focuses on **easy installation** and **report design**: once set up, reports can be built
-and published in a minute.
+[![Latest release](https://img.shields.io/github/v/release/ariacom/Seal-Report)](https://github.com/ariacom/Seal-Report/releases/latest)
+[![Downloads](https://img.shields.io/github/downloads/ariacom/Seal-Report/total)](https://github.com/ariacom/Seal-Report/releases)
+[![License: MIT](https://img.shields.io/github/license/ariacom/Seal-Report)](LICENSE)
+[![Stars](https://img.shields.io/github/stars/ariacom/Seal-Report?style=flat)](https://github.com/ariacom/Seal-Report/stargazers)
 
-* **Web site & quick start guides**: <a href="https://sealreport.org" target=_blank>sealreport.org</a>
-* **Live demo** of the Web Report Server: <a href="https://sealreport.org/demo" target=_blank>sealreport.org/demo</a>
-* **Free support & community**: <a href="https://github.com/ariacom/Seal-Report/discussions" target=_blank>GitHub Discussions</a>
+Seal Report turns any SQL or NoSQL source into reports, pivot tables, charts and scheduled outputs,
+and runs ETL and batch tasks. Self-hosted on Windows or Linux, written in C# and developed since 2015.
+A self-hosted alternative to SSRS or Power BI Report Server.
+
+**[Live demo](https://sealreport.org/demo)** · **[Download](https://github.com/ariacom/Seal-Report/releases/latest)** · **[Documentation](https://sealreport.org)** · **[Discussions](https://github.com/ariacom/Seal-Report/discussions)**
+
+![An AI agent builds a report from a plain-language request](Docs/Images/ai-chat.png)
+
+*Ask an agent in plain language: it inspects your data sources, answers with the data, then builds and saves the report.*
+
+## What's new in version 10
+* **MIT License**: free for everyone, including commercial and embedded use.
+* **AI Agents**: design reports, analyze data, manage data sources and schedules by chat, with your own provider (OpenAI, Azure OpenAI, Anthropic, or local models through Ollama).
+* **.NET 10** on Windows and Linux.
+* **New web interface** on Bootstrap 5, with ECharts added to the chart engines.
+* **SharePoint** as an output destination for scheduled reports.
+
+See the [release notes](https://github.com/ariacom/Seal-Report/releases) for details.
 
 ## Main Features
 * **Dynamic SQL sources**: Use your own SQL, or let the Seal engine build the SQL used to query your database dynamically.
@@ -31,17 +46,12 @@ and published in a minute.
 ## Quick Start
 1. **Install**: Download the latest setup from <a href="https://github.com/ariacom/Seal-Report/releases" target=_blank>GitHub Releases</a>.
 2. **Connect**: Use the Server Manager to declare a data source (OLE DB, ODBC, MS SQL Server, Oracle, MySQL, SQLite, PostgreSQL, MongoDB, Excel, CSV, ...).
-3. **Design**: Build your first report in the Report Designer — drag elements, add restrictions, choose charts — or let the AI assistant create it for you.
+3. **Design**: Build your first report in the Report Designer — drag elements, add restrictions, choose charts — or let an AI agent create it for you.
 4. **Publish**: Deploy the Web Report Server (Windows or Linux) and schedule your report outputs.
 
 Step-by-step tutorials are available at <a href="https://sealreport.org" target=_blank>sealreport.org</a>.
 
 ## Screen Shots
-### AI Agents
-Ask an agent in plain language: it inspects your data sources, answers with the data, then builds and saves the report for you.
-
-![AI Agents](Docs/Images/ai-chat.png)
-
 ### HTML Report Result
 ![HTML Report Result](Docs/Images/report-result-general.png)
 
