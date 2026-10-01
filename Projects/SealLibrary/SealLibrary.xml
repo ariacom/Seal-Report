@@ -2192,6 +2192,12 @@
             Field used to force the load of the System.Diagnostics.EventLog assembly (necessary to compile Security Scripts)
             </summary>
         </member>
+        <member name="M:Seal.Helpers.RazorHelper.forceLoad(System.Func{System.Object})">
+            <summary>
+            Force the load of the assembly referenced by the function. On a non-Windows OS, a component that is
+            not supported or not installed on the platform is ignored.
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.RazorHelper.LoadRazorAssemblies">
             <summary>
             Force the load of the assemblies

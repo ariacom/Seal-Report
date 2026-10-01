@@ -1535,6 +1535,8 @@ namespace Seal.Model
         Dictionary<string, RepositoryTranslation> _repositoryWildCharTranslations = null;
 
         Dictionary<string, RepositoryTranslation> _repositoryTranslations = null;
+        volatile bool _repositoryTranslationsLoaded = false;
+        readonly object _repositoryTranslationsLock = new object();
         /// <summary>
         /// Current repository translations
         /// </summary>
@@ -1542,19 +1544,33 @@ namespace Seal.Model
         {
             get
             {
-                if (_repositoryTranslations == null)
+                if (!_repositoryTranslationsLoaded)
                 {
-                    lock (this)
+                    //Other threads wait here until the translations are fully loaded
+                    lock (_repositoryTranslationsLock)
                     {
-                        _repositoryTranslations = new Dictionary<string, RepositoryTranslation>();
-                        var excelPath = Path.ChangeExtension(RepositoryTranslationsPath, "xlsx");
-                        if (File.Exists(excelPath)) RepositoryTranslation.InitFromExcel(_repositoryTranslations, excelPath, true);
-                        else RepositoryTranslation.InitFromCSV(_repositoryTranslations, RepositoryTranslationsPath, true);
-
-                        //Execute script if any
-                        if (!string.IsNullOrEmpty(Configuration.RepositoryTranslationsScript))
+                        //If the dictionary is already set, the getter is re-entered by the translations script of the loading thread
+                        if (!_repositoryTranslationsLoaded && _repositoryTranslations == null)
                         {
-                            RazorHelper.CompileExecute(Configuration.RepositoryTranslationsScript, this);
+                            try
+                            {
+                                var translations = new Dictionary<string, RepositoryTranslation>();
+                                var excelPath = Path.ChangeExtension(RepositoryTranslationsPath, "xlsx");
+                                if (File.Exists(excelPath)) RepositoryTranslation.InitFromExcel(translations, excelPath, true);
+                                else RepositoryTranslation.InitFromCSV(translations, RepositoryTranslationsPath, true);
+                                _repositoryTranslations = translations;
+
+                                //Execute script if any
+                                if (!string.IsNullOrEmpty(Configuration.RepositoryTranslationsScript))
+                                {
+                                    RazorHelper.CompileExecute(Configuration.RepositoryTranslationsScript, this);
+                                }
+                            }
+                            finally
+                            {
+                                if (_repositoryTranslations == null) _repositoryTranslations = new Dictionary<string, RepositoryTranslation>();
+                                _repositoryTranslationsLoaded = true;
+                            }
                         }
                     }
                 }
@@ -1575,7 +1591,12 @@ namespace Seal.Model
         /// </summary>
         public void ReloadRepositoryTranslations()
         {
-            _repositoryTranslations = null;
+            lock (_repositoryTranslationsLock)
+            {
+                _repositoryTranslations = null;
+                _repositoryWildCharTranslations = null;
+                _repositoryTranslationsLoaded = false;
+            }
         }
 
         /// <summary>
@@ -1593,16 +1614,19 @@ namespace Seal.Model
                 if (result == null)
                 {
                     //Wild char management
-                    if (_repositoryWildCharTranslations == null)
+                    //The dictionary is filled before being published: another thread must never enumerate it while it is built
+                    var wildCharTranslations = _repositoryWildCharTranslations;
+                    if (wildCharTranslations == null)
                     {
-                        _repositoryWildCharTranslations = new Dictionary<string, RepositoryTranslation>();
+                        wildCharTranslations = new Dictionary<string, RepositoryTranslation>();
                         foreach (var k in RepositoryTranslations.Keys.Where(i => i.Contains('*')))
                         {
-                            _repositoryWildCharTranslations.Add(k, RepositoryTranslations[k]);
+                            wildCharTranslations.Add(k, RepositoryTranslations[k]);
                         }
+                        _repositoryWildCharTranslations = wildCharTranslations;
                     }
 
-                    foreach (var t in _repositoryWildCharTranslations.Values.Where(i => i.Context == context && i.Reference == reference))
+                    foreach (var t in wildCharTranslations.Values.Where(i => i.Context == context && i.Reference == reference))
                     {
                         if (Helper.IsMatchWildcard(instance, t.Instance))
                         {

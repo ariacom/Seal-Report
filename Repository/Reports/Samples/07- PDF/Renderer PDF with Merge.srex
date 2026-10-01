@@ -2664,6 +2664,9 @@ ORDER BY 1</Sql>
                 !subReport.HasErrors &amp;&amp; !subReport.Cancel)
                 System.Threading.Thread.Sleep(100);
             
+            if(subReport.HasErrors || string.IsNullOrEmpty(subReport.ResultFilePath))
+                throw new Exception($"Error executing the report '{_report}': {subReport.ExecutionErrors}");
+
             // Load or merge result here
             if(doc == null)
                 doc = DocumentOperation.LoadFile(subReport.ResultFilePath);
@@ -2679,7 +2682,7 @@ ORDER BY 1</Sql>
     {
         var exceptionDocument = new PDFExceptionDocument() { Exception = ex };
         exceptionDocument.GeneratePdf(report.ResultFilePath);
-        throw ex;
+        throw;
     }
 }
 

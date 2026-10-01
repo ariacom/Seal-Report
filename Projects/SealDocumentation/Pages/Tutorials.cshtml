@@ -220,7 +220,11 @@
                                     </code></pre>
                                 </li>
                                 <li>
-                                    For <b>HTML to PDF</b> results (<b>Puppeteer</b>), the <b>Chromium</b> browser itself is downloaded at the first execution in the <i>Assemblies/Chromium</i> Repository sub-folder, but its shared libraries must be installed (<i>libnss3</i> and the other Chromium dependencies): follow the procedure:<br /><a href="https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#recommended-enable-user-namespace-cloning" target="_blank">Running Puppeteer on WSL (Windows subsystem for Linux)</a><br />
+                                    For <b>HTML to PDF</b> results (<b>Puppeteer</b>), the <b>Chromium</b> browser itself is downloaded at the first execution in the <i>Assemblies/Chromium</i> Repository sub-folder, but its shared libraries must be installed (<i>libnss3</i>, <i>libasound2</i> and the other Chromium dependencies). On Ubuntu 24.04:
+                                    <pre><code class="language-bash">
+                                    sudo apt install -y libnss3 libasound2t64
+                                    </code></pre>
+                                    (the package is named <i>libasound2</i> before Ubuntu 24.04). If the browser still fails to start, the error message names the missing library; check also the procedure:<br /><a href="https://github.com/puppeteer/puppeteer/blob/main/docs/troubleshooting.md#recommended-enable-user-namespace-cloning" target="_blank">Running Puppeteer on WSL (Windows subsystem for Linux)</a><br />
                                     If the server has no access to the internet, the execution fails with a message giving the URL of the Chromium archive and the target folder: download it from another machine and unzip it in this folder.
                                 </li>
                                 <li>

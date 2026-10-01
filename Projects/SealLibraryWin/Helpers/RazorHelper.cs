@@ -73,6 +73,23 @@ namespace Seal.Helpers
         /// </summary>
         public static EventLogEntryType _01; //Necessary to compile Security Scripts
         static int _loadTries = 3;
+
+        /// <summary>
+        /// Force the load of the assembly referenced by the function. On a non-Windows OS, a component that is
+        /// not supported or not installed on the platform is ignored.
+        /// </summary>
+        static void forceLoad(Func<object> reference)
+        {
+            try
+            {
+                _ = reference();
+            }
+            catch (Exception ex)
+            {
+                if (OperatingSystem.IsWindows()) Helper.WriteLogException("LoadRazorAssemblies", ex);
+            }
+        }
+
         /// <summary>
         /// Force the load of the assemblies
         /// </summary>
@@ -110,50 +127,56 @@ namespace Seal.Helpers
                     }
 
                     //Force other load (required to compile Razor scripts)
-                    _ = new HttpClient();
-                    _ = new HtmlString("");
-                    _ = new DataTable();
-                    _ = new OleDbConnection();
-                    _ = new LdapConnection("");
-                    _ = new SyndicationFeed();
-                    _ = new XDocument();
-                    _ = new PrincipalContext(ContextType.Machine);
-                    _ = JWT.DefaultSettings;
-                    _ = JObject.Parse("{}");
-                    _ = new FastZip();
-                    _ = new OdbcConnection();
-                    _ = new SqlConnection();
-                    _ = new SftpClient("", "a", "");
-                    _ = new FtpClient();
-                    _ = new AdomdConnection();
-                    _ = new XLWorkbook();
-                    _ = new MongoClient();
-                    _ = HttpUtility.HtmlEncode("");
-                    _ = JsonContent.Create(new { });
-                    _ = new OracleConnection("");
-                    _ = new JwtSecurityTokenHandler();
-                    _ = new DirectoryEntry();
-                    _ = new ServerManager();
-                    _ = new FileSystemAccessRule("a", FileSystemRights.Read, AccessControlType.Deny);
-                    _ = new MessageResource.ScheduleTypeEnum();
-                    _ = new WebProxy();
-                    _ = ColorTranslator.FromHtml("#00000");
-                    _ = new Plot();
-                    _ = new Workbook();
+                    //Each load is isolated: a component not supported on the platform (e.g. OleDb or
+                    //DirectoryServices on Linux) must not prevent the load of the following ones.
+                    forceLoad(() => new HttpClient());
+                    forceLoad(() => new HtmlString(""));
+                    forceLoad(() => new DataTable());
+                    forceLoad(() => new OleDbConnection());
+                    forceLoad(() => new LdapConnection(""));
+                    forceLoad(() => new SyndicationFeed());
+                    forceLoad(() => new XDocument());
+                    forceLoad(() => new PrincipalContext(ContextType.Machine));
+                    forceLoad(() => JWT.DefaultSettings);
+                    forceLoad(() => JObject.Parse("{}"));
+                    forceLoad(() => new FastZip());
+                    forceLoad(() => new OdbcConnection());
+                    forceLoad(() => new SqlConnection());
+                    forceLoad(() => new SftpClient("", "a", ""));
+                    forceLoad(() => new FtpClient());
+                    forceLoad(() => new AdomdConnection());
+                    forceLoad(() => new XLWorkbook());
+                    forceLoad(() => new MongoClient());
+                    forceLoad(() => HttpUtility.HtmlEncode(""));
+                    forceLoad(() => JsonContent.Create(new { }));
+                    forceLoad(() => new OracleConnection(""));
+                    forceLoad(() => new JwtSecurityTokenHandler());
+                    forceLoad(() => new DirectoryEntry());
+                    forceLoad(() => new ServerManager());
+                    forceLoad(() => new FileSystemAccessRule("a", FileSystemRights.Read, AccessControlType.Deny));
+                    forceLoad(() => new MessageResource.ScheduleTypeEnum());
+                    forceLoad(() => new WebProxy());
+                    forceLoad(() => ColorTranslator.FromHtml("#00000"));
+                    forceLoad(() => new Plot());
+                    forceLoad(() => new Workbook());
                     //StringValues (Microsoft.Extensions.Primitives, skipped by the folder scan above) is returned by
                     //HttpRequest.Headers/Query/Form: needed to compile e.g. the JWT security provider script
-                    _ = Microsoft.Extensions.Primitives.StringValues.Empty;
+                    forceLoad(() => Microsoft.Extensions.Primitives.StringValues.Empty);
                     //Use a MemoryStream (not a temp file): forces the DocumentFormat.OpenXml assembly load
                     //without leaving a locked temp file behind, which caused "being used by another process"
                     //when several Seal processes start at the same time (e.g. web server + scheduler on first run).
-                    using (var dummyStream = new MemoryStream())
-                        SpreadsheetDocument.Create(dummyStream, SpreadsheetDocumentType.Workbook, autoSave: false).Dispose();
-                    _ = new PdfOptions();
-                    _ = new NpgsqlConnection("");
-                    _ = new SQLiteConnection("");
-                    _ = AngleSharp.Configuration.Default;
+                    forceLoad(() =>
+                    {
+                        using (var dummyStream = new MemoryStream())
+                            SpreadsheetDocument.Create(dummyStream, SpreadsheetDocumentType.Workbook, autoSave: false).Dispose();
+                        return null;
+                    });
+                    forceLoad(() => new PdfOptions());
+                    forceLoad(() => new NpgsqlConnection(""));
+                    forceLoad(() => new SQLiteConnection(""));
+                    forceLoad(() => AngleSharp.Configuration.Default);
 #if WINDOWS
-                    _ = new System.Windows.Forms.Control();
+                    forceLoad(() => new System.Windows.Forms.Control());
 #endif
                     _01 = EventLogEntryType.Warning;
                 }

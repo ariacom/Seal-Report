@@ -46,6 +46,11 @@ namespace Seal.Model
             get { return "Folder Device"; }
         }
 
+        static bool sameFile(string path1, string path2)
+        {
+            return string.Equals(Path.GetFullPath(path1), Path.GetFullPath(path2), OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal);
+        }
+
         /// <summary>
         /// Check that the report result has been saved and set information
         /// </summary>
@@ -64,9 +69,14 @@ namespace Seal.Model
             else
             {
                 finalPath = Path.Combine(report.OutputFolderDeviceResultFolder, Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath));
-                File.Copy(report.ResultFilePath, finalPath, true);
+                //The result may already be at its final place (e.g. output folder set to the temporary directory): copying the file onto itself fails
+                if (!sameFile(report.ResultFilePath, finalPath))
+                {
+                    File.Copy(report.ResultFilePath, finalPath, true);
+                    File.Delete(report.ResultFilePath);
+                }
             }
-            File.Delete(report.ResultFilePath);
+            if (output.ZipResult) File.Delete(report.ResultFilePath);
             report.ResultFilePath = finalPath;
 
             output.Information = report.Translate("Report result generated in '{0}'", report.DisplayResultFilePath);
