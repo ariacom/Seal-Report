@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} rij(en) zonder coördinaten
 WebJS;Copy for Excel;Kopiëren voor Excel
 WebJS;Download CSV;CSV downloaden
 Report;Reset restrictions;Beperkingen herstellen
+Web;You have been signed out.;U bent afgemeld.
+Web;Show password;Wachtwoord tonen
+Web;or;of

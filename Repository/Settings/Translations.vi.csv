@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} dòng không có tọa độ
 WebJS;Copy for Excel;Sao chép cho Excel
 WebJS;Download CSV;Tải xuống CSV
 Report;Reset restrictions;Đặt lại hạn chế
+Web;You have been signed out.;Bạn đã đăng xuất.
+Web;Show password;Hiện mật khẩu
+Web;or;hoặc

@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} fila(s) sin coordenadas
 WebJS;Copy for Excel;Copiar para Excel
 WebJS;Download CSV;Descargar CSV
 Report;Reset restrictions;Restablecer restricciones
+Web;You have been signed out.;Ha cerrado la sesión.
+Web;Show password;Mostrar contraseña
+Web;or;o

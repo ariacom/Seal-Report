@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;Řádků bez souřadnic: {0}
 WebJS;Copy for Excel;Kopírovat pro Excel
 WebJS;Download CSV;Stáhnout CSV
 Report;Reset restrictions;Obnovit omezení
+Web;You have been signed out.;Byli jste odhlášeni.
+Web;Show password;Zobrazit heslo
+Web;or;nebo

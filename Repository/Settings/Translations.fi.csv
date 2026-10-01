@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} riviä ilman koordinaatteja
 WebJS;Copy for Excel;Kopioi Exceliä varten
 WebJS;Download CSV;Lataa CSV
 Report;Reset restrictions;Palauta rajoitukset
+Web;You have been signed out.;Olet kirjautunut ulos.
+Web;Show password;Näytä salasana
+Web;or;tai

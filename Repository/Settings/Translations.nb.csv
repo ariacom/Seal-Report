@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} rad(er) uten koordinater
 WebJS;Copy for Excel;Kopier til Excel
 WebJS;Download CSV;Last ned CSV
 Report;Reset restrictions;Tilbakestill begrensninger
+Web;You have been signed out.;Du er logget ut.
+Web;Show password;Vis passord
+Web;or;eller

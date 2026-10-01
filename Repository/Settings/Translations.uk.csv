@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;Рядків без координат: {0
 WebJS;Copy for Excel;Копіювати для Excel
 WebJS;Download CSV;Завантажити CSV
 Report;Reset restrictions;Скинути обмеження
+Web;You have been signed out.;Ви вийшли із системи.
+Web;Show password;Показати пароль
+Web;or;або

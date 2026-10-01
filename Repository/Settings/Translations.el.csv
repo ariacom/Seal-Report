@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} γραμμές χωρίς συντετ
 WebJS;Copy for Excel;Αντιγραφή για το Excel
 WebJS;Download CSV;Λήψη CSV
 Report;Reset restrictions;Επαναφορά περιορισμών
+Web;You have been signed out.;Έχετε αποσυνδεθεί.
+Web;Show password;Εμφάνιση κωδικού
+Web;or;ή

@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;Wiersze bez współrzędnych: {0}
 WebJS;Copy for Excel;Kopiuj dla programu Excel
 WebJS;Download CSV;Pobierz CSV
 Report;Reset restrictions;Resetuj ograniczenia
+Web;You have been signed out.;Wylogowano.
+Web;Show password;Pokaż hasło
+Web;or;lub

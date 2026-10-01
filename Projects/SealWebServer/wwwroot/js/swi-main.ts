@@ -64,12 +64,12 @@ class SWIMain {
             if ((e.keyCode || e.which) == 13) _main.search();
         });
 
-        $("#password,#username").keypress(function (e) {
-            if ((e.keyCode || e.which) == 13) _main.login();
-        });
-
-        $("#securitycode").keypress(function (e) {
-            if ((e.keyCode || e.which) == 13) _main.checkSecurityCode();
+        //Show/hide password button of the authentication dialogs
+        $(document).off("click.authpassword").on("click.authpassword", ".auth-password-toggle", function () {
+            const $input = $(this).siblings("input");
+            const show = $input.attr("type") == "password";
+            $input.attr("type", show ? "text" : "password");
+            $(this).find("span").toggleClass("fa-eye", !show).toggleClass("fa-eye-slash", show);
         });
 
         //Mobile mode: collapse the expanded navbar menu after an action in it
@@ -78,22 +78,26 @@ class SWIMain {
         });
 
         SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
-        $("#login-modal-submit").unbind("click").on("click", function () {
+        //The authentication dialogs are real forms (Enter key and submit button both raise submit)
+        $("#login-form").unbind("submit").on("submit", function (e) {
+            e.preventDefault();
             _main.login();
         });
 
-        $("#security-modal-submit").unbind("click").on("click", function () {
+        $("#security-form").unbind("submit").on("submit", function (e) {
+            e.preventDefault();
             _main.checkSecurityCode();
         });
 
         $("#login-password-reset").unbind("click").on("click", function (e) {
             e.preventDefault();
             SWIUtil.HideModal($loginModal);
-            $("#password-reset-name").text("")
+            $("#password-reset-name").val("");
             SWIUtil.ShowModal($passwordResetModal);
         });
 
-        $("#password-reset-submit").unbind("click").on("click", function () {
+        $("#password-reset-form").unbind("submit").on("submit", function (e) {
+            e.preventDefault();
             _gateway.ResetPassword(
                 $("#password-reset-name").val() as string,
                 function (data) {
@@ -104,7 +108,7 @@ class SWIMain {
             );
         });
 
-        $("#security-back-to-login").unbind("click").on("click", function (e) {
+        $(".security-back-to-login").unbind("click").on("click", function (e) {
             e.preventDefault();
             window.location.reload();
         });
@@ -116,7 +120,8 @@ class SWIMain {
         const guid = new URLSearchParams(window.location.search).get('guid');
         if (token && guid) {
             SWIUtil.HideModal($waitDialog);
-            $("#password-reset-submit2").unbind("click").on("click", function () {
+            $("#password-reset-form2").unbind("submit").on("submit", function (e) {
+                e.preventDefault();
                 _gateway.ResetPassword2(
                     guid, token, $("#password-reset1").val() as string, $("#password-reset2").val() as string,
                     function (data) {
@@ -375,6 +380,7 @@ class SWIMain {
                 $("#nav_button").text("");
                 SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
                 if (window.aiPanel) window.aiPanel.reset();
+                $("#login-modal-info").text($("#login-modal-info").data("text"));
                 _main.showLogin();
             });
         });
@@ -545,8 +551,8 @@ class SWIMain {
     private loginFailure(data: any, firstTry: boolean) {
         SWIUtil.HideModal($waitDialog);
         if (!firstTry) $("#login-modal-error").text(data.error);
+        //No enableControls() here: the user is not connected, it would reveal the folders and reports of the previous session behind the dialog
         _main.showLogin();
-        _main.enableControls();
     }
 
     private showLogin() {
@@ -564,6 +570,7 @@ class SWIMain {
     }
 
     private login() {
+        $("#login-modal-info").text("");
         SWIUtil.HideModal($loginModal);
         SWIUtil.ShowModal($waitDialog);
         _gateway.Login($("#username").val() as string, $("#password").val() as string,
@@ -599,7 +606,6 @@ class SWIMain {
                 SWIUtil.HideModal($waitDialog);
                 $("#security-modal-error").text(data.error);
                 _main.showSecurityCode(null);
-                _main.enableControls();
             });
     }
 

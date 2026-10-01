@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} पंक्तियाँ बिन�
 WebJS;Copy for Excel;Excel के लिए कॉपी करें
 WebJS;Download CSV;CSV डाउनलोड करें
 Report;Reset restrictions;प्रतिबंध रीसेट करें
+Web;You have been signed out.;आप साइन आउट हो गए हैं।
+Web;Show password;पासवर्ड दिखाएँ
+Web;or;या

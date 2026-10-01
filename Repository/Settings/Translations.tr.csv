@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;Koordinatı olmayan {0} satır
 WebJS;Copy for Excel;Excel için kopyala
 WebJS;Download CSV;CSV indir
 Report;Reset restrictions;Kısıtlamaları Sıfırla
+Web;You have been signed out.;Oturumunuz kapatıldı.
+Web;Show password;Parolayı göster
+Web;or;veya

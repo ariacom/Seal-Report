@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;Строк без координат: {0}
 WebJS;Copy for Excel;Копировать для Excel
 WebJS;Download CSV;Скачать CSV
 Report;Reset restrictions;Сбросить ограничения
+Web;You have been signed out.;Вы вышли из системы.
+Web;Show password;Показать пароль
+Web;or;или

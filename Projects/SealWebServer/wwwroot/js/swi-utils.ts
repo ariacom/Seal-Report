@@ -368,7 +368,9 @@ namespace SWIUtil {
                 $("#profile-change-password").unbind("click").on("click", function (e) {
                     SWIUtil.HideModal($("#profile-dialog"));
                     $("#change-password-error").addClass("d-none").html("");
-                    $("#change-password-submit").unbind("click").on("click", function () {
+                    $("#password-change,#password-change1,#password-change2").val("");
+                    $("#change-password-form").unbind("submit").on("submit", function (e) {
+                        e.preventDefault();
                         _gateway.ChangePassword(
                             $("#password-change").val() as string, $("#password-change1").val() as string, $("#password-change2").val() as string,
                             function (data) {

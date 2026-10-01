@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} sor koordináták nélkül
 WebJS;Copy for Excel;Másolás Excelbe
 WebJS;Download CSV;CSV letöltése
 Report;Reset restrictions;Korlátozások visszaállítása
+Web;You have been signed out.;Kijelentkezett.
+Web;Show password;Jelszó megjelenítése
+Web;or;vagy

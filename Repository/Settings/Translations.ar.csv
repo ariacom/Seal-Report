@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} صف بدون إحداثيات
 WebJS;Copy for Excel;نسخ إلى Excel
 WebJS;Download CSV;تنزيل CSV
 Report;Reset restrictions;إعادة تعيين القيود
+Web;You have been signed out.;لقد تم تسجيل خروجك.
+Web;Show password;إظهار كلمة المرور
+Web;or;أو

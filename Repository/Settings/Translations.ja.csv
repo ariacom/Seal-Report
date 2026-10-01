@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;座標のない行: {0}
 WebJS;Copy for Excel;Excel用にコピー
 WebJS;Download CSV;CSVをダウンロード
 Report;Reset restrictions;制限をリセット
+Web;You have been signed out.;サインアウトしました。
+Web;Show password;パスワードを表示
+Web;or;または

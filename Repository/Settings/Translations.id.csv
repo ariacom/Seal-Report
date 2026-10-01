@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} baris tanpa koordinat
 WebJS;Copy for Excel;Salin untuk Excel
 WebJS;Download CSV;Unduh CSV
 Report;Reset restrictions;Atur Ulang Pembatasan
+Web;You have been signed out.;Anda telah keluar.
+Web;Show password;Tampilkan kata sandi
+Web;or;atau

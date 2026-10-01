@@ -9,140 +9,169 @@
 }
 
 
+<!-- Authentication dialogs (login, two-factor, password reset/change): shared "auth-modal" card layout, see sealweb.css.
+     Each dialog is a real <form> with autocomplete attributes so that browser password managers can fill and save. -->
+
 <!-- Login Modal -->
-<div id="login-modal" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="top:50px;z-index:25000;">
-    <div class="modal-dialog">
-        <!-- Modal content-->
+<div id="login-modal" class="modal fade auth-modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="z-index:25000;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-success" style="color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <h4 style="color:white;"><span class="fa-solid fa-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Login")</h4>
-            </div>
             <div class="modal-body">
+                <div class="auth-icon"><span class="fa-solid fa-right-to-bracket"></span></div>
+                <div class="auth-brand">@repository.Configuration.WebProductName</div>
+                <h1 class="auth-title">@repository.TranslateWeb("Login")</h1>
+                <div id="login-modal-info" class="alert alert-info" role="status" data-text="@repository.TranslateWeb("You have been signed out.")"></div>
+                <div id="login-modal-error" class="alert alert-danger" role="alert"></div>
                 @if (!(authenticationConfig?.IsUnique() ?? false))
                 {
-                    @if (!(authenticationConfig?.HideLoginPassword ?? false))
-                    {
-                        <div class="mb-3">
-                            <label for="username"><span class="fa-solid fa-user"></span> @repository.TranslateWeb("User name")</label>
-                            <input type="text" class="form-control" id="username" name="username" placeholder="@repository.TranslateWeb("Enter user name")" />
-                        </div>
-                        <div class="mb-3">
-                            <label for="password"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Password")</label>
-                            <input type="password" class="form-control" id="password" placeholder="@repository.TranslateWeb("Enter password")" />
-                        </div>
-
-                        <a id="login-password-reset" href="" style="display:block;margin-bottom:1rem;">@repository.TranslateWeb("Forget your password ?")</a>
-                    }
-                    <button id="login-modal-submit" class="btn btn-secondary btn-success w-100"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
+                    <form id="login-form" autocomplete="on">
+                        @if (!(authenticationConfig?.HideLoginPassword ?? false))
+                        {
+                            <div class="mb-3">
+                                <label for="username">@repository.TranslateWeb("User name")</label>
+                                <input type="text" class="form-control" id="username" name="username" autocomplete="username" autocapitalize="none" spellcheck="false" />
+                            </div>
+                            <div class="mb-2">
+                                <label for="password">@repository.TranslateWeb("Password")</label>
+                                <div class="input-group">
+                                    <input type="password" class="form-control" id="password" name="password" autocomplete="current-password" />
+                                    <button type="button" class="btn btn-outline-secondary auth-password-toggle" tabindex="-1" title="@repository.TranslateWeb("Show password")" aria-label="@repository.TranslateWeb("Show password")"><span class="fa-regular fa-eye"></span></button>
+                                </div>
+                            </div>
+                            <div class="auth-link text-end mb-3">
+                                <a id="login-password-reset" href="">@repository.TranslateWeb("Forget your password ?")</a>
+                            </div>
+                        }
+                        <button id="login-modal-submit" type="submit" class="btn btn-primary w-100">@repository.TranslateWeb("Login")</button>
+                    </form>
                 }
                 @if (authenticationConfig?.Enabled ?? false)
                 {
-                    <div class="text-center bg-success" style="padding: 6px 12px; margin-top: 15px; border-radius: 4px"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login") @Html.ActionLink(@authenticationConfig.Name ?? "Login", "Login", "Home")</div>
+                    @if (!authenticationConfig.IsUnique())
+                    {
+                        <div class="auth-divider"><span>@repository.TranslateWeb("or")</span></div>
+                    }
+                    <a class="btn btn-outline-secondary w-100" href="@Url.Action("Login", "Home")">@repository.TranslateWeb("Login") @authenticationConfig.Name</a>
                 }
-            </div>
-            <div class="modal-footer" style="text-align:left">
-                <span id="login-modal-error" class="badge text-bg-danger" style="font-size:12px;white-space:normal;"></span>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Security Code Modal -->
-<div id="security-modal" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="top:50px;z-index:26000;">
-    <div class="modal-dialog">
-        <!-- Modal content-->
+<div id="security-modal" class="modal fade auth-modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="z-index:26000;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-success" style="color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <h4 style="color:white;"><span class="fa-solid fa-lock"></span> @repository.Configuration.WebProductName @repository.TranslateWeb("Two-Factor Authentication")</h4>
-            </div>
             <div class="modal-body">
-                <div style="margin-bottom:20px;">
-                    <span id="security-code-message" class="badge text-bg-warning" style="font-size:14px;"></span>
+                <div class="auth-icon"><span class="fa-solid fa-shield-halved"></span></div>
+                <div class="auth-brand">@repository.Configuration.WebProductName</div>
+                <h1 class="auth-title">@repository.TranslateWeb("Two-Factor Authentication")</h1>
+                <div id="security-code-message" class="alert alert-warning" role="status"></div>
+                <div id="security-modal-error" class="alert alert-danger" role="alert"></div>
+                <form id="security-form" autocomplete="off">
+                    <div class="mb-3">
+                        <label for="securitycode">@repository.TranslateWeb("Security code")</label>
+                        <input type="text" class="form-control" id="securitycode" name="securitycode" autocomplete="one-time-code" autocapitalize="none" spellcheck="false" />
+                    </div>
+                    <button id="security-modal-submit" type="submit" class="btn btn-primary w-100">@repository.TranslateWeb("Login")</button>
+                </form>
+                <div class="auth-link text-center mt-3">
+                    <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
-                <div class="mb-3">
-                    <label for="securitycode"><span class="fa-solid fa-lock"></span> @repository.TranslateWeb("Security code")</label>
-                    <input type="text" class="form-control" id="securitycode" name="securitycode" placeholder="@repository.TranslateWeb("Enter your security code")" />
-                </div>
-                <a class="security-back-to-login d-block mb-3" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
-                <button id="security-modal-submit" class="btn btn-secondary btn-success w-100"><span class="fa-solid fa-power-off"></span> @repository.TranslateWeb("Login")</button>
-            </div>
-            <div class="modal-footer" style="text-align:left">
-                <span id="security-modal-error" class="badge text-bg-danger" style="font-size: 12px;"></span>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Password Recover Modal -->
-<div id="password-reset-modal" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="top:50px;z-index:25000;">
-    <div class="modal-dialog">
-        <!-- Modal content-->
+<div id="password-reset-modal" class="modal fade auth-modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="z-index:25000;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-warning" style="position:relative;color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;font-size:1rem;"></button>
-                <h4 style="color:white;"><span class="fa-solid fa-key"></span> @repository.TranslateWeb("Reset your password")</h4>
-            </div>
             <div class="modal-body">
-                <div class="mb-3">
-                    <label for="password-reset-name"><span class="fa-solid fa-user"></span> @repository.TranslateWeb("Enter your user identifier or email")</label>
-                    <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" placeholder="@repository.TranslateWeb("User identifier or email")" />
-                    <a class="security-back-to-login d-block mt-2" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
+                <div class="auth-icon"><span class="fa-solid fa-key"></span></div>
+                <div class="auth-brand">@repository.Configuration.WebProductName</div>
+                <h1 class="auth-title">@repository.TranslateWeb("Reset your password")</h1>
+                <form id="password-reset-form" autocomplete="on">
+                    <div class="mb-3">
+                        <label for="password-reset-name">@repository.TranslateWeb("Enter your user identifier or email")</label>
+                        <input type="text" class="form-control" id="password-reset-name" name="password-reset-name" autocomplete="username" autocapitalize="none" spellcheck="false" />
+                    </div>
+                    <button id="password-reset-submit" type="submit" class="btn btn-primary w-100">@repository.TranslateWeb("Reset password")</button>
+                </form>
+                <div class="auth-link text-center mt-3">
+                    <a class="security-back-to-login" href="">@repository.TranslateWeb("Back to login with user name and password")</a>
                 </div>
-                <button id="password-reset-submit" class="btn btn-secondary btn-warning w-100"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Reset password")</button>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Password Recover Modal2 -->
-<div id="password-reset-modal2" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="top:50px;z-index:25000;">
-    <div class="modal-dialog">
-        <!-- Modal content-->
+<div id="password-reset-modal2" class="modal fade auth-modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="z-index:25000;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-warning" style="position:relative;color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;font-size:1rem;"></button>
-                <h4 style="color:white;"><span class="fa-solid fa-key"></span> @repository.TranslateWeb("Re-init your password")</h4>
-            </div>
             <div class="modal-body">
-                <div id="password-reset-error2" class="alert alert-danger d-none" role="alert" style="font-size:14px;"></div>
-                <div class="mb-3">
-                    <label for="password-reset1"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your new password")</label>
-                    <input type="password" class="form-control" id="password-reset1" name="password-reset1" placeholder="@repository.TranslateWeb("New password")" />
-                </div>
-                <div class="mb-3">
-                    <label for="password-reset2"><span class="fa-solid fa-eye-slash"></span> @repository.TranslateWeb("Confirm your new password")</label>
-                    <input type="password" class="form-control" id="password-reset2" name="password-reset2" placeholder="@repository.TranslateWeb("New password")" />
-                </div>
-                <button id="password-reset-submit2" class="btn btn-secondary btn-warning w-100"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Change password")</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
+                <div class="auth-icon"><span class="fa-solid fa-key"></span></div>
+                <div class="auth-brand">@repository.Configuration.WebProductName</div>
+                <h1 class="auth-title">@repository.TranslateWeb("Re-init your password")</h1>
+                <div id="password-reset-error2" class="alert alert-danger d-none" role="alert"></div>
+                <form id="password-reset-form2" autocomplete="on">
+                    <div class="mb-3">
+                        <label for="password-reset1">@repository.TranslateWeb("Enter your new password")</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password-reset1" name="password-reset1" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary auth-password-toggle" tabindex="-1" title="@repository.TranslateWeb("Show password")" aria-label="@repository.TranslateWeb("Show password")"><span class="fa-regular fa-eye"></span></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password-reset2">@repository.TranslateWeb("Confirm your new password")</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password-reset2" name="password-reset2" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary auth-password-toggle" tabindex="-1" title="@repository.TranslateWeb("Show password")" aria-label="@repository.TranslateWeb("Show password")"><span class="fa-regular fa-eye"></span></button>
+                        </div>
+                    </div>
+                    <button id="password-reset-submit2" type="submit" class="btn btn-primary w-100">@repository.TranslateWeb("Change password")</button>
+                </form>
             </div>
         </div>
     </div>
 </div>
 
 <!-- Change Password Modal -->
-<div id="change-password-modal" class="modal fade" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="top:50px;z-index:25000;">
-    <div class="modal-dialog">
-        <!-- Modal content-->
+<div id="change-password-modal" class="modal fade auth-modal" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="z-index:25000;">
+    <div class="modal-dialog modal-dialog-centered">
         <div class="modal-content">
-            <div class="modal-header bg-warning" style="position:relative;color:white;text-align:center;justify-content:center;font-size:30px;border-top-left-radius:6px;border-top-right-radius:6px;">
-                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close" style="position:absolute;right:15px;top:50%;transform:translateY(-50%);margin:0;font-size:1rem;"></button>
-                <h4 style="color:white;"><span class="fa-solid fa-key"></span> @repository.TranslateWeb("Change your password")</h4>
-            </div>
             <div class="modal-body">
-                <div id="change-password-error" class="alert alert-danger d-none" role="alert" style="font-size:14px;"></div>
-                <div class="mb-3">
-                    <label for="password-change"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your current password")</label>
-                    <input type="password" class="form-control" id="password-change" name="password-change" placeholder="@repository.TranslateWeb("Current password")" />
-                </div>
-                <div class="mb-3">
-                    <label for="password-change1"><span class="fa-solid fa-eye"></span> @repository.TranslateWeb("Enter your new password")</label>
-                    <input type="password" class="form-control" id="password-change1" name="password-change1" placeholder="@repository.TranslateWeb("New password")" />
-                </div>
-                <div class="mb-3">
-                    <label for="password-change2"><span class="fa-solid fa-eye-slash"></span> @repository.TranslateWeb("Confirm your new password")</label>
-                    <input type="password" class="form-control" id="password-change2" name="password-change2" placeholder="@repository.TranslateWeb("New password")" />
-                </div>
-                <button id="change-password-submit" class="btn btn-secondary btn-warning w-100"><span class="fa-regular fa-square-check"></span> @repository.TranslateWeb("Change password")</button>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
+                <div class="auth-icon"><span class="fa-solid fa-key"></span></div>
+                <div class="auth-brand">@repository.Configuration.WebProductName</div>
+                <h1 class="auth-title">@repository.TranslateWeb("Change your password")</h1>
+                <div id="change-password-error" class="alert alert-danger d-none" role="alert"></div>
+                <form id="change-password-form" autocomplete="on">
+                    <div class="mb-3">
+                        <label for="password-change">@repository.TranslateWeb("Enter your current password")</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password-change" name="password-change" autocomplete="current-password" />
+                            <button type="button" class="btn btn-outline-secondary auth-password-toggle" tabindex="-1" title="@repository.TranslateWeb("Show password")" aria-label="@repository.TranslateWeb("Show password")"><span class="fa-regular fa-eye"></span></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password-change1">@repository.TranslateWeb("Enter your new password")</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password-change1" name="password-change1" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary auth-password-toggle" tabindex="-1" title="@repository.TranslateWeb("Show password")" aria-label="@repository.TranslateWeb("Show password")"><span class="fa-regular fa-eye"></span></button>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label for="password-change2">@repository.TranslateWeb("Confirm your new password")</label>
+                        <div class="input-group">
+                            <input type="password" class="form-control" id="password-change2" name="password-change2" autocomplete="new-password" />
+                            <button type="button" class="btn btn-outline-secondary auth-password-toggle" tabindex="-1" title="@repository.TranslateWeb("Show password")" aria-label="@repository.TranslateWeb("Show password")"><span class="fa-regular fa-eye"></span></button>
+                        </div>
+                    </div>
+                    <button id="change-password-submit" type="submit" class="btn btn-primary w-100">@repository.TranslateWeb("Change password")</button>
+                </form>
             </div>
         </div>
     </div>

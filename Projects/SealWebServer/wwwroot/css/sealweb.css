@@ -843,6 +843,93 @@ table.dataTable {
     }
 }
 
+/*  Authentication dialogs (login, two-factor, password reset/change)  */
+.auth-modal {
+    --bs-modal-width: 400px;
+}
+
+.auth-modal .modal-content {
+    border: none;
+    border-radius: 12px;
+    box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+}
+
+.auth-modal .modal-body {
+    position: relative;
+    padding: 32px;
+}
+
+.auth-modal .btn-close {
+    position: absolute;
+    top: 16px;
+    right: 16px;
+}
+
+/* Header: round icon badge, product name, then the dialog title as a subtitle */
+.auth-icon {
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    width: 56px;
+    height: 56px;
+    margin: 0 auto 14px auto;
+    border-radius: 50%;
+    font-size: 22px;
+    color: var(--bs-primary);
+    background: rgba(var(--bs-primary-rgb), 0.12);
+}
+
+.auth-brand {
+    text-align: center;
+    font-size: 24px;
+    font-weight: 600;
+    line-height: 1.2;
+}
+
+.auth-title {
+    text-align: center;
+    font-size: 15px;
+    font-weight: 400;
+    color: var(--bs-secondary-color);
+    margin: 6px 0 24px 0;
+}
+
+.auth-modal label {
+    font-size: 14px;
+    font-weight: 500;
+    margin-bottom: 4px;
+}
+
+.auth-modal .alert {
+    font-size: 14px;
+    padding: 8px 12px;
+}
+
+/* Messages are set as text by the script: no text, no box */
+.auth-modal .alert:empty {
+    display: none;
+}
+
+.auth-link {
+    font-size: 14px;
+}
+
+.auth-divider {
+    display: flex;
+    align-items: center;
+    gap: 12px;
+    margin: 16px 0;
+    font-size: 13px;
+    color: var(--bs-secondary-color);
+}
+
+.auth-divider::before,
+.auth-divider::after {
+    content: "";
+    flex: 1;
+    border-top: 1px solid var(--bs-border-color);
+}
+
 /*  Profile Dialog  */
 #profile-dialog .modal-dialog,
 #folder-dialog .modal-dialog {

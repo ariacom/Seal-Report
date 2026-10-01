@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} rând(uri) fără coordonate
 WebJS;Copy for Excel;Copiere pentru Excel
 WebJS;Download CSV;Descărcare CSV
 Report;Reset restrictions;Resetează restricțiile
+Web;You have been signed out.;V-ați deconectat.
+Web;Show password;Afișează parola
+Web;or;sau

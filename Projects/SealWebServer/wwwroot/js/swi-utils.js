@@ -386,7 +386,9 @@ var SWIUtil;
                 $("#profile-change-password").unbind("click").on("click", function (e) {
                     SWIUtil.HideModal($("#profile-dialog"));
                     $("#change-password-error").addClass("d-none").html("");
-                    $("#change-password-submit").unbind("click").on("click", function () {
+                    $("#password-change,#password-change1,#password-change2").val("");
+                    $("#change-password-form").unbind("submit").on("submit", function (e) {
+                        e.preventDefault();
                         _gateway.ChangePassword($("#password-change").val(), $("#password-change1").val(), $("#password-change2").val(), function (data) {
                             SWIUtil.HideModal($("#change-password-modal"));
                             SWIUtil.ShowMessage("alert-success", SWIUtil.tr("Your password has been changed."), 5000);

@@ -487,3 +487,6 @@ Report;{0} row(s) without coordinates;{0} שורות ללא קואורדינטו
 WebJS;Copy for Excel;העתקה ל-Excel
 WebJS;Download CSV;הורדת CSV
 Report;Reset restrictions;איפוס מגבלות
+Web;You have been signed out.;התנתקת.
+Web;Show password;הצג סיסמה
+Web;or;או
