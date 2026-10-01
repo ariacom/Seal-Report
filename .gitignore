@@ -50,6 +50,7 @@ Repository/Devices/Email/_*.scfx
 Repository/Devices/FileServer/_*.scfx
 #Seal Data Entry module (closed, tracked in SealAriacom\Modules\SealDataEntry, deployed here by its deploy.ps1)
 Repository/Views/DataTableEditor*.cshtml
+Repository/Views/Renderers/*/DataTableEditor*.cshtml
 [Pp]ackages/
 temp/
 Assemblies/
