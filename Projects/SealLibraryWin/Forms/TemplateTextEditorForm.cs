@@ -235,6 +235,7 @@ namespace Seal.Forms
         public string CheckSyntax()
         {
             string error = "";
+            int warningCount = 0;
             if (IsRawCSharp) ObjectForCheckSyntax = new object(); //Dummy object
 
 
@@ -277,7 +278,7 @@ namespace Seal.Forms
                         }
                     }
 
-                    FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
+                    warningCount = FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
                 }
                 catch (Exception ex)
                 {
@@ -293,6 +294,12 @@ namespace Seal.Forms
                 {
                     toolStripStatusLabel.Text = IsRawCSharp ? "C# Syntax is OK" : "Razor Syntax is OK";
                     toolStripStatusLabel.Image = global::Seal.Properties.Resources.checkedGreen;
+                    if (warningCount > 0)
+                    {
+                        //Warnings are highlighted in the editor: click on a highlighted text to get its message
+                        toolStripStatusLabel.Text += string.Format(" ({0} warning{1}: click on the highlighted text for detail)", warningCount, warningCount > 1 ? "s" : "");
+                        toolStripStatusLabel.Image = SystemIcons.Warning.ToBitmap();
+                    }
                 }
             }
 

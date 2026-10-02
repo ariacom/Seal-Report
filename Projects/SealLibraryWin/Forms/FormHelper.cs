@@ -86,9 +86,52 @@ namespace Seal.Forms
             }
         }
 
-        public static void CheckRazorSyntax(Scintilla textBox, object objectForCheckSyntax, Dictionary<int, string> compilationErrors, string finalScript = "")
+        //Highlight the compiler errors and warnings in the editor, returns the line of the first error
+        static Line setRazorErrors(Scintilla textBox, Dictionary<int, string> compilationErrors, IEnumerable<RazorEngineCompilerError> errors, string sourceCode, int NUM, int NUM2)
+        {
+            setIndicatorAppearance(textBox, NUM);
+            setIndicatorAppearance2(textBox, NUM2);
+            Line firstErrorLine = null;
+            var sourceLines = sourceCode.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
+            foreach (var err in errors.OrderBy(i => i.Line))
+            {
+                //err.Line is 1-based (Roslyn line + 1, see RazorCoreEngine), sourceLines is 0-based
+                if (err.Line > 0 && err.Line <= sourceLines.Length)
+                {
+                    //Text of the faulty line in the generated code: Razor keeps the indentation of the script, so it matches the editor line
+                    var pattern = sourceLines[err.Line - 1].Trim();
+                    var lines = new List<Line>();
+                    //1) Exact line given by the #line pragmas of the generated code (valid when the editor shows the compiled script,
+                    //which is the common case: the usings appended by GetFullScript do not shift the lines). The text is checked to be safe
+                    //(e.g. the editor shows only a function of the whole script, or the header line count of the engine has changed).
+                    if (err.TemplateLine > 0 && err.TemplateLine <= textBox.Lines.Count)
+                    {
+                        var line = textBox.Lines[err.TemplateLine - 1];
+                        if (line.Text.Trim() == pattern) lines.Add(line);
+                    }
+                    //2) Fallback: all the editor lines having the same text (may highlight several lines, e.g. for a '}')
+                    if (lines.Count == 0) lines.AddRange(textBox.Lines.Where(i => i.Text.Trim() == pattern));
+
+                    foreach (var line in lines)
+                    {
+                        textBox.IndicatorCurrent = (err.IsWarning ? NUM2 : NUM);
+                        setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
+
+                        if (!err.IsWarning && firstErrorLine == null) firstErrorLine = line;
+                    }
+                }
+            }
+            return firstErrorLine;
+        }
+
+        /// <summary>
+        /// Check the syntax of a Razor script and highlight the errors and warnings in the editor.
+        /// Throws an exception if the compilation fails, otherwise returns the number of warnings.
+        /// </summary>
+        public static int CheckRazorSyntax(Scintilla textBox, object objectForCheckSyntax, Dictionary<int, string> compilationErrors, string finalScript = "")
         {
             string error = "";
+            int warningCount = 0;
             const int NUM = 18;
             const int NUM2 = 19;
 
@@ -104,43 +147,24 @@ namespace Seal.Forms
                 var script = RazorHelper.GetFullScript(!string.IsNullOrEmpty(finalScript) ? finalScript : textBox.Text);
                 if (objectForCheckSyntax is MetaEnum) script = Helper.ClearAllLINQKeywords(script);
 
-                RazorHelper.Compile(script, objectForCheckSyntax.GetType(), Guid.NewGuid().ToString());
+                if (objectForCheckSyntax == null) throw new Exception("No object to check the syntax.");
+
+                var warnings = RazorCoreEngine.CheckSyntax(script, out string generatedCode);
+                if (warnings.Count > 0)
+                {
+                    //Valid syntax: the warnings are highlighted, the caret and the scroll position are kept
+                    int selectionStart = textBox.SelectionStart, selectionEnd = textBox.SelectionEnd, firstVisibleLine = textBox.FirstVisibleLine;
+                    setRazorErrors(textBox, compilationErrors, warnings, generatedCode, NUM, NUM2);
+                    textBox.SelectionStart = selectionStart;
+                    textBox.SelectionEnd = selectionEnd;
+                    textBox.FirstVisibleLine = firstVisibleLine;
+                    warningCount = warnings.Count;
+                }
             }
             catch (TemplateCompilationException ex)
             {
                 //Note: Razor parsing errors are also reported as TemplateCompilationException by RazorEngineCore
-                setIndicatorAppearance(textBox, NUM);
-                setIndicatorAppearance2(textBox, NUM2);
-                Line firstErrorLine = null;
-                var sourceLines = ex.CompilationData.SourceCode.Replace("\r\n", "\n").Replace("\r", "\n").Split('\n');
-                foreach (var err in ex.CompilerErrors.OrderBy(i => i.Line))
-                {
-                    //err.Line is 1-based (Roslyn line + 1, see RazorCoreEngine), sourceLines is 0-based
-                    if (err.Line > 0 && err.Line <= sourceLines.Length)
-                    {
-                        //Text of the faulty line in the generated code: Razor keeps the indentation of the script, so it matches the editor line
-                        var pattern = sourceLines[err.Line - 1].Trim();
-                        var lines = new List<Line>();
-                        //1) Exact line given by the #line pragmas of the generated code (valid when the editor shows the compiled script,
-                        //which is the common case: the usings appended by GetFullScript do not shift the lines). The text is checked to be safe
-                        //(e.g. the editor shows only a function of the whole script, or the header line count of the engine has changed).
-                        if (err.TemplateLine > 0 && err.TemplateLine <= textBox.Lines.Count)
-                        {
-                            var line = textBox.Lines[err.TemplateLine - 1];
-                            if (line.Text.Trim() == pattern) lines.Add(line);
-                        }
-                        //2) Fallback: all the editor lines having the same text (may highlight several lines, e.g. for a '}')
-                        if (lines.Count == 0) lines.AddRange(textBox.Lines.Where(i => i.Text.Trim() == pattern));
-
-                        foreach (var line in lines)
-                        {
-                            textBox.IndicatorCurrent = (err.IsWarning ? NUM2 : NUM);
-                            setRazorError(textBox, compilationErrors, line, err.Column, (err.IsWarning ? "Warning: " : "Error: ") + err.ErrorText);
-
-                            if (!err.IsWarning && firstErrorLine == null) firstErrorLine = line;
-                        }
-                    }
-                }
+                var firstErrorLine = setRazorErrors(textBox, compilationErrors, ex.CompilerErrors, ex.CompilationData.SourceCode, NUM, NUM2);
                 if (firstErrorLine != null) firstErrorLine.Goto();
 
                 error = string.Format("Compilation error:\r\n{0}", Helper.GetExceptionMessage(ex));
@@ -155,6 +179,7 @@ namespace Seal.Forms
 
 
             if (!string.IsNullOrEmpty(error)) throw new Exception(error);
+            return warningCount;
         }
 
 

@@ -11,6 +11,8 @@ using System.Net;
 using System.Security.Cryptography;
 using System.Text;
 using System.Threading;
+using Microsoft.CodeAnalysis;
+using Microsoft.CodeAnalysis.CSharp;
 using RazorEngineCore;
 
 namespace Seal.Helpers
@@ -152,26 +154,7 @@ namespace Seal.Helpers
                 int headerLines = 0;
                 try
                 {
-                    compiled = NoSyncContext(() => _engine.Compile<SealCoreTemplateBase>(script, b =>
-                    {
-                        // default namespaces (parity with the fork's TemplateServiceConfiguration)
-                        b.AddUsing("System");
-                        b.AddUsing("System.Collections.Generic");
-                        b.AddUsing("System.Linq");
-                        b.AddUsing("System.Threading.Tasks");
-                        // RazorEngineCore prepends '@inherits ...' plus one '@using' per DefaultUsings entry to the
-                        // template before parsing it: the #line pragmas of the generated code are shifted by that much.
-                        headerLines = 1 + b.Options.DefaultUsings.Count;
-
-                        var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
-                        foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
-                        {
-                            if (a.IsDynamic) continue;
-                            string loc; try { loc = a.Location; } catch { continue; }
-                            if (string.IsNullOrEmpty(loc) || !seen.Add(loc)) continue;
-                            try { b.AddAssemblyReference(a); } catch { }
-                        }
-                    }));
+                    compiled = NoSyncContext(() => _engine.Compile<SealCoreTemplateBase>(script, b => { headerLines = ConfigureBuilder(b); }));
                 }
                 catch (RazorEngineCompilationException ex)
                 {
@@ -189,6 +172,117 @@ namespace Seal.Helpers
         }
 
         /// <summary>
+        /// Set the default namespaces and the assembly references of a compilation.
+        /// Returns the number of directive lines RazorEngineCore prepends to the template.
+        /// </summary>
+        static int ConfigureBuilder(IRazorEngineCompilationOptionsBuilder b)
+        {
+            // default namespaces (parity with the fork's TemplateServiceConfiguration)
+            b.AddUsing("System");
+            b.AddUsing("System.Collections.Generic");
+            b.AddUsing("System.Linq");
+            b.AddUsing("System.Threading.Tasks");
+
+            foreach (var a in CurrentAssemblies())
+            {
+                try { b.AddAssemblyReference(a); } catch { }
+            }
+
+            // RazorEngineCore prepends '@inherits ...' plus one '@using' per DefaultUsings entry to the
+            // template before parsing it: the #line pragmas of the generated code are shifted by that much.
+            return 1 + b.Options.DefaultUsings.Count;
+        }
+
+        /// <summary>
+        /// Every currently loaded assembly having a file location (== UseCurrentAssembliesReferenceResolver)
+        /// </summary>
+        static List<System.Reflection.Assembly> CurrentAssemblies()
+        {
+            var result = new List<System.Reflection.Assembly>();
+            var seen = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            foreach (var a in AppDomain.CurrentDomain.GetAssemblies())
+            {
+                if (a.IsDynamic) continue;
+                string loc; try { loc = a.Location; } catch { continue; }
+                if (string.IsNullOrEmpty(loc) || !seen.Add(loc)) continue;
+                result.Add(a);
+            }
+            return result;
+        }
+
+        //Metadata references of the syntax check, by assembly location
+        static readonly ConcurrentDictionary<string, MetadataReference> _checkReferences = new(StringComparer.OrdinalIgnoreCase);
+
+        //Warnings raised by the engine or the references, not by the script (CS0105: using already added by default)
+        static readonly HashSet<string> _ignoredWarnings = new() { "CS0105", "CS1701", "CS1702", "CS1998" };
+
+        /// <summary>
+        /// Compile 'script' for a syntax check only: nothing is cached or persisted.
+        /// A compilation failure throws the same TemplateCompilationException as Compile.
+        /// On success, returns the compiler warnings located in the script and the generated C# code (to map RazorEngineCompilerError.Line).
+        /// RazorEngineCore drops the diagnostics of a successful compilation, so the generated code is analyzed again with Roslyn (no emit).
+        /// </summary>
+        public static List<RazorEngine.Templating.RazorEngineCompilerError> CheckSyntax(string script, out string generatedCode)
+        {
+            generatedCode = "";
+            var result = new List<RazorEngine.Templating.RazorEngineCompilerError>();
+            if (string.IsNullOrEmpty(script)) return result;
+
+            RazorHelper.LoadRazorAssemblies();
+            IRazorEngineCompiledTemplate<SealCoreTemplateBase> compiled;
+            int headerLines = 0;
+            try
+            {
+                compiled = NoSyncContext(() => _engine.Compile<SealCoreTemplateBase>(script, b =>
+                {
+                    headerLines = ConfigureBuilder(b);
+                    //Keeps the generated code in the compiled template
+                    b.IncludeDebuggingInfo();
+                }));
+            }
+            catch (RazorEngineCompilationException ex)
+            {
+                throw ToTemplateCompilationException(ex, headerLines);
+            }
+
+            try
+            {
+                //The generated code is only exposed through the saved meta data
+                using var stream = new MemoryStream();
+                NoSyncContext<object>(() => { compiled.SaveToStream(stream); return null; });
+                stream.Position = 0;
+                var meta = NoSyncContext(() => RazorEngineCompiledTemplateMeta.Read(stream).GetAwaiter().GetResult());
+                if (string.IsNullOrEmpty(meta?.GeneratedSourceCode)) return result;
+
+                var references = new List<MetadataReference>();
+                foreach (var a in CurrentAssemblies())
+                {
+                    try { references.Add(_checkReferences.GetOrAdd(a.Location, loc => MetadataReference.CreateFromFile(loc))); } catch { }
+                }
+                var compilation = CSharpCompilation.Create(
+                    "SyntaxCheck",
+                    new[] { CSharpSyntaxTree.ParseText(meta.GeneratedSourceCode) },
+                    references,
+                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary));
+
+                foreach (var d in compilation.GetDiagnostics())
+                {
+                    if (d.Severity != DiagnosticSeverity.Warning || _ignoredWarnings.Contains(d.Id)) continue;
+                    //Only the warnings located in the script (code under a #line pragma)
+                    if (!d.Location.GetMappedLineSpan().HasMappedPath) continue;
+                    result.Add(ToCompilerError(d, headerLines));
+                }
+                generatedCode = meta.GeneratedSourceCode;
+            }
+            catch
+            {
+                //Warnings are a bonus: the syntax is valid
+                result.Clear();
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Run the compiled template cached under 'key' with the given model and ViewBag, and return the rendered result
         /// </summary>
         public static string Run(string key, object model, object viewBag = null)
@@ -197,6 +291,31 @@ namespace Seal.Helpers
                 throw new ArgumentException($"No template could be resolved with name '{key}'. The partial must be compiled before it is included.");
             var result = NoSyncContext(() => t.Run(i => { i.Model = model; i.ViewBag = viewBag; }));
             return result ?? "";
+        }
+
+        /// <summary>
+        /// Convert a Roslyn diagnostic. 'headerLines' is the number of directive lines RazorEngineCore prepended to the template (0 if unknown).
+        /// </summary>
+        static RazorEngine.Templating.RazorEngineCompilerError ToCompilerError(Diagnostic d, int headerLines)
+        {
+            // Line/Column: position in the generated C# code (CompilationData.SourceCode)
+            var span = d.Location.GetLineSpan();
+            // TemplateLine: position in the Razor template, resolved by Roslyn through the #line pragmas
+            // of the generated code, minus the directives prepended by RazorEngineCore
+            int templateLine = 0;
+            if (headerLines > 0)
+            {
+                var mapped = d.Location.GetMappedLineSpan();
+                if (mapped.IsValid && mapped.HasMappedPath) templateLine = Math.Max(0, mapped.StartLinePosition.Line + 1 - headerLines);
+            }
+            return new RazorEngine.Templating.RazorEngineCompilerError(
+                d.GetMessage(),
+                span.Path ?? "",
+                span.StartLinePosition.Line + 1,
+                span.StartLinePosition.Character + 1,
+                d.Id,
+                d.Severity != DiagnosticSeverity.Error,
+                templateLine);
         }
 
         /// <summary>
@@ -209,28 +328,8 @@ namespace Seal.Helpers
         {
             try
             {
-                var errors = (ex.Errors ?? new List<Microsoft.CodeAnalysis.Diagnostic>())
-                    .Select(d =>
-                    {
-                        // Line/Column: position in the generated C# code (CompilationData.SourceCode)
-                        var span = d.Location.GetLineSpan();
-                        // TemplateLine: position in the Razor template, resolved by Roslyn through the #line pragmas
-                        // of the generated code, minus the directives prepended by RazorEngineCore
-                        int templateLine = 0;
-                        if (headerLines > 0)
-                        {
-                            var mapped = d.Location.GetMappedLineSpan();
-                            if (mapped.IsValid && mapped.HasMappedPath) templateLine = Math.Max(0, mapped.StartLinePosition.Line + 1 - headerLines);
-                        }
-                        return new RazorEngine.Templating.RazorEngineCompilerError(
-                            d.GetMessage(),
-                            span.Path ?? "",
-                            span.StartLinePosition.Line + 1,
-                            span.StartLinePosition.Character + 1,
-                            d.Id,
-                            d.Severity != Microsoft.CodeAnalysis.DiagnosticSeverity.Error,
-                            templateLine);
-                    })
+                var errors = (ex.Errors ?? new List<Diagnostic>())
+                    .Select(d => ToCompilerError(d, headerLines))
                     .ToList();
                 if (errors.Count == 0)
                     errors.Add(new RazorEngine.Templating.RazorEngineCompilerError(ex.Message, "", 0, 0, "", false));
