@@ -2340,9 +2340,33 @@
             assembly is reused (and invalidated by lastModification), mirroring GetGlobalAssemblyCache/SaveAssemblyInCache.
             </summary>
         </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.ConfigureBuilder(RazorEngineCore.IRazorEngineCompilationOptionsBuilder)">
+            <summary>
+            Set the default namespaces and the assembly references of a compilation.
+            Returns the number of directive lines RazorEngineCore prepends to the template.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.CurrentAssemblies">
+            <summary>
+            Every currently loaded assembly having a file location (== UseCurrentAssembliesReferenceResolver)
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.CheckSyntax(System.String,System.String@)">
+            <summary>
+            Compile 'script' for a syntax check only: nothing is cached or persisted.
+            A compilation failure throws the same TemplateCompilationException as Compile.
+            On success, returns the compiler warnings located in the script and the generated C# code (to map RazorEngineCompilerError.Line).
+            RazorEngineCore drops the diagnostics of a successful compilation, so the generated code is analyzed again with Roslyn (no emit).
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.RazorCoreEngine.Run(System.String,System.Object,System.Object)">
             <summary>
             Run the compiled template cached under 'key' with the given model and ViewBag, and return the rendered result
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.RazorCoreEngine.ToCompilerError(Microsoft.CodeAnalysis.Diagnostic,System.Int32)">
+            <summary>
+            Convert a Roslyn diagnostic. 'headerLines' is the number of directive lines RazorEngineCore prepended to the template (0 if unknown).
             </summary>
         </member>
         <member name="M:Seal.Helpers.RazorCoreEngine.ToTemplateCompilationException(RazorEngineCore.RazorEngineCompilationException,System.Int32)">

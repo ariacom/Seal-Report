@@ -73,7 +73,7 @@ var SWIUtil;
             var $alert = $("<div class='alert sr-alert " + alertClass + "' role='alert'>"
                 + "<span class='sr-alert-icon fa-solid " + icon + "'></span>"
                 + "<p class='sr-alert-text'>" + message + "</p>"
-                + "<button type='button' class='btn-close sr-alert-close' aria-label='close'></button>"
+                + "<button type='button' class='sr-alert-close' aria-label='close'><span class='fa-solid fa-xmark'></span></button>"
                 + "</div>");
             $alert.find(".sr-alert-close").on("click", function () { SWIUtil.CloseAlerts($alert); });
             $("body").append($alert);

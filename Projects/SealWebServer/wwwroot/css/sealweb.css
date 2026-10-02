@@ -610,14 +610,29 @@ table.dataTable {
 
     .sr-alert .sr-alert-close {
         flex: 0 0 auto;
-        margin-left: 4px;
-        padding: 4px;
-        opacity: 0.6;
-        font-size: 11px;
+        display: inline-flex;
+        align-items: center;
+        justify-content: center;
+        width: 26px;
+        height: 26px;
+        margin: -4px -6px -4px 4px;
+        padding: 0;
+        border: none;
+        border-radius: 50%;
+        background: transparent;
+        color: inherit;
+        font-size: 14px;
+        line-height: 1;
+        opacity: 0.65;
+        cursor: pointer;
+        transition: opacity 0.15s, background-color 0.15s;
     }
 
-        .sr-alert .sr-alert-close:hover {
+        .sr-alert .sr-alert-close:hover,
+        .sr-alert .sr-alert-close:focus-visible {
             opacity: 1;
+            background-color: rgba(0, 0, 0, 0.1);
+            outline: none;
         }
 
 .alert-success {
