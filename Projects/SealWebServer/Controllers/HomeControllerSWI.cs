@@ -993,8 +993,13 @@ namespace SealWebServer.Controllers
 
 
                 var file = Request.Form.Files[0];
+                //Check the file name
+                var fileName = Path.GetFileName((file.FileName ?? "").Replace('\\', '/'));
+                if (string.IsNullOrWhiteSpace(fileName) || fileName == "." || fileName == ".." || FileHelper.HasInvalidFileNameChars(fileName)) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
+                var folderPath = Path.GetFullPath(folder.GetFullPath());
                 //Saving the file
-                var finalPath = FileHelper.GetUniqueFileName(Path.Combine(folder.GetFullPath(), file.FileName));
+                var finalPath = Path.GetFullPath(FileHelper.GetUniqueFileName(Path.Combine(folderPath, fileName)));
+                if (!finalPath.StartsWith(Path.TrimEndingDirectorySeparator(folderPath) + Path.DirectorySeparatorChar)) throw new Exception("Error: invalid path");
                 using (var stream = System.IO.File.Create(finalPath))
                 {
                     file.CopyTo(stream);
