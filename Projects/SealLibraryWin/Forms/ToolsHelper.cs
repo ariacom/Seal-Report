@@ -1151,6 +1151,8 @@ namespace Seal.Forms
             foreach (string subFolder in Directory.GetDirectories(folder))
             {
                 if (log.IsJobCancelled()) return;
+                //Skip the recycle bins of the personal folders: a deleted report must not get its schedules back
+                if (folder.StartsWith(repository.PersonalFolder, StringComparison.OrdinalIgnoreCase) && Path.GetFileName(subFolder) == Repository.RecycleBinFolderName) continue;
                 SynchronizeSchedules(log, subFolder, repository, ref count, ref errorCount, errorSummary);
             }
 

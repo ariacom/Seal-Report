@@ -727,10 +727,7 @@ namespace Seal.Model
                 if (!AssembliesLoaded)
                 {
                     //Load extra assemblies defined in Repository, then the extensions built for the current Seal library (Extensions\Net for the Web Server, Extensions\Win for the Windows applications)
-                    var assemblies = Directory.GetFiles(AssembliesFolder, "*.dll").ToList();
-                    var extensionsFolder = Configuration.IsUsingSealLibraryWin ? ExtensionsWinFolder : ExtensionsNetFolder;
-                    if (Directory.Exists(extensionsFolder)) assemblies.AddRange(Directory.GetFiles(extensionsFolder, "*.dll"));
-                    foreach (var assembly in assemblies)
+                    foreach (var assembly in Directory.GetFiles(AssembliesFolder, "*.dll"))
                     {
                         try
                         {
@@ -740,6 +737,25 @@ namespace Seal.Model
                         {
                             Helper.WriteLogException("Repository.Init: Assemblies", ex);
                         }
+                    }
+
+                    //The extensions are loaded from a shadow copy: the file installed in the folder is never locked and can be replaced by a setup while the applications are running
+                    var extensionsFolder = Configuration.IsUsingSealLibraryWin ? ExtensionsWinFolder : ExtensionsNetFolder;
+                    if (Directory.Exists(extensionsFolder))
+                    {
+                        var extensions = Directory.GetFiles(extensionsFolder, "*.dll");
+                        foreach (var extension in extensions)
+                        {
+                            try
+                            {
+                                LoadExtensionAssembly(extension);
+                            }
+                            catch (Exception ex)
+                            {
+                                Helper.WriteLogException("Repository.Init: Extensions", ex);
+                            }
+                        }
+                        CleanExtensionShadowCopies(extensionsFolder, extensions);
                     }
 
                     //Add this assembly resolve necessary when executing Razor scripts
@@ -846,13 +862,91 @@ namespace Seal.Model
             var name = new AssemblyName(args.Name).Name + ".dll";
             string assemblyPath = Path.Combine(AssembliesFolder, name);
             //Extension assemblies and their private dependencies live in the runtime sub-folder (Extensions\Net or Extensions\Win)
-            if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(Configuration.IsUsingSealLibraryWin ? ExtensionsWinFolder : ExtensionsNetFolder, name);
+            if (!File.Exists(assemblyPath))
+            {
+                var extensionPath = Path.Combine(Configuration.IsUsingSealLibraryWin ? ExtensionsWinFolder : ExtensionsNetFolder, name);
+                if (File.Exists(extensionPath)) return LoadExtensionAssembly(extensionPath);
+            }
             //Dynamic assemblies live in the runtime sub-folder (Net/Win); fall back to the Dynamics root for back-compat
             if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsNetFolder, name);
             if (!File.Exists(assemblyPath)) assemblyPath = Path.Combine(DynamicsFolder, name);
             if (!File.Exists(assemblyPath)) return null;
             Assembly assembly = Assembly.LoadFrom(assemblyPath);
             return assembly;
+        }
+
+        /// <summary>
+        /// Name of the sub-folder of an Extensions folder holding the shadow copies of the extension assemblies
+        /// </summary>
+        public const string ExtensionsShadowFolderName = "Shadow";
+
+        /// <summary>
+        /// Shadow copy folder of an extension assembly: one sub-folder per version of the file (last modification and size)
+        /// </summary>
+        static string GetExtensionShadowFolder(string extensionPath)
+        {
+            var info = new FileInfo(extensionPath);
+            return Path.Combine(info.DirectoryName, ExtensionsShadowFolderName, $"{info.LastWriteTimeUtc.Ticks:X}-{info.Length:X}");
+        }
+
+        /// <summary>
+        /// Load an extension assembly from a shadow copy to keep the original file unlocked.
+        /// The assembly is loaded in place if the shadow copy cannot be created (e.g. no write permission on the folder).
+        /// </summary>
+        static Assembly LoadExtensionAssembly(string extensionPath)
+        {
+            string shadowPath = null;
+            try
+            {
+                var shadowFolder = GetExtensionShadowFolder(extensionPath);
+                shadowPath = Path.Combine(shadowFolder, Path.GetFileName(extensionPath));
+                if (!File.Exists(shadowPath))
+                {
+                    Directory.CreateDirectory(shadowFolder);
+                    //Copy to a temporary file then rename it: a process starting at the same time never loads a partial copy
+                    var tempPath = shadowPath + "." + Guid.NewGuid().ToString("N") + ".tmp";
+                    File.Copy(extensionPath, tempPath);
+                    try
+                    {
+                        File.Move(tempPath, shadowPath);
+                    }
+                    catch
+                    {
+                        //Copy already done by another process
+                        File.Delete(tempPath);
+                    }
+                }
+                return Assembly.LoadFrom(shadowPath);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException($"Repository.LoadExtensionAssembly: shadow copy '{shadowPath}' not used", ex);
+            }
+            return Assembly.LoadFrom(extensionPath);
+        }
+
+        /// <summary>
+        /// Delete the shadow copies of the previous versions of the extension assemblies (the ones still loaded by a running process are locked and kept)
+        /// </summary>
+        static void CleanExtensionShadowCopies(string extensionsFolder, string[] extensions)
+        {
+            try
+            {
+                var shadowRoot = Path.Combine(extensionsFolder, ExtensionsShadowFolderName);
+                if (!Directory.Exists(shadowRoot)) return;
+
+                var currentFolders = extensions.Select(i => GetExtensionShadowFolder(i)).ToList();
+                foreach (var folder in Directory.GetDirectories(shadowRoot))
+                {
+                    if (currentFolders.Contains(folder, StringComparer.InvariantCultureIgnoreCase)) continue;
+                    try
+                    {
+                        Directory.Delete(folder, true);
+                    }
+                    catch { }
+                }
+            }
+            catch { }
         }
 
 
