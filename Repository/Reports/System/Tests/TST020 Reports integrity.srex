@@ -30,6 +30,7 @@
 @using System.IO;
 @using System.Linq;
 @using System.Collections.Generic;
+@using Seal.Renderer;
 
 @{
     ReportTask task = Model;
@@ -108,6 +109,9 @@
         catch (RazorEngine.Templating.TemplateCompilationException ex) { errors.Add($"[{rel}] script does not compile: {Helper.GetExceptionMessage(ex)}"); }
         catch (Exception ex) { errors.Add($"[{rel}] script error: {ex.Message}"); }
 
+        //1b. All custom templates of the views compile (view, partial and renderer templates: Excel, PDF, CSV, etc.)
+        CompileViewTemplates(rep, rel, errors);
+
         //2. Initialize for execution (resolves sources, models and enumerated lists)
         try { rep.InitForExecution(); }
         catch (Exception ex) { errors.Add($"[{rel}] initialization error: {ex.Message}"); return; }
@@ -156,6 +160,31 @@
             Comp(o.PreScript, o.GetType());
             Comp(o.PostScript, o.GetType());
         }
+    }
+
+    //Compile the custom templates of every view (recursively): the view template, its partial templates and its renderer templates.
+    //Each template is reported separately with the view name, so one broken template does not hide the others.
+    void CompileViewTemplates(Report rep, string rel, List&lt;string&gt; errors)
+    {
+        foreach (var view in rep.AllViews)
+        {
+            if (view.UseCustomTemplate) CompTemplate(view.CustomTemplate, typeof(Report), $"[{rel}] view '{view.Name}': custom template", errors);
+            foreach (var partial in view.PartialTemplates.Where(i =&gt; i.UseCustom))
+            {
+                CompTemplate(partial.Text, typeof(ReportView), $"[{rel}] view '{view.Name}': custom partial template '{partial.Name}'", errors);
+            }
+            foreach (var renderer in new RootRenderer[] { view.ExcelRenderer, view.PDFRenderer, view.HTML2PDFRenderer, view.CSVRenderer, view.TextRenderer, view.XMLRenderer, view.JsonRenderer })
+            {
+                if (renderer != null &amp;&amp; renderer.UseCustomTemplate) CompTemplate(renderer.CustomTemplate, typeof(Report), $"[{rel}] view '{view.Name}': custom {renderer.GetRenderType()} template", errors);
+            }
+        }
+    }
+
+    void CompTemplate(string script, Type modelType, string context, List&lt;string&gt; errors)
+    {
+        try { Comp(script, modelType); }
+        catch (RazorEngine.Templating.TemplateCompilationException ex) { errors.Add($"{context} does not compile: {Helper.GetExceptionMessage(ex)}"); }
+        catch (Exception ex) { errors.Add($"{context} error: {ex.Message}"); }
     }
 
     void Comp(string script, Type modelType)
