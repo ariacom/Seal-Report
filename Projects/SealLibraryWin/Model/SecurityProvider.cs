@@ -41,11 +41,6 @@ namespace Seal.Model
         public string TwoFAScript { get; set; } = "";
 
         /// <summary>
-        /// Property not used anymore
-        /// </summary>
-        public bool PromptUserPassword { get; set; } = false;
-
-        /// <summary>
         /// List of SecurityParameter
         /// </summary>
         public List<SecurityParameter> Parameters { get; set; } = new List<SecurityParameter>();

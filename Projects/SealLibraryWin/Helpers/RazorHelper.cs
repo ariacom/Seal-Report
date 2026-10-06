@@ -122,7 +122,8 @@ namespace Seal.Helpers
                         }
                         catch (Exception ex)
                         {
-                            if (!(ex is FileNotFoundException)) Helper.WriteLogException($"LoadRazorAssemblies for '{path}'", ex);
+                            //BadImageFormatException: native library (not a .NET assembly), nothing to load
+                            if (!(ex is FileNotFoundException) && !(ex is BadImageFormatException)) Helper.WriteLogException($"LoadRazorAssemblies for '{path}'", ex);
                         }
                     }
 

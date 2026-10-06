@@ -25,7 +25,7 @@
                 @if (!(authenticationConfig?.IsUnique() ?? false))
                 {
                     <form id="login-form" autocomplete="on">
-                        @if (!(authenticationConfig?.HideLoginPassword ?? false))
+                        @if (!repository.Security.HideLoginPassword && !(authenticationConfig?.HideLoginPassword ?? false))
                         {
                             <div class="mb-3">
                                 <label for="username">@repository.TranslateWeb("User name")</label>

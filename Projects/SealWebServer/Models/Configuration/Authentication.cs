@@ -27,7 +27,7 @@
         }
 
         /// <summary>
-        /// If true, the Login Password fields are hidden (e.g. for Integrated Windows Authentication)
+        /// Kept for compatibility: the option is now 'Hide login user name and password' in the Security configuration (Server Manager). If true, the Login Password fields are hidden.
         /// </summary>
         public bool HideLoginPassword { get; set; } = false;
     }

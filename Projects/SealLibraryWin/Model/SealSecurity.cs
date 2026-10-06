@@ -60,6 +60,7 @@ namespace Seal.Model
                 GetProperty("ResetPasswordScript2").SetIsBrowsable(true);
                 GetProperty("EnableChangePassword").SetIsBrowsable(true);
                 GetProperty("ChangePasswordScript").SetIsBrowsable(true);
+                GetProperty("HideLoginPassword").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -204,6 +205,15 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string ChangePasswordScript { get; set; }
+
+        /// <summary>
+        /// If true, the user name and password fields are hidden in the login page of the Web Report Server (e.g. for the Integrated Windows authentication).
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Hide login user name and password"), Description("If true, the user name and password fields are hidden in the login page of the Web Report Server (e.g. for the Integrated Windows authentication)."), Id(12, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool HideLoginPassword { get; set; } = false;
 
         /// <summary>
         /// True if the Two-Factor Authentication is enabled
