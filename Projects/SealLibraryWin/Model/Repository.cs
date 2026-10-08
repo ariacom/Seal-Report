@@ -789,46 +789,7 @@ namespace Seal.Model
                                 //Compile the file and save the dll
                                 var code = File.ReadAllText(csFile);
                                 // Compile the code
-                                var syntaxTree = CSharpSyntaxTree.ParseText(code);
-
-                                //Force these basic references
-                                var refNameSpaces = new[] {
-                                    "System",
-                                    "System.Runtime",
-                                    "System.Collections",
-                                    "System.Linq",
-                                    "System.Globalization",
-                                    "System.Net",
-                                    "System.Security",
-                                    "System.Security.Cryptography",
-                                    "System.Security.Principal.Windows",
-                                    "System.Security.Claims",
-                                    "System.IO",
-                                    "System.Data",
-                                    "System.Data.Common",
-                                    "Microsoft.Data.SqlClient"
-                                };
-
-                                var refs = new List<PortableExecutableReference>();
-                                foreach (var refNameSpace in refNameSpaces)
-                                {
-                                    try { 
-                                        var refAssembly = Assembly.Load(refNameSpace); 
-                                        refs.Add(MetadataReference.CreateFromFile(refAssembly.Location)); }
-                                    catch { }
-                                }
-
-                                refs = refs.Concat(AppDomain.CurrentDomain.GetAssemblies()
-                                    .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location) && a.Location != dllPath)
-                                    .Select(a => MetadataReference.CreateFromFile(a.Location)))
-                                .Distinct().ToList();
-
-                                var compilation = CSharpCompilation.Create(
-                                    Path.GetFileNameWithoutExtension(csFile),
-                                    new[] { syntaxTree },
-                                    refs,
-                                    new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
-                                );
+                                var compilation = CreateDynamicCompilation(Path.GetFileNameWithoutExtension(csFile), code);
 
                                 var symbolsPath = Path.ChangeExtension(dllPath, "pdb");
                                 EmitResult result = compilation.Emit(dllPath, symbolsPath);
@@ -855,6 +816,83 @@ namespace Seal.Model
                     DynamicAssembliesLoaded = true;
                 }
             }
+        }
+
+        /// <summary>
+        /// Create the compilation of a dynamic assembly from the C# code of its file (name is the file name without extension).
+        /// Used to build the assembly at startup and to check the syntax in the editor, so both give the same result.
+        /// </summary>
+        public CSharpCompilation CreateDynamicCompilation(string name, string code)
+        {
+            var syntaxTree = CSharpSyntaxTree.ParseText(code);
+
+            //Force these basic references
+            var refNameSpaces = new[] {
+                "System",
+                "System.Runtime",
+                "System.Collections",
+                "System.Linq",
+                "System.Globalization",
+                "System.Net",
+                "System.Security",
+                "System.Security.Cryptography",
+                "System.Security.Principal.Windows",
+                "System.Security.Claims",
+                "System.IO",
+                "System.Data",
+                "System.Data.Common",
+                "Microsoft.Data.SqlClient"
+            };
+
+            var refs = new List<PortableExecutableReference>();
+            foreach (var refNameSpace in refNameSpaces)
+            {
+                try
+                {
+                    var refAssembly = Assembly.Load(refNameSpace);
+                    refs.Add(MetadataReference.CreateFromFile(refAssembly.Location));
+                }
+                catch { }
+            }
+
+            //The dynamic assemblies are compiled in the order of their file names: the assembly itself and the next ones are not referenced,
+            //even if they are already loaded (case of a syntax check done after the startup)
+            var dynamicFolder = Configuration.IsUsingSealLibraryWin ? DynamicsWinFolder : DynamicsNetFolder;
+            Func<string, bool> isCompiledBefore = location =>
+                !string.Equals(Path.GetDirectoryName(location), dynamicFolder, StringComparison.OrdinalIgnoreCase)
+                || Comparer<string>.Default.Compare(Path.GetFileNameWithoutExtension(location) + ".cs", name + ".cs") < 0;
+
+            refs = refs.Concat(AppDomain.CurrentDomain.GetAssemblies()
+                .Where(a => !a.IsDynamic && !string.IsNullOrEmpty(a.Location) && isCompiledBefore(a.Location))
+                .Select(a => MetadataReference.CreateFromFile(a.Location)))
+            .Distinct().ToList();
+
+            return CSharpCompilation.Create(
+                name,
+                new[] { syntaxTree },
+                refs,
+                new CSharpCompilationOptions(OutputKind.DynamicallyLinkedLibrary)
+            );
+        }
+
+        /// <summary>
+        /// Check the C# code of a dynamic assembly without saving it: returns the errors and the warnings located in the code
+        /// </summary>
+        public List<RazorEngine.Templating.RazorEngineCompilerError> CheckDynamicCompilation(string name, string code)
+        {
+            var result = new List<RazorEngine.Templating.RazorEngineCompilerError>();
+            using (var stream = new MemoryStream())
+            {
+                foreach (var diagnostic in CreateDynamicCompilation(name, code).Emit(stream).Diagnostics)
+                {
+                    if (diagnostic.Severity != DiagnosticSeverity.Error && diagnostic.Severity != DiagnosticSeverity.Warning) continue;
+                    if (diagnostic.Severity == DiagnosticSeverity.Warning && !diagnostic.Location.IsInSource) continue;
+                    var position = diagnostic.Location.GetLineSpan().StartLinePosition;
+                    var line = diagnostic.Location.IsInSource ? position.Line + 1 : 0;
+                    result.Add(new RazorEngine.Templating.RazorEngineCompilerError(diagnostic.GetMessage(), name + ".cs", line, position.Character + 1, diagnostic.Id, diagnostic.Severity != DiagnosticSeverity.Error, line));
+                }
+            }
+            return result;
         }
 
         Assembly AssemblyResolve(object sender, ResolveEventArgs args)

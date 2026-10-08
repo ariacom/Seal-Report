@@ -32,6 +32,8 @@ namespace Seal.Forms
         public PropertyDescriptor ContextPropertyDescriptor = null;
         public string ContextPropertyName = null;
         public bool IsRawCSharp = false;
+        //Name of the dynamic assembly edited (file name without extension) if IsRawCSharp
+        public string RawCSharpName = "";
 
         public Scintilla textBox = new Scintilla();
 
@@ -210,12 +212,12 @@ namespace Seal.Forms
 
         private void okToolStripButton_Click(object sender, EventArgs e)
         {
-            if (textBox.Modified && ObjectForCheckSyntax != null)
+            if (textBox.Modified && (ObjectForCheckSyntax != null || IsRawCSharp))
             {
                 var error = CheckSyntax();
                 if (!string.IsNullOrEmpty(error))
                 {
-                    if (MessageBox.Show("The Razor syntax is incorrect. Do you really want to save this script and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
+                    if (MessageBox.Show((IsRawCSharp ? "The C# syntax is incorrect." : "The Razor syntax is incorrect.") + " Do you really want to save this script and exit ?", "Warning", MessageBoxButtons.OKCancel, MessageBoxIcon.Warning) == DialogResult.Cancel) return;
                 }
             }
 
@@ -251,19 +253,8 @@ namespace Seal.Forms
                             throw new Exception("C# code expected: it must contain 'namespace' and 'class' keywords.");
                         }
 
-                        //case of Raw C# (for dynamics), convert to a Razor script
-                        var lines = textBox.Text.Replace("\r\n", "\r").Replace("\n", "\r").Split("\r");
-                        finalScript = "";
-                        foreach(var line in lines)
-                        {
-                            var newLine = line;
-                            if (line.Trim().StartsWith("using ")) newLine = line.Replace("using", "@using");
-                            if (line.Trim().StartsWith("namespace "))
-                            {
-                                newLine = "@functions "  + (line.Contains("{") ? "{" : "");
-                            }
-                            finalScript += newLine + "\r\n";
-                        }
+                        //case of Raw C# (for dynamics): same compilation as the one done at startup
+                        warningCount = FormHelper.CheckCSharpSyntax(textBox, _compilationErrors, RawCSharpName);
                     }
                     else
                     {
@@ -276,9 +267,9 @@ namespace Seal.Forms
 
                             finalScript = editor.ReplaceFunction(script, ContextPropertyDescriptor.DisplayName, textBox.Text);
                         }
-                    }
 
-                    warningCount = FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
+                        warningCount = FormHelper.CheckRazorSyntax(textBox, ObjectForCheckSyntax, _compilationErrors, finalScript);
+                    }
                 }
                 catch (Exception ex)
                 {

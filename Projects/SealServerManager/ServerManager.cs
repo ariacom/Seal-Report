@@ -187,6 +187,7 @@ namespace Seal
                 frm.textBox.Text = code;
                 frm.checkSyntaxToolStripButton.Visible = true;
                 frm.IsRawCSharp = true;
+                frm.RawCSharpName = Path.GetFileNameWithoutExtension(dlg.FileName);
                 ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                 if (frm.ShowDialog() == DialogResult.OK)
                 {

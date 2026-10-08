@@ -182,6 +182,41 @@ namespace Seal.Forms
             return warningCount;
         }
 
+        /// <summary>
+        /// Check the syntax of the C# code of a dynamic assembly (name is the file name without extension) and highlight the errors and warnings in the editor.
+        /// The code is compiled like at startup. Throws an exception if the compilation fails, otherwise returns the number of warnings.
+        /// </summary>
+        public static int CheckCSharpSyntax(Scintilla textBox, Dictionary<int, string> compilationErrors, string name)
+        {
+            const int NUM = 18;
+            const int NUM2 = 19;
+
+            // Remove all uses of our indicator
+            textBox.IndicatorCurrent = NUM;
+            textBox.IndicatorClearRange(0, textBox.TextLength);
+            textBox.IndicatorCurrent = NUM2;
+            textBox.IndicatorClearRange(0, textBox.TextLength);
+
+            compilationErrors.Clear();
+            var diagnostics = Repository.Instance.CheckDynamicCompilation(name, textBox.Text);
+            if (diagnostics.Count == 0) return 0;
+
+            //The errors and warnings are highlighted: the caret and the scroll position are kept if there are only warnings
+            int selectionStart = textBox.SelectionStart, selectionEnd = textBox.SelectionEnd, firstVisibleLine = textBox.FirstVisibleLine;
+            var firstErrorLine = setRazorErrors(textBox, compilationErrors, diagnostics, textBox.Text, NUM, NUM2);
+            var errors = diagnostics.Where(i => !i.IsWarning).ToList();
+            if (errors.Count > 0)
+            {
+                if (firstErrorLine != null) firstErrorLine.Goto();
+                throw new Exception("Compilation error:\r\n" + string.Join("\r\n", errors.Select(i => string.Format("({0},{1}): error {2}: {3}", i.Line, i.Column, i.ErrorNumber, i.ErrorText))));
+            }
+
+            textBox.SelectionStart = selectionStart;
+            textBox.SelectionEnd = selectionEnd;
+            textBox.FirstVisibleLine = firstVisibleLine;
+            return diagnostics.Count;
+        }
+
 
         public static void RestoreForm(Form form, Size size, Point location, string stateStr)
         {

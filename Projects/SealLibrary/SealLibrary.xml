@@ -13708,6 +13708,17 @@
             Init the repository from a given path
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.CreateDynamicCompilation(System.String,System.String)">
+            <summary>
+            Create the compilation of a dynamic assembly from the C# code of its file (name is the file name without extension).
+            Used to build the assembly at startup and to check the syntax in the editor, so both give the same result.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.CheckDynamicCompilation(System.String,System.String)">
+            <summary>
+            Check the C# code of a dynamic assembly without saving it: returns the errors and the warnings located in the code
+            </summary>
+        </member>
         <member name="F:Seal.Model.Repository.ExtensionsShadowFolderName">
             <summary>
             Name of the sub-folder of an Extensions folder holding the shadow copies of the extension assemblies
