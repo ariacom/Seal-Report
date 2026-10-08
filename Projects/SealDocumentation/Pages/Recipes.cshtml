@@ -297,6 +297,7 @@
                             <pre><code class="language-csharp">
             //Repository.RepositoryConfigurationPath = @@"C:\ProgramData\Seal Report Repository"; //to specify an alternate Repository Path
             Repository repository = Repository.Create();
+            //Repository repository = Repository.Create(@@"C:\MyOtherRepository"); //to load a repository from a given folder without changing the default one (several repositories can be handled by the same process)
             Report report = Report.LoadFromFile(@@"C:\ProgramData\Seal Report Repository\Reports\Search - Orders.srex", repository);
             ReportExecution execution = new ReportExecution() { Report = report };
             execution.Execute();

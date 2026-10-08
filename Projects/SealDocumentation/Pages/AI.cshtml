@@ -139,6 +139,15 @@
                             <div class="bs-callout bs-callout-info">
                                 <ck>Check <a href="~/Sources#lineAI">AI Data Source Manager</a> for the details of the metadata edition</ck>.
                             </div>
+                            <p>
+                                <strong>Working with the chat panel</strong>
+                            </p>
+                            <ul>
+                                <li><b>Follow-up suggestions</b>: when an agent proposes next steps or asks to choose between alternatives, the options are displayed as links: a click sends the suggestion as the next message.</li>
+                                <li><b>Reports created by an agent</b> are executed once before they are delivered: the agent checks the result (number of rows, execution error) and fixes the report if the test fails. The filters of the report are created as prompted restrictions by default, so that the user can change their values at execution. The Report Designer agent can also define drop-down lists in the report and add a <a href="~/Reports#lineViews_map">Map view</a>.</li>
+                                <li><b>Panel state</b>: the state of the panel (open or closed, width) is saved in the user profile, and the last conversation is selected again after a login.</li>
+                                <li><b>CSV export</b> of a result shown in the chat uses the CSV separator of the server configuration.</li>
+                            </ul>
                         </div>
                         <!-- end col -->
                     </div>

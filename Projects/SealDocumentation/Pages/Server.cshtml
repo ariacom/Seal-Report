@@ -89,6 +89,7 @@
                                 <h4>Server source code and dynamic assemblies</h4>
                                 Share source code amongst your report scripts by saving .cs files in the repository folder <b>Assemblies\Dynamics</b>.<br />
                                 The file will be compiled into a .dll assembly that will be loaded automatically.<br />
+                                In the <b>Server Manager</b>, the <b>Check Syntax</b> (F8) of the editor compiles the file exactly as it is done at startup: errors are located at their line and column (<eg>e.g. a missing using directive</eg>), and the syntax is also checked when the editor is validated.<br />
                                 Sample of .cs source code:<br />
                                 <pre><code class="language-csharp">
 using Seal;
@@ -110,6 +111,15 @@ namespace MyNamespace
                             <div class="bs-callout bs-callout-info">
                                 Be sure that the <code>Server is local (No internet)</code> property equals <b>true</b> if your server has no access to the internet.<br />
                                 In this case all the Java Scripts and CSS files used in the report result will be loaded from the server.
+                            </div>
+                            <div class="bs-callout bs-callout-info">
+                                <h4>Colors of the web site</h4>
+                                The colors of the <b>Web Report Server</b> (banner, folder tree and primary buttons) are defined in the file <i>wwwroot\css\site-colors.css</i> of the web site. The file is referenced by the <code>Web CSS Files</code> property and loaded after the Seal Report stylesheets, thus its rules override the default ones.<br />
+                                Edit the colors to adapt the site to your corporate identity: no restart is needed, just reload the page. An existing <i>site-colors.css</i> is never overwritten by the setup or by the Web Server publication.<br />
+                                The PowerShell script <i>site-colors-gen.ps1</i> installed in the <i>Core</i> folder generates the whole file from a single primary color:
+                                <pre><code class="language-bash">
+powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site-colors-gen.ps1" -Primary "#908A85" -Out "C:\inetpub\wwwroot\Seal Report\wwwroot\css\site-colors.css"
+                                </code></pre>
                             </div>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Session cookie and several instances on the same web site</h4>
@@ -300,6 +310,9 @@ namespace MyNamespace
                                     <strong>Change Password</strong> (<code>Enable Change Password</code>): allows users having a login defined in the security file to change their password. An optional <code>Change Password Script</code> may be defined to customize the behavior.
                                 </li>
                             </ul>
+                            <p>
+                                Set the option <code>Hide login user name and password</code> to true to hide the user name and password fields in the login page (<eg>e.g. for the Integrated Windows Authentication</eg>). This option replaces the <i>HideLoginPassword</i> property of the <i>appsettings.json</i> file, which is still supported for compatibility.
+                            </p>
 
                             <div class="bs-callout bs-callout-demo">
                                 Script sample for the Basic Authentication Provider:
@@ -329,7 +342,7 @@ namespace MyNamespace
                             </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Test your security provider</h4>
-                                Once your <strong>Security Provider</strong> is configured, user the helper <code>Test a login</code> to fully test a login process with given name and password.
+                                Once your <strong>Security Provider</strong> is configured, use the helper <code>Test a login</code> to fully test a login process with given name and password.
                             </div>
                         </div>
                         <!-- end col -->

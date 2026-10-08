@@ -140,7 +140,22 @@
                             </div>
                             <p>
                                 Like tables in <strong>Data Source</strong>, <code>Pre/Post SQL Statements</code> can be executed just before and after the SELECT statement is executed.<br />
-                                Finally ,the model definition allows to configure build timeout and join preferences, and to edit all the <a href="Sources.cshtml#lineTables_cr">Common Restrictions</a> found in the SQL generated for the model (use the property <code>Common Restrictions</code>).
+                                Finally, the model definition allows to configure build timeout and join preferences, and to edit all the <a href="~/Sources#lineTables_cr">Common Restrictions</a> found in the SQL generated for the model (use the property <code>Common Restrictions</code>).
+                            </p>
+                            <p id="lineModels_joins">
+                                <strong>Joins of the model</strong><br />
+                                By default, all the joins of the <strong>Data Source</strong> are used as they are defined to link the tables of the model: the joins chosen are the ones having the minimal total weight (refer to <a href="~/Sources#lineJoins">Joins</a>).<br />
+                                The property <code>Joins of the model</code> allows to change a join for the model only, without modifying the <strong>Data Source</strong>:
+                            </p>
+                            <ul>
+                                <li><code>Use the join</code>: if false, the join is not used to link the tables of the model.</li>
+                                <li><code>Join type</code>: inner, left outer or right outer join for this model.</li>
+                                <li><code>Is bi-directional</code>: indicates if the join can be used in both directions for this model.</li>
+                                <li><code>Weight</code>: weight of the join for this model (from 1 to 1000), a join having a higher weight is avoided when another path exists.</li>
+                                <li><code>Additional clause</code>: SQL added with an AND to the join clause. For an outer join, this allows to restrict the outer table without losing the rows of the other table (<eg>e.g. Orders.OrderDate &gt;= '2024-01-01' for a left outer join between Customers and Orders</eg>). The SQL may contain Common Restrictions or Common Values.</li>
+                            </ul>
+                            <p>
+                                Use the helper <code>View joins evaluated</code> to show the joins chosen for the model and the query generated.
                             </p>
                             <div class="col-md-12 text-center">
                                 <div class="caption">
@@ -259,12 +274,13 @@
                                 <strong>Prompting the value at execution</strong><br />
                                 When the report is executed, the restriction value can be prompted to end-user by modifying the <code>Prompt Restriction</code> property.<br />
                                 In this case, the properties <code>Trigger execution</code>, <code>Is Required</code> and <code>Operator style</code> can be set.<br />
-                                If the restriction has an Enumerated List, other properties allow to control its display layout (<code>Enum Layout</code>) and the values selected the first time (<code>First selection</code>).
+                                If the restriction has an Enumerated List, other properties allow to control its display layout (<code>Enum Layout</code>) and the values selected the first time (<code>First selection</code>).<br />
+                                When a report has prompted restrictions, the <b>Reset restrictions</b> button displayed next to the <b>Execute</b> button restores their initial values (the ones defined in the report) without executing the report.
                             </p>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Sharing prompted restrictions amongst models</h4>
                                 If several restrictions have the <b>same display name and the same metadata source column</b>, only one restriction will be prompted (the one with the lowest display order) and the values will be dispatched to all model restrictions.<br />
-                                This is also applied for <a href="Sources.cshtml#lineTables_cr" ">Common Restrictions</a> (but only the <b>name</b> is used as common restriction does not have source column).<br />
+                                This is also applied for <a href="~/Sources#lineTables_cr">Common Restrictions</a> (but only the <b>name</b> is used as common restriction does not have source column).<br />
                                 Another method to share restrictions is demontrated in the report:<br />
                                 <a class="btn btn-primary live-sample">Live Sample: 14-Sharing Models and Views properties</a><br />
                             </div>
@@ -302,7 +318,7 @@
                                 Charts axis and series are also defined in the report model.<br />
                                 Three JavaScript Chart libraries are supported by Seal Report: <strong>Chart JS</strong>, <strong>ECharts</strong> and <strong>Plotly Chart</strong>. <br />
                                 A Chart library to generate static images is also available: <strong>ScottPlot Chart</strong>. <br />
-                                According to the library chosen, the look and functionalities are different but we recommand to use <strong>Chart JS</strong> first (for maintenance and performances reasons).<br>
+                                According to the library chosen, the look and functionalities are different but we recommend to use <strong>Chart JS</strong> first (for maintenance and performances reasons).<br>
                                 The <strong>ScottPlot Chart</strong> library can be used to get the best rendering for the PDF format.<br>
                             </p>
                             <div class="bs-callout bs-callout-warning">
@@ -346,7 +362,7 @@
                                 The option <code>Use raw SQL</code> indicates to use directly the <b>SQL Select Statement</b> to generate the result table instead of using a 'select * from (<b>SQL Select Statement</b>) a' statement.<br />
                                 In this case, aggregations, restrictions and custom SQL cannot be used.<br /><br />
 
-                                Note that the <b>SQL Select Statement</b> may contain <a href="Sources.cshtml#lineTables_cr">Common Restrictions</a>.<br />
+                                Note that the <b>SQL Select Statement</b> may contain <a href="~/Sources#lineTables_cr">Common Restrictions</a>.<br />
 
                                 <div class="bs-callout bs-callout-warning">
                                     <h4>Converting a model</h4>
@@ -369,7 +385,7 @@
                         <div class="col-md-12">
                             <h4>LINQ Model</h4>
                             <p>
-                                A <strong>LINQ Model</strong> is a model based on a <a href="Sources.cshtml#lineNoSQL"><b>LINQ Data Source</b></a>.<br />
+                                A <strong>LINQ Model</strong> is a model based on a <a href="~/Sources#lineNoSQL"><b>LINQ Data Source</b></a>.<br />
                                 It is managed as a normal model except that the Seal engine will generate a <b>LINQ Query</b> instead of an <b>SQL Statement</b> to get the result table.
                             </p>
                             <p>
@@ -761,7 +777,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             <p>
                                 On <strong>Linux OS</strong> or <strong>Azure Platform</strong>, a dedicated <b>Seal Report Scheduler</b> may be used instead of the <b>Windows Task Scheduler</b>.<br />
                                 Schedule definitions are stored in the dedicated repository folder: <i>\SpecialFolders\Schedules</i> and are executed by either another process or an worker thread in the Web Report Server.<br />
-                                <ck>Check dedicated  <a href="~/Tutorials.cshtml#lineScheduler">tutorials</a> for running the <b>Seal Report Scheduler</b></ck>.
+                                <ck>Check dedicated  <a href="~/Tutorials#lineScheduler">tutorials</a> for running the <b>Seal Report Scheduler</b></ck>.
                             </p>
                             <div class="bs-callout bs-callout-danger">
                                 <h4>Windows Task Scheduler: Check users and synchronization</h4>

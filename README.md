@@ -31,6 +31,7 @@ See the [release notes](https://github.com/ariacom/Seal-Report/releases) for det
 * **LINQ queries**: Join and query any data sources (SQL, Excel, XML, OLAP Cube, HTTP JSON, etc.) with the power of LINQ.
 * **Native Pivot Tables**: Drag and drop elements directly in a pivot table (cross tab) and display them in your report.
 * **HTML5 Charts**: Define and display chart series in two mouse clicks (support of ChartJS, ECharts, Plotly, ScottPlot and Gauge libraries).
+* **Maps**: Display the rows of a model having a latitude and a longitude on an interactive map, with colors, sizes and popups (OpenStreetMap, OpenTopoMap, OpenHikingMap, IGN or your own tiles).
 * **AI Agents**: Chat with role-based AI agents to design reports, analyze data, manage data sources, schedule executions or administer the server — using your own provider (OpenAI, Azure OpenAI, Anthropic or Ollama, including local models). AI tasks can also be embedded in reports.
 * **Fully responsive HTML rendering with the Razor engine**: Use the power of HTML5 in the report result (Bootstrap layout, responsiveness, table sorting and filtering). Customize your report presentation in HTML with Razor parsing.
 * **Excel and PDF**: Full control of your report result in Excel (ClosedXML library) or PDF (QuestPDF library). Several other formats are available (XML, JSON, Text, CSV) or can easily be customized.

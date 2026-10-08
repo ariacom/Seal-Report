@@ -289,6 +289,20 @@
                             <div class="bs-callout bs-callout-info">
                                 When joining two tables, the <code>SQL clause</code> is used by the Seal engine without any transformation, thus it is recommended to use the table names or alias before the column.
                             </div>
+                            <p>
+                                <strong>How the joins of a model are chosen</strong><br />
+                                The tables are the nodes and the joins are the links of a graph: to build the query of a model, the Seal engine chooses the set of joins linking all the tables of the model with the <b>minimal total weight</b>. Intermediate tables are added automatically if they are required to link two tables.<br />
+                                The following properties of the join drive the choice:
+                            </p>
+                            <ul>
+                                <li><code>Join type</code>: <b>Inner</b>, <b>Left outer</b>, <b>Right outer</b> (or <b>Cross</b> join).</li>
+                                <li><code>Is bi-directional</code>: indicates if the join can also be used in the other direction (from the right table to the left table).</li>
+                                <li><code>Weight</code>: weight of the join from 1 (default) to 1000. A join having a higher weight is avoided when another path exists (<eg>e.g. set a weight of 10 to a join that must be used only if no other join links the two tables</eg>).</li>
+                            </ul>
+                            <div class="bs-callout bs-callout-warning">
+                                If several joins are defined between the same two tables, only the first one is used.<br />
+                                The joins can be excluded or changed for a given model in the report (refer to <a href="~/Reports#lineModels_joins">Joins of the model</a>). In the <b>Report Designer</b>, the model helper <code>View joins evaluated</code> shows the joins chosen and the query generated: use it to understand if a join definition is missing in the source, or if a join weight has to be changed.
+                            </div>
                         </div>
                         <!-- end col -->
                     </div>
