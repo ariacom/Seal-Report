@@ -316,7 +316,7 @@
 
         //==================== STEP 4: remove ONE FTP schedule ====================
         request = $@"
-        For the report located at '{reportFilePath}', remove EXACTLY ONE of the two schedules attached to the 'FTP Device' output. Keep the other one.
+        For the report located at '{reportFilePath}', remove EXACTLY ONE of the two schedules attached to the 'FTP Device' output: remove the monthly one and keep the weekly one (every Monday). Do not ask for confirmation.
     ";
         if (chatLog != null) task.LogMessage(request);
         agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
