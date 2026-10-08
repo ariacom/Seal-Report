@@ -513,7 +513,7 @@ new {x1=Helper.ToString(ExcelEmployeeObjective["employee"]), x2=Int32.Parse(Exce
         {
             categories += category.Name + ";";
         }
-        string titleWithLink = string.Format("<a href='{0}' target=_blank>{1}</a>", link, HttpUtility.HtmlEncode(item.Title.Text));
+        string titleWithLink = string.Format("&lt;a href='{0}' target=_blank&gt;{1}&lt;/a&gt;", link, HttpUtility.HtmlEncode(item.Title.Text));
         //Values must match the table definition
         table.Rows.Add(item.Id, item.PublishDate.DateTime, item.Title.Text, item.Summary.Text, link, categories, titleWithLink);
     }

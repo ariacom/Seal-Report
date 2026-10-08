@@ -449,7 +449,7 @@
                             <pre><code class="language-javascript">
 $("#login_execute_button")
 .click(function () {
-    $("#login_label").html("Connecting...<br>");
+    $("#login_label").html("Connecting...&lt;br&gt;");
     $.post(sealServer + "SWILogin", {
         user: 'ben',
         password: 'ben'
@@ -461,13 +461,13 @@ $("#login_execute_button")
                 var mySessionId = data.sessionId;
                 var form = $('&lt;form method="post" target="_blank" />').appendTo('body');
                 form.attr('action', sealServer + "SWExecuteReport");
-                form.append($('<input />').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
-                form.append($('<input />').attr('name', 'r0_name').attr('value', "Quantity"));
-                form.append($('<input />').attr('name', 'r0_operator').attr('value', "Between"));
-                form.append($('<input />').attr('name', 'r0_value_1').attr('value', "34"));
-                form.append($('<input />').attr('name', 'r0_value_2').attr('value', "123"));
-                form.append($('<input />').attr('name', 'use_default_restrictions').attr('value', "true"));
-                form.append($('<input />').attr('type', 'hidden').attr('name', 'sessionId').attr('value', mySessionId));
+                form.append($('&lt;input /&gt;').attr('name', 'path').attr('value', "\\Search - Orders.srex"));
+                form.append($('&lt;input /&gt;').attr('name', 'r0_name').attr('value', "Quantity"));
+                form.append($('&lt;input /&gt;').attr('name', 'r0_operator').attr('value', "Between"));
+                form.append($('&lt;input /&gt;').attr('name', 'r0_value_1').attr('value', "34"));
+                form.append($('&lt;input /&gt;').attr('name', 'r0_value_2').attr('value', "123"));
+                form.append($('&lt;input /&gt;').attr('name', 'use_default_restrictions').attr('value', "true"));
+                form.append($('&lt;input /&gt;').attr('type', 'hidden').attr('name', 'sessionId').attr('value', mySessionId));
                 form.children('input').attr('type', 'hidden');
                 form.submit();
 
