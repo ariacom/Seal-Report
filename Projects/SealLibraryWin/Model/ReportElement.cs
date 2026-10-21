@@ -465,7 +465,7 @@ namespace Seal.Model
             get
             {
                 int result = 99999;
-                if (FinalSortOrder != null && FinalSortOrder.Contains(" ")) result = int.Parse(FinalSortOrder.Split(' ')[0]);
+                if (FinalSortOrder != null && FinalSortOrder.Contains(" ") && !int.TryParse(FinalSortOrder.Split(' ')[0], out result)) result = 99999;
                 return result;
             }
         }

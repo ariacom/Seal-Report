@@ -2447,7 +2447,8 @@ model.ResultTable = query2.CopyToDataTable2();
 
         void buildOrderClause(IEnumerable<ReportElement> elements, List<string> orderColumns, ref StringBuilder orderClause, ref StringBuilder orderClauseName, bool noGroupBy)
         {
-            foreach (ReportElement element in elements.OrderBy(i => i.FinalSortOrder))
+            //numeric order: "2 Ascendant" comes before the automatic sorts "100 Ascendant", "101 Ascendant"...
+            foreach (ReportElement element in elements.OrderBy(i => i.FinalSort))
             {
                 if (!orderColumns.Contains(element.SQLColumn) && element.IsSorted)
                 {

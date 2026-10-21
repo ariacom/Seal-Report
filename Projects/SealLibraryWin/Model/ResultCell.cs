@@ -502,7 +502,7 @@ namespace Seal.Model
             if (a.Length == 0 || a.Length != b.Length) return 0;
             ReportModel model = a[0].Element.Model;
 
-            foreach (ReportElement element in model.Elements.Where(i => !string.IsNullOrEmpty(i.FinalSortOrder)).OrderBy(i => i.FinalSortOrder))
+            foreach (ReportElement element in model.Elements.Where(i => !string.IsNullOrEmpty(i.FinalSortOrder)).OrderBy(i => i.FinalSort))
             {
                 ResultCell aCell = a.FirstOrDefault(i => i.Element == element);
                 ResultCell bCell = b.FirstOrDefault(i => i.Element == element);
