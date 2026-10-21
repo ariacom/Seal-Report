@@ -7,9 +7,9 @@
 		<Configurations>Debug;Release</Configurations>
 		<GeneratePackageOnBuild>True</GeneratePackageOnBuild>
 		<Product>Seal Report</Product>
-		<Version>10.2.0.0</Version>
-		<FileVersion>10.2.0.0</FileVersion>
-		<AssemblyVersion>10.2.0.0</AssemblyVersion>
+		<Version>10.3.0.0</Version>
+		<FileVersion>10.3.0.0</FileVersion>
+		<AssemblyVersion>10.3.0.0</AssemblyVersion>
 		<Description>
 			Provides the objects to create, load and execute reports using the Seal Report framework.
 			A full repository file structure must be available on the machine running the program.
@@ -212,6 +212,9 @@
 		<PackageReference Include="System.DirectoryServices.AccountManagement" Version="10.0.12" />
 		<PackageReference Include="System.DirectoryServices.Protocols" Version="10.0.12" />
 		<PackageReference Include="System.ServiceModel.Syndication" Version="10.0.12" />
+		<!-- Pinned above the transitive versions: known vulnerabilities (NU1903) -->
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" />
 		<PackageReference Include="AngleSharp" Version="1.8.2" />
 		<PackageReference Include="MailKit" Version="4.18.1" />
 		<PackageReference Include="MimeKit" Version="4.18.1" />

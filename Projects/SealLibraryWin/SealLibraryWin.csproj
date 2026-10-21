@@ -7,9 +7,9 @@
 		<RootNamespace>Seal</RootNamespace>
 		<AssemblyName>SealLibraryWin</AssemblyName>
 		<Product>Seal Report</Product>
-		<Version>10.2.0.0</Version>
-		<FileVersion>10.2.0.0</FileVersion>
-		<AssemblyVersion>10.2.0.0</AssemblyVersion>
+		<Version>10.3.0.0</Version>
+		<FileVersion>10.3.0.0</FileVersion>
+		<AssemblyVersion>10.3.0.0</AssemblyVersion>
 		<Description>Seal Report Library (Windows)</Description>
 		<Authors>Ariacom</Authors>
 		<Copyright>Copyright (c) Seal Report (https://sealreport.org)</Copyright>
@@ -99,6 +99,9 @@
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Data.Odbc" Version="10.0.12" />
 		<PackageReference Include="System.Data.OleDb" Version="10.0.12" />
+		<!-- Pinned above the transitive versions: known vulnerabilities (NU1903); kept for the projects referencing this library -->
+		<PackageReference Include="System.Security.Cryptography.Pkcs" Version="10.0.13" NoWarn="NU1510" />
+		<PackageReference Include="System.Security.Cryptography.Xml" Version="10.0.13" NoWarn="NU1510" />
 		<PackageReference Include="AngleSharp" Version="1.8.2" />
 		<PackageReference Include="DiffPlex" Version="1.9.0" />
 		<PackageReference Include="DiffPlex.Wpf" Version="1.9.1" />
