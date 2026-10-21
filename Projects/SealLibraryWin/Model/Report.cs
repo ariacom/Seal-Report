@@ -596,7 +596,10 @@ namespace Seal.Model
                     }
                 }
                 if (string.IsNullOrEmpty(fileName)) fileName = "result";
-                fileName = Helper.CleanFileName(fileName) + ".html";
+                fileName = Helper.CleanFileName(fileName);
+                //Temporary result file: the display name grows with each drill or sub-report navigation ('Report > Value > Value...'), keep the path under the OS limit
+                if (!ForOutput && fileName.Length > 100) fileName = fileName.Substring(0, 100).Trim();
+                fileName += ".html";
                 if (!ForOutput) fileName = fileName.Replace(" ", "_");
                 return fileName;
             }

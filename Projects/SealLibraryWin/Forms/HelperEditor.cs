@@ -247,8 +247,8 @@ namespace Seal.Forms
                         }
                         else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.PostgreSQL)
                         {
-                            year.Name = string.Format("make_date(date_part('year',{0}), 1, 1)", _metaColumn.Name);
-                            month.Name = string.Format("make_date(date_part('year',{0}), date_part('month',{0}), 1)", _metaColumn.Name);
+                            year.Name = string.Format("make_date(date_part('year',{0})::int, 1, 1)", _metaColumn.Name);
+                            month.Name = string.Format("make_date(date_part('year',{0})::int, date_part('month',{0})::int, 1)", _metaColumn.Name);
                         }
                         else if (_metaColumn.MetaTable.Source.Connection.DatabaseType == DatabaseType.SQLite)
                         {
