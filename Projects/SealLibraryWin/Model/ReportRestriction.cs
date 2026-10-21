@@ -309,7 +309,7 @@ namespace Seal.Model
 
                 if (result == null) result = MetaColumn.Enum;
 
-                if (result != null && result.IsDynamic && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
+                if (result != null && result.IsDynamic && !result.IsLoadOnDemand && result.Values.Count == 0 && string.IsNullOrEmpty(result.Error))
                 {
                     result.RefreshEnum();
                 }
@@ -325,8 +325,11 @@ namespace Seal.Model
         {
             get
             {
-                if (EnumRE == null) return null;
-                return Model == null ? EnumRE.Values : EnumRE.GetValues(Model.Connection);
+                var enumRE = EnumRE;
+                if (enumRE == null) return null;
+                //List loaded on demand: the selected values must be in the list to be displayed and posted back
+                if (enumRE.IsLoadOnDemand) enumRE.EnsureValues(EnumValues);
+                return Model == null ? enumRE.Values : enumRE.GetValues(Model.Connection);
             }
         }
 
@@ -1410,6 +1413,7 @@ namespace Seal.Model
         /// </summary>
         public string GetEnumDisplayValue(string id)
         {
+            if (EnumRE.IsLoadOnDemand) EnumRE.EnsureValues(EnumValues.Contains(id) ? EnumValues : new List<string>() { id });
             if (Model == null)
             {
                 //Case of input values

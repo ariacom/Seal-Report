@@ -1145,7 +1145,7 @@ namespace Seal.Forms
 
                 if (selectedEntity is ReportSource && propertyName == "ConnectionGUID")
                 {
-                    ((ReportSource)selectedEntity).RefreshEnumsOnDbConnection();
+                    ((ReportSource)selectedEntity).RefreshEnumsOnDbConnection(false);
                 }
                 else if (selectedEntity is MetaConnection && propertyName == "Name")
                 {

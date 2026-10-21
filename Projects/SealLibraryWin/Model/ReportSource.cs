@@ -253,13 +253,14 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Refresh the enumerated list values
+        /// Refresh the enumerated list values. If lazy, a list is only refreshed the first time its values are used: the lists not used by the report are not loaded.
         /// </summary>
-        public void RefreshEnumsOnDbConnection()
+        public void RefreshEnumsOnDbConnection(bool lazy = true)
         {
             foreach (var itemEnum in MetaData.Enums.Where(i => i.IsDbRefresh))
             {
-                itemEnum.RefreshEnum();
+                if (lazy) itemEnum.RefreshPending = true;
+                else itemEnum.RefreshEnum();
             }
         }
     }

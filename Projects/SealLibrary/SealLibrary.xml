@@ -5764,6 +5764,26 @@
             Optional Script used to build the values displayed in a prompted restriction. The Script is used only if the list is dynamic, refreshed before report execution. It can contain either the '{EnumFilter}' and/or '{EnumValues_&lt;Name>}' keywords where &lt;Name> is the name of another prompted enumerated list.
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaEnum.LoadOnDemand">
+            <summary>
+            If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. The list should be bound to restrictions only (property 'Enumerated List' of the restriction): a column displayed with this list shows the identifiers.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaEnum.ShouldSerializeLoadOnDemand">
+            <summary>
+            Serialize LoadOnDemand only if not the default value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.SqlSelected">
+            <summary>
+            If the values are loaded on demand, optional SQL Select Statement returning the values of the identifiers selected (e.g. by a navigation link or saved in the report). It follows the definition of 'SQL Select Statement' and contains the '{EnumSelected}' keyword, replaced by the list of the identifiers quoted (e.g. WHERE id IN ({EnumSelected})). If empty, each selected identifier is searched with the 'SQL Select Statement for prompted restriction' used as filter.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.IsLoadOnDemand">
+            <summary>
+            True if the values are loaded on demand: the list is never loaded as a whole
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaEnum.HasDependencies">
             <summary>
             True if the list has dependencies to other list
@@ -5772,6 +5792,11 @@
         <member name="P:Seal.Model.MetaEnum.Values">
             <summary>
             The list of values used for this enumerated list
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.RefreshPending">
+            <summary>
+            If True, the values are refreshed from the database the first time they are used (set when a report is loaded for execution, an unused list is never loaded)
             </summary>
         </member>
         <member name="M:Seal.Model.MetaEnum.ShouldSerializeValues">
@@ -5834,6 +5859,16 @@
         <member name="M:Seal.Model.MetaEnum.GetDisplayValue(System.String,Seal.Model.MetaConnection,System.Boolean)">
             <summary>
             Return the display value from the identifier
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaEnum.AddValues(System.Collections.Generic.IEnumerable{Seal.Model.MetaEV})">
+            <summary>
+            List loaded on demand: add the values not yet in the list. They are appended so the positional html ids already given stay valid.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaEnum.EnsureValues(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            List loaded on demand: load the values of the identifiers selected that are not yet in the list (e.g. a value set by a navigation link or saved in the report)
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.HelperRefreshEnum">
@@ -12153,9 +12188,9 @@
             Load the available MetaSources defined in the repository
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportSource.RefreshEnumsOnDbConnection">
+        <member name="M:Seal.Model.ReportSource.RefreshEnumsOnDbConnection(System.Boolean)">
             <summary>
-            Refresh the enumerated list values
+            Refresh the enumerated list values. If lazy, a list is only refreshed the first time its values are used: the lists not used by the report are not loaded.
             </summary>
         </member>
         <member name="T:Seal.Model.ReportTask">
@@ -13490,6 +13525,11 @@
         <member name="F:Seal.Model.Repository.EnumValuesKeyword">
             <summary>
             Keyword prefix used in the SQL of a dynamic enumerated list to specify the values selected in another enumerated list (dependencies)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.EnumSelectedKeyword">
+            <summary>
+            Keyword used in the 'SQL Select Statement for selected values' of an enumerated list loaded on demand to specify the identifiers of the selected values
             </summary>
         </member>
         <member name="F:Seal.Model.Repository.JoinAutoName">

@@ -102,6 +102,10 @@ namespace Seal.Model
         /// </summary>
         public const string EnumValuesKeyword = "{EnumValues_";
         /// <summary>
+        /// Keyword used in the 'SQL Select Statement for selected values' of an enumerated list loaded on demand to specify the identifiers of the selected values
+        /// </summary>
+        public const string EnumSelectedKeyword = "{EnumSelected";
+        /// <summary>
         /// Name used for a join having an automatic name
         /// </summary>
         public const string JoinAutoName = "<AutomaticJoinName>";

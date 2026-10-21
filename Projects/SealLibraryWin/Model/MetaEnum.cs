@@ -48,6 +48,8 @@ namespace Seal.Model
                 GetProperty("ScriptDisplay").SetIsBrowsable(true);
                 GetProperty("FilterChars").SetIsBrowsable(true);
                 GetProperty("Message").SetIsBrowsable(true);
+                GetProperty("LoadOnDemand").SetIsBrowsable(true);
+                GetProperty("SqlSelected").SetIsBrowsable(true);
 
                 GetProperty("Values").SetIsBrowsable(IsEditable);
                 GetProperty("NumberOfValues").SetIsBrowsable(true);
@@ -64,6 +66,8 @@ namespace Seal.Model
 
                 GetProperty("FilterChars").SetIsReadOnly(!HasDynamicDisplay);
                 GetProperty("Message").SetIsReadOnly(!HasDynamicDisplay || (FilterChars == 0 && !HasDependencies));
+                GetProperty("LoadOnDemand").SetIsReadOnly(!HasDynamicDisplay);
+                GetProperty("SqlSelected").SetIsReadOnly(!LoadOnDemand);
 
                 GetProperty("Information").SetIsReadOnly(true);
                 GetProperty("Error").SetIsReadOnly(true);
@@ -295,6 +299,47 @@ namespace Seal.Model
 #endif
         public string ScriptDisplay { get; set; }
 
+        private bool _loadOnDemand = false;
+        /// <summary>
+        /// If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. The list should be bound to restrictions only (property 'Enumerated List' of the restriction): a column displayed with this list shows the identifiers.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(false)]
+        [Category("Dynamic display"), DisplayName("Values loaded on demand"), Description("If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. The list should be bound to restrictions only (property 'Enumerated List' of the restriction): a column displayed with this list shows the identifiers."), Id(5, 2)]
+#endif
+        public bool LoadOnDemand
+        {
+            get { return _loadOnDemand; }
+            set
+            {
+                _loadOnDemand = value;
+                UpdateEditorAttributes();
+            }
+        }
+        /// <summary>
+        /// Serialize LoadOnDemand only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeLoadOnDemand() { return LoadOnDemand; }
+
+        /// <summary>
+        /// If the values are loaded on demand, optional SQL Select Statement returning the values of the identifiers selected (e.g. by a navigation link or saved in the report). It follows the definition of 'SQL Select Statement' and contains the '{EnumSelected}' keyword, replaced by the list of the identifiers quoted (e.g. WHERE id IN ({EnumSelected})). If empty, each selected identifier is searched with the 'SQL Select Statement for prompted restriction' used as filter.
+        /// </summary>
+#if WINDOWS
+        [Category("Dynamic display"), DisplayName("SQL Select Statement for selected values"), Description("If the values are loaded on demand, optional SQL Select Statement returning the values of the identifiers selected (e.g. by a navigation link or saved in the report). It follows the definition of 'SQL Select Statement' and contains the '{EnumSelected}' keyword, replaced by the list of the identifiers quoted (e.g. WHERE id IN ({EnumSelected})). If empty, each selected identifier is searched with the 'SQL Select Statement for prompted restriction' used as filter."), Id(6, 2)]
+        [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
+#endif
+        public string SqlSelected { get; set; }
+
+        /// <summary>
+        /// True if the values are loaded on demand: the list is never loaded as a whole
+        /// </summary>
+        [XmlIgnore]
+        public bool IsLoadOnDemand
+        {
+            get { return LoadOnDemand && HasDynamicDisplay && FilterChars > 0 && (!string.IsNullOrEmpty(SqlDisplay) || !string.IsNullOrEmpty(ScriptDisplay)); }
+        }
+
         /// <summary>
         /// True if the list has dependencies to other list
         /// </summary>
@@ -318,7 +363,31 @@ namespace Seal.Model
         [Category("Values"), DisplayName("Values"), Description("The list of values used for this enumerated list"), Id(1, 3)]
         [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
 #endif
-        public List<MetaEV> Values { get; set; } = new List<MetaEV>();
+        public List<MetaEV> Values
+        {
+            get
+            {
+                //Deferred refresh: the list is loaded from the database the first time its values are used
+                if (RefreshPending)
+                {
+                    lock (_refreshLock)
+                    {
+                        if (RefreshPending) RefreshEnum();
+                    }
+                }
+                return _values;
+            }
+            set { _values = value; }
+        }
+        List<MetaEV> _values = new List<MetaEV>();
+        readonly object _refreshLock = new object();
+
+        /// <summary>
+        /// If True, the values are refreshed from the database the first time they are used (set when a report is loaded for execution, an unused list is never loaded)
+        /// </summary>
+        [XmlIgnore]
+        public bool RefreshPending { get; set; } = false;
+
         /// <summary>
         /// Serialize Values only if not empty and the list has no dynamic display
         /// </summary>
@@ -478,7 +547,20 @@ namespace Seal.Model
         /// <param name="checkOnly"></param>
         public void RefreshEnum(bool checkOnly = false)
         {
-            if (_source == null || !IsDynamic || (string.IsNullOrEmpty(Sql) && string.IsNullOrEmpty(Script))) return;
+            RefreshPending = false;
+            if (_source == null || !IsDynamic) return;
+
+            if (IsLoadOnDemand)
+            {
+                //Never loaded as a whole: values are added by the prompted restriction (filter typed or selected values)
+                if (!checkOnly) _values = new List<MetaEV>();
+                Error = "";
+                Information = Helper.FormatMessage("The values are loaded on demand: the list is built from the filter typed by the user and the values selected.");
+                UpdateEditorAttributes();
+                return;
+            }
+
+            if (string.IsNullOrEmpty(Sql) && string.IsNullOrEmpty(Script)) return;
 
             DbConnection connection = null;
             var initialValues = Values.ToList();
@@ -586,6 +668,68 @@ namespace Seal.Model
             var values = ValuesPerConnection ? GetValues(connection) : Values;
             MetaEV value = values.FirstOrDefault(i => i.Id == id);
             return value == null ? id : (forRestriction ? value.DisplayRestriction : value.DisplayValue);
+        }
+
+        /// <summary>
+        /// List loaded on demand: add the values not yet in the list. They are appended so the positional html ids already given stay valid.
+        /// </summary>
+        public void AddValues(IEnumerable<MetaEV> values)
+        {
+            lock (_refreshLock)
+            {
+                //Process a pending refresh first: it would reset the list after the values are added
+                var current = Values;
+                foreach (var value in values)
+                {
+                    if (!current.Exists(i => i.Id == value.Id)) current.Add(value);
+                }
+                SetValuesHtmlIds();
+            }
+        }
+
+        /// <summary>
+        /// List loaded on demand: load the values of the identifiers selected that are not yet in the list (e.g. a value set by a navigation link or saved in the report)
+        /// </summary>
+        public void EnsureValues(IEnumerable<string> ids)
+        {
+            if (!IsLoadOnDemand || ids == null) return;
+            var missing = ids.Where(i => !string.IsNullOrEmpty(i) && !Values.Exists(j => j.Id == i)).Distinct().ToList();
+            if (missing.Count == 0) return;
+
+            try
+            {
+                var found = new List<MetaEV>();
+                if (!string.IsNullOrEmpty(SqlSelected))
+                {
+                    var databaseType = _source.Connection != null ? _source.Connection.DatabaseType : DatabaseType.Standard;
+                    var idList = string.Join(",", missing.Select(i => "'" + Helper.EscapeSQLStringLiteral(i, databaseType) + "'"));
+                    var finalSQL = RazorHelper.CompileExecute(SqlSelected, this).Replace(Repository.EnumSelectedKeyword + "}", idList);
+                    finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
+                    DbConnection connection = _source.GetOpenConnection();
+                    try
+                    {
+                        found = getValues(connection, finalSQL);
+                    }
+                    finally
+                    {
+                        connection.Close();
+                    }
+                }
+                else
+                {
+                    //No dedicated SQL: each identifier is used as filter of the prompted restriction, the exact identifier is kept
+                    foreach (var id in missing)
+                    {
+                        found.AddRange(GetSubSetValues(id, null).Where(i => i.Id == id));
+                    }
+                }
+                AddValues(found.Where(i => missing.Contains(i.Id)));
+            }
+            catch (Exception ex)
+            {
+                Error = ex.Message;
+                Helper.WriteLogException("EnsureValues", ex);
+            }
         }
 
         #region Helpers

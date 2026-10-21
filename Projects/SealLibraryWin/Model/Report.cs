@@ -1470,7 +1470,8 @@ namespace Seal.Model
                 //Refresh enums
                 if (refreshEnums)
                 {
-                    foreach (ReportSource source in result.Sources) source.RefreshEnumsOnDbConnection();
+                    //For execution, a list is loaded the first time it is used: the lists not used by the report are never loaded
+                    foreach (ReportSource source in result.Sources) source.RefreshEnumsOnDbConnection(!forEdition);
                 }
             }
             catch (Exception ex)

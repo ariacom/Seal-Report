@@ -1653,6 +1653,7 @@ namespace Seal.Helpers
         {
             sql = ClearSQLKeywords(sql, Repository.EnumFilterKeyword, "filter");
             sql = ClearSQLKeywords(sql, Repository.EnumValuesKeyword, "NULL");
+            sql = ClearSQLKeywords(sql, Repository.EnumSelectedKeyword, "NULL");
             if (model != null) sql = model.ParseCommonRestrictions(sql);
             sql = ClearSQLKeywords(sql, Repository.CommonRestrictionKeyword, "1=1");
             sql = ClearSQLKeywords(sql, Repository.CommonValueKeyword, "NULL");

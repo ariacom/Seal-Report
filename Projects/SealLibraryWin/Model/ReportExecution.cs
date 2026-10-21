@@ -727,16 +727,18 @@ namespace Seal.Model
         {
             try
             {
+                //A restriction shared by several models (e.g. taken from a reference model) is checked once: its validation errors are not repeated
+                var done = new HashSet<ReportRestriction>();
                 foreach (ReportRestriction restriction in Report.ExecutionInputValues.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                 {
-                    setRestriction(restriction);
+                    if (done.Add(restriction)) setRestriction(restriction);
                 }
 
                 foreach (ReportModel model in Report.Models)
                 {
                     foreach (ReportRestriction restriction in model.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                     {
-                        setRestriction(restriction);
+                        if (done.Add(restriction)) setRestriction(restriction);
                     }
 
                     if (model.IsLINQ)
@@ -745,7 +747,7 @@ namespace Seal.Model
                         {
                             foreach (ReportRestriction restriction in subModel.AllExecutionRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI))
                             {
-                                setRestriction(restriction);
+                                if (done.Add(restriction)) setRestriction(restriction);
                             }
                         }
                     }
@@ -2593,6 +2595,12 @@ namespace Seal.Model
                 if ((enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars) || (enumRE.HasDependencies && CurrentEnumValues.Count > 0))
                 {
                     values = enumRE.GetSubSetValues(filter, CurrentEnumValues);
+                    if (enumRE.IsLoadOnDemand)
+                    {
+                        //List loaded on demand: the values found are added to the list, so the value chosen is found when the form is posted
+                        enumRE.AddValues(values);
+                        restriction.SetEnumHtmlIds();
+                    }
                 }
 
                 //Apply auto filter if any
@@ -2608,7 +2616,12 @@ namespace Seal.Model
                     }
                 }
 
-                foreach (var enumDef in restriction.MetaEnumValuesRE.Where(i => values.Exists(j => i.Id == j.Id)))
+                var enumValues = restriction.MetaEnumValuesRE;
+                //List loaded on demand: keep the order of the SQL (the list also holds the values of the previous searches)
+                var displayed = enumRE.IsLoadOnDemand ?
+                    values.Select(v => v.Id).Distinct().Select(id => enumValues.FirstOrDefault(i => i.Id == id)).Where(i => i != null) :
+                    enumValues.Where(i => values.Exists(j => i.Id == j.Id));
+                foreach (var enumDef in displayed)
                 {
                     //Collapse newlines to a space: a raw CR/LF would break this JSON string (and a <br> in the
                     //rebuilt <option> would blank the bootstrap-select menu), so keep the label single-line.

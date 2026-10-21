@@ -146,6 +146,11 @@ namespace Seal.Forms
                         samples.Add("SELECT DISTINCT City\r\nFROM Customers\r\nWHERE Country in ({EnumValues_Country})\r\nORDER BY 1");
                         description = descriptionTemplate1 + "The SQL may contain the filter tag by using the keyword '{EnumFilter}' to build the enum with filters got from the user.\r\nThe SQL may contain dependencies with other enum values got from the user by using the keyword {EnumValues_<Name>} where <Name> is the name of the other enumerated list.\r\nThe keyword is replaced by the values checked only (the operator chosen for the other restriction is not taken into account), so it is typically used with 'IN (...)'.\r\n";
                     }
+                    else if (context.PropertyDescriptor.Name == "SqlSelected")
+                    {
+                        samples.Add("SELECT CategoryID, CategoryName\r\nFROM Categories\r\nWHERE CategoryID IN ({EnumSelected})");
+                        description = descriptionTemplate1 + "For a list whose values are loaded on demand, the SQL returns the values of the identifiers selected (saved in the report, set by a navigation link or by a schedule).\r\nThe keyword '{EnumSelected}' is replaced by the list of the identifiers quoted, so it is used with 'IN (...)'. When the SQL is checked, it is replaced by NULL.\r\n";
+                    }
                     else
                     {
 

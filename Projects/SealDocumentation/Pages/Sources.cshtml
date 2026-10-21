@@ -33,6 +33,7 @@
                             <ul class="nav">
                                 <li><a href="#lineEnums_de">Dynamic enums</a></li>
                                 <li><a href="#lineEnums_dd">Dynamic display</a></li>
+                                <li><a href="#lineEnums_od">Values loaded on demand</a></li>
                             </ul>
                         </li>
                         <li>
@@ -353,7 +354,8 @@
                             <div class="bs-callout bs-callout-danger">
                                 <h4>Performances</h4>
                                 As building the enum list can be time consuming, it is a good practice to schedule a task to update enum values every morning.<br />
-                                Setting <code>List is refreshed upon the database connection</code> to <b>true</b> means the list is always queried when the report is executed. This can be useful if the list depends on the user connected but can be also time consuming.
+                                Setting <code>List is refreshed upon the database connection</code> to <b>true</b> means the list is always queried when the report is executed. This can be useful if the list depends on the user connected but can be also time consuming.<br />
+                                Such a list is queried only if the report uses its values (restriction, column displayed with the list, script): the other lists of the Data Source are not loaded.
                             </div>
                         </div>
                         <!-- end col -->
@@ -390,11 +392,41 @@
                         <!-- end col -->
                     </div>
                     <!-- end row -->
+                    <div id="lineEnums_od" class="row" style="padding-top:35px">
+                        <div class="col-md-12">
+                            <h4>Large lists: values loaded on demand</h4>
+                            <p>
+                                With a dynamic display, the values are still loaded as a whole before the execution: the filter typed by the user only selects among them. For a very large list (<eg>e.g. thousands of customers or companies</eg>), set <code>Values loaded on demand</code> to <b>true</b>: the list is never loaded as a whole.<br />
+                                <ul>
+                                    <li>The values proposed to the user are only those returned by the <code>SQL Select Statement for prompted restriction</code> for the text typed (keyword <b>'{EnumFilter}'</b>): limit the number of rows returned (<eg>e.g. TOP 100 or LIMIT 100</eg>).</li>
+                                    <li>The values already selected (saved in the report, set by a navigation link or by a schedule) are loaded with the <code>SQL Select Statement for selected values</code>: the keyword <b>'{EnumSelected}'</b> is replaced by the list of the identifiers quoted. If this SQL is empty, each identifier is searched with the SQL of the prompted restriction.</li>
+                                    <li>The list requires <code>List is dynamically loaded</code>, <code>List is refreshed before the report execution</code> and <code>Filter characters to type</code> greater than 0.</li>
+                                    <li>Bind the list to the restrictions only (property <code>Enumerated List</code> of the restriction): a column displayed with this list shows the identifiers. The <code>SQL Select Statement</code> of the list is not used.</li>
+                                </ul>
+                            </p>
+                            <div class="bs-callout bs-callout-demo">
+                                <h4>Search a product by its name</h4>
+                                <code>SQL Select Statement for prompted restriction</code>:
+                                <pre><code class="language-sql">
+                                SELECT TOP 100 ProductID, ProductName FROM Products
+                                WHERE ProductName LIKE '%{EnumFilter}%'
+                                ORDER BY ProductName
+                                </code></pre>
+                                <code>SQL Select Statement for selected values</code>:
+                                <pre><code class="language-sql">
+                                SELECT ProductID, ProductName FROM Products
+                                WHERE ProductID IN ({EnumSelected})
+                                </code></pre>
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
                     <div class="bs-callout bs-callout-demo">
                         <h4>Dynamic Display Samples</h4>
                         <a class="btn btn-primary live-sample">Live Sample: 09-Enumerated List - Dynamic Display</a><br />
                         This report shows how the 'Product Name' prompted list depends on the choice of a 'Product Category'.<br />
-                        The report contains also a custom enumerated list named to search the product name with characters.
+                        The report contains also a custom enumerated list named to search the product name with characters, and the same search with values loaded on demand ('Product Name Search (on demand)'): the list of products is never loaded as a whole.
                         <a class="btn btn-primary live-sample">Live Sample: 02-LINQ/210-Enumerated List LINQ - Dynamic Display</a><br />
                         This report contains two <b>Enumerated Lists</b> defined by <code>Scripts</code> with a <b>LINQ</b> Source.
                     </div>
