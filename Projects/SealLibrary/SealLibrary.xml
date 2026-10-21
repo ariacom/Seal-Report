@@ -13657,6 +13657,11 @@
             Set culture from a name, returns true if the change is done.
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.ResetCultureInfo">
+            <summary>
+            Reset the culture to the default one of the configuration
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.Configuration">
             <summary>
             Current configuration

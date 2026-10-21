@@ -356,6 +356,16 @@ namespace Seal.Model
             return result;
         }
 
+        /// <summary>
+        /// Reset the culture to the default one of the configuration
+        /// </summary>
+        public void ResetCultureInfo()
+        {
+            var currentName = _cultureInfo?.Name;
+            _cultureInfo = null;
+            if (CultureInfo.Name != currentName) _jsTranslations = null;
+        }
+
         SealServerConfiguration _configuration = null;
         /// <summary>
         /// Current configuration

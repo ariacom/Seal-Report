@@ -105,7 +105,7 @@ namespace SealWebServer.Controllers
             string culture = WebUser.Profile.Culture;
             if (!string.IsNullOrEmpty(culture)) Repository.SetCultureInfo(culture);
             else if (!string.IsNullOrEmpty(defaultGroup.Culture)) Repository.SetCultureInfo(defaultGroup.Culture);
-            else if (Repository.CultureInfo.EnglishName != Repository.Instance.CultureInfo.EnglishName) Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
+            else Repository.ResetCultureInfo();
 
             string reportToExecute = "", reportToExecuteName = "";
             bool executeLast = false;
@@ -1169,7 +1169,7 @@ namespace SealWebServer.Controllers
                 {
                     WebUser.Profile.Culture = "";
                     if (!string.IsNullOrEmpty(WebUser.DefaultGroup.Culture)) Repository.SetCultureInfo(WebUser.DefaultGroup.Culture);
-                    else Repository.SetCultureInfo(Repository.Instance.CultureInfo.EnglishName);
+                    else Repository.ResetCultureInfo();
                 }
                 else
                 {
