@@ -13835,6 +13835,11 @@
             Settings folder
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.WebHelpFilePath">
+            <summary>
+            Full path of the Web Help Link when it names an existing file of the repository (e.g. 'Settings\Help.pdf'), null otherwise (URL or no link).
+            </summary>
+        </member>
         <member name="P:Seal.Model.Repository.AIPromptsFolder">
             <summary>
             Folder for AI system prompt files (Settings\AI\Prompts).
@@ -15749,7 +15754,7 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebHelpLink">
             <summary>
-            Optional Help link for the Web Report Server
+            Optional Help link for the Web Report Server: a URL, or the path of a file relative to the repository folder (e.g. 'Settings\Help.pdf') served to the authenticated users
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebCultures">

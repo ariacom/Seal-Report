@@ -204,10 +204,10 @@ namespace Seal.Model
         public string WebProductName { get; set; } = "Seal Report";
 
         /// <summary>
-        /// Optional Help link for the Web Report Server
+        /// Optional Help link for the Web Report Server: a URL, or the path of a file relative to the repository folder (e.g. 'Settings\Help.pdf') served to the authenticated users
         /// </summary>
 #if WINDOWS
-        [Category("Server Settings"), DisplayName("Web Help Link"), Description("Optional Help link for the Web Report Server."), Id(7, 1)]
+        [Category("Server Settings"), DisplayName("Web Help Link"), Description("Optional Help link for the Web Report Server: a URL, or the path of a file relative to the repository folder (e.g. 'Settings\\Help.pdf') served to the authenticated users."), Id(7, 1)]
 #endif
         public string WebHelpLink { get; set; }
 

@@ -974,6 +974,28 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// View the help file when the Web Help Link of the configuration names a file of the repository.
+        /// </summary>
+        public ActionResult SWIViewHelpFile()
+        {
+            writeDebug("SWIViewHelpFile");
+            try
+            {
+                if (!CheckAuthentication(null)) return Content(_loginContent);
+
+                var path = Repository.WebHelpFilePath;
+                if (path == null) throw new Exception("Error: no help file in the repository");
+                //Shown inline (no download name) so a PDF or an HTML page opens in the browser tab
+                if (!new Microsoft.AspNetCore.StaticFiles.FileExtensionContentTypeProvider().TryGetContentType(path, out string contentType)) contentType = "application/octet-stream";
+                return File(System.IO.File.ReadAllBytes(path), contentType);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
 
         /// <summary>
         /// Upload a file in a repository folder.

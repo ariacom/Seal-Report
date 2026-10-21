@@ -1132,6 +1132,30 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Full path of the Web Help Link when it names an existing file of the repository (e.g. 'Settings\Help.pdf'), null otherwise (URL or no link).
+        /// </summary>
+        public string WebHelpFilePath
+        {
+            get
+            {
+                var link = Configuration.WebHelpLink;
+                if (string.IsNullOrWhiteSpace(link) || link.Contains("://")) return null;
+                try
+                {
+                    var root = Path.GetFullPath(RepositoryPath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+                    var path = Path.GetFullPath(Path.Combine(root, FileHelper.ConvertOSFilePath(link.Trim().TrimStart('\\', '/'))));
+                    //The file must stay inside the repository
+                    if (!path.StartsWith(root, StringComparison.OrdinalIgnoreCase) || !File.Exists(path)) return null;
+                    return path;
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
         /// Folder for AI system prompt files (Settings\AI\Prompts).
         /// </summary>
         public string AIPromptsFolder

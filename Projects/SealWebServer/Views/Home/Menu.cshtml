@@ -89,7 +89,7 @@
                 <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {
-                        <li class="nav-item"><a href="@repository.Configuration.WebHelpLink" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-circle-info"></i></a></li>
+                        <li class="nav-item"><a href="@(repository.WebHelpFilePath != null ? Url.Action("SWIViewHelpFile", "Home") : repository.Configuration.WebHelpLink)" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-circle-info"></i></a></li>
                 }
                 <li class="nav-item"><a id="disconnect-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
             </ul>

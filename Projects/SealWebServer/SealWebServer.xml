@@ -217,6 +217,11 @@
             View a file published in the repository.
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIViewHelpFile">
+            <summary>
+            View the help file when the Web Help Link of the configuration names a file of the repository.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWUploadFile(System.String)">
             <summary>
             Upload a file in a repository folder.
