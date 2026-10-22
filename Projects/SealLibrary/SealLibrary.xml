@@ -16660,6 +16660,16 @@
             Custom string got in user profile
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.Properties">
+            <summary>
+            Business context of the user, set by the Security Provider script during the login (e.g. subscriber, tier, quotas) and read by the other scripts (Pre/Post SQL of the data sources, report and tool scripts). Keys are case-insensitive. The values stay on the server: they are not sent to the browser.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetProperty(System.String,System.String)">
+            <summary>
+            Returns the value of a property set by the Security Provider, or the default value if the property is not defined
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityUser.WebUserName">
             <summary>
             Parameters for authentication: User name 

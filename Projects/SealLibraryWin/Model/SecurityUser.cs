@@ -340,6 +340,19 @@ namespace Seal.Model
         public string Tag2;
 
         /// <summary>
+        /// Business context of the user, set by the Security Provider script during the login (e.g. subscriber, tier, quotas) and read by the other scripts (Pre/Post SQL of the data sources, report and tool scripts). Keys are case-insensitive. The values stay on the server: they are not sent to the browser.
+        /// </summary>
+        public Dictionary<string, string> Properties { get; } = new Dictionary<string, string>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Returns the value of a property set by the Security Provider, or the default value if the property is not defined
+        /// </summary>
+        public string GetProperty(string name, string defaultValue = "")
+        {
+            return Properties.TryGetValue(name, out var value) && value != null ? value : defaultValue;
+        }
+
+        /// <summary>
         /// Parameters for authentication: User name 
         /// </summary>
         public string WebUserName = "";
@@ -544,6 +557,7 @@ namespace Seal.Model
         {
             Error = "";
             Warning = "";
+            Properties.Clear();
             string script = (Security.UseCustomScript && !string.IsNullOrEmpty(Security.Script) ? Security.Script : Security.ProviderScript);
             if (string.IsNullOrEmpty(script)) throw new Exception("No Security Script to execute. Check the rights to access the repository Security.xml file...");
             try
@@ -596,6 +610,7 @@ namespace Seal.Model
         public void Logout()
         {
             SecurityGroups.Clear();
+            Properties.Clear();
             SealSecurity.RemoveLoggedUsed(this);
         }
 
