@@ -11,6 +11,7 @@
 
 	user.Name = user.WebUserName; //Display name
 	//user.PersonalFolderName -> may be set to defined the personal folder name
+	//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 
 	//Authenticate and set the groups defined in the security login
 	if (!user.LoginAuthentication(user.WebUserName, user.WebPassword)) {

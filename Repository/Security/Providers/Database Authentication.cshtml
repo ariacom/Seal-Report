@@ -15,6 +15,7 @@
 
 	user.Name = user.WebUserName; //Display name
 	//user.PersonalFolderName -> may be set to defined the personal folder name
+	//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 
 	DbConnection connection = Helper.DbConnectionFromConnectionString(ConnectionType.OleDb, Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
 	connection.Open();

@@ -19,6 +19,7 @@
 
 	user.Name = user.WebUserName; //Display name
 	//user.PersonalFolderName -> may be set to defined the personal folder name
+	//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 
     var credential = new NetworkCredential(user.WebUserName, user.WebPassword);
     var ldapConnection = new LdapConnection(new LdapDirectoryIdentifier(user.Security.GetValue(""ldap_server""), user.Security.GetNumericValue(""ldap_port""), false, false));

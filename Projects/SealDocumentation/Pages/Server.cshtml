@@ -340,6 +340,11 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
     }
 }                            </code></pre>
                             </div>
+                            <p>
+                                Besides the display name and the security groups, the script may set the personal folder name (<code>user.PersonalFolderName</code>) and the business context of the user in <code>user.Properties</code>, a dictionary of key/value strings (<eg>e.g. customer, subscription tier, quotas</eg>).
+                                The other scripts read it with <code>user.GetProperty("key")</code> (<eg>e.g. the Pre SQL of a data source through <code>Report.SecurityContext</code>, report or AI tool scripts</eg>). The dictionary is cleared at each login and at logout, and it is never sent to the browser.<br />
+                                A script may also add to <code>user.SecurityGroups</code> a <code>SecurityGroup</code> built in memory (folders and rights, personal folder, data sources): rights defined per customer or per user can then come from a database instead of the security file.
+                            </p>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Test your security provider</h4>
                                 Once your <strong>Security Provider</strong> is configured, use the helper <code>Test a login</code> to fully test a login process with given name and password.

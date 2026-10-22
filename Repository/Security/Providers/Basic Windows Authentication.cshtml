@@ -26,6 +26,7 @@
     {
         user.Name = user.WebUserName;
 		//user.PersonalFolderName -> may be set to defined the personal folder name
+		//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 		if (user.Security.GetBoolValue(""add_windows_groups""))
 		{
 			user.AddWindowsGroupToSecurityGroup(user.Security.GetBoolValue(""windows_groups_skip_domain""), user.Security.GetValue(""windows_groups_ad_context""));
