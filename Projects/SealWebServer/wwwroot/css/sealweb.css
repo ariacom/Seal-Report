@@ -748,6 +748,30 @@ table.dataTable {
     color: #62a6ff;
 }
 
+/* View Folders / View Report toggle, below the favorites and recents */
+#menu-main a.menu-view-toggle {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    margin-top: 4px;
+    padding: 7px 14px 5px;
+    border-top: 1px solid #e5e5e5;
+    color: #333;
+    text-decoration: none;
+    white-space: nowrap;
+}
+
+#menu-main a.menu-view-toggle:hover {
+    background: #f0f5ff;
+    color: #62a6ff;
+}
+
+#menu-main a.menu-view-toggle i {
+    width: 14px;
+    text-align: center;
+    color: #62a6ff;
+}
+
 .menu-fav-actions {
     display: none;
     flex-shrink: 0;

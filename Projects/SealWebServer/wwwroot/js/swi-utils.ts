@@ -251,8 +251,8 @@ namespace SWIUtil {
                 if (main && main._reportPath != "") parent.append($("<li class='menu-divider-recent-report divider menu-reports'>"));
             }
             if (main) {
-                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' href='#'>").html(SWIUtil.tr("View Folders"))));
-                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' href='#'>").html(SWIUtil.tr("View Report"))));
+                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-folders' class='menu-view-toggle' href='#'>").html("<i class='fa fa-folder-open'></i><span>" + SWIUtil.tr("View Folders") + "</span>")));
+                parent.append($("<li class='menu-reports'>").append($("<a id='menu-view-report' class='menu-view-toggle' href='#'>").html("<i class='fa fa-file-lines'></i><span>" + SWIUtil.tr("View Report") + "</span>")));
             }
 
             //Toggle report/folders
