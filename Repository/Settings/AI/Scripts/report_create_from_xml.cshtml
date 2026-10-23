@@ -58,10 +58,10 @@
         var msGuid = doc.Descendants("MetaSourceGUID")
                         .Select(e => e.Value == null ? null : e.Value.Trim())
                         .FirstOrDefault(v => !string.IsNullOrEmpty(v));
-        var metaSource = repo.Sources.FirstOrDefault(s => string.Equals(s.GUID, msGuid, StringComparison.OrdinalIgnoreCase));
+        var metaSource = tool.GetAvailableSources().FirstOrDefault(s => string.Equals(s.GUID, msGuid, StringComparison.OrdinalIgnoreCase)); // includes the Private Data Sources granted to the user
         if (metaSource == null)
         {
-            tool.ExecResult = $"Error: MetaSourceGUID '{msGuid}' does not match any data source. Use the GUID from datasource_list.";
+            tool.ExecResult = $"Error: MetaSourceGUID '{msGuid}' does not match any data source you can access. Use the GUID from datasource_list.";
             return;
         }
 
