@@ -937,6 +937,32 @@ $('<div>', {{
 }
 ";
 
+        const string razorAIAgentPromptScriptTemplate = @"@using Seal.Model
+@using Seal.AI
+@{
+    AIAgent agent = Model;
+    SecurityUser user = agent.SecurityContext; //null for a caller without user (task, scheduler)
+    if (user == null) { return; }
+}
+## Context of the current user
+- Name: @user.Name
+@* The text rendered here is appended to the system prompt before each chat turn. *@
+";
+
+        const string razorAIAgentSamplePromptsScriptTemplate = @"@using System.Linq
+@using Seal.Model
+@using Seal.AI
+@{
+    AIAgent agent = Model;
+    SecurityUser user = agent.SecurityContext; //null for a caller without user
+    //One sample prompt per line (blank lines and lines starting with # are ignored).
+    //Nothing rendered: the prompts of the Sample Prompts File are used.
+    var prompts = agent.Configuration.GetSamplePrompts();
+    if (user != null) prompts.Insert(0, ""What can I do with my data, "" + user.Name + ""?"");
+}
+@Raw(string.Join(""\r\n"", prompts))
+";
+
         //Sample proposed in the editor for the 'Razor Forbidden Tokens' configuration property: the active built-in deny-list plus
         //commented suggestions the admin can enable by removing the leading //. Lines starting with // are ignored at runtime.
         static readonly string razorForbiddenTokensSample =
@@ -2141,6 +2167,50 @@ $('<div>', {{
                         scriptDefaultName = (context.Instance as AIAgentConfiguration)?.Name;
                         frm.Text = "Edit the System Prompt file";
                         ScintillaHelper.Init(frm.textBox, Lexer.Null);
+
+                        //Load the file content into the editor instead of the file name
+                        valueToEdit = "";
+                        if (!string.IsNullOrWhiteSpace(scriptFileName))
+                        {
+                            var scriptPath = Path.IsPathRooted(scriptFileName)
+                                ? scriptFileName
+                                : Path.Combine(scriptFolder, scriptFileName);
+                            if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
+                        }
+                    }
+                    else if (context.PropertyDescriptor.Name == "SystemPromptScriptFile")
+                    {
+                        //Edit the content of the external system prompt script file (the property keeps the file name)
+                        editScriptFile = true;
+                        scriptFileName = valueToEdit;
+                        scriptFolder = Repository.Instance.AIScriptsFolder;
+                        scriptExtension = ".cshtml";
+                        scriptDefaultName = (context.Instance as AIAgentConfiguration)?.Name + " context";
+                        template = razorAIAgentPromptScriptTemplate;
+                        frm.Text = "Edit the System Prompt script file (its output is appended to the system prompt)";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+
+                        //Load the file content into the editor instead of the file name
+                        valueToEdit = "";
+                        if (!string.IsNullOrWhiteSpace(scriptFileName))
+                        {
+                            var scriptPath = Path.IsPathRooted(scriptFileName)
+                                ? scriptFileName
+                                : Path.Combine(scriptFolder, scriptFileName);
+                            if (File.Exists(scriptPath)) valueToEdit = File.ReadAllText(scriptPath);
+                        }
+                    }
+                    else if (context.PropertyDescriptor.Name == "SamplePromptsScriptFile")
+                    {
+                        //Edit the content of the external sample prompts script file (the property keeps the file name)
+                        editScriptFile = true;
+                        scriptFileName = valueToEdit;
+                        scriptFolder = Repository.Instance.AIScriptsFolder;
+                        scriptExtension = ".cshtml";
+                        scriptDefaultName = (context.Instance as AIAgentConfiguration)?.Name + " samples";
+                        template = razorAIAgentSamplePromptsScriptTemplate;
+                        frm.Text = "Edit the Sample Prompts script file (one prompt per line in its output)";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
 
                         //Load the file content into the editor instead of the file name
                         valueToEdit = "";

@@ -41,7 +41,9 @@ namespace Seal.AI
                 GetProperty("SkillGUIDs").SetIsBrowsable(true);
                 GetProperty("DefaultSystemPrompt").SetIsBrowsable(true);
                 GetProperty("SystemPromptFile").SetIsBrowsable(true);
+                GetProperty("SystemPromptScriptFile").SetIsBrowsable(true);
                 GetProperty("SamplePromptsFile").SetIsBrowsable(true);
+                GetProperty("SamplePromptsScriptFile").SetIsBrowsable(true);
                 GetProperty("Temperature").SetIsBrowsable(true);
                 GetProperty("MaxTokens").SetIsBrowsable(true);
                 GetProperty("TopP").SetIsBrowsable(true);
@@ -147,14 +149,38 @@ namespace Seal.AI
         public string SystemPromptFile { get; set; }
 
         /// <summary>
+        /// File name of a Razor script, relative to <c>Settings\AI\Scripts</c>, executed before each chat turn with the
+        /// <see cref="AIAgent"/> as Model (its <see cref="AIAgent.SecurityContext"/> gives the current user, null for a
+        /// caller without user). The text it returns is appended to the system prompt: a context computed per user and
+        /// per turn (e.g. the data sets, folders or rights of the user), so one agent serves every user.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\tSystem Prompt Script File"), Description("File name of a Razor script (e.g. my-context.cshtml), located in Settings\\AI\\Scripts, executed before each chat turn with the AI Agent as Model (agent.SecurityContext = current user, may be null). The text returned by the script is appended to the system prompt: use it for a context that depends on the user. Click the editor button to edit the script file content."), Id(10, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string SystemPromptScriptFile { get; set; }
+
+        /// <summary>
         /// File name of a text file containing sample user prompts, relative to <c>Settings\AI\Prompts\Samples</c>.
         /// One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments. Click the editor button to edit the file content."), Id(10, 1)]
+        [Category("Definition"), DisplayName("Sample Prompts File"), Description("File name of the sample prompts list (e.g. sample-prompts.md), located in Settings\\AI\\Prompts\\Samples. One prompt per line; lines starting with # are treated as comments. Click the editor button to edit the file content."), Id(11, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         public string SamplePromptsFile { get; set; }
+
+        /// <summary>
+        /// File name of a Razor script, relative to <c>Settings\AI\Scripts</c>, executed when the sample prompts are requested with the
+        /// <see cref="AIAgent"/> as Model (its <see cref="AIAgent.SecurityContext"/> gives the current user, may be null). Its output gives
+        /// one prompt per line (blank lines and lines starting with <c>#</c> are ignored): sample prompts computed per user.
+        /// When the script fails or renders nothing, the prompts of <see cref="SamplePromptsFile"/> are used (see <see cref="AIAgent.GetSamplePrompts"/>).
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Sample Prompts Script File"), Description("File name of a Razor script (e.g. my-samples.cshtml), located in Settings\\AI\\Scripts, executed when the sample prompts are displayed with the AI Agent as Model (agent.SecurityContext = current user, may be null). The script renders one prompt per line (lines starting with # are ignored): use it for sample prompts that depend on the user. If the script fails or renders nothing, the Sample Prompts File is used. Click the editor button to edit the script file content."), Id(12, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string SamplePromptsScriptFile { get; set; }
 
         /// <summary>
         /// Returns the effective system prompt at runtime.
@@ -191,7 +217,16 @@ namespace Seal.AI
                 ? SamplePromptsFile
                 : Path.Combine(Repository.Instance.AISamplePromptsFolder, SamplePromptsFile);
             if (!File.Exists(path)) return result;
-            foreach (var line in File.ReadAllLines(path))
+            return ParseSamplePrompts(File.ReadAllLines(path));
+        }
+
+        /// <summary>
+        /// Returns the sample prompts of the given lines: blank lines and lines starting with <c>#</c> are skipped.
+        /// </summary>
+        public static List<string> ParseSamplePrompts(IEnumerable<string> lines)
+        {
+            var result = new List<string>();
+            foreach (var line in lines)
             {
                 var trimmed = line.Trim();
                 if (!string.IsNullOrEmpty(trimmed) && !trimmed.StartsWith("#"))

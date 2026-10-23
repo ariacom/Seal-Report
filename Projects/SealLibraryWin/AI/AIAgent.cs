@@ -5,6 +5,7 @@ using System.Linq;
 using Ganss.Xss;
 using Newtonsoft.Json;
 using OpenAI.Chat;
+using Seal.Helpers;
 using Seal.Model;
 
 namespace Seal.AI
@@ -165,9 +166,63 @@ namespace Seal.AI
             get
             {
                 var prompt = Configuration.EffectiveSystemPrompt;
+                var context = systemPromptScriptResult();
+                if (!string.IsNullOrWhiteSpace(context))
+                    prompt = string.IsNullOrWhiteSpace(prompt) ? context.Trim() : prompt.TrimEnd() + "\r\n\r\n" + context.Trim();
                 if (!_chatSuggestions) return prompt;
                 return string.IsNullOrWhiteSpace(prompt) ? ChatSuggestionsInstruction : prompt.TrimEnd() + "\r\n\r\n" + ChatSuggestionsInstruction;
             }
+        }
+
+        /// <summary>
+        /// Text rendered by the <see cref="AIAgentConfiguration.SystemPromptScriptFile"/> of the configuration (Model = this agent),
+        /// appended to the system prompt. A failing script is logged and adds nothing: the chat goes on with the static prompt.
+        /// </summary>
+        string systemPromptScriptResult()
+        {
+            var file = Configuration.SystemPromptScriptFile;
+            if (string.IsNullOrWhiteSpace(file)) return null;
+            try
+            {
+                var path = Path.IsPathRooted(file) ? file : Path.Combine(Repository.Instance.AIScriptsFolder, file);
+                if (!File.Exists(path)) throw new System.Exception($"System Prompt Script File '{path}' not found.");
+                //the file date is part of the key: a modified script is compiled again
+                var lastWrite = File.GetLastWriteTime(path);
+                return RazorHelper.CompileExecute(File.ReadAllText(path), this, "AIAgentPromptScript_" + Configuration.GUID + "_" + lastWrite.Ticks, lastWrite);
+            }
+            catch (System.Exception ex)
+            {
+                Helper.WriteLogException($"System Prompt Script of the AI agent '{Configuration.Name}'", ex);
+                return null;
+            }
+        }
+
+        /// <summary>
+        /// Returns the sample prompts of the agent for its <see cref="SecurityContext"/>: the lines rendered by the
+        /// <see cref="AIAgentConfiguration.SamplePromptsScriptFile"/> of the configuration (Model = this agent), or the prompts of the
+        /// <see cref="AIAgentConfiguration.SamplePromptsFile"/> when the script is not set, fails (the error is logged) or renders nothing.
+        /// </summary>
+        public List<string> GetSamplePrompts()
+        {
+            var file = Configuration.SamplePromptsScriptFile;
+            if (!string.IsNullOrWhiteSpace(file))
+            {
+                try
+                {
+                    var path = Path.IsPathRooted(file) ? file : Path.Combine(Repository.Instance.AIScriptsFolder, file);
+                    if (!File.Exists(path)) throw new System.Exception($"Sample Prompts Script File '{path}' not found.");
+                    //the file date is part of the key: a modified script is compiled again
+                    var lastWrite = File.GetLastWriteTime(path);
+                    var result = RazorHelper.CompileExecute(File.ReadAllText(path), this, "AIAgentSamplePromptsScript_" + Configuration.GUID + "_" + lastWrite.Ticks, lastWrite);
+                    var prompts = AIAgentConfiguration.ParseSamplePrompts((result ?? "").Split('\n'));
+                    if (prompts.Count > 0) return prompts;
+                }
+                catch (System.Exception ex)
+                {
+                    Helper.WriteLogException($"Sample Prompts Script of the AI agent '{Configuration.Name}'", ex);
+                }
+            }
+            return Configuration.GetSamplePrompts();
         }
 
         void seedSystemPrompt()

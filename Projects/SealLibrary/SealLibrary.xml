@@ -482,11 +482,6 @@
             Current security user for the tool execution
             </summary>
         </member>
-        <member name="F:Seal.AI.AIToolCall.Repository">
-            <summary>
-            Repository used by the tool scripts to load or create reports, see AIToolConfiguration.GetRepository()
-            </summary>
-        </member>
         <member name="F:Seal.AI.AIToolCall.ExecutionLog">
             <summary>
             Current log for the tool execution
@@ -596,8 +591,7 @@
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetRepository">
             <summary>
-            Returns the repository the tool scripts use to load or create reports.
-            If the user has Data Sources built by the Security Provider (see SecurityUser.Sources), a fast copy of the repository including them is returned (the same one for the current tool call), otherwise the repository instance.
+            Returns the repository the tool scripts use to load or create reports (the Private Data Sources used by a report are loaded on demand).
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetExecSource(System.String)">
@@ -714,10 +708,26 @@
             When set, takes precedence over <see cref="P:Seal.AI.AIAgentConfiguration.DefaultSystemPrompt"/>.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.SystemPromptScriptFile">
+            <summary>
+            File name of a Razor script, relative to <c>Settings\AI\Scripts</c>, executed before each chat turn with the
+            <see cref="T:Seal.AI.AIAgent"/> as Model (its <see cref="F:Seal.AI.AIAgent.SecurityContext"/> gives the current user, null for a
+            caller without user). The text it returns is appended to the system prompt: a context computed per user and
+            per turn (e.g. the data sets, folders or rights of the user), so one agent serves every user.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile">
             <summary>
             File name of a text file containing sample user prompts, relative to <c>Settings\AI\Prompts\Samples</c>.
             One prompt per line; blank lines and lines starting with <c>#</c> are ignored.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.SamplePromptsScriptFile">
+            <summary>
+            File name of a Razor script, relative to <c>Settings\AI\Scripts</c>, executed when the sample prompts are requested with the
+            <see cref="T:Seal.AI.AIAgent"/> as Model (its <see cref="F:Seal.AI.AIAgent.SecurityContext"/> gives the current user, may be null). Its output gives
+            one prompt per line (blank lines and lines starting with <c>#</c> are ignored): sample prompts computed per user.
+            When the script fails or renders nothing, the prompts of <see cref="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile"/> are used (see <see cref="M:Seal.AI.AIAgent.GetSamplePrompts"/>).
             </summary>
         </member>
         <member name="P:Seal.AI.AIAgentConfiguration.EffectiveSystemPrompt">
@@ -732,6 +742,11 @@
             Reads and returns the list of sample user prompts from <see cref="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile"/>.
             Returns an empty list when the file is not set or does not exist.
             Blank lines and lines starting with <c>#</c> are skipped.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgentConfiguration.ParseSamplePrompts(System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Returns the sample prompts of the given lines: blank lines and lines starting with <c>#</c> are skipped.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAgentConfiguration.Temperature">
@@ -921,6 +936,19 @@
             <summary>
             When true, <see cref="F:Seal.AI.AIAgent.ChatSuggestionsInstruction"/> is appended to the system prompt
             (set by the interactive web chat panel only, so headless callers never get <c>[[...]]</c> tags).
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.systemPromptScriptResult">
+            <summary>
+            Text rendered by the <see cref="P:Seal.AI.AIAgentConfiguration.SystemPromptScriptFile"/> of the configuration (Model = this agent),
+            appended to the system prompt. A failing script is logged and adds nothing: the chat goes on with the static prompt.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.GetSamplePrompts">
+            <summary>
+            Returns the sample prompts of the agent for its <see cref="F:Seal.AI.AIAgent.SecurityContext"/>: the lines rendered by the
+            <see cref="P:Seal.AI.AIAgentConfiguration.SamplePromptsScriptFile"/> of the configuration (Model = this agent), or the prompts of the
+            <see cref="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile"/> when the script is not set, fails (the error is logged) or renders nothing.
             </summary>
         </member>
         <member name="F:Seal.AI.AIAgent.LoadSkillToolName">
@@ -6329,9 +6357,9 @@
             True if the source is loaded for edition (e.g. in the Server Manager): the objects of the Data Source References are then copied and not editable.
             </summary>
         </member>
-        <member name="P:Seal.Model.MetaSource.IsDynamic">
+        <member name="P:Seal.Model.MetaSource.IsPrivate">
             <summary>
-            True if the source is built in memory for a user by the Security Provider script (see SecurityUser.Sources): it has no file and cannot be saved.
+            True if the source is a Private Data Source (see Repository.PrivateSourcesFolder): not loaded with the repository, loaded on demand, allowed only to the security groups listing its GUID.
             </summary>
         </member>
         <member name="M:Seal.Model.MetaSource.IsOwnObject(System.String)">
@@ -10196,10 +10224,10 @@
             Return the report of a given schedule GUID
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.InitScheduleSecurityContext(Seal.Model.Report@,Seal.Model.ReportSchedule@)">
+        <member name="M:Seal.Model.ReportExecution.InitScheduleSecurityContext(Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>
             If the Security Provider is executed for the scheduled outputs (SealSecurity.ProviderForScheduledOutputs), the 'User name' of the output is authenticated without password
-            and the report is loaded again with the Data Sources built for the user. If the authentication fails, the report is kept: the output uses its 'User name' and 'User groups'.
+            to get his groups and properties. If the authentication fails, the output uses its 'User name' and 'User groups'.
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.ExecuteReportSchedule(System.String,System.String,Seal.Model.Report)">
@@ -13793,12 +13821,6 @@
             Creates a basic repository: properties are shared or cloned for performance reasons
             </summary>
         </member>
-        <member name="M:Seal.Model.Repository.AddUserSources(Seal.Model.SecurityUser)">
-            <summary>
-            Add to the repository a copy of the Data Sources built in memory for the user (see SecurityUser.Sources), with their Data Source References loaded from this repository.
-            Must be called before loading a report using these sources.
-            </summary>
-        </member>
         <member name="F:Seal.Model.Repository.AssembliesLoaded">
             <summary>
             True is Assemblies have been loaded. Can be set to true at startup to disable Assemblies load.
@@ -13874,6 +13896,48 @@
         <member name="P:Seal.Model.Repository.TaskTemplatesFolder">
             <summary>
             Task templates folder
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.PrivateSourcesFolder">
+            <summary>
+            Private Data Sources folder (and its sub-folders): Data Sources not loaded with the repository (e.g. one per customer).
+            They are loaded on demand by the reports using them, and allowed to a user only if one of his security groups lists their GUID.
+            </summary>
+        </member>
+        <member name="T:Seal.Model.Repository.PrivateSourceFile">
+            <summary>
+            Private Data Source file found in the private folder
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Repository.PrivateSourceFile.GUID">
+            <summary>GUID of the Data Source</summary>
+        </member>
+        <member name="F:Seal.Model.Repository.PrivateSourceFile.Name">
+            <summary>Name of the Data Source</summary>
+        </member>
+        <member name="F:Seal.Model.Repository.PrivateSourceFile.FilePath">
+            <summary>Path of the file</summary>
+        </member>
+        <member name="F:Seal.Model.Repository.PrivateSourceFile.LastWrite">
+            <summary>Last write time of the file</summary>
+        </member>
+        <member name="F:Seal.Model.Repository.PrivateSourceFile.Master">
+            <summary>Data Source loaded from the file, shared by the repositories that copy it</summary>
+        </member>
+        <member name="M:Seal.Model.Repository.GetPrivateSourceFiles">
+            <summary>
+            Returns the Private Data Source files found in the private folder and its sub-folders (the folder is scanned again at most every second)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.GetPrivateSource(System.String)">
+            <summary>
+            Returns the Private Data Source having the given GUID, or null if there is no file for it in the private folder.
+            The source is a copy of the file loaded once (reloaded when the file changes), its Data Source References are loaded from this repository.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.FindSource(System.String)">
+            <summary>
+            Returns the Data Source having the given GUID: a source of the repository or a Private Data Source
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.DevicesFolder">
@@ -16734,21 +16798,6 @@
         <member name="M:Seal.Model.SecurityUser.GetProperty(System.String,System.String)">
             <summary>
             Returns the value of a property set by the Security Provider, or the default value if the property is not defined
-            </summary>
-        </member>
-        <member name="P:Seal.Model.SecurityUser.Sources">
-            <summary>
-            Data Sources of the user, built in memory by the Security Provider script during the login (e.g. the data of a subscriber referencing a shared Data Source). They have no file and are added to the repository used by the user (report executions, AI tools). They stay on the server.
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SecurityUser.AddSource(Seal.Model.MetaSource)">
-            <summary>
-            Add a Data Source built in memory to the user (called by the Security Provider script). The Data Source References of the source are loaded from the repository.
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SecurityUser.GetSources(Seal.Model.Repository)">
-            <summary>
-            Returns the Data Sources of the user. If a repository is given, their Data Source References are loaded from it when needed (e.g. after a reload of the repository).
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.ForSchedule">

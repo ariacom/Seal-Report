@@ -1,3 +1,6 @@
+@using System
+@using System.Linq
+@using System.Collections.Generic
 @using System.Text
 @using System.Text.Json
 @using Seal.Model
@@ -6,9 +9,16 @@
     AIToolConfiguration tool = Model;
     var args   = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var name   = args.GetProperty("name").GetString();
-    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (name: {name})..");
+    // Optional filter: table names or name prefixes (e.g. "dg." or "ref.v_commune"); the other tables are only listed by name
+    var filters = args.TryGetProperty("tables", out var tp) && tp.ValueKind == JsonValueKind.Array
+        ? tp.EnumerateArray().Select(i => i.GetString()?.Trim()).Where(i => !string.IsNullOrEmpty(i)).ToList()
+        : new List<string>();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (name: {name}{(filters.Count > 0 ? ", tables: " + string.Join(", ", filters) : "")})..");
     var source = tool.GetAvailableSources().FirstOrDefault(i => i.Name == name);
     if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found or not allowed."; return; }
+    bool Selected(MetaTable t) => filters.Count == 0 || filters.Any(f => (t.Name ?? "").StartsWith(f, StringComparison.OrdinalIgnoreCase) || (t.AliasName ?? "").StartsWith(f, StringComparison.OrdinalIgnoreCase));
+    var tables = source.MetaData.Tables.Where(Selected).ToList();
+    if (tables.Count == 0) { tool.ExecResult = $"Error: no table of '{name}' matches {string.Join(", ", filters)}. Tables: {string.Join(", ", source.MetaData.Tables.Select(t => t.AliasName))}."; return; }
 
     var sb = new StringBuilder();
 
@@ -24,7 +34,9 @@
 
     // --- Tables and columns ---
     sb.AppendLine("## Tables");
-    foreach (var table in source.MetaData.Tables)
+    var others = source.MetaData.Tables.Where(t => !tables.Contains(t)).ToList();
+    if (others.Count > 0) sb.AppendLine($"Detail limited to {tables.Count} table(s). Other tables (call again with their name in 'tables' for their columns): {string.Join(", ", others.Select(t => t.AliasName))}.\r\n");
+    foreach (var table in tables)
     {
         var tableName = string.IsNullOrEmpty(table.Alias) ? table.Name : $"{table.Name} (alias: {table.Alias})";
         sb.AppendLine($"### {tableName}{(string.IsNullOrEmpty(table.Description) ? "" : $" — {table.Description}")}");
@@ -41,10 +53,12 @@
     }
 
     // --- Joins ---
-    if (source.MetaData.Joins.Count > 0)
+    // joins touching a detailed table
+    var joins = source.MetaData.Joins.Where(j => filters.Count == 0 || tables.Contains(j.LeftTable) || tables.Contains(j.RightTable)).ToList();
+    if (joins.Count > 0)
     {
         sb.AppendLine("## Joins");
-        foreach (var join in source.MetaData.Joins)
+        foreach (var join in joins)
         {
             var left  = join.LeftTable?.AliasName  ?? "?";
             var right = join.RightTable?.AliasName ?? "?";

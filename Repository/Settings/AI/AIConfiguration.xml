@@ -56,9 +56,10 @@ Use the returned GUIDs with datasource_guid and connection_guid parameters in da
       <Name>datasource_get_detail</Name>
       <Description>Returns a structured summary of a data source:
 connection info (no credentials), tables with their columns and types, and joins between tables.
-Use this to understand the schema and relationships before writing SQL.</Description>
+Use this to understand the schema and relationships before writing SQL.
+For a large data source, pass "tables" (table names or prefixes, e.g. ["dg."]) to detail only these tables and their joins: the other tables are listed by name only.</Description>
       <ProgressLabel>Inspecting data source {name}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Data source name"}},"required":["name"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Data source name"},"tables":{"type":"array","items":{"type":"string"},"description":"Optional: table names or name prefixes to detail (e.g. [\"dg.\", \"ref.v_commune\"]). Omit to detail every table."}},"required":["name"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_get_detail.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>

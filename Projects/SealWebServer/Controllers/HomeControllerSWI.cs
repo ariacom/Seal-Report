@@ -1343,7 +1343,7 @@ namespace SealWebServer.Controllers
                 List<string> prompts = new List<string>();
                 if (agent != null)
                 {
-                    prompts = agent.Configuration.GetSamplePrompts()
+                    prompts = agent.GetSamplePrompts()
                         .Select(p => Repository.RepositoryTranslate("AISamplePrompt", "*", p)).ToList();
                 }
 

@@ -274,11 +274,13 @@ namespace Seal.AI
             var script = EffectiveExecutionScript;
             if (string.IsNullOrWhiteSpace(script)) return string.Empty;
 
-            //File-backed: cache the compiled script by file path and invalidate on file change
+            //File-backed: cache the compiled script by tool and file date, a modified file is compiled again
+            //(the in-memory cache of a keyed script is never invalidated, the date must be part of the key)
             var path = Path.IsPathRooted(ExecutionScriptFile)
                 ? ExecutionScriptFile
                 : Path.Combine(Repository.Instance.AIScriptsFolder, ExecutionScriptFile);
-            RazorHelper.CompileExecute(script, this, GetType().Name + "_" + GUID, File.GetLastWriteTime(path));
+            var lastWrite = File.GetLastWriteTime(path);
+            RazorHelper.CompileExecute(script, this, GetType().Name + "_" + GUID + "_" + lastWrite.Ticks, lastWrite);
             return ExecResult;
         }
     }
