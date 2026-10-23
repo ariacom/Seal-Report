@@ -1193,7 +1193,13 @@ namespace Seal.Model
             MetaSource master;
             lock (file)
             {
-                if (file.Master == null) file.Master = MetaSource.LoadFromFile(file.FilePath);
+                if (file.Master == null)
+                {
+                    master = MetaSource.LoadFromFile(file.FilePath);
+                    //Objects attached to the source (e.g. the default format of a column uses Source.Repository during the copy)
+                    master.InitReferences(this);
+                    file.Master = master;
+                }
                 master = file.Master;
             }
             lock (_privateSources)
