@@ -23,6 +23,7 @@
         ? tool.GetAvailableSources().FirstOrDefault(s => s.GUID == dsGuid)
         : tool.GetExecSource(null);
     if (source == null) { tool.ExecResult = "Error: data source not found or not allowed."; return; }
+    if (source.IsDynamic) { tool.ExecResult = $"Error: the data source '{source.Name}' is built in memory for the user by the Security Provider: it cannot be modified."; return; }
     var srcDir = Path.GetDirectoryName(source.FilePath);
     if (string.IsNullOrEmpty(srcDir) || !securityContext.HasFolderRight(srcDir, (int)FolderRight.Edit))
     { tool.ExecResult = "Error: editing data sources requires write (Edit) access to the source's folder, published via the group's Repository Folders. It is not enabled for your security group."; return; }

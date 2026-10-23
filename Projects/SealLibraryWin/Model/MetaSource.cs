@@ -170,6 +170,33 @@ namespace Seal.Model
         public bool ShouldSerializeDataSourceReferences() { return DataSourceReferences.Count > 0; }
 
         /// <summary>
+        /// GUIDs of the objects (connections, tables, joins and enums) loaded from the Data Source References.
+        /// These objects are shared with the referenced Data Sources: they are never modified or saved by this source.
+        /// </summary>
+        [XmlIgnore]
+        public HashSet<string> ReferencedGUIDs { get; private set; } = new HashSet<string>();
+
+        /// <summary>
+        /// True if the source is loaded for edition (e.g. in the Server Manager): the objects of the Data Source References are then copied and not editable.
+        /// </summary>
+        [XmlIgnore]
+        public bool ForEdition { get; set; } = false;
+
+        /// <summary>
+        /// True if the source is built in memory for a user by the Security Provider script (see SecurityUser.Sources): it has no file and cannot be saved.
+        /// </summary>
+        [XmlIgnore]
+        public bool IsDynamic { get; set; } = false;
+
+        /// <summary>
+        /// True if the object with the given GUID belongs to this source (it is not shared from a Data Source Reference)
+        /// </summary>
+        public bool IsOwnObject(string guid)
+        {
+            return ForEdition || !ReferencedGUIDs.Contains(guid);
+        }
+
+        /// <summary>
         /// If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
         /// </summary>
 #if WINDOWS
@@ -523,12 +550,12 @@ namespace Seal.Model
 
             LoadDatasourceReferences();
 
-            //init references in objects
-            foreach (var connection in Connections)
+            //init references in objects, the objects shared from the Data Source References keep their own source
+            foreach (var connection in Connections.Where(i => IsOwnObject(i.GUID)))
             {
                 connection.Source = this;
             }
-            foreach (var table in MetaData.Tables)
+            foreach (var table in MetaData.Tables.Where(i => IsOwnObject(i.GUID)))
             {
                 table.Source = this;
                 foreach (var column in table.Columns)
@@ -552,11 +579,11 @@ namespace Seal.Model
             //remove lost links
             MetaData.TableLinks.RemoveAll(i => i.Source == null);
 
-            foreach (var join in MetaData.Joins)
+            foreach (var join in MetaData.Joins.Where(i => IsOwnObject(i.GUID)))
             {
                 join.Source = this;
             }
-            foreach (var item in MetaData.Enums)
+            foreach (var item in MetaData.Enums.Where(i => IsOwnObject(i.GUID)))
             {
                 item.Source = this;
             }
@@ -592,43 +619,122 @@ namespace Seal.Model
             return Path.Combine(Path.GetDirectoryName(path), Path.GetFileNameWithoutExtension(path) + "_Connections.xml");
         }
 
+        /// <summary>
+        /// Returns the Data Sources referenced by this source, including the references of the references (each source once, this source excluded)
+        /// </summary>
+        List<MetaSource> GetReferencedSources()
+        {
+            var result = new List<MetaSource>();
+            var toCheck = new Queue<MetaSource>();
+            toCheck.Enqueue(this);
+            while (toCheck.Count > 0)
+            {
+                var source = toCheck.Dequeue();
+                foreach (var reference in Repository.Sources.Where(i => source.DataSourceReferences.Contains(i.GUID)))
+                {
+                    if (reference.GUID == GUID || result.Contains(reference)) continue;
+                    result.Add(reference);
+                    toCheck.Enqueue(reference);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Add to the source the objects of the Data Source References.
+        /// The objects are shared with the referenced sources and never modified (their Source and IsEditable flag are kept), except for edition where they are copied and not editable.
+        /// </summary>
         void LoadDatasourceReferences()
         {
-            foreach (var reference in Repository.Sources.Where(i => DataSourceReferences.Contains(i.GUID)))
+            //Objects of a previous load are removed: they are added again from the current referenced sources
+            Connections.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+            MetaData.Tables.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+            MetaData.Joins.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+            MetaData.Enums.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+            ReferencedGUIDs.Clear();
+
+            if (DataSourceReferences.Count == 0 || Repository == null) return;
+
+            foreach (var reference in GetReferencedSources())
             {
-                //Add connections
-                foreach (var connection in reference.Connections)
+                //Only the own objects of the reference, its references are also in the list
+                foreach (var connection in reference.Connections.Where(i => !reference.ReferencedGUIDs.Contains(i.GUID)))
                 {
                     if (Connections.Exists(i => i.GUID == connection.GUID)) continue;
 
-                    connection.IsEditable = false;
-                    Connections.Add(connection);
+                    var item = connection;
+                    if (ForEdition)
+                    {
+                        item = (MetaConnection)Helper.Clone(connection);
+                        item.IsEditable = false;
+                    }
+                    Connections.Add(item);
+                    ReferencedGUIDs.Add(item.GUID);
                 }
-                //Add tables
-                foreach (var table in reference.MetaData.Tables)
+                foreach (var table in reference.MetaData.Tables.Where(i => !reference.ReferencedGUIDs.Contains(i.GUID)))
                 {
                     if (MetaData.Tables.Exists(i => i.GUID == table.GUID)) continue;
 
-                    table.IsEditable = false;
-                    MetaData.Tables.Add(table);
+                    var item = table;
+                    if (ForEdition)
+                    {
+                        item = (MetaTable)Helper.Clone(table);
+                        item.IsEditable = false;
+                    }
+                    MetaData.Tables.Add(item);
+                    ReferencedGUIDs.Add(item.GUID);
                 }
-                //Add joins
-                foreach (var itemJoin in reference.MetaData.Joins)
+                foreach (var join in reference.MetaData.Joins.Where(i => !reference.ReferencedGUIDs.Contains(i.GUID)))
                 {
-                    if (MetaData.Joins.Exists(i => i.GUID == itemJoin.GUID)) continue;
+                    if (MetaData.Joins.Exists(i => i.GUID == join.GUID)) continue;
 
-                    itemJoin.IsEditable = false;
-                    MetaData.Joins.Add(itemJoin);
+                    var item = join;
+                    if (ForEdition)
+                    {
+                        item = (MetaJoin)Helper.Clone(join);
+                        item.IsEditable = false;
+                    }
+                    MetaData.Joins.Add(item);
+                    ReferencedGUIDs.Add(item.GUID);
                 }
-                //Add enums
-                foreach (var itemEnum in reference.MetaData.Enums)
+                foreach (var itemEnum in reference.MetaData.Enums.Where(i => !reference.ReferencedGUIDs.Contains(i.GUID)))
                 {
                     if (MetaData.Enums.Exists(i => i.GUID == itemEnum.GUID)) continue;
 
-                    itemEnum.IsEditable = false;
-                    MetaData.Enums.Add(itemEnum);
+                    var item = itemEnum;
+                    if (ForEdition)
+                    {
+                        item = (MetaEnum)Helper.Clone(itemEnum);
+                        item.IsEditable = false;
+                    }
+                    MetaData.Enums.Add(item);
+                    ReferencedGUIDs.Add(item.GUID);
                 }
             }
+        }
+
+        /// <summary>
+        /// Deep copy of the source without the objects shared from the Data Source References (they are added again by InitReferences in the new repository).
+        /// The source itself is not modified, so it can be copied while other threads use it.
+        /// </summary>
+        public MetaSource CloneOwnObjects()
+        {
+            var shallow = (MetaSource)MemberwiseClone();
+            shallow.Connections = Connections.Where(i => !ReferencedGUIDs.Contains(i.GUID)).ToList();
+            shallow._metaData = new MetaData()
+            {
+                Tables = MetaData.Tables.Where(i => !ReferencedGUIDs.Contains(i.GUID)).ToList(),
+                TableLinks = MetaData.TableLinks.ToList(),
+                Joins = MetaData.Joins.Where(i => !ReferencedGUIDs.Contains(i.GUID)).ToList(),
+                Enums = MetaData.Enums.Where(i => !ReferencedGUIDs.Contains(i.GUID)).ToList()
+            };
+            var result = (MetaSource)Helper.Clone(shallow);
+            //Not serialized by the clone ([XmlIgnore])
+            result.FilePath = FilePath;
+            result.LastModification = LastModification;
+            result.LastMetadataModification = LastMetadataModification;
+            result.IsDynamic = IsDynamic;
+            return result;
         }
 
         /// <summary>
@@ -703,6 +809,9 @@ namespace Seal.Model
         /// </summary>
         public void SaveToFile(string path)
         {
+            if (IsDynamic) throw new Exception($"The Data Source '{Name}' is built in memory for the user by the Security Provider: it cannot be saved.");
+
+
             //Check last modification
             if (LastModification != DateTime.MinValue && File.Exists(path))
             {
@@ -1153,11 +1262,23 @@ WHERE m.type = 'table';
             TempLinks = MetaData.TableLinks.ToList();
             TempJoins = MetaData.Joins.ToList();
             TempEnums = MetaData.Enums.ToList();
-            Connections.RemoveAll(i => !i.IsEditable);
-            MetaData.Tables.RemoveAll(i => !i.IsEditable);
-            MetaData.TableLinks.RemoveAll(i => !i.IsEditable);
-            MetaData.Joins.RemoveAll(i => !i.IsEditable);
-            MetaData.Enums.RemoveAll(i => !i.IsEditable);
+            if (this is ReportSource)
+            {
+                //Objects of the repository source are not editable in the report
+                Connections.RemoveAll(i => !i.IsEditable);
+                MetaData.Tables.RemoveAll(i => !i.IsEditable);
+                MetaData.TableLinks.RemoveAll(i => !i.IsEditable);
+                MetaData.Joins.RemoveAll(i => !i.IsEditable);
+                MetaData.Enums.RemoveAll(i => !i.IsEditable);
+            }
+            else
+            {
+                //Objects of the Data Source References (shared or copied for edition). The IsEditable flag is not used here: a report may have set it on the objects of this source.
+                Connections.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+                MetaData.Tables.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+                MetaData.Joins.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+                MetaData.Enums.RemoveAll(i => ReferencedGUIDs.Contains(i.GUID));
+            }
         }
 
         /// <summary>

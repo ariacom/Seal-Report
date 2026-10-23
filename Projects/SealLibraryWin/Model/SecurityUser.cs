@@ -353,7 +353,49 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Parameters for authentication: User name 
+        /// Data Sources of the user, built in memory by the Security Provider script during the login (e.g. the data of a subscriber referencing a shared Data Source). They have no file and are added to the repository used by the user (report executions, AI tools). They stay on the server.
+        /// </summary>
+        public List<MetaSource> Sources { get; } = new List<MetaSource>();
+
+        /// <summary>
+        /// Add a Data Source built in memory to the user (called by the Security Provider script). The Data Source References of the source are loaded from the repository.
+        /// </summary>
+        public MetaSource AddSource(MetaSource source)
+        {
+            if (source == null) throw new ArgumentNullException(nameof(source));
+            if (string.IsNullOrEmpty(source.GUID)) throw new Exception("The Data Source added to the user must have a GUID.");
+            if (Security.Repository.Sources.Exists(i => i.GUID == source.GUID)) throw new Exception($"The Data Source '{source.Name}' added to the user has the GUID of a Data Source of the repository.");
+
+            source.IsDynamic = true;
+            source.FilePath = null;
+            source.InitReferences(Security.Repository);
+            lock (Sources)
+            {
+                Sources.RemoveAll(i => i.GUID == source.GUID);
+                Sources.Add(source);
+            }
+            return source;
+        }
+
+        /// <summary>
+        /// Returns the Data Sources of the user. If a repository is given, their Data Source References are loaded from it when needed (e.g. after a reload of the repository).
+        /// </summary>
+        public List<MetaSource> GetSources(Repository repository = null)
+        {
+            lock (Sources)
+            {
+                if (repository != null) foreach (var source in Sources.Where(i => i.Repository != repository)) source.InitReferences(repository);
+                return Sources.ToList();
+            }
+        }
+
+        /// <summary>
+        /// True if the user is authenticated for a scheduled output (see SealSecurity.ProviderForScheduledOutputs): there is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
+        /// </summary>
+        public bool ForSchedule = false;
+
+        /// <summary>
+        /// Parameters for authentication: User name
         /// </summary>
         public string WebUserName = "";
 
@@ -558,6 +600,7 @@ namespace Seal.Model
             Error = "";
             Warning = "";
             Properties.Clear();
+            lock (Sources) Sources.Clear();
             string script = (Security.UseCustomScript && !string.IsNullOrEmpty(Security.Script) ? Security.Script : Security.ProviderScript);
             if (string.IsNullOrEmpty(script)) throw new Exception("No Security Script to execute. Check the rights to access the repository Security.xml file...");
             try
@@ -587,6 +630,9 @@ namespace Seal.Model
                 }
             }
 
+            //Scheduled output: no Two-Factor Authentication and no logged user
+            if (ForSchedule) return;
+
             if (string.IsNullOrEmpty(Error) && Security.TwoFAActive)
             {
                 script = Security.TwoFAGenerationScriptEffective;
@@ -611,6 +657,7 @@ namespace Seal.Model
         {
             SecurityGroups.Clear();
             Properties.Clear();
+            lock (Sources) Sources.Clear();
             SealSecurity.RemoveLoggedUsed(this);
         }
 
@@ -708,6 +755,8 @@ namespace Seal.Model
         public bool CanAccessSource(MetaSource source)
         {
             if (source == null) return false;
+            //The Data Sources built for the user are always allowed
+            if (source.IsDynamic) return Sources.Exists(i => i.GUID == source.GUID);
             //A group with an empty list (or no group at all) grants access to all data sources
             if (SecurityGroups.Count == 0 || SecurityGroups.Exists(g => g.DataSourceGUIDs.Count == 0)) return true;
             return SecurityGroups.Exists(g => g.DataSourceGUIDs.Contains(source.GUID));

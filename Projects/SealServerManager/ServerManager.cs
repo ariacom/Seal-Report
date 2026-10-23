@@ -526,6 +526,7 @@ namespace Seal
                 if (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower())
                 {
                     _source = MetaSource.LoadFromFile(path);
+                    _source.ForEdition = true;
                     _source.InitReferences(_repository);
                     _device = null;
                 }
@@ -576,6 +577,7 @@ namespace Seal
             if (sender == dataSourceToolStripMenuItem || sender == noSQLdataSourceToolStripMenuItem)
             {
                 _source = MetaSource.Create(_repository);
+                _source.ForEdition = true;
                 _source.IsNoSQL = (sender == noSQLdataSourceToolStripMenuItem);
                 if (_source.IsNoSQL)
                 {

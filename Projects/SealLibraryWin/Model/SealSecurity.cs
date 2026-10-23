@@ -61,6 +61,7 @@ namespace Seal.Model
                 GetProperty("EnableChangePassword").SetIsBrowsable(true);
                 GetProperty("ChangePasswordScript").SetIsBrowsable(true);
                 GetProperty("HideLoginPassword").SetIsBrowsable(true);
+                GetProperty("ProviderForScheduledOutputs").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -214,6 +215,15 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool HideLoginPassword { get; set; } = false;
+
+        /// <summary>
+        /// If true, the Security Provider script is executed for the scheduled outputs having a 'User name': the user is authenticated without password (user.ForSchedule is true) to get his groups, properties and data sources. If the authentication fails, the output is generated with the 'User name' and 'User groups' of the output.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Execute the provider for scheduled outputs"), Description("If true, the Security Provider script is executed for the scheduled outputs having a 'User name': the user is authenticated without password (user.ForSchedule is true) to get his groups, properties and data sources. If the authentication fails, the output is generated with the 'User name' and 'User groups' of the output."), Id(13, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool ProviderForScheduledOutputs { get; set; } = false;
 
         /// <summary>
         /// True if the Two-Factor Authentication is enabled

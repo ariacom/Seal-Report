@@ -11,7 +11,7 @@
     // NoSQL sources never use a SQL model — route straight to the metadata tool
     var srcGuid = args.TryGetProperty("source_guid", out var sgp) ? sgp.GetString() : null;
     if (!string.IsNullOrEmpty(srcGuid)) {
-        var src = Repository.Instance.Sources.FirstOrDefault(s => s.GUID == srcGuid);
+        var src = tool.GetAvailableSources().FirstOrDefault(s => s.GUID == srcGuid);
         if (src != null && src.IsNoSQL) {
             tool.ExecResult =
                 "MODEL TYPE: Metadata (NoSQL) — use report_create_from_xml.\n" +

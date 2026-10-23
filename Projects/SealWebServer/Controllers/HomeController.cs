@@ -168,6 +168,8 @@ namespace SealWebServer.Controllers
         {
             WebUser.WebPrincipal = User;
             WebUser.Authenticate();
+            //Data Sources built for the user by the Security Provider
+            Repository?.AddUserSources(WebUser);
             if (string.IsNullOrEmpty(WebUser.SecurityCode)) WebHelper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
         }
 

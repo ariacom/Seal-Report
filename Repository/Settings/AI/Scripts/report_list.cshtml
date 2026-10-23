@@ -7,7 +7,7 @@
 @{
     AIToolConfiguration tool = Model;
     var sb              = new StringBuilder();
-    var repo            = Repository.Instance;
+    var repo            = tool.GetRepository(); // includes the Data Sources built for the user
     var securityContext = tool.CurrentToolCall.SecurityContext;
 
     // Parse optional folder-filter argument

@@ -156,7 +156,25 @@ namespace Seal.AI
         {
             var sources = Repository.Instance.Sources;
             var user = CurrentToolCall?.SecurityContext;
-            return user == null ? sources : sources.Where(s => user.CanAccessSource(s));
+            //The Data Sources built for the user by the Security Provider are added
+            return user == null ? sources : sources.Concat(user.GetSources(Repository.Instance)).Where(s => user.CanAccessSource(s));
+        }
+
+        /// <summary>
+        /// Returns the repository the tool scripts use to load or create reports.
+        /// If the user has Data Sources built by the Security Provider (see SecurityUser.Sources), a fast copy of the repository including them is returned (the same one for the current tool call), otherwise the repository instance.
+        /// </summary>
+        public Repository GetRepository()
+        {
+            var call = CurrentToolCall;
+            if (call?.SecurityContext == null || call.SecurityContext.Sources.Count == 0) return Repository.Instance;
+            if (call.Repository == null)
+            {
+                var repository = Repository.Instance.CreateFast();
+                repository.AddUserSources(call.SecurityContext);
+                call.Repository = repository;
+            }
+            return call.Repository;
         }
 
         /// <summary>

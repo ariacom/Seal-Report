@@ -482,6 +482,11 @@
             Current security user for the tool execution
             </summary>
         </member>
+        <member name="F:Seal.AI.AIToolCall.Repository">
+            <summary>
+            Repository used by the tool scripts to load or create reports, see AIToolConfiguration.GetRepository()
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIToolCall.ExecutionLog">
             <summary>
             Current log for the tool execution
@@ -587,6 +592,12 @@
             Returns the data sources the current security context is allowed to access with the AI tools.
             When no security context is set, or the context defines no restriction, all repository sources are returned.
             Restrictions are defined through the DataSourceGUIDs of the user's security groups.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetRepository">
+            <summary>
+            Returns the repository the tool scripts use to load or create reports.
+            If the user has Data Sources built by the Security Provider (see SecurityUser.Sources), a fast copy of the repository including them is returned (the same one for the current tool call), otherwise the repository instance.
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetExecSource(System.String)">
@@ -6307,6 +6318,27 @@
             True if DataSourceReferences must be serialized
             </summary>
         </member>
+        <member name="P:Seal.Model.MetaSource.ReferencedGUIDs">
+            <summary>
+            GUIDs of the objects (connections, tables, joins and enums) loaded from the Data Source References.
+            These objects are shared with the referenced Data Sources: they are never modified or saved by this source.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaSource.ForEdition">
+            <summary>
+            True if the source is loaded for edition (e.g. in the Server Manager): the objects of the Data Source References are then copied and not editable.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaSource.IsDynamic">
+            <summary>
+            True if the source is built in memory for a user by the Security Provider script (see SecurityUser.Sources): it has no file and cannot be saved.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.IsOwnObject(System.String)">
+            <summary>
+            True if the object with the given GUID belongs to this source (it is not shared from a Data Source Reference)
+            </summary>
+        </member>
         <member name="P:Seal.Model.MetaSource.IsNoSQL">
             <summary>
             If true, this source contains only tables built from dedicated Razor Scripts (one for the definition and one for the load). The a LINQ query will then be used to fill the models.
@@ -6475,6 +6507,23 @@
         <member name="M:Seal.Model.MetaSource.Create(Seal.Model.Repository)">
             <summary>
             Create a basic MetaSource
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.GetReferencedSources">
+            <summary>
+            Returns the Data Sources referenced by this source, including the references of the references (each source once, this source excluded)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.LoadDatasourceReferences">
+            <summary>
+            Add to the source the objects of the Data Source References.
+            The objects are shared with the referenced sources and never modified (their Source and IsEditable flag are kept), except for edition where they are copied and not editable.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaSource.CloneOwnObjects">
+            <summary>
+            Deep copy of the source without the objects shared from the Data Source References (they are added again by InitReferences in the new repository).
+            The source itself is not modified, so it can be copied while other threads use it.
             </summary>
         </member>
         <member name="M:Seal.Model.MetaSource.LoadFromFile(System.String)">
@@ -10147,6 +10196,12 @@
             Return the report of a given schedule GUID
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportExecution.InitScheduleSecurityContext(Seal.Model.Report@,Seal.Model.ReportSchedule@)">
+            <summary>
+            If the Security Provider is executed for the scheduled outputs (SealSecurity.ProviderForScheduledOutputs), the 'User name' of the output is authenticated without password
+            and the report is loaded again with the Data Sources built for the user. If the authentication fails, the report is kept: the output uses its 'User name' and 'User groups'.
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportExecution.ExecuteReportSchedule(System.String,System.String,Seal.Model.Report)">
             <summary>
             Execute a report schedule
@@ -13738,6 +13793,12 @@
             Creates a basic repository: properties are shared or cloned for performance reasons
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.AddUserSources(Seal.Model.SecurityUser)">
+            <summary>
+            Add to the repository a copy of the Data Sources built in memory for the user (see SecurityUser.Sources), with their Data Source References loaded from this repository.
+            Must be called before loading a report using these sources.
+            </summary>
+        </member>
         <member name="F:Seal.Model.Repository.AssembliesLoaded">
             <summary>
             True is Assemblies have been loaded. Can be set to true at startup to disable Assemblies load.
@@ -15484,6 +15545,11 @@
             If true, the user name and password fields are hidden in the login page of the Web Report Server (e.g. for the Integrated Windows authentication).
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.ProviderForScheduledOutputs">
+            <summary>
+            If true, the Security Provider script is executed for the scheduled outputs having a 'User name': the user is authenticated without password (user.ForSchedule is true) to get his groups, properties and data sources. If the authentication fails, the output is generated with the 'User name' and 'User groups' of the output.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealSecurity.TwoFAActive">
             <summary>
             True if the Two-Factor Authentication is enabled
@@ -16670,9 +16736,29 @@
             Returns the value of a property set by the Security Provider, or the default value if the property is not defined
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.Sources">
+            <summary>
+            Data Sources of the user, built in memory by the Security Provider script during the login (e.g. the data of a subscriber referencing a shared Data Source). They have no file and are added to the repository used by the user (report executions, AI tools). They stay on the server.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.AddSource(Seal.Model.MetaSource)">
+            <summary>
+            Add a Data Source built in memory to the user (called by the Security Provider script). The Data Source References of the source are loaded from the repository.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetSources(Seal.Model.Repository)">
+            <summary>
+            Returns the Data Sources of the user. If a repository is given, their Data Source References are loaded from it when needed (e.g. after a reload of the repository).
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.ForSchedule">
+            <summary>
+            True if the user is authenticated for a scheduled output (see SealSecurity.ProviderForScheduledOutputs): there is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityUser.WebUserName">
             <summary>
-            Parameters for authentication: User name 
+            Parameters for authentication: User name
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.WebPassword">

@@ -43,7 +43,7 @@
     if (targets.Count == 0)
     { tool.ExecResult = $"No matching column or table found in source '{source.Name}'. Use datasource_get_detail to get the exact GUIDs/names."; return; }
 
-    var repo = Repository.Instance;
+    var repo = tool.GetRepository(); // includes the Data Sources built for the user
     var roots = new List<string>();
     if (Directory.Exists(repo.ReportsFolder)) roots.Add(repo.ReportsFolder);
     if (!string.IsNullOrEmpty(repo.PersonalFolder) && Directory.Exists(repo.PersonalFolder)) roots.Add(repo.PersonalFolder);

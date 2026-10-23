@@ -596,7 +596,17 @@ namespace Seal.Model
         public Repository CreateFast()
         {
             //check if some files have changed, in this case -> full reload
-            if (MustReload()) return Create(RepositoryPath);
+            if (MustReload())
+            {
+                var reloaded = Create(RepositoryPath);
+                //Keep the Data Sources built for the user
+                foreach (var source in Sources.Where(i => i.IsDynamic).Select(i => i.CloneOwnObjects()).ToList())
+                {
+                    reloaded.Sources.Add(source);
+                    source.InitReferences(reloaded);
+                }
+                return reloaded;
+            }
 
             //Fast load
             Repository result = null;
@@ -605,15 +615,8 @@ namespace Seal.Model
             {
                 result = new Repository();
                 //Just clone the sources as connections and enums can be updated
-                result.Sources = (List<MetaSource>)Helper.Clone(Sources);
-                for (int i = 0; i < result.Sources.Count && i < Sources.Count; i++)
-                {
-                    //Not serialized by the clone ([XmlIgnore]): keep them to save or reload the source from the fast repository
-                    var source = result.Sources[i];
-                    source.FilePath = Sources[i].FilePath;
-                    source.LastModification = Sources[i].LastModification;
-                    source.LastMetadataModification = Sources[i].LastMetadataModification;
-                }
+                //The objects of the Data Source References are not cloned: InitReferences shares them again from the cloned referenced sources
+                result.Sources = Sources.Select(i => i.CloneOwnObjects()).ToList();
                 foreach (var source in result.Sources) source.InitReferences(result);
                 //Others collections should remain static/unchanged an can be shared...
                 result._translations = Translations;
@@ -625,6 +628,24 @@ namespace Seal.Model
                 result.initCultureSeparators();
             }
             return result;
+        }
+
+        /// <summary>
+        /// Add to the repository a copy of the Data Sources built in memory for the user (see SecurityUser.Sources), with their Data Source References loaded from this repository.
+        /// Must be called before loading a report using these sources.
+        /// </summary>
+        public void AddUserSources(SecurityUser user)
+        {
+            //Sources of a previous user (e.g. new login in the same session)
+            Sources.RemoveAll(i => i.IsDynamic);
+            if (user == null) return;
+            foreach (var userSource in user.GetSources())
+            {
+                if (Sources.Exists(i => i.GUID == userSource.GUID)) continue;
+                var source = userSource.CloneOwnObjects();
+                Sources.Add(source);
+                source.InitReferences(this);
+            }
         }
 
         /// <summary>
@@ -1009,7 +1030,7 @@ namespace Seal.Model
         {
             if (Configuration.FilePath != null && File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
             if (Security.FilePath != null && File.GetLastWriteTime(Security.FilePath) != Security.LastModification) return true;
-            foreach (var item in Sources) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
+            foreach (var item in Sources.Where(i => !i.IsDynamic)) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
             foreach (var item in Devices.Where(i => i is OutputEmailDevice)) if (item.FilePath != null && File.GetLastWriteTime(item.FilePath) != ((OutputEmailDevice)item).LastModification) return true;
             //Check for new files
             foreach (var file in Directory.GetFiles(SourcesFolder, "*." + SealConfigurationFileExtension))

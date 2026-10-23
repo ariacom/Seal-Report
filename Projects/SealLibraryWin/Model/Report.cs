@@ -644,8 +644,8 @@ namespace Seal.Model
                 //Check custom Output Parameters 
                 OutputToExecute.CopyParameters(OutputToExecute.View.Parameters);
 
-                //Add the security context for the output if specified
-                if (!string.IsNullOrWhiteSpace(OutputToExecute.UserName) || !string.IsNullOrWhiteSpace(OutputToExecute.UserGroups))
+                //Add the security context for the output if specified (not if the user of the output has been authenticated by the Security Provider for a schedule)
+                if (SecurityContext?.ForSchedule != true && (!string.IsNullOrWhiteSpace(OutputToExecute.UserName) || !string.IsNullOrWhiteSpace(OutputToExecute.UserGroups)))
                 {
                     SecurityContext = new SecurityUser(Repository.Security) { Name = OutputToExecute.UserName };
                     string[] groups = OutputToExecute.UserGroups.Replace(";", "\r").Replace("\r\n", "\r").Replace("\n", "\r").Split('\r');

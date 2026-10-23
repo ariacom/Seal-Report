@@ -6,7 +6,7 @@
 @using Microsoft.Win32.TaskScheduler
 @{
     AIToolConfiguration tool = Model;
-    var repo            = Repository.Instance;
+    var repo            = tool.GetRepository(); // includes the Data Sources built for the user
     var securityContext = tool.CurrentToolCall.SecurityContext;
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
 
