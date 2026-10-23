@@ -154,27 +154,23 @@ namespace Seal.AI
         /// </summary>
         public IEnumerable<MetaSource> GetAvailableSources()
         {
-            var sources = Repository.Instance.Sources;
+            var repository = Repository.Instance;
             var user = CurrentToolCall?.SecurityContext;
-            //The Data Sources built for the user by the Security Provider are added
-            return user == null ? sources : sources.Concat(user.GetSources(Repository.Instance)).Where(s => user.CanAccessSource(s));
+            if (user == null) return repository.Sources;
+            //Private Data Sources listed explicitly by the groups of the user are added
+            var privateSources = user.SecurityGroups.SelectMany(g => g.DataSourceGUIDs).Distinct()
+                .Where(guid => !repository.Sources.Exists(s => s.GUID == guid))
+                .Select(guid => repository.GetPrivateSource(guid))
+                .Where(s => s != null);
+            return repository.Sources.Concat(privateSources).Where(s => user.CanAccessSource(s));
         }
 
         /// <summary>
-        /// Returns the repository the tool scripts use to load or create reports.
-        /// If the user has Data Sources built by the Security Provider (see SecurityUser.Sources), a fast copy of the repository including them is returned (the same one for the current tool call), otherwise the repository instance.
+        /// Returns the repository the tool scripts use to load or create reports (the Private Data Sources used by a report are loaded on demand).
         /// </summary>
         public Repository GetRepository()
         {
-            var call = CurrentToolCall;
-            if (call?.SecurityContext == null || call.SecurityContext.Sources.Count == 0) return Repository.Instance;
-            if (call.Repository == null)
-            {
-                var repository = Repository.Instance.CreateFast();
-                repository.AddUserSources(call.SecurityContext);
-                call.Repository = repository;
-            }
-            return call.Repository;
+            return Repository.Instance;
         }
 
         /// <summary>

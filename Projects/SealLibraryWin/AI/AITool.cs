@@ -46,11 +46,6 @@ namespace Seal.AI
         public SecurityUser SecurityContext = null;
 
         /// <summary>
-        /// Repository used by the tool scripts to load or create reports, see AIToolConfiguration.GetRepository()
-        /// </summary>
-        public Repository Repository = null;
-
-        /// <summary>
         /// Current log for the tool execution
         /// </summary>
         public ReportExecutionLog ExecutionLog = null;

@@ -12,6 +12,7 @@ using System.Data;
 using System.Diagnostics;
 using System.Reflection;
 using System.Text;
+using System.Xml;
 using Microsoft.CodeAnalysis.CSharp;
 using Microsoft.CodeAnalysis.Emit;
 
@@ -596,17 +597,7 @@ namespace Seal.Model
         public Repository CreateFast()
         {
             //check if some files have changed, in this case -> full reload
-            if (MustReload())
-            {
-                var reloaded = Create(RepositoryPath);
-                //Keep the Data Sources built for the user
-                foreach (var source in Sources.Where(i => i.IsDynamic).Select(i => i.CloneOwnObjects()).ToList())
-                {
-                    reloaded.Sources.Add(source);
-                    source.InitReferences(reloaded);
-                }
-                return reloaded;
-            }
+            if (MustReload()) return Create(RepositoryPath);
 
             //Fast load
             Repository result = null;
@@ -628,24 +619,6 @@ namespace Seal.Model
                 result.initCultureSeparators();
             }
             return result;
-        }
-
-        /// <summary>
-        /// Add to the repository a copy of the Data Sources built in memory for the user (see SecurityUser.Sources), with their Data Source References loaded from this repository.
-        /// Must be called before loading a report using these sources.
-        /// </summary>
-        public void AddUserSources(SecurityUser user)
-        {
-            //Sources of a previous user (e.g. new login in the same session)
-            Sources.RemoveAll(i => i.IsDynamic);
-            if (user == null) return;
-            foreach (var userSource in user.GetSources())
-            {
-                if (Sources.Exists(i => i.GUID == userSource.GUID)) continue;
-                var source = userSource.CloneOwnObjects();
-                Sources.Add(source);
-                source.InitReferences(this);
-            }
         }
 
         /// <summary>
@@ -1030,7 +1003,7 @@ namespace Seal.Model
         {
             if (Configuration.FilePath != null && File.GetLastWriteTime(Configuration.FilePath) != Configuration.LastModification) return true;
             if (Security.FilePath != null && File.GetLastWriteTime(Security.FilePath) != Security.LastModification) return true;
-            foreach (var item in Sources.Where(i => !i.IsDynamic)) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
+            foreach (var item in Sources) if (File.GetLastWriteTime(item.FilePath) != item.LastModification) return true;
             foreach (var item in Devices.Where(i => i is OutputEmailDevice)) if (item.FilePath != null && File.GetLastWriteTime(item.FilePath) != ((OutputEmailDevice)item).LastModification) return true;
             //Check for new files
             foreach (var file in Directory.GetFiles(SourcesFolder, "*." + SealConfigurationFileExtension))
@@ -1120,6 +1093,129 @@ namespace Seal.Model
         public string TaskTemplatesFolder
         {
             get { return Path.Combine(SourcesFolder, "TaskTemplates"); }
+        }
+
+        /// <summary>
+        /// Private Data Sources folder (and its sub-folders): Data Sources not loaded with the repository (e.g. one per customer).
+        /// They are loaded on demand by the reports using them, and allowed to a user only if one of his security groups lists their GUID.
+        /// </summary>
+        public string PrivateSourcesFolder
+        {
+            get { return Path.Combine(SourcesFolder, "Private"); }
+        }
+
+        /// <summary>
+        /// Private Data Source file found in the private folder
+        /// </summary>
+        public class PrivateSourceFile
+        {
+            /// <summary>GUID of the Data Source</summary>
+            public string GUID;
+            /// <summary>Name of the Data Source</summary>
+            public string Name;
+            /// <summary>Path of the file</summary>
+            public string FilePath;
+            /// <summary>Last write time of the file</summary>
+            public DateTime LastWrite;
+            /// <summary>Data Source loaded from the file, shared by the repositories that copy it</summary>
+            internal MetaSource Master;
+        }
+
+        //Private Data Source files by path, shared by all the repositories
+        static readonly Dictionary<string, PrivateSourceFile> _privateSourceFiles = new Dictionary<string, PrivateSourceFile>(StringComparer.OrdinalIgnoreCase);
+        static DateTime _privateSourceScan = DateTime.MinValue;
+        static string _privateSourceScanFolder = null;
+        //Private Data Sources of this repository: copies of the master sources, with their references loaded from this repository
+        readonly Dictionary<string, MetaSource> _privateSources = new Dictionary<string, MetaSource>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Returns the Private Data Source files found in the private folder and its sub-folders (the folder is scanned again at most every second)
+        /// </summary>
+        public List<PrivateSourceFile> GetPrivateSourceFiles()
+        {
+            lock (_privateSourceFiles)
+            {
+                var folder = PrivateSourcesFolder;
+                if (_privateSourceScanFolder != folder || (DateTime.Now - _privateSourceScan).TotalSeconds >= 1)
+                {
+                    if (_privateSourceScanFolder != folder) _privateSourceFiles.Clear();
+                    _privateSourceScanFolder = folder;
+                    _privateSourceScan = DateTime.Now;
+                    var files = Directory.Exists(folder) ? Directory.GetFiles(folder, "*." + SealConfigurationFileExtension, SearchOption.AllDirectories) : new string[0];
+                    foreach (var path in _privateSourceFiles.Keys.Where(i => !files.Contains(i, StringComparer.OrdinalIgnoreCase)).ToList()) _privateSourceFiles.Remove(path);
+                    foreach (var path in files)
+                    {
+                        var lastWrite = File.GetLastWriteTime(path);
+                        if (_privateSourceFiles.TryGetValue(path, out var file) && file.LastWrite == lastWrite) continue;
+                        try
+                        {
+                            //Only the GUID and the name are read, the source is loaded when it is used
+                            file = new PrivateSourceFile() { FilePath = path, LastWrite = lastWrite };
+                            using (var reader = XmlReader.Create(path))
+                            {
+                                reader.MoveToContent();
+                                reader.ReadStartElement();
+                                while (!reader.EOF && (file.GUID == null || file.Name == null))
+                                {
+                                    if (reader.NodeType == XmlNodeType.Element)
+                                    {
+                                        if (reader.Name == "GUID") file.GUID = reader.ReadElementContentAsString();
+                                        else if (reader.Name == "Name") file.Name = reader.ReadElementContentAsString();
+                                        else reader.Skip();
+                                    }
+                                    else if (reader.NodeType == XmlNodeType.EndElement) break;
+                                    else reader.Read();
+                                }
+                            }
+                            if (string.IsNullOrEmpty(file.Name)) file.Name = Path.GetFileNameWithoutExtension(path);
+                            if (!string.IsNullOrEmpty(file.GUID)) _privateSourceFiles[path] = file;
+                        }
+                        catch (Exception ex)
+                        {
+                            Helper.WriteLogException("Repository.GetPrivateSourceFiles: " + path, ex);
+                        }
+                    }
+                }
+                return _privateSourceFiles.Values.ToList();
+            }
+        }
+
+        /// <summary>
+        /// Returns the Private Data Source having the given GUID, or null if there is no file for it in the private folder.
+        /// The source is a copy of the file loaded once (reloaded when the file changes), its Data Source References are loaded from this repository.
+        /// </summary>
+        public MetaSource GetPrivateSource(string guid)
+        {
+            if (string.IsNullOrEmpty(guid)) return null;
+            var file = GetPrivateSourceFiles().FirstOrDefault(i => i.GUID == guid);
+            if (file == null) return null;
+
+            MetaSource master;
+            lock (file)
+            {
+                if (file.Master == null) file.Master = MetaSource.LoadFromFile(file.FilePath);
+                master = file.Master;
+            }
+            lock (_privateSources)
+            {
+                if (_privateSources.TryGetValue(guid, out var current) && current.FilePath == master.FilePath && current.LastModification == master.LastModification) return current;
+
+                var result = master.CloneOwnObjects();
+                result.IsPrivate = true;
+                //Added before the references are loaded: a private source referencing another one finds it
+                _privateSources[guid] = result;
+                result.InitReferences(this);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Returns the Data Source having the given GUID: a source of the repository or a Private Data Source
+        /// </summary>
+        public MetaSource FindSource(string guid)
+        {
+            if (string.IsNullOrEmpty(guid)) return null;
+            return Sources.FirstOrDefault(i => i.GUID == guid) ?? GetPrivateSource(guid);
         }
 
         /// <summary>

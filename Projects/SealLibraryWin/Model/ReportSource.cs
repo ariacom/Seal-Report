@@ -85,7 +85,7 @@ namespace Seal.Model
             {
                 if (string.IsNullOrEmpty(_metaSourceName) && !string.IsNullOrEmpty(MetaSourceGUID))
                 {
-                    var metaSource = Repository.Sources.FirstOrDefault(i => i.GUID == MetaSourceGUID);
+                    var metaSource = Repository.FindSource(MetaSourceGUID);
                     if (metaSource != null) _metaSourceName = metaSource.Name;
                 }
                 return _metaSourceName;
@@ -113,7 +113,7 @@ namespace Seal.Model
                 MetaConnection result = null;
                 if (!string.IsNullOrEmpty(MetaSourceGUID) && Repository != null)
                 {
-                    MetaSource source = Repository.Sources.FirstOrDefault(i => i.GUID == MetaSourceGUID);
+                    MetaSource source = Repository.FindSource(MetaSourceGUID);
                     if (source != null) result = source.Connection;
                 }
                 return result;
@@ -181,7 +181,8 @@ namespace Seal.Model
 
             if (!string.IsNullOrEmpty(MetaSourceGUID))
             {
-                MetaSource source = repository.Sources.FirstOrDefault(i => i.GUID == MetaSourceGUID);
+                //Source of the repository or Private Data Source loaded on demand
+                MetaSource source = repository.FindSource(MetaSourceGUID);
                 if (source != null)
                 {
                     IsDefault = source.IsDefault;

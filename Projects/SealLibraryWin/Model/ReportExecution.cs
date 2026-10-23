@@ -2266,9 +2266,9 @@ namespace Seal.Model
 
         /// <summary>
         /// If the Security Provider is executed for the scheduled outputs (SealSecurity.ProviderForScheduledOutputs), the 'User name' of the output is authenticated without password
-        /// and the report is loaded again with the Data Sources built for the user. If the authentication fails, the report is kept: the output uses its 'User name' and 'User groups'.
+        /// to get his groups and properties. If the authentication fails, the output uses its 'User name' and 'User groups'.
         /// </summary>
-        static void InitScheduleSecurityContext(ref Report report, ref ReportSchedule schedule)
+        static void InitScheduleSecurityContext(Report report, ReportSchedule schedule)
         {
             var output = schedule.Output;
             var security = report.Repository.Security;
@@ -2280,18 +2280,6 @@ namespace Seal.Model
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Schedule '{0}': the user '{1}' of the output has not been authenticated by the Security Provider, the output is generated with its user name and groups.\r\n{2}", schedule.Name, output.UserName, user.Error));
                 return;
-            }
-
-            if (user.Sources.Count > 0)
-            {
-                var repository = report.Repository.CreateFast();
-                repository.AddUserSources(user);
-                var scheduleGUID = schedule.GUID;
-                var newReport = Report.LoadFromFile(report.FilePath, repository);
-                var newSchedule = newReport.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
-                if (newSchedule == null) throw new Exception($"Unable to find schedule for schedule GUID '{scheduleGUID}'");
-                report = newReport;
-                schedule = newSchedule;
             }
             report.SecurityContext = user;
         }
@@ -2347,7 +2335,7 @@ namespace Seal.Model
                     }
                     isFirst = false;
 
-                    if (!schedule.IsTasksSchedule) InitScheduleSecurityContext(ref report, ref schedule);
+                    if (!schedule.IsTasksSchedule) InitScheduleSecurityContext(report, schedule);
 
                     ReportExecution reportExecution = new ReportExecution() { Report = report };
                     report.ExecutionContext = ReportExecutionContext.TaskScheduler;

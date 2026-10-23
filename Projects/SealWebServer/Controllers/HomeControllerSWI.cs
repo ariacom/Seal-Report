@@ -1127,7 +1127,6 @@ namespace SealWebServer.Controllers
             {
                 SetSessionId(sessionId);
                 if (WebUser != null) WebUser.Logout();
-                Repository?.AddUserSources(null);
                 //Audit
                 Audit.LogAudit(AuditType.Logout, WebUser);
                 Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.AuthenticatedLoggedUserCount.ToString());

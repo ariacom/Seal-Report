@@ -1088,6 +1088,37 @@ namespace Seal
             removeToolStripMenuItem.ShortcutKeys = (text != "Remove Views..." ? Keys.Delete : Keys.None);
         }
 
+        const string AddPrivateSourceText = "Add a Private Data Source...";
+
+        /// <summary>
+        /// Select a Private Data Source file in the private folder of the repository and returns the source (null if cancelled)
+        /// </summary>
+        MetaSource selectPrivateSource()
+        {
+            var folder = _repository.PrivateSourcesFolder;
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            OpenFileDialog dlg = new OpenFileDialog();
+            dlg.Filter = string.Format(Repository.SealRootProductName + " Data Source files (*.{0})|*.{0}", Repository.SealConfigurationFileExtension);
+            dlg.Title = "Add a Private Data Source";
+            dlg.CheckFileExists = true;
+            dlg.CheckPathExists = true;
+            dlg.InitialDirectory = folder;
+            if (dlg.ShowDialog() != DialogResult.OK) return null;
+
+            var file = _repository.GetPrivateSourceFiles().FirstOrDefault(i => string.Equals(Path.GetFullPath(i.FilePath), Path.GetFullPath(dlg.FileName), StringComparison.OrdinalIgnoreCase));
+            if (file == null)
+            {
+                MessageBox.Show("The file must be a Data Source located in the folder " + folder, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                return null;
+            }
+            if (_report.Sources.Exists(i => i.MetaSourceGUID == file.GUID))
+            {
+                MessageBox.Show(string.Format("The Private Data Source '{0}' is already in the report.", file.Name), "Information", MessageBoxButtons.OK, MessageBoxIcon.Information);
+                return null;
+            }
+            return _repository.GetPrivateSource(file.GUID);
+        }
+
         void addAddItem(string text, object tag, string toolTip = "")
         {
             ToolStripMenuItem ts = new ToolStripMenuItem();
@@ -1169,6 +1200,7 @@ namespace Seal
                     {
                         addAddItem(string.Format("Add {0} (Repository)", source.Name), source);
                     }
+                    addAddItem(AddPrivateSourceText, null, "Load a Private Data Source from the folder " + _repository.PrivateSourcesFolder);
                     addRemoveItem("Remove Data Sources...");
                 }
                 else if (entity is ViewFolder)
@@ -1368,6 +1400,12 @@ namespace Seal
             if (selectedEntity is SourceFolder && Report != null)
             {
                 MetaSource source = ((ToolStripMenuItem)sender).Tag as MetaSource;
+                if (((ToolStripMenuItem)sender).Text == AddPrivateSourceText)
+                {
+                    //Load from the Private Data Sources folder
+                    source = selectPrivateSource();
+                    if (source == null) return;
+                }
                 ReportSource newSource = Report.AddSource(source);
                 newSource.IsNoSQL = ((ToolStripMenuItem)sender).Text.Contains("LINQ");
                 if (source != null)
@@ -1551,7 +1589,7 @@ namespace Seal
 #if DEBUG
             path = Path.Combine(Path.GetDirectoryName(Application.ExecutablePath) + string.Format(@"\..\..\..\{0}\bin\Debug", Path.GetFileNameWithoutExtension(Repository.SealServerManager)), Repository.SealServerManager);
 #endif
-            MetaSource metaSource = _repository.Sources.FirstOrDefault(i => i.GUID == source.MetaSourceGUID);
+            MetaSource metaSource = _repository.FindSource(source.MetaSourceGUID);
             if (metaSource != null)
             {
                 var p = new Process();

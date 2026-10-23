@@ -1234,7 +1234,10 @@ namespace Seal.Forms
 
         }
 
-        public static string SaveConfigurationFile(string fileFolder, string filePath, string entityName)
+        /// <summary>
+        /// Select the path to save a configuration file: in the given folder, or in the optional other folder and its sub-folders (e.g. the Private Data Sources folder)
+        /// </summary>
+        public static string SaveConfigurationFile(string fileFolder, string filePath, string entityName, string otherFolder = null)
         {
             bool cont = true;
             string newPath = "";
@@ -1247,9 +1250,11 @@ namespace Seal.Forms
                 dlg.Filter = string.Format("Seal configuration files (*.{0})|*.{0}|All files (*.*)|*.*", Repository.SealConfigurationFileExtension);
                 if (dlg.ShowDialog() == DialogResult.OK)
                 {
-                    if (fileFolder.ToLower() != Path.GetDirectoryName(dlg.FileName).ToLower())
+                    var directory = Path.GetDirectoryName(dlg.FileName);
+                    bool inOtherFolder = !string.IsNullOrEmpty(otherFolder) && (directory + Path.DirectorySeparatorChar).StartsWith(otherFolder + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+                    if (fileFolder.ToLower() != directory.ToLower() && !inOtherFolder)
                     {
-                        MessageBox.Show("The configuration file must remain in the same repository folder.\r\n", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                        MessageBox.Show("The configuration file must remain in the same repository folder." + (string.IsNullOrEmpty(otherFolder) ? "" : "\r\nIt can also be saved in the folder " + otherFolder + " or its sub-folders.") + "\r\n", "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
                     }
                     else
                     {

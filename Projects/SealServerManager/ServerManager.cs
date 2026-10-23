@@ -196,9 +196,18 @@ namespace Seal
             }
         }
 
+        /// <summary>
+        /// True if the path is in the Private Data Sources folder or one of its sub-folders
+        /// </summary>
+        bool IsPrivateSourcePath(string path)
+        {
+            return (Path.GetDirectoryName(Path.GetFullPath(path)) + Path.DirectorySeparatorChar).StartsWith(Path.GetFullPath(_repository.PrivateSourcesFolder) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase);
+        }
+
         bool HasValidRepositoryDirectory(string path)
         {
             return (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower()
+                || IsPrivateSourcePath(path)
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesEmailFolder.ToLower()
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesFileServerFolder.ToLower()
                 || Path.GetDirectoryName(path).ToLower() == _repository.DevicesSharePointFolder.ToLower()
@@ -352,6 +361,28 @@ namespace Seal
         private void buildOpenMenus()
         {
             buildOpenMenu(_repository.SourcesFolder, openSourceToolStripMenuItem, global::Seal.Properties.Resources.database);
+            //Private Data Sources: not listed, selected in their folder
+            openSourceToolStripMenuItem.DropDownItems.Add(new ToolStripSeparator());
+            var privateItem = new ToolStripMenuItem("Private Data Source...") { Image = global::Seal.Properties.Resources.database, ToolTipText = "Open a Private Data Source from the folder " + _repository.PrivateSourcesFolder };
+            privateItem.Click += new EventHandler(delegate (object sender, EventArgs e)
+            {
+                if (!checkModified()) return;
+                if (!Directory.Exists(_repository.PrivateSourcesFolder)) Directory.CreateDirectory(_repository.PrivateSourcesFolder);
+                OpenFileDialog dlg = new OpenFileDialog();
+                dlg.Filter = string.Format(Repository.SealRootProductName + " Data Source files (*.{0})|*.{0}", Repository.SealConfigurationFileExtension);
+                dlg.Title = "Open a Private Data Source";
+                dlg.CheckFileExists = true;
+                dlg.CheckPathExists = true;
+                dlg.InitialDirectory = _repository.PrivateSourcesFolder;
+                if (dlg.ShowDialog() != DialogResult.OK) return;
+                if (!IsPrivateSourcePath(dlg.FileName))
+                {
+                    MessageBox.Show("A Private Data Source must be located in the folder " + _repository.PrivateSourcesFolder, "Error", MessageBoxButtons.OK, MessageBoxIcon.Error);
+                    return;
+                }
+                openFile(dlg.FileName);
+            });
+            openSourceToolStripMenuItem.DropDownItems.Add(privateItem);
             buildOpenMenu(_repository.DevicesEmailFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.device);
             buildOpenMenu(_repository.DevicesFileServerFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
             buildOpenMenu(_repository.DevicesSharePointFolder, openDeviceToolStripMenuItem, global::Seal.Properties.Resources.fileserver, false);
@@ -447,7 +478,7 @@ namespace Seal
         {
             get
             {
-                if (_source != null) return _repository.SourcesFolder;
+                if (_source != null) return !string.IsNullOrEmpty(_source.FilePath) && IsPrivateSourcePath(_source.FilePath) ? Path.GetDirectoryName(_source.FilePath) : _repository.SourcesFolder;
                 if (_device != null && _device is OutputEmailDevice) return _repository.DevicesEmailFolder;
                 if (_device != null && _device is OutputFileServerDevice) return _repository.DevicesFileServerFolder;
                 if (_device != null && _device is OutputSharePointDevice) return _repository.DevicesSharePointFolder;
@@ -523,7 +554,7 @@ namespace Seal
             bool openOK = true;
             try
             {
-                if (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower())
+                if (Path.GetDirectoryName(path).ToLower() == _repository.SourcesFolder.ToLower() || IsPrivateSourcePath(path))
                 {
                     _source = MetaSource.LoadFromFile(path);
                     _source.ForEdition = true;
@@ -642,7 +673,8 @@ namespace Seal
                 string newPath = "";
                 if (sender == saveAsToolStripMenuItem || string.IsNullOrEmpty(Path.GetDirectoryName(FilePath)))
                 {
-                    newPath = ToolsHelper.SaveConfigurationFile(FileFolder, FilePath, Entity.Name);
+                    //A Data Source can also be saved as a Private Data Source
+                    newPath = ToolsHelper.SaveConfigurationFile(FileFolder, FilePath, Entity.Name, _source != null ? _repository.PrivateSourcesFolder : null);
                     if (string.IsNullOrEmpty(newPath)) return;
                 }
 

@@ -183,10 +183,10 @@ namespace Seal.Model
         public bool ForEdition { get; set; } = false;
 
         /// <summary>
-        /// True if the source is built in memory for a user by the Security Provider script (see SecurityUser.Sources): it has no file and cannot be saved.
+        /// True if the source is a Private Data Source (see Repository.PrivateSourcesFolder): not loaded with the repository, loaded on demand, allowed only to the security groups listing its GUID.
         /// </summary>
         [XmlIgnore]
-        public bool IsDynamic { get; set; } = false;
+        public bool IsPrivate { get; set; } = false;
 
         /// <summary>
         /// True if the object with the given GUID belongs to this source (it is not shared from a Data Source Reference)
@@ -630,7 +630,8 @@ namespace Seal.Model
             while (toCheck.Count > 0)
             {
                 var source = toCheck.Dequeue();
-                foreach (var reference in Repository.Sources.Where(i => source.DataSourceReferences.Contains(i.GUID)))
+                //Sources of the repository or Private Data Sources
+                foreach (var reference in source.DataSourceReferences.Select(i => Repository.FindSource(i)).Where(i => i != null))
                 {
                     if (reference.GUID == GUID || result.Contains(reference)) continue;
                     result.Add(reference);
@@ -733,7 +734,7 @@ namespace Seal.Model
             result.FilePath = FilePath;
             result.LastModification = LastModification;
             result.LastMetadataModification = LastMetadataModification;
-            result.IsDynamic = IsDynamic;
+            result.IsPrivate = IsPrivate;
             return result;
         }
 
@@ -809,9 +810,6 @@ namespace Seal.Model
         /// </summary>
         public void SaveToFile(string path)
         {
-            if (IsDynamic) throw new Exception($"The Data Source '{Name}' is built in memory for the user by the Security Provider: it cannot be saved.");
-
-
             //Check last modification
             if (LastModification != DateTime.MinValue && File.Exists(path))
             {
