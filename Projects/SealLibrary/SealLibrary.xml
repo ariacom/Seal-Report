@@ -1474,6 +1474,11 @@
             Checks the code level, validates, saves the report, then executes it and renders its views. Returns the result for the agent.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.CheckDeserialization(System.String)">
+            <summary>
+            Deserializes the report XML as Report.LoadFromFile does: returns the cause and the line in error, or null if the report can be read.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.EmptyCharts(Seal.Model.Report)">
             <summary>
             Chart views whose model has no Data element with a serie of the chart engine: such a chart renders empty without any error.

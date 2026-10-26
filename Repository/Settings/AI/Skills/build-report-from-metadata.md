@@ -140,6 +140,18 @@ Minimal list with one prompted restriction:
   aggregation) and a `Map` view in the Container (`map_label`, `map_color_column`,
   `map_size_column`; `map_latitude`/`map_longitude` when the column names do not
   contain latitude/longitude). Without coordinates, say a map is not possible.
+- **Status colors**: when a chart or a map shows a status, a level or a rating (OK/KO,
+  Good/Average/Poor, Excellent/Insufficient, Error…), color each value by its meaning
+  unless the user chose other colors: positive → green `#2ca02c`, intermediate or
+  warning → orange `#ff7f0e`, negative or error → red `#d62728`, unknown or not
+  applicable → grey `#7f7f7f`. Map every value (labels exactly as displayed: case,
+  accents, spaces; read them in the test rows or with `database_get_sample_values`)
+  with `chartjs_color_mappings` / `plotly_color_mappings`
+  (`'Good':'#2ca02c','Average':'#ff7f0e','Poor':'#d62728'`) or `map_colors` (one
+  `value=color` per line). Chart JS maps the axis labels of a pie but the series of a
+  bar or a line: for bars per status, put the status in a Column element with
+  `<SerieDefinition>Splitter</SerieDefinition>`. `Chart Echarts` and `Chart Scottplot`
+  have no mapping usable here: use `Chart JS` for a status chart.
 - **Record limit**: models are limited to 5000 records by default; pass
   `no_record_limit: true` only if the user explicitly asks. Tell the user.
 - **Editable criteria** on an existing report: set `Prompt` and keep the current

@@ -40,6 +40,15 @@ so models, elements, restrictions and the other views are preserved.
 | Legend on the right / bottom | `chartjs_legend_position` | `right` / `bottom` |
 | Chart title | `chartjs_title` | the title text |
 | Doughnut instead of pie | `chartjs_doughnut` | `True` |
+| Colors by status / level | `chartjs_color_mappings` | `'OK':'#2ca02c','KO':'#d62728'` |
+
+**Status colors**: a chart or a map showing a status, a level or a rating is colored
+by meaning unless the user chose other colors: positive (OK, Good, Excellent) → green
+`#2ca02c`, intermediate or warning (Average, Sufficient) → orange `#ff7f0e`, negative or
+error (KO, Poor, Insufficient, Error) → red `#d62728`, unknown → grey `#7f7f7f`.
+Map every value with its label exactly as displayed. Chart JS maps the axis labels of
+a pie but the series of a bar or a line (status as Splitter); a Map view uses
+`map_colors` with one `value=color` per line.
 
 ## Rules
 
