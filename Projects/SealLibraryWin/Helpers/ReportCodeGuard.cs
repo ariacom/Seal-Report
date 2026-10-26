@@ -54,8 +54,9 @@ namespace Seal.Helpers
         /// <param name="existingXml">The XML of the report already saved (null or empty for a new report): its content is accepted as is</param>
         /// <param name="level">The level of the writer</param>
         /// <param name="trustedValues">Optional texts accepted for any property (e.g. the default scripts set by a tool)</param>
+        /// <param name="user">Optional writer, used to check the reports referenced by view parameters (e.g. widget_exec_report): only the reports the user can execute are accepted</param>
         /// <returns>The list of the content refused (empty if the XML is accepted), in English</returns>
-        public static List<string> Check(string newXml, string existingXml, ReportCodeLevel level, IEnumerable<string> trustedValues = null)
+        public static List<string> Check(string newXml, string existingXml, ReportCodeLevel level, IEnumerable<string> trustedValues, SecurityUser user)
         {
             var result = new List<string>();
             if (level >= ReportCodeLevel.Scripts || string.IsNullOrWhiteSpace(newXml)) return result;
@@ -77,19 +78,27 @@ namespace Seal.Helpers
                 try
                 {
                     var existingDoc = XDocument.Parse(existingXml);
-                    foreach (var item in GetItems(existingDoc.Root)) existingKeys.Add(item.Key);
+                    foreach (var item in GetItems(existingDoc.Root, user)) existingKeys.Add(item.Key);
                 }
                 catch { /* an unreadable saved report gives no accepted content */ }
             }
             var trusted = new HashSet<string>((trustedValues ?? Enumerable.Empty<string>()).Where(i => !string.IsNullOrEmpty(i)).Select(Normalize));
 
-            foreach (var item in GetItems(newDoc.Root))
+            foreach (var item in GetItems(newDoc.Root, user))
             {
                 if (item.Level <= level || existingKeys.Contains(item.Key)) continue;
                 if (trusted.Contains(item.Key.Substring(item.Key.IndexOf('\n') + 1))) continue;
                 if (!result.Contains(item.Message)) result.Add(item.Message);
             }
             return result;
+        }
+
+        /// <summary>
+        /// Checks a report XML without writer (see the overload with the user).
+        /// </summary>
+        public static List<string> Check(string newXml, string existingXml, ReportCodeLevel level, IEnumerable<string> trustedValues = null)
+        {
+            return Check(newXml, existingXml, level, trustedValues, null);
         }
 
         /// <summary>
@@ -122,6 +131,145 @@ namespace Seal.Helpers
         public static bool IsPlainValue(string text)
         {
             return string.IsNullOrEmpty(text) || _plainValueRegex.IsMatch(text);
+        }
+
+        /// <summary>
+        /// Public class of Seal.Model or Seal.Renderer having a given name (null if unknown), as resolved for an XML element.
+        /// </summary>
+        public static Type FindSealType(string name)
+        {
+            return !string.IsNullOrEmpty(name) && Types.TryGetValue(name, out Type type) ? type : null;
+        }
+
+        /// <summary>
+        /// Code level required to write a property of a class (property and class <see cref="SealCodeAttribute"/>), Metadata if none.
+        /// </summary>
+        public static ReportCodeLevel GetRequiredLevel(Type type, PropertyInfo property)
+        {
+            var result = ReportCodeLevel.Metadata;
+            var classAttribute = type != null ? GetAttribute(type) : null;
+            if (classAttribute != null && classAttribute.Level > result) result = classAttribute.Level;
+            var attribute = property != null && type != null ? GetAttribute(property, type) : null;
+            if (attribute != null && attribute.Level > result) result = attribute.Level;
+            return result;
+        }
+
+        /// <summary>
+        /// True if the property of a class is rendered as HTML without encoding (active HTML requires the Scripts level).
+        /// </summary>
+        public static bool IsHtmlProperty(Type type, PropertyInfo property)
+        {
+            var attribute = property != null && type != null ? GetAttribute(property, type) : null;
+            return attribute != null && attribute.Html;
+        }
+
+        static readonly RegexOptions _options = RegexOptions.Compiled | RegexOptions.IgnoreCase | RegexOptions.CultureInvariant;
+        //A CSS color: name, #hex, or rgb/rgba/hsl/hsla with numeric arguments
+        static readonly Regex _colorRegex = new Regex(@"^(#([0-9a-f]{3}|[0-9a-f]{4}|[0-9a-f]{6}|[0-9a-f]{8})|[a-z]{3,30}|(rgb|rgba|hsl|hsla)\(\s*\d+(\.\d+)?(deg|%)?\s*(,\s*\d+(\.\d+)?%?\s*){2,3}\))$", _options);
+        //A color of a list: quoted (no quote, backslash or new line inside) or not
+        static readonly Regex _colorItemRegex = new Regex(@"\G\s*(?:(?<q>['""])(?<c>[^'""\\\r\n]*)\k<q>|(?<c>(?:rgba?|hsla?)\([^()]*\)|#[0-9a-f]+|[a-z]+))\s*(?<sep>,|$)", _options);
+        //A pair label: color of a color mapping, the label is quoted (no quote, backslash, angle bracket or new line inside)
+        static readonly Regex _colorMappingRegex = new Regex(@"\G\s*(?<q>['""])(?<l>[^'""\\<>\r\n]*)\k<q>\s*:\s*(?:(?<q2>['""])(?<c>[^'""\\\r\n]*)\k<q2>|(?<c>(?:rgba?|hsla?)\([^()]*\)|#[0-9a-f]+|[a-z]+))\s*(?<sep>,|$)", _options);
+        static readonly Regex _cssDeclarationRegex = new Regex(@"^-{0,2}[a-z][a-z0-9\-]*\s*:\s*[^;]+$", _options);
+        static readonly Regex _cssForbiddenRegex = new Regex(@"url\s*\(|expression\s*\(|@import|javascript\s*:|behavior\s*:|-moz-binding|[<>{}\\""]", _options);
+        static readonly Regex _classRegex = new Regex(@"^[\w\- ]+$", _options);
+        static readonly HashSet<string> _htmlParameters = new HashSet<string>() { "model_summary", "report_summary", "restrictions_header", "restrictions_footer" };
+
+        static string parseColors(string value, Regex itemRegex, Func<Match, string> format)
+        {
+            var items = new List<string>();
+            int position = 0;
+            while (position < value.Length)
+            {
+                var match = itemRegex.Match(value, position);
+                if (!match.Success || match.Index != position) return null;
+                if (!_colorRegex.IsMatch(match.Groups["c"].Value.Trim())) return null;
+                items.Add(format(match));
+                position = match.Index + match.Length;
+                if (match.Groups["sep"].Value == "") break;
+            }
+            return position >= value.Length && items.Count > 0 ? string.Join(",", items) : null;
+        }
+
+        /// <summary>
+        /// Checks the value of a view parameter rendered as code by its template (see ReportViewTemplate.RawParameterNames) against the type expected by the parameter:
+        /// list of colors (*_colors), color mappings (*_color_mappings), CSS declarations (*_css, style), CSS classes (*_class, class), HTML without active content
+        /// (model_summary, report_summary, restrictions_header, restrictions_footer), report to execute (widget_exec_report). A plain value is always accepted.
+        /// Returns null if the value is accepted with its canonical form, otherwise the reason of the refusal (the value then requires the Scripts level).
+        /// </summary>
+        /// <param name="name">Parameter name</param>
+        /// <param name="value">Parameter value</param>
+        /// <param name="user">Optional writer: a report path must be a report he can execute</param>
+        /// <param name="canonical">Value to save (rewritten for the colors and the color mappings)</param>
+        public static string CheckRawParameter(string name, string value, SecurityUser user, out string canonical)
+        {
+            canonical = value;
+            value = (value ?? "").Trim();
+            if (IsPlainValue(value)) return null;
+            name = name ?? "";
+            const string plainHint = "use a value of its list or a plain value (no quote, parenthesis, brace, angle bracket, equal sign, ampersand or backslash)";
+
+            if (name == "additional_js") return "it is JavaScript";
+
+            if (name.EndsWith("_colors"))
+            {
+                var inner = value.StartsWith("[") && value.EndsWith("]") ? value.Substring(1, value.Length - 2) : value;
+                var result = parseColors(inner, _colorItemRegex, m => "'" + m.Groups["c"].Value.Trim() + "'");
+                if (result == null) return $"expected a list of colors, e.g. ['#1f77b4','green','rgba(255,0,0,0.5)'] (CSS names, #hex, rgb/rgba/hsl/hsla), or {plainHint}";
+                canonical = "[" + result + "]";
+                return null;
+            }
+
+            if (name.EndsWith("_color_mappings"))
+            {
+                var result = parseColors(value, _colorMappingRegex, m => "'" + m.Groups["l"].Value + "':'" + m.Groups["c"].Value.Trim() + "'");
+                if (result == null) return "expected label and color pairs, e.g. 'ok':'green','ko':'#ff0000' (labels quoted without quote, backslash, angle bracket or new line; colors as CSS names, #hex, rgb/rgba/hsl/hsla)";
+                canonical = result;
+                return null;
+            }
+
+            if (name.EndsWith("_css") || name == "style")
+            {
+                var declarations = value.Split(';').Select(i => i.Trim()).Where(i => i != "").ToList();
+                if (_cssForbiddenRegex.IsMatch(value) || declarations.Count == 0 || declarations.Any(i => !_cssDeclarationRegex.IsMatch(i)))
+                    return "expected CSS declarations 'property: value;' without url(, expression(, @import, angle bracket, brace, double quote or backslash";
+                canonical = string.Join(" ", declarations.Select(i => i + ";"));
+                return null;
+            }
+
+            if (name.EndsWith("_class") || name == "class")
+            {
+                if (!_classRegex.IsMatch(value)) return "expected CSS class names separated by spaces (letters, digits, '-' and '_')";
+                canonical = string.Join(" ", value.Split(' ', StringSplitOptions.RemoveEmptyEntries));
+                return null;
+            }
+
+            if (_htmlParameters.Contains(name))
+            {
+                if (HasActiveHtml(value)) return "the HTML contains active content (script, frame, embedded object, event handler or script URL)";
+                return null;
+            }
+
+            if (name == "widget_exec_report")
+            {
+                var error = "expected the path of an existing report you can execute, e.g. \\Folder\\Report.srex";
+                if (value.IndexOfAny(new[] { '"', '\'', '<', '>', '&', '\r', '\n' }) >= 0 || value.Contains("..") || !value.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase)) return error;
+                try
+                {
+                    var path = FileHelper.ConvertOSFilePath(value);
+                    if (path.StartsWith(SWIFolder.GetRepositoryRoot())) return error;
+                    var repository = user?.Security?.Repository ?? Repository.Instance;
+                    var fullPath = System.IO.Path.GetFullPath(user != null ? user.GetFullPath(path) : repository.ReportsFolder + path);
+                    var roots = new List<string>() { System.IO.Path.GetFullPath(repository.ReportsFolder) };
+                    if (user != null) roots.Add(System.IO.Path.GetFullPath(repository.GetPersonalFolder(user)));
+                    if (!roots.Any(i => fullPath.StartsWith(i.TrimEnd(System.IO.Path.DirectorySeparatorChar) + System.IO.Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))) return error;
+                    if (!System.IO.File.Exists(fullPath)) return error;
+                    if (user != null && !user.HasFolderRight(System.IO.Path.GetDirectoryName(fullPath), (int)FolderRight.Execute)) return error;
+                }
+                catch { return error; }
+                return null;
+            }
+            return plainHint;
         }
 
         static Dictionary<string, Type> Types
@@ -235,15 +383,15 @@ namespace Seal.Helpers
             sb.Append("</").Append(element.Name.LocalName).Append('>');
         }
 
-        static IEnumerable<CodeItem> GetItems(XElement root)
+        static IEnumerable<CodeItem> GetItems(XElement root, SecurityUser user)
         {
             var items = new List<CodeItem>();
-            if (root != null) Visit(root, ResolveType(root, null), items, ReportCodeLevel.Metadata);
+            if (root != null) Visit(root, ResolveType(root, null), items, ReportCodeLevel.Metadata, user);
             return items;
         }
 
         /// <param name="inheritedLevel">Level required by every text of the element (e.g. the parameters of a table template)</param>
-        static void Visit(XElement element, Type type, List<CodeItem> items, ReportCodeLevel inheritedLevel)
+        static void Visit(XElement element, Type type, List<CodeItem> items, ReportCodeLevel inheritedLevel, SecurityUser user)
         {
             var label = GetLabel(element, type);
             if (type != null)
@@ -255,8 +403,8 @@ namespace Seal.Helpers
                     AppendCanonical(sb, element);
                     items.Add(new CodeItem() { Key = type.Name + "|\n" + sb.ToString(), Level = classAttribute.Level, Message = $"the {label} requires the {classAttribute.Level} level" });
                 }
-                if (typeof(ReportView).IsAssignableFrom(type)) VisitViewParameters(element, label, items, (string)element.Element("TemplateName"), "Parameters");
-                else if (typeof(ReportOutput).IsAssignableFrom(type)) VisitViewParameters(element, label, items, null, "ViewParameters");
+                if (typeof(ReportView).IsAssignableFrom(type)) VisitViewParameters(element, label, items, (string)element.Element("TemplateName"), "Parameters", user);
+                else if (typeof(ReportOutput).IsAssignableFrom(type)) VisitViewParameters(element, label, items, null, "ViewParameters", user);
             }
 
             foreach (var child in element.Elements())
@@ -280,18 +428,18 @@ namespace Seal.Helpers
                     //List: each child element is an item
                     foreach (var subChild in child.Elements())
                     {
-                        if (subChild.HasElements) Visit(subChild, ResolveType(subChild, itemType), items, childLevel);
+                        if (subChild.HasElements) Visit(subChild, ResolveType(subChild, itemType), items, childLevel, user);
                         else VisitText(subChild, null, null, label, items, childLevel);
                     }
                 }
-                else Visit(child, ResolveType(child, property.PropertyType), items, childLevel);
+                else Visit(child, ResolveType(child, property.PropertyType), items, childLevel, user);
             }
         }
 
         /// <summary>
         /// Parameters of a view (or the view parameters of an output) rendered without encoding by the view template: a value must be a value of the template list or a plain value, otherwise it is code (Scripts level).
         /// </summary>
-        static void VisitViewParameters(XElement element, string label, List<CodeItem> items, string templateName, string listName)
+        static void VisitViewParameters(XElement element, string label, List<CodeItem> items, string templateName, string listName, SecurityUser user)
         {
             var list = element.Element(listName);
             if (list == null) return;
@@ -318,11 +466,13 @@ namespace Seal.Helpers
                 if (definitions.Count == 0) continue;
                 //A value of the list proposed by the template is safe
                 if (definitions.All(i => i != null && i.Enums != null && i.EnumValues.Contains(value))) continue;
+                //A value of the expected type (colors, CSS, HTML without active content, report path) is safe
+                if (CheckRawParameter(name, value, user, out _) == null) continue;
                 items.Add(new CodeItem()
                 {
                     Key = "Parameter|" + name + "\n" + value,
                     Level = ReportCodeLevel.Scripts,
-                    Message = $"the value of the parameter '{name}' of {label} is rendered as code (JavaScript, CSS or HTML) and requires the Scripts level: use a value of its list or a plain value (no quote, parenthesis, brace, angle bracket, equal sign, ampersand or backslash)"
+                    Message = $"the value of the parameter '{name}' of {label} is rendered as code (JavaScript, CSS or HTML) and requires the Scripts level: {CheckRawParameter(name, value, user, out _)}"
                 });
             }
         }

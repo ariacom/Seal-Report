@@ -32,6 +32,9 @@ namespace Seal.AI
         public AnthropicProvider() { }
 
         /// <inheritdoc/>
+        public override bool SupportsToolResultImages => true;
+
+        /// <inheritdoc/>
         protected override void Initialize(string endpoint, string key, string model, float temperature, int maxTokens, float topP)
         {
             _apiKey = key;
@@ -247,12 +250,29 @@ namespace Seal.AI
                     var toolResults = new List<object>();
                     while (i < messages.Count && messages[i] is ToolChatMessage toolMsg)
                     {
-                        toolResults.Add(new
+                        var images = toolMsg.Content.Where(p => p.Kind == ChatMessageContentPartKind.Image && p.ImageBytes != null).ToList();
+                        if (images.Count == 0)
                         {
-                            type = "tool_result",
-                            tool_use_id = toolMsg.ToolCallId,
-                            content = toolMsg.Content[0].Text
-                        });
+                            toolResults.Add(new
+                            {
+                                type = "tool_result",
+                                tool_use_id = toolMsg.ToolCallId,
+                                content = toolMsg.Content[0].Text
+                            });
+                        }
+                        else
+                        {
+                            //Text and images of the tool result (e.g. the picture of a rendered report)
+                            var content = new List<object>() { new { type = "text", text = toolMsg.Content[0].Text } };
+                            foreach (var image in images)
+                                content.Add(new { type = "image", source = new { type = "base64", media_type = image.ImageBytesMediaType, data = Convert.ToBase64String(image.ImageBytes.ToArray()) } });
+                            toolResults.Add(new
+                            {
+                                type = "tool_result",
+                                tool_use_id = toolMsg.ToolCallId,
+                                content
+                            });
+                        }
                         i++;
                     }
                     result.Add(new { role = "user", content = toolResults });

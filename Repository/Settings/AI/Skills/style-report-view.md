@@ -23,6 +23,10 @@ Gauge, KPI, Card, Container, Widget…), not only Chart JS.
    Values are validated against each parameter's type and enumeration; parameters
    left at their default are not stored.
 
+To see how a template uses a parameter, `seal_read` its source (`Views\<Template>.cshtml`)
+or `seal_search` the parameter name in `Reports\Samples`. Adding or removing a view
+(a map, a tab, a chart) is not a parameter change: use `build-report-from-metadata`.
+
 `report_configure_view` edits the view **in place** without rewriting the report,
 so models, elements, restrictions and the other views are preserved.
 

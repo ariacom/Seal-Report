@@ -111,7 +111,7 @@ Internal cross-reference GUIDs (GUID, ViewGUID, SourceGUID, ModelGUID, and the G
 Also used to modify an existing report: pass the XML from report_get_xml, changed, with the same path and overwrite=true.
 For SQL-based reports use report_create_from_sql instead.</Description>
       <ProgressLabel>Creating report {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\\\Sales\\\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"xml":{"type":"string","description":"Complete XML content of the report file (.srex). Retrieve a template via report_get_xml, replace MetaSourceGUID and MetaColumnGUID with values from datasource_list / datasource_get_detail, then pass the result here."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file at the destination path. Default false."},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default. Set true ONLY if the user explicitly asks for no record limit (MaxNumberOfRecords 0 is then kept). Default false."}},"required":["path","xml"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\\\Sales\\\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"xml":{"type":"string","description":"Complete XML content of the report file (.srex). Retrieve a template via report_get_xml, replace MetaSourceGUID and MetaColumnGUID with values from datasource_list / datasource_get_detail, then pass the result here."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file at the destination path. Default false."},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default. Set true ONLY if the user explicitly asks for no record limit (MaxNumberOfRecords 0 is then kept). Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false: use it only to check a layout (tabs, containers, charts), not for every save."}},"required":["path","xml"]}</ParametersSchema>
       <ExecutionScriptFile>report_create_from_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -346,6 +346,66 @@ Pass table_name to refresh a single table, or omit to refresh all dynamic tables
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Optional: name/alias of a single dynamic table to refresh. Omit to refresh all dynamic tables."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the refresh."}},"required":["confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_refresh_schema.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a1</GUID>
+      <Name>seal_read</Name>
+      <Description>Reads a file of the Seal knowledge folders of the repository: view templates and their configuration (Views\*.cshtml, Views\*.config.cshtml), sample reports (Reports\Samples\*.srex), skills (Settings\AI\Skills).
+Use it to learn Seal like a developer: copy the XML structure of a sample report, check how a view template renders its parameters.
+Give a path relative to the repository; a folder path lists its files. Long files are returned by pages of lines (offset = first line, length = number of lines).
+The data sources, the security, the settings and the logs are never readable. Read-only.</Description>
+      <ProgressLabel>Reading {path}</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"File or folder path relative to the repository, e.g. Reports\\Samples\\11-Tab Control - Model Layout.srex or Views"},"offset":{"type":"integer","description":"First line to read (1-based, e.g. a line number returned by seal_search). Default 1."},"length":{"type":"integer","description":"Number of lines to read. Default 500; the result is limited to about 40 kB."}},"required":["path"]}</ParametersSchema>
+      <ExecutionScriptFile>seal_read.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a2</GUID>
+      <Name>seal_search</Name>
+      <Description>Searches a regular expression in the files of the Seal knowledge folders (view templates, sample reports, skills) and returns the matching lines as 'file:line: text'.
+Use it to find an example: a sample report using a view template (TemplateName&gt;Tab Page&lt;), a parameter name, an XML element.
+Then read the file around the line with seal_read. Read-only.</Description>
+      <ProgressLabel>Searching the Seal examples for {regex}</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"regex":{"type":"string","description":"Regular expression (.NET syntax) searched in each line, case-insensitive by default, e.g. &lt;TemplateName&gt;Tab Page&lt;/TemplateName&gt;"},"folder":{"type":"string","description":"Optional folder (or file) relative to the repository to limit the search, e.g. Reports\\Samples or Views. Default: all the knowledge folders."},"file_pattern":{"type":"string","description":"Optional file name pattern, e.g. *.srex or *.config.cshtml."},"ignore_case":{"type":"boolean","description":"Default true."}},"required":["regex"]}</ParametersSchema>
+      <ExecutionScriptFile>seal_search.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a3</GUID>
+      <Name>seal_describe_class</Name>
+      <Description>Describes a Seal class serialized in a report XML (Report, ReportSource, ReportModel, ReportElement, ReportRestriction, ReportView, MetaEnum, ReportOutput, ReportSchedule, ReportTask...):
+its XML elements with their type, default value (an omitted element keeps it), enumeration values, description, and the code level (Sql, Scripts) required to write them.
+Use it to know which elements a class accepts and their valid values before writing or patching a report. Read-only.</Description>
+      <ProgressLabel>Describing the class {name}</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Class name = XML element name, e.g. ReportElement"}},"required":["name"]}</ParametersSchema>
+      <ExecutionScriptFile>seal_describe_class.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a4</GUID>
+      <Name>view_template_list</Name>
+      <Description>Lists the view templates usable in a &lt;ReportView&gt;&lt;TemplateName&gt; (Report, Model, Container, Tab Control, Tab Page, Page Table, Data Table, Chart JS, Map, Card, KPI, Widget...), with the parent templates allowed, whether it is a model view (needs a &lt;ModelGUID&gt;), its number of parameters and its description. Read-only.</Description>
+      <ProgressLabel>Listing the view templates</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{},"required":[]}</ParametersSchema>
+      <ExecutionScriptFile>view_template_list.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a5</GUID>
+      <Name>view_template_get_parameters</Name>
+      <Description>Returns the parameters of a view template (name, label, type, default value, allowed values, description), to set in &lt;ReportView&gt;&lt;Parameters&gt; when writing a report.
+For a view of an existing report, view_get_parameters also gives the current values. Read-only.</Description>
+      <ProgressLabel>Reading the parameters of the view template {template}</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"template":{"type":"string","description":"View template name as returned by view_template_list, e.g. Tab Page"}},"required":["template"]}</ParametersSchema>
+      <ExecutionScriptFile>view_template_get_parameters.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a6</GUID>
+      <Name>report_patch_xml</Name>
+      <Description>Modifies an existing report by XPath operations on its XML, without rewriting it: change a value, add or remove an element, a restriction, a view, a model...
+Operations: set (text of the selected elements or attributes; created in its parent when missing; or 'xml' to replace the selected elements), insert (XML fragment, position append/prepend/before/after), remove.
+The GUIDs of the report are kept: give short placeholders (e.g. e9, v3) as &lt;GUID&gt; of the new elements, they are regenerated with their references. The whole patch is applied or nothing.
+The result goes through the same checks as report_create_from_xml (authorization level, data source references, restrictions), then the report is saved, executed and its views rendered.
+Call report_get_xml first to see the current XML.</Description>
+      <ProgressLabel>Modifying the report {path}</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative path of the existing report (e.g. Reports\\Sales\\monthly.srex or Personal\\my_report.srex)"},"operations":{"type":"array","description":"Operations applied in order","items":{"type":"object","properties":{"op":{"type":"string","enum":["set","insert","remove"]},"xpath":{"type":"string","description":"XPath of the target nodes, e.g. /Report/Models/ReportModel[Name='Orders']/Elements or //ReportView[Name='Chart JS']/Parameters"},"value":{"type":"string","description":"set: the new text"},"xml":{"type":"string","description":"insert: the XML fragment to insert (one or several elements); set: the fragment replacing the selected elements"},"position":{"type":"string","enum":["append","prepend","before","after"],"description":"insert: append (last child, default), prepend (first child), before or after (sibling of the target)"}},"required":["op","xpath"]}},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default. Set true ONLY if the user explicitly asks for no record limit. Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false: use it only to check a layout (tabs, containers, charts), not for every save."}},"required":["path","operations"]}</ParametersSchema>
+      <ExecutionScriptFile>report_patch_xml.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
   </AITools>
   <AISkills>
     <AISkillConfiguration>
@@ -366,6 +426,12 @@ For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
         <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
         <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
         <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a1</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a2</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a3</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a4</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a5</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a6</GUID>
       </ToolGUIDs>
     </AISkillConfiguration>
     <AISkillConfiguration>
@@ -404,6 +470,8 @@ Load this whenever the target source is NoSQL.</Description>
         <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
         <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
         <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a3</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a6</GUID>
       </ToolGUIDs>
     </AISkillConfiguration>
     <AISkillConfiguration>
@@ -418,6 +486,10 @@ Load this when the user asks to restyle or reconfigure the chart/view of an exis
         <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
         <GUID>2a3b4c5d-6e7f-4890-9a1b-2c3d4e5f6a7b</GUID>
         <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a4</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a5</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a1</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a2</GUID>
       </ToolGUIDs>
     </AISkillConfiguration>
     <AISkillConfiguration>

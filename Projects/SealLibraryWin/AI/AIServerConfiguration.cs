@@ -66,6 +66,7 @@ namespace Seal.AI
                 GetProperty("AIAgents").SetIsBrowsable(true);
                 GetProperty("DefaultProviderGUID").SetIsBrowsable(true);
                 GetProperty("DefaultAgentGUID").SetIsBrowsable(true);
+                GetProperty("KnowledgeFolders").SetIsBrowsable(true);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -175,6 +176,40 @@ namespace Seal.AI
         {
             get { return _defaultAgentGUID; }
             set { _defaultAgentGUID = value; }
+        }
+
+        /// <summary>
+        /// Default value of <see cref="KnowledgeFolders"/>
+        /// </summary>
+        public const string DefaultKnowledgeFolders = "Views\r\nReports\\Samples\r\nSettings\\AI\\Skills";
+
+        string _knowledgeFolders = DefaultKnowledgeFolders;
+        /// <summary>
+        /// Folders of the repository the AI tools seal_read and seal_search can read (one relative path per line, e.g. Views or Reports\Samples), to learn Seal from the view templates, the sample reports and the skills.
+        /// The folders Settings (except Settings\AI\Skills), Sources, Security and Logs are never readable, even if they are listed.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Knowledge folders"), Description("Folders of the repository the AI tools seal_read and seal_search can read (one relative path per line, e.g. Views or Reports\\Samples), to learn Seal from the view templates, the sample reports and the skills. The folders Settings (except Settings\\AI\\Skills), Sources, Security and Logs are never readable, even if they are listed."), Category("AI Configuration"), Id(8, 1)]
+        [DefaultValue(DefaultKnowledgeFolders)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string KnowledgeFolders
+        {
+            get { return _knowledgeFolders; }
+            set { _knowledgeFolders = value; }
+        }
+
+        /// <summary>
+        /// Returns the list of the <see cref="KnowledgeFolders"/>, the default folders if none is set
+        /// </summary>
+        public List<string> GetKnowledgeFolders()
+        {
+            var result = new List<string>();
+            foreach (var line in (string.IsNullOrWhiteSpace(KnowledgeFolders) ? DefaultKnowledgeFolders : KnowledgeFolders).Split(new char[] { '\r', '\n', ';' }, StringSplitOptions.RemoveEmptyEntries))
+            {
+                if (!string.IsNullOrWhiteSpace(line)) result.Add(line.Trim());
+            }
+            return result;
         }
 
         List<AIAgentConfiguration> _AIAgents = new List<AIAgentConfiguration>();

@@ -62,6 +62,8 @@
 		<Compile Include="..\SealLibraryWin\AI\AISkillConfiguration.cs" Link="AI\AISkillConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIAgent.cs" Link="AI\AIAgent.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIUsage.cs" Link="AI\AIUsage.cs" />
+		<Compile Include="..\SealLibraryWin\AI\AIKnowledge.cs" Link="AI\AIKnowledge.cs" />
+		<Compile Include="..\SealLibraryWin\AI\AIReportWriter.cs" Link="AI\AIReportWriter.cs" />
 		<Compile Include="..\SealLibraryWin\BuildAttributeDate.cs" Link="BuildAttributeDate.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\ObjectShredder.cs" Link="Helpers\ObjectShredder.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\CryptoHelper.cs" Link="Helpers\CryptoHelper.cs" />

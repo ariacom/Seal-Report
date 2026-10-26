@@ -1,0 +1,23 @@
+@using System.Text.Json
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path = args.GetProperty("path").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path})..");
+    var noRecordLimit = args.TryGetProperty("no_record_limit", out var nlp) && nlp.ValueKind == JsonValueKind.True;
+    var renderPicture = args.TryGetProperty("render_picture", out var rpp) && rpp.ValueKind == JsonValueKind.True;
+
+    System.Collections.Generic.List<AIPatchOperation> operations;
+    try
+    {
+        // The operations may be given as an array or as a JSON text
+        var ops = args.GetProperty("operations");
+        operations = AIReportWriter.ParseOperations(ops.ValueKind == JsonValueKind.String ? ops.GetString() : ops.GetRawText());
+    }
+    catch (Exception ex) { tool.ExecResult = $"Error: invalid 'operations': {ex.Message}"; return; }
+
+    // Same chain as report_create_from_xml: code level check, validations, save, test execution and rendering of the views
+    tool.ExecResult = new AIReportWriter(tool).Patch(path, operations, noRecordLimit, renderPicture);
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

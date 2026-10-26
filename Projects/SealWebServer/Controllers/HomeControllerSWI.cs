@@ -756,7 +756,7 @@ namespace SealWebServer.Controllers
                 //Extensions of the normalized paths: on Windows, trailing dots and spaces of a file name are removed when the file is written
                 if (Path.GetFullPath(destinationPath).EndsWith(reportExtension, StringComparison.OrdinalIgnoreCase) && !Path.GetFullPath(sourcePath).EndsWith(reportExtension, StringComparison.OrdinalIgnoreCase))
                 {
-                    var messages = ReportCodeGuard.Check(System.IO.File.ReadAllText(sourcePath), null, WebUser.ReportCodeLevel);
+                    var messages = ReportCodeGuard.Check(System.IO.File.ReadAllText(sourcePath), null, WebUser.ReportCodeLevel, null, WebUser);
                     if (messages.Count > 0)
                     {
                         ReportCodeGuard.LogRefusal(WebUser, destinationPath, WebUser.ReportCodeLevel, messages, "Web move/copy");
@@ -1051,7 +1051,7 @@ namespace SealWebServer.Controllers
                 {
                     string xml;
                     using (var reader = new StreamReader(new MemoryStream(content), true)) xml = reader.ReadToEnd();
-                    var messages = ReportCodeGuard.Check(xml, null, WebUser.ReportCodeLevel);
+                    var messages = ReportCodeGuard.Check(xml, null, WebUser.ReportCodeLevel, null, WebUser);
                     if (messages.Count > 0)
                     {
                         ReportCodeGuard.LogRefusal(WebUser, finalPath, WebUser.ReportCodeLevel, messages, "Web upload");

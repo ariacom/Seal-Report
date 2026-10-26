@@ -70,6 +70,28 @@ namespace Seal.AI
         /// and abort early when it is <c>true</c>.
         /// </summary>
         public ICancelOperation CancelOperation = null;
+
+        /// <summary>
+        /// True if the AI provider of the agent accepts images in a tool result: the script can then add pictures to <see cref="ResultImages"/>.
+        /// </summary>
+        public bool AcceptsImages = false;
+
+        /// <summary>
+        /// Images returned with the text result of the tool (only if <see cref="AcceptsImages"/> is true)
+        /// </summary>
+        public List<AIToolResultImage> ResultImages = new List<AIToolResultImage>();
+    }
+
+    /// <summary>
+    /// Image returned by a tool with its text result (e.g. the picture of a rendered report)
+    /// </summary>
+    public class AIToolResultImage
+    {
+        /// <summary>Content of the image</summary>
+        public byte[] Data;
+
+        /// <summary>Media type of the image (e.g. image/png, image/jpeg)</summary>
+        public string MediaType = "image/png";
     }
 
     /// <summary>

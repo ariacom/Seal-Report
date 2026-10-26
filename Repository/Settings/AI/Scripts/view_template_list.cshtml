@@ -1,0 +1,24 @@
+@using System.Linq
+@using System.Text
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+
+    // View templates of the repository (Views folder): a <ReportView> uses one of them by its <TemplateName>
+    var sb = new StringBuilder();
+    sb.AppendLine("# View templates (TemplateName | parents allowed | model view | parameters | description)");
+    sb.AppendLine("A view of a model (ForReportModel) must have a <ModelGUID>; a template with 'model child' must be under a Model view. Call view_template_get_parameters for the parameters of a template, seal_read on Views\\<file>.cshtml for its source.");
+    foreach (var template in RepositoryServer.ViewTemplates.Where(i => string.IsNullOrEmpty(i.RendererType)).OrderBy(i => i.Name))
+    {
+        var parents = template.ParentNames.Count > 0 ? string.Join(", ", template.ParentNames) : "any";
+        var model = template.ForReportModel ? "model view (ModelGUID)" : template.IsModelViewChild ? "model child" : "";
+        var file = string.IsNullOrEmpty(template.FilePath) ? "" : System.IO.Path.GetFileName(template.FilePath);
+        var description = (template.Description ?? "").Replace("\r", " ").Replace("\n", " ").Trim();
+        var error = string.IsNullOrEmpty(template.Error) ? "" : " (template in error: " + template.Error.Replace("\r", " ").Replace("\n", " ") + ")";
+        sb.AppendLine($"- {template.Name} | {parents} | {model} | {template.Parameters.Count} | {description} [file {file}]{error}");
+    }
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

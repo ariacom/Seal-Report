@@ -1,0 +1,16 @@
+@using System.Text.Json
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo = tool.GetRepository();
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var regex = args.GetProperty("regex").GetString();
+    var folder = args.TryGetProperty("folder", out var fp) && fp.ValueKind == JsonValueKind.String ? fp.GetString() : null;
+    var filePattern = args.TryGetProperty("file_pattern", out var pp) && pp.ValueKind == JsonValueKind.String ? pp.GetString() : null;
+    var ignoreCase = !(args.TryGetProperty("ignore_case", out var ip) && ip.ValueKind == JsonValueKind.False);
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (regex: {regex}, folder: {folder ?? "all"})..");
+
+    // Only the knowledge folders of the AI configuration are searched
+    tool.ExecResult = AIKnowledge.Search(repo, repo.AIConfiguration.GetKnowledgeFolders(), regex, folder, filePattern, ignoreCase);
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

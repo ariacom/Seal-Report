@@ -1,0 +1,15 @@
+@using System.Text.Json
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo = tool.GetRepository();
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var path = args.GetProperty("path").GetString();
+    var offset = args.TryGetProperty("offset", out var op) && op.ValueKind == JsonValueKind.Number ? op.GetInt32() : 1;
+    var length = args.TryGetProperty("length", out var lp) && lp.ValueKind == JsonValueKind.Number ? lp.GetInt32() : AIKnowledge.DefaultReadLines;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (path: {path}, offset: {offset})..");
+
+    // Only the knowledge folders of the AI configuration can be read (never Settings except the skills, Sources, Security, Logs)
+    tool.ExecResult = AIKnowledge.Read(repo, repo.AIConfiguration.GetKnowledgeFolders(), path, offset, length);
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

@@ -40,6 +40,7 @@ namespace Seal.AI
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
                 GetProperty("SkillGUIDs").SetIsBrowsable(true);
                 GetProperty("MaxReportCodeLevel").SetIsBrowsable(true);
+                GetProperty("MaxToolCalls").SetIsBrowsable(true);
                 GetProperty("DefaultSystemPrompt").SetIsBrowsable(true);
                 GetProperty("SystemPromptFile").SetIsBrowsable(true);
                 GetProperty("SystemPromptScriptFile").SetIsBrowsable(true);
@@ -137,6 +138,20 @@ namespace Seal.AI
         [DefaultValue(ReportCodeLevel.Scripts)]
 #endif
         public ReportCodeLevel MaxReportCodeLevel { get; set; } = ReportCodeLevel.Scripts;
+
+        /// <summary>
+        /// Default value of <see cref="MaxToolCalls"/>
+        /// </summary>
+        public const int DefaultMaxToolCalls = 40;
+
+        /// <summary>
+        /// Maximum number of tool calls the agent can make to answer one user message. When it is reached, the agent answers with what it has done so far.
+        /// </summary>
+#if WINDOWS
+        [Category("Parameters"), DisplayName("Max tool calls per message"), Description("Maximum number of tool calls the agent can make to answer one user message (0 for the default value, 40). When it is reached, the agent answers with what it has done so far."), Id(4, 2)]
+        [DefaultValue(DefaultMaxToolCalls)]
+#endif
+        public int MaxToolCalls { get; set; } = DefaultMaxToolCalls;
 
         /// <summary>
         /// Inline system prompt injected at the start of every conversation.

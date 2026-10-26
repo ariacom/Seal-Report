@@ -74,6 +74,11 @@ namespace Seal.AI
         public AIUsage LastUsage { get; protected set; } = new AIUsage();
 
         /// <summary>
+        /// True if the provider sends the images of a tool result (image parts of a <see cref="ToolChatMessage"/>) to the model.
+        /// </summary>
+        public virtual bool SupportsToolResultImages => false;
+
+        /// <summary>
         /// Records the token usage of the API call that just completed.
         /// </summary>
         protected void SetLastUsage(int inputTokens, int outputTokens)

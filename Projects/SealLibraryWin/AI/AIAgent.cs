@@ -264,7 +264,8 @@ namespace Seal.AI
         /// plus a built-in <c>load_skill</c> tool when the agent has skills
         /// (via <see cref="AIAgentConfiguration.GetSkillConfigurations"/>),
         /// executes any tool calls the AI requests, and repeats until a plain reply is
-        /// produced or <paramref name="maxIterations"/> is reached.
+        /// produced, <paramref name="maxIterations"/> is reached (if positive) or the agent has made
+        /// <see cref="AIAgentConfiguration.MaxToolCalls"/> tool calls in the turn.
         /// Falls back to a plain <see cref="IAIProvider.HandleChat"/> call when no tools and no skills are configured.
         /// </summary>
         /// <remarks>
@@ -273,8 +274,11 @@ namespace Seal.AI
         /// instructions are returned as the tool result and the skill's own tools are merged into the active
         /// tool set for the rest of the conversation.
         /// </remarks>
-        public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10, Action<string> progress = null)
+        public string Chat(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 0, Action<string> progress = null)
         {
+            //The images of the previous tool results (e.g. pictures of rendered reports) are not sent again: they are replaced by their text
+            removeToolResultImages();
+
             // Chat with the current system prompt of the configuration: a conversation reloaded from a
             // saved chat (or rewound, or kept in a long-lived web session) otherwise keeps the prompt it
             // was started with, and prompt file changes are silently ignored.
@@ -328,8 +332,13 @@ namespace Seal.AI
             }
 
             var tools = BuildTools();
+            var acceptsImages = _provider is AIProvider aiProvider && aiProvider.SupportsToolResultImages;
+            //Ceiling of the tool calls of the turn: each round-trip makes at least one call
+            var maxToolCalls = Configuration.MaxToolCalls > 0 ? Configuration.MaxToolCalls : AIAgentConfiguration.DefaultMaxToolCalls;
+            if (maxIterations <= 0) maxIterations = maxToolCalls;
+            var toolCallCount = 0;
 
-            for (int i = 0; i < maxIterations; i++)
+            for (int i = 0; i < maxIterations && toolCallCount < maxToolCalls; i++)
             {
                 if (cancelOperation?.Cancel == true) break;
 
@@ -353,6 +362,13 @@ namespace Seal.AI
                 {
                     if (cancelOperation?.Cancel == true) break;
 
+                    // Ceiling reached: every call of the reply still needs a result
+                    if (++toolCallCount > maxToolCalls)
+                    {
+                        Messages.Add(new ToolChatMessage(toolCall.Id, $"Error: the limit of {maxToolCalls} tool calls for this request is reached, this call was not executed. Answer the user with what you have done and found so far, and say what remains to be done."));
+                        continue;
+                    }
+
                     // Built-in skill loader: return the skill instructions and unlock its tools.
                     if (toolCall.Name == LoadSkillToolName)
                     {
@@ -369,6 +385,7 @@ namespace Seal.AI
                     toolCall.AgentConfiguration = Configuration;
                     toolCall.ExecutionLog = toolsLog;
                     toolCall.CancelOperation = cancelOperation;
+                    toolCall.AcceptsImages = acceptsImages;
 
                     var toolConfig = activeToolConfigs.TryGetValue(toolCall.Name, out var tc) ? tc : null;
                     progress?.Invoke(toolConfig?.GetProgressLabel(toolCall, Culture) ?? $"Running '{toolCall.Name}'");
@@ -396,8 +413,16 @@ namespace Seal.AI
                     {
                         result = $"Error: tool '{toolCall.Name}' is not available. If it belongs to a skill, call '{LoadSkillToolName}' to load that skill first, then retry.";
                     }
-                    if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result}");
-                    Messages.Add(new ToolChatMessage(toolCall.Id, result));
+                    if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result}" + (toolCall.ResultImages.Count > 0 ? $"\r\n({toolCall.ResultImages.Count} image(s))" : ""));
+                    if (acceptsImages && toolCall.ResultImages.Count > 0)
+                    {
+                        // Text first: the saved conversation keeps the text of the first part
+                        var parts = new List<ChatMessageContentPart>() { ChatMessageContentPart.CreateTextPart(string.IsNullOrEmpty(result) ? " " : result) };
+                        foreach (var image in toolCall.ResultImages.Where(img => img.Data != null && img.Data.Length > 0))
+                            parts.Add(ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(image.Data), image.MediaType));
+                        Messages.Add(new ToolChatMessage(toolCall.Id, parts));
+                    }
+                    else Messages.Add(new ToolChatMessage(toolCall.Id, result));
                 }
                 if (cancelOperation?.Cancel == true) break;
 
@@ -415,6 +440,21 @@ namespace Seal.AI
             var finalReply = _provider.HandleChat(Messages);
             addUsage();
             return finalReply;
+        }
+
+        /// <summary>
+        /// Replaces the tool results having images by their text only, so that the images are sent to the model once.
+        /// </summary>
+        void removeToolResultImages()
+        {
+            for (int i = 0; i < Messages.Count; i++)
+            {
+                if (Messages[i] is ToolChatMessage tool && tool.Content.Any(p => p.Kind == ChatMessageContentPartKind.Image))
+                {
+                    var text = tool.Content.Count > 0 && tool.Content[0].Kind == ChatMessageContentPartKind.Text ? tool.Content[0].Text : "";
+                    Messages[i] = new ToolChatMessage(tool.ToolCallId, text + "\r\n[The picture returned with this result is no longer available]");
+                }
+            }
         }
 
         /// <summary>
@@ -530,7 +570,7 @@ namespace Seal.AI
         /// <summary>
         /// Same as <see cref="Chat"/> but returns the reply sanitized as safe HTML.
         /// </summary>
-        public string ChatHtml(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 10)
+        public string ChatHtml(string userMessage, ICancelOperation cancelOperation = null, ReportExecutionLog log = null, ReportExecutionLog toolsLog = null, int maxIterations = 0)
         {
             var raw = Chat(userMessage, cancelOperation, log, toolsLog, maxIterations);
             var sanitizer = new HtmlSanitizer();

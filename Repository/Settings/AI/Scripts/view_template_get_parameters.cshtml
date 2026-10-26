@@ -1,0 +1,45 @@
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var name = args.GetProperty("template").GetString();
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (template: {name})..");
+
+    var templates = RepositoryServer.ViewTemplates.Where(i => string.IsNullOrEmpty(i.RendererType)).ToList();
+    var template = templates.FirstOrDefault(i => i.Name == name) ?? templates.FirstOrDefault(i => string.Equals(i.Name, name, StringComparison.OrdinalIgnoreCase));
+    if (template == null)
+    {
+        tool.ExecResult = $"Error: no view template named '{name}'. Templates: {string.Join(", ", templates.Select(i => i.Name).OrderBy(i => i))}.";
+        return;
+    }
+
+    var sb = new StringBuilder();
+    sb.AppendLine($"## Parameters of the view template '{template.Name}' (name | label | type | default | values | description)");
+    sb.AppendLine("Set them in the view: <Parameters><Parameter><Name>name</Name><Value>value</Value></Parameter></Parameters>. Only set a parameter whose value differs from its default. Booleans are True/False.");
+    var raw = template.RawParameterNames;
+    foreach (var p in template.Parameters.OrderBy(i => i.Name))
+    {
+        var values = "";
+        if (p.Enums != null && p.Enums.Length > 0)
+        {
+            var ids = p.EnumValues;
+            var displays = p.EnumDisplays;
+            var items = ids.Select((id, i) => displays != null && i < displays.Length && !string.IsNullOrEmpty(displays[i]) && displays[i] != id ? $"{id} ({displays[i]})" : id);
+            values = (p.UseOnlyEnumValues ? "one of: " : "e.g.: ") + string.Join(", ", items);
+        }
+        else if (p.Type == ViewParameterType.Boolean) values = "True, False";
+        else if (p.TextSamples != null && p.TextSamples.Length > 0) values = "e.g.: " + string.Join(" / ", p.TextSamples.Select(i => i.Split('|')[0].Replace("\r", " ").Replace("\n", " ")).Take(5));
+        var level = raw.Contains(p.Name) || p.CodeLevel > ReportCodeLevel.Metadata ? " [rendered as code: a value outside its list must be plain text (no quote, parenthesis, brace, angle bracket, equal sign, ampersand, backslash) below the Scripts level]" : "";
+        var description = (p.Description ?? "").Replace("\r", " ").Replace("\n", " ").Trim();
+        var defaultValue = (p.Value ?? "").Replace("\r", " ").Replace("\n", " ");
+        if (defaultValue.Length > 100) defaultValue = defaultValue.Substring(0, 100) + "…";
+        sb.AppendLine($"- {p.Name} | {p.DisplayName} | {p.Type} | {defaultValue} | {values} | {description}{level}");
+    }
+    if (template.Parameters.Count == 0) sb.AppendLine("(no parameter)");
+    tool.ExecResult = sb.ToString();
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}

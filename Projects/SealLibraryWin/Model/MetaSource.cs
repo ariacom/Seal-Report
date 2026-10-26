@@ -487,6 +487,14 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// SQL of a dynamic enumerated list loading the distinct values of a column of a SQL source
+        /// </summary>
+        public static string GetEnumSqlFromColumn(MetaColumn column)
+        {
+            return string.Format("SELECT DISTINCT \r\n{0} \r\nFROM {1} \r\nORDER BY 1", column.Name, column.MetaTable.FullSQLName);
+        }
+
+        /// <summary>
         /// Helper to create a MetaEnum for a given MetaColumn
         /// </summary>
         public MetaEnum CreateEnumFromColumn(MetaColumn column)
@@ -497,7 +505,7 @@ namespace Seal.Model
             result.IsDynamic = true;
             if (!IsNoSQL)
             {
-                result.Sql = string.Format("SELECT DISTINCT \r\n{0} \r\nFROM {1} \r\nORDER BY 1", column.Name, column.MetaTable.FullSQLName);
+                result.Sql = GetEnumSqlFromColumn(column);
             }
             else
             {
