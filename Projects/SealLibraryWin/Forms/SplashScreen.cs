@@ -62,8 +62,48 @@ namespace Seal.Forms
         Timer _fadeTimer;
         bool _closing = false;
 
+        //Detection of a dialog box (MessageBox...) shown by the process during the initialization
+        delegate bool EnumWindowsProc(IntPtr hWnd, IntPtr lParam);
+        [DllImport("user32.dll")]
+        static extern bool EnumWindows(EnumWindowsProc lpEnumFunc, IntPtr lParam);
+        [DllImport("user32.dll")]
+        static extern uint GetWindowThreadProcessId(IntPtr hWnd, out uint lpdwProcessId);
+        [DllImport("user32.dll")]
+        static extern bool IsWindowVisible(IntPtr hWnd);
+        [DllImport("user32.dll", CharSet = CharSet.Unicode)]
+        static extern int GetClassName(IntPtr hWnd, System.Text.StringBuilder lpClassName, int nMaxCount);
+
+        bool hasVisibleDialog()
+        {
+            bool result = false;
+            uint currentProcessId = (uint)Environment.ProcessId;
+            var className = new System.Text.StringBuilder(256);
+            EnumWindows((hWnd, lParam) =>
+            {
+                GetWindowThreadProcessId(hWnd, out uint processId);
+                if (processId == currentProcessId && hWnd != Handle && IsWindowVisible(hWnd))
+                {
+                    className.Clear();
+                    GetClassName(hWnd, className, className.Capacity);
+                    if (className.ToString() == "#32770") result = true;
+                }
+                return !result;
+            }, IntPtr.Zero);
+            return result;
+        }
+
         void timer_tick(object sender, EventArgs e)
         {
+            if (!_closing && hasVisibleDialog())
+            {
+                //A dialog box is shown (e.g. an error at startup): close the TopMost splash screen at once, otherwise it hides the dialog
+                _closing = true;
+                _timer.Stop();
+                _fadeTimer.Stop();
+                Close();
+                return;
+            }
+
             if (_mainForm.IsInitialized() && !_closing)
             {
                 _timer.Stop();
@@ -95,7 +135,7 @@ namespace Seal.Forms
             _fadeTimer.Start();
 
             //Poll the main form initialization status
-            _timer = new Timer { Interval = 200 };
+            _timer = new Timer { Interval = 100 };
             _timer.Tick += timer_tick;
             _timer.Start();
         }
