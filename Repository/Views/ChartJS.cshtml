@@ -106,7 +106,7 @@
                         anchor: '@view.GetValue("chartjs_label_anchor")',
                         clamp: true
                     },
-                    yAxisID: 'y@(serie.Element.YAxisType == AxisType.Secondary ? "2" : "")'
+                    @(isHorizontalBar ? "xAxisID" : "yAxisID"): '@(isHorizontalBar ? "x" : "y")@(serie.Element.YAxisType == AxisType.Secondary ? "2" : "")'
                 },
                 </text>
             }
@@ -139,8 +139,9 @@
 
                 var valueFormatter = function (dataset, dataIndex, type, chart) {
                     var axisID = dataset.@(isHorizontalBar ? "x" : "y")AxisID;
-                    var format = (axisID == 'y2' ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
-                    var isDate = (axisID == 'y2' ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
+                    var isSecondary = (axisID == '@(isHorizontalBar ? "x2" : "y2")');
+                    var format = (isSecondary ? '@Raw(Helper.ToJS(reportModel.ExecD3SecondaryYAxisFormat))' : '@Raw(Helper.ToJS(reportModel.ExecD3PrimaryYAxisFormat))');
+                    var isDate = (isSecondary ? @Helper.ToJS(reportModel.ExecAxisSecondaryYIsDateTime) : @Helper.ToJS(reportModel.ExecAxisPrimaryYIsDateTime));
 
                     var val = getValue(dataset, dataIndex);
                     if (isDate) return d3.timeFormat(format)(new Date(val));
@@ -252,9 +253,9 @@
                         offset: true,
                         display: @view.GetBoolValueJS("chartjs_show_xaxis"),
                         stacked: @Helper.ToJS(chartType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
-                        scaleLabel: {
+                        title: {
                             display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_xaxis_title")))),
-                            labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_xaxis_title"))))'
+                            text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_xaxis_title"))))'
                     },
                     @if (!reportModel.ExecChartIsNumericAxis && !reportModel.ExecChartIsDateTimeAxis)
                     {
@@ -291,17 +292,16 @@
                         </text>
                     }
                                                 },
-                    @(!isHorizontalBar ? "y" : "x"): 
                     @if (reportModel.HasPrimaryYAxis)
                     {
                         <text>
-                        {
+                        @(!isHorizontalBar ? "y" : "x"): {
                             display: @view.GetBoolValueJS("chartjs_show_yaxis"),
                             position: '@(isHorizontalBar ? "bottom" : "left")',
                             stacked: @Helper.ToJS(chartType == "bar" && view.GetBoolValue("chartjs_bar_stacked")),
-                            scaleLabel: {
+                            title: {
                                 display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis_title")))),
-                                labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis_title"))))'
+                                text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis_title"))))'
                             },
                             @Raw(view.GetValueIfNotEmpty("min:", "chartjs_yaxis_min", ","))
                             @Raw(view.GetValueIfNotEmpty("max:", "chartjs_yaxis_max", ","))
@@ -318,13 +318,15 @@
                     @if (reportModel.HasSecondaryYAxis)
                     {
                         <text>
-                        y2: {
+                        @(isHorizontalBar ? "x2" : "y2"): {
+                            axis: '@(isHorizontalBar ? "x" : "y")',
                             display: @view.GetBoolValueJS("chartjs_show_yaxis"),
                             type: 'linear',
                             position: '@(isHorizontalBar ? "top" : "right")',
-                            scaleLabel: {
+                            grid: { drawOnChartArea: false },
+                            title: {
                                 display: @Raw(Helper.ToJS(!string.IsNullOrEmpty(view.GetValue("chartjs_yaxis2_title")))),
-                                labelString: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis2_title"))))'
+                                text: '@Raw(Helper.ToJS(modelView.GetTranslatedMappedLabel(view.GetValue("chartjs_yaxis2_title"))))'
                             },
                             @Raw(view.GetValueIfNotEmpty("min:", "chartjs_yaxis2_min", ","))
                             @Raw(view.GetValueIfNotEmpty("max:", "chartjs_yaxis2_max", ","))

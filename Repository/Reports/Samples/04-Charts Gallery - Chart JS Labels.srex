@@ -935,6 +935,59 @@ AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction>
         </ReportRestriction>
       </Restrictions>
     </ReportModel>
+    <ReportModel>
+      <GUID>3f6c2a1e-7d4b-4e8a-9c21-5b0e8d4f1a72</GUID>
+      <Name>Model - Bar - Horizontal - 2 Axes</Name>
+      <SourceGUID>591ae57e-84e4-4d40-a4e0-1b8fe863442f</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f40</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <EnumGUID>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUID>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+          <EnumGUIDEL>ecf22cb6-bea3-4d1b-b28e-d917c77cd31a</EnumGUIDEL>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f41</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f42</GUID>
+          <Name>[Order Details].Discount*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <YAxisType>Secondary</YAxisType>
+          <MetaColumnGUID>a63be915-3593-4377-8155-5ab3a78f45ba</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f43]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f43</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
   </Models>
   <Views>
     <ReportView>
@@ -1532,6 +1585,57 @@ AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction>
               </Parameters>
               <SortOrder>15</SortOrder>
             </ReportView>
+            <ReportView>
+              <GUID>8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f50</GUID>
+              <Name>Model - Bar - Horizontal - 2 Axes</Name>
+              <Views>
+                <ReportView>
+                  <GUID>8a2d4c6e-1f3b-4a5d-8e7f-9b0c1d2e3f51</GUID>
+                  <Name>Chart JS</Name>
+                  <TemplateName>Chart JS</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>chartjs_bar_horizontal</Name>
+                      <Value>True</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_xaxis_title</Name>
+                      <Value>Category</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_yaxis_title</Name>
+                      <Value>Sales</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_yaxis2_title</Name>
+                      <Value>Discount</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_display</Name>
+                      <Value>auto</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_anchor</Name>
+                      <Value>end</Value>
+                    </Parameter>
+                    <Parameter>
+                      <Name>chartjs_label_align</Name>
+                      <Value>right</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Model</TemplateName>
+              <ModelGUID>3f6c2a1e-7d4b-4e8a-9c21-5b0e8d4f1a72</ModelGUID>
+              <Parameters>
+                <Parameter>
+                  <Name>show_data_tables</Name>
+                  <Value>False</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>16</SortOrder>
+            </ReportView>
           </Views>
           <TemplateName>Container</TemplateName>
           <Parameters>
@@ -1541,7 +1645,8 @@ AND [387eba64-d9bb-442e-90b2-5ffd90d66696]</Restriction>
 col-sm-4;col-sm-4;col-sm-4;
 col-sm-4;col-sm-4;col-sm-4;
 col-sm-4;col-sm-4;col-sm-4;
-col-sm-4;col-sm-4;col-sm-4;</Value>
+col-sm-4;col-sm-4;col-sm-4;
+col-sm-4;</Value>
             </Parameter>
           </Parameters>
           <SortOrder>1</SortOrder>
