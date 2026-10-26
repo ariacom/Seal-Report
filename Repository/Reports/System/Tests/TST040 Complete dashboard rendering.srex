@@ -1,0 +1,158 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b1a7c010-0040-4a00-9000-000000000001</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;Executes the dashboard 'Reports\TST040 Complete dashboard.srex' (Tab Control with widgets, KPI, Chart JS pie, ECharts, cards, Leaflet map, page and data tables) and checks the models and the HTML rendered.&lt;/li&gt;
+&lt;li&gt;Open the dashboard itself to check its rendering visually.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
+  <ViewGUID>b1a7c010-0040-4a00-9000-000000000501</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b1a7c010-0040-4a00-9000-000000000101</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b1a7c010-0040-4a00-9000-000000000301</GUID>
+      <Name>Model</Name>
+      <SourceGUID>b1a7c010-0040-4a00-9000-000000000101</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>b1a7c010-0040-4a00-9000-000000000401</GUID>
+      <Name>Check Complete Dashboard</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>b1a7c010-0040-4a00-9000-000000000101</SourceGUID>
+      <Script>@using System;
+@using System.IO;
+@using System.Linq;
+@using System.Threading;
+@using System.Text.RegularExpressions;
+@using System.Collections.Generic;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var errors = new List&lt;string&gt;();
+
+    const int TimeoutSeconds = 180;
+    var path = Path.Combine(Path.GetDirectoryName(report.FilePath), "Reports", "TST040 Complete dashboard.srex");
+    report.LogMessage("Executing '{0}'", path.Replace(repository.ReportsFolder, ""));
+
+    var rep = Report.LoadFromFile(path, repository);
+    if (!string.IsNullOrEmpty(rep.LoadErrors)) throw new Exception("Load error: " + rep.LoadErrors);
+    rep.SkipExternalViewer = true;
+    rep.CurrentViewGUID = rep.ViewGUID;
+
+    var execution = new ReportExecution() { Report = rep };
+    execution.Execute();
+    int cnt = TimeoutSeconds;
+    while (--cnt &gt; 0 &amp;&amp; rep.IsExecuting &amp;&amp; !report.Cancel) Thread.Sleep(1000);
+    if (rep.IsExecuting)
+    {
+        rep.CancelExecution();
+        throw new Exception($"Execution timeout ({TimeoutSeconds}s).");
+    }
+    if (rep.HasErrors) throw new Exception("Execution errors:" + Environment.NewLine + rep.ExecutionErrors);
+
+    //Models: expected minimum number of body rows
+    CheckRows(report, rep, "Sales per month", 12, errors);
+    CheckRows(report, rep, "Sales per category", 8, errors);
+    CheckRows(report, rep, "Sales per year", 3, errors);
+    CheckRows(report, rep, "Employees", 3, errors);
+    CheckRows(report, rep, "Sales per city", 10, errors);
+
+    //Rendered HTML
+    var htmlPath = rep.HTMLDisplayFilePath;
+    if (!File.Exists(htmlPath)) throw new Exception($"Result file not found: '{htmlPath}'");
+    var html = File.ReadAllText(htmlPath);
+    report.LogMessage("Checking the HTML rendered ({0:N0} characters)", html.Length);
+
+    //Tab Control: 3 pages, record count shown on 'Details'
+    CheckCount(html, "_tab_page'", 3, "Tab Control: tab links", errors);
+    CheckContains(html, "&gt;Overview&lt;", "Tab Control: page 'Overview'", errors);
+    CheckContains(html, "&gt;Map&lt;", "Tab Control: page 'Map'", errors);
+    CheckRegex(html, @"&gt;Details \(\d+\)&lt;", "Tab Control: page 'Details' with its record count", errors);
+    //Widgets
+    foreach (var title in new[] { "KPI Sales 1997", "Pie Sales per category", "Bar Sales per year" }) CheckContains(html, title, $"Widget: title '{title}'", errors);
+    CheckContains(html, "fa-chart-pie", "Widget: icon", errors);
+    //KPI: trend button with its icon and percentage badge
+    CheckRegex(html, @"btn btn-(danger|warning|primary|success)", "KPI: trend button", errors);
+    CheckRegex(html, @"fa-arrow-(trend-down|right-long|trend-up)", "KPI: trend icon", errors);
+    //Charts
+    CheckContains(html, "type: 'doughnut'", "Chart JS: pie (doughnut) chart", errors);
+    CheckCount(html, "echarts.init(dom)", 2, "ECharts: charts", errors);
+    //Cards
+    CheckContains(html, "tst040-cards", "Cards: container", errors);
+    foreach (var name in new[] { "Buchanan", "Callahan", "Davolio" }) CheckContains(html, name, $"Cards / tables: employee '{name}'", errors);
+    //Map
+    CheckContains(html, "L.map(container", "Map: Leaflet map", errors);
+    foreach (var city in new[] { "Paris", "Bruxelles", "Strasbourg" }) CheckContains(html, city, $"Map: city '{city}'", errors);
+    //No error rendered by a view
+    CheckNotContains(html, "Error in view", "Views: no rendering error", errors);
+
+    if (errors.Count &gt; 0)
+        throw new Exception($"Dashboard checks failed ({errors.Count}):" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+    report.LogMessage("All dashboard checks passed.");
+}
+
+@functions {
+    void CheckRows(Report root, Report rep, string modelName, int minRows, List&lt;string&gt; errors)
+    {
+        var model = rep.Models.FirstOrDefault(i =&gt; i.Name == modelName);
+        if (model == null) { errors.Add($"Model '{modelName}' not found."); return; }
+        var table = model.Pages.FirstOrDefault()?.DataTable;
+        int rows = table == null ? 0 : table.BodyEndRow - table.BodyStartRow;
+        root.LogMessage("Model '{0}': {1} row(s)", modelName, rows);
+        if (rows &lt; minRows) errors.Add($"Model '{modelName}': {rows} row(s), at least {minRows} expected.");
+    }
+
+    void CheckContains(string html, string text, string check, List&lt;string&gt; errors)
+    {
+        if (!html.Contains(text)) errors.Add($"{check}: '{text}' not found.");
+    }
+
+    void CheckNotContains(string html, string text, string check, List&lt;string&gt; errors)
+    {
+        if (html.Contains(text)) errors.Add($"{check}: '{text}' found.");
+    }
+
+    void CheckRegex(string html, string pattern, string check, List&lt;string&gt; errors)
+    {
+        if (!Regex.IsMatch(html, pattern)) errors.Add($"{check}: pattern '{pattern}' not found.");
+    }
+
+    void CheckCount(string html, string text, int minCount, string check, List&lt;string&gt; errors)
+    {
+        int count = Regex.Matches(html, Regex.Escape(text)).Count;
+        if (count &lt; minCount) errors.Add($"{check}: '{text}' found {count} time(s), at least {minCount} expected.");
+    }
+}
+</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>b1a7c010-0040-4a00-9000-000000000501</GUID>
+      <Name>View</Name>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>
