@@ -253,6 +253,12 @@ namespace Seal.Model
         public string Description { get; set; }
 
         /// <summary>
+        /// Set by a template: code level required to write a value of the parameter (e.g. Scripts for a value rendered as JavaScript). The parameters rendered with @Raw() by a view template are detected without declaration (see ReportViewTemplate.RawParameterNames).
+        /// </summary>
+        [XmlIgnore]
+        public ReportCodeLevel CodeLevel { get; set; } = ReportCodeLevel.Metadata;
+
+        /// <summary>
         /// The parameter value
         /// </summary>
 #if WINDOWS
@@ -363,6 +369,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [XmlIgnore]
+        [SealCode(ReportCodeLevel.Metadata)]
         public string TextValue
         {
             get

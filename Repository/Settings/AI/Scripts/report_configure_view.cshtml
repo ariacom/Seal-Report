@@ -59,6 +59,7 @@
     try
     {
         var report = Report.LoadFromFile(fullPath, repo, false);
+        var savedXml = report.GetXml(); // content already saved, accepted by the report code level check
 
         // Recursively collect every view
         var allViews = new System.Collections.Generic.List<ReportView>();
@@ -122,6 +123,9 @@
             affected.Add($"'{v.Name}' [{v.TemplateName}]");
         }
 
+        // Report code level of the user and the agent (e.g. a parameter value starting with '@' is a Razor script)
+        var codeError = tool.CheckReportCode(report.GetXml(), savedXml, fullPath);
+        if (codeError != null) { tool.ExecResult = codeError; return; }
         report.SaveToFile();
 
         var what = string.Join(", ", applied.Distinct());

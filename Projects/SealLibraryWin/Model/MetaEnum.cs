@@ -202,6 +202,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(6, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string Sql
         {
             get { return _sql; }
@@ -221,6 +222,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Script"), Description("If the list is dynamic, Razor Script executed to load or update the enumerated list values. The Script is executed after the optional SQL load when 'SQL Select Statement' is not empty."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string Script
         {
             get { return _script; }
@@ -288,6 +290,7 @@ namespace Seal.Model
         [Category("Dynamic display"), DisplayName("SQL Select Statement for prompted restriction"), Description("Optional SQL Select Statement used to build the values displayed in a prompted restriction. The SQL can return 1 to 5 columns and follows the definition of 'SQL Select Statement' property. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. '{EnumValues_<Name>}' is replaced by the values checked in the other list only, the operator chosen for that restriction is not taken into account (e.g. use it with 'IN (...)'). The SQL is used only if the list is dynamic, refreshed before report execution."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlDisplay { get; set; }
 
         /// <summary>
@@ -297,6 +300,7 @@ namespace Seal.Model
         [Category("Dynamic display"), DisplayName("Script for prompted restriction"), Description("Optional Script used to build the values displayed in a prompted restriction. It can contain either the '{EnumFilter}' and/or '{EnumValues_<Name>}' keywords where <Name> is the name of another prompted enumerated list. '{EnumValues_<Name>}' is replaced by the values checked in the other list only, the operator chosen for that restriction is not taken into account. The Script is used only if the list is dynamic, refreshed before report execution."), Id(4, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ScriptDisplay { get; set; }
 
         private bool _loadOnDemand = false;
@@ -329,6 +333,7 @@ namespace Seal.Model
         [Category("Dynamic display"), DisplayName("SQL Select Statement for selected values"), Description("If the values are loaded on demand, optional SQL Select Statement returning the values of the identifiers selected (e.g. by a navigation link or saved in the report). It follows the definition of 'SQL Select Statement' and contains the '{EnumSelected}' keyword, replaced by the list of the identifiers quoted (e.g. WHERE id IN ({EnumSelected})). If empty, each selected identifier is searched with the 'SQL Select Statement for prompted restriction' used as filter."), Id(6, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlSelected { get; set; }
 
         /// <summary>

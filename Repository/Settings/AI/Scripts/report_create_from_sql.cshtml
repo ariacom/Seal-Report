@@ -10,7 +10,7 @@
     var repo            = tool.GetRepository(); // includes the Data Sources built for the user
     var securityContext = tool.CurrentToolCall.SecurityContext;
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
-    if (!securityContext.SqlModel) { tool.ExecResult = "Error: you are not allowed to create reports from raw SQL (SQL Models are disabled for your security group). Use the metadata route (report_create_from_xml) instead if it can express the request; otherwise tell the user in one sentence that an administrator can enable 'SQL models' for their security group."; return; }
+    if (tool.GetReportCodeLevel() < ReportCodeLevel.Sql) { tool.ExecResult = "Error: you are not allowed to create reports from raw SQL (it requires the 'Sql' report code level, for the user and the agent). Use the metadata route (report_create_from_xml) instead if it can express the request; otherwise tell the user in one sentence that an administrator can grant the 'Metadata and SQL' report code level to their security group."; return; }
 
     var args             = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path             = Seal.Helpers.FileHelper.ConvertOSFilePath(args.GetProperty("path").GetString());
@@ -82,6 +82,11 @@
         model.Table.DynamicColumns   = true;
         model.Table.KeepColumnNames  = keepColumnNames;
         model.Table.Sql              = sql;
+
+        // Report code level of the user and the agent: checked before the SQL is executed and the report saved
+        var codeError = tool.CheckReportCode(report.GetXml(), overwrite && File.Exists(fullPath) ? File.ReadAllText(fullPath) : null, fullPath);
+        if (codeError != null) { tool.ExecResult = codeError; return; }
+
         model.RefreshMetaTable(true);
         if (!noRecordLimit) model.MaxNumberOfRecords = defaultMaxNumberOfRecords;
 

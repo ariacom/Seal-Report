@@ -2,6 +2,7 @@
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
+using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using Seal.AI;
@@ -36,7 +37,7 @@ namespace Seal.Model
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("MenuScript").SetIsBrowsable(true);
 
-                GetProperty("SqlModel").SetIsBrowsable(true);
+                GetProperty("ReportCodeLevel").SetIsBrowsable(true);
                 GetProperty("DataSourceGUIDs").SetIsBrowsable(true);
                 GetProperty("OutputDeviceGUIDs").SetIsBrowsable(true);
 
@@ -174,6 +175,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("\tFolders script"), Description("Optional script executed to define/modify the folders published in the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string FoldersScript { get; set; }
 
         /// <summary>
@@ -183,6 +185,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Folder detail script"), Description("Optional script executed to define/modify the reports published in the Web Report Server for a given folder. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(11, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string FolderDetailScript { get; set; }
 
         /// <summary>
@@ -192,16 +195,33 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Menu script"), Description("Optional script executed to define/modify the reports menu of the Web Report Server. If the user belongs to several groups, scripts are executed sequentially sorted by group name."), Id(12, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MenuScript { get; set; }
 
         /// <summary>
-        /// If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied.
+        /// Obsolete, replaced by <see cref="ReportCodeLevel"/>: still read from the security files saved by older versions, true gives at least the 'Sql' level. Never saved.
+        /// </summary>
+        [Obsolete("Use ReportCodeLevel: SqlModel = true is ReportCodeLevel.Sql")]
+        public bool SqlModel
+        {
+            get { return ReportCodeLevel >= ReportCodeLevel.Sql; }
+            set { if (value && ReportCodeLevel < ReportCodeLevel.Sql) ReportCodeLevel = ReportCodeLevel.Sql; }
+        }
+        /// <summary>
+        /// SqlModel is never serialized, ReportCodeLevel is saved instead
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeSqlModel() { return false; }
+
+        /// <summary>
+        /// The code a user of the group can write in the reports he saves (Web Report Server, AI Agents): 'Metadata' (no SQL, no script), 'Sql' (custom SQL, SQL models, restriction expressions, raw SQL queries of the AI tools) or 'Scripts' (also Razor scripts). The level of a user is the highest level of his groups. Existing reports can always be executed, the level is checked only when a report is written.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\t\t\tSQL models"), Description("If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied. Note that dynamic filters set for security purpose will not be applied."), Id(1, 4)]
-        [DefaultValue(false)]
+        [Category("Tools Security"), DisplayName("\t\t\tReport code level"), Description("The code a user of the group can write in the reports he saves with the Web Report Server or the AI Agents: 'Metadata only' (no SQL, no script), 'Metadata and SQL' (custom SQL, SQL models, restriction expressions, and the raw SQL queries of the AI tools: dynamic filters set for security purpose are then not applied) or 'Metadata, SQL and scripts' (also Razor scripts, connections, tasks, table templates and view parameters rendered as code). The level of a user is the highest level of his groups (it replaces the former 'SQL models' option: enabled is 'Metadata and SQL'). Content already saved in a report is kept and existing reports can always be executed: the level is checked only for new or modified content when a report is written (AI tools, upload)."), Id(1, 4)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(ReportCodeLevel.Metadata)]
 #endif
-        public bool SqlModel { get; set; } = false;
+        public ReportCodeLevel ReportCodeLevel { get; set; } = ReportCodeLevel.Metadata;
 
         /// <summary>
         /// For the AI Tools: The data sources (identified by their GUID) that the AI tools can access for this group. If the list is empty, all data sources are allowed.

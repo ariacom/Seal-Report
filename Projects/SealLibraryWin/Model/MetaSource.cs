@@ -223,6 +223,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. This may be useful to change dynamically components of the source (e.g. modifying connections, tables, columns, enums, etc.)."), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string InitScript { get; set; } = "";
         /// <summary>
         /// True if InitScript must be serialized
@@ -237,6 +238,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Pre SQL Statement"), Description("SQL Statement executed after the connection is open and before the query is executed. The statement may contain Razor script if it starts with '@'."), Id(5, 4)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PreSQL { get; set; }
         /// <summary>
         /// True if PreSQL must be serialized
@@ -251,6 +253,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Post SQL Statement"), Description("SQL Statement executed before the connection is closed and after the query is executed. The statement may contain Razor script if it starts with '@'."), Id(6, 4)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PostSQL { get; set; }
         /// <summary>
         /// True if PostSQL must be serialized

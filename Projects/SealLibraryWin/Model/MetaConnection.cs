@@ -23,6 +23,7 @@ namespace Seal.Model
     /// <summary>
     /// A MetaConnection defines a connection to a database
     /// </summary>
+    [SealCode(ReportCodeLevel.Scripts)]
     public class MetaConnection : RootComponent
     {
         /// <summary>
@@ -222,6 +223,7 @@ namespace Seal.Model
         [DisplayName("OLE DB Connection string"), Description("OLE DB Connection string used to connect to the database if the connection type is OleDb. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(4, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize ConnectionString only if not empty
@@ -237,6 +239,7 @@ namespace Seal.Model
         [DisplayName("ODBC Connection string"), Description("ODBC Connection string used to connect to the database if the connection type is ODBC. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(5, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string OdbcConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize OdbcConnectionString only if not empty
@@ -253,6 +256,7 @@ namespace Seal.Model
         [DisplayName("MS SQLServer Connection string"), Description("MS SQLServer Connection string used to connect to the database if the connection type is MS SQLServer. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(6, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MSSqlServerConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize MSSqlServerConnectionString only if not empty
@@ -268,6 +272,7 @@ namespace Seal.Model
         [DisplayName("Mongo DB Connection string"), Description("Mongo DB Connection string used to connect to the database if the connection type is Mongo DB. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder. %USER% for the user name. %PASSWORD% for the password."), Category("Connection String"), Id(7, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MongoDBConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize MongoDBConnectionString only if not empty
@@ -283,6 +288,7 @@ namespace Seal.Model
         [DisplayName("MySQL Connection string"), Description("MySQL Connection string used to connect to the database if the connection type is MySQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(8, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MySQLConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize MySQLConnectionString only if not empty
@@ -298,6 +304,7 @@ namespace Seal.Model
         [DisplayName("Oracle Connection string"), Description("Oracle Connection string used to connect to the database if the connection type is Oracle. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(9, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string OracleConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize OracleConnectionString only if not empty
@@ -313,6 +320,7 @@ namespace Seal.Model
         [DisplayName("PostgreSQL Connection string"), Description("PostgreSQL Connection string used to connect to the database if the connection type is PostgreSQL. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(10, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PostgreSQLConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize PostgreSQLConnectionString only if not empty
@@ -328,6 +336,7 @@ namespace Seal.Model
         [DisplayName("SQLite Connection string"), Description("SQLite Connection string used to connect to the database if the connection type is SQLite. The string can contain the keyword " + Repository.SealRepositoryKeyword + " to specify the repository root folder."), Category("Connection String"), Id(10, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string SQLiteConnectionString { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize SQLiteConnectionString only if not empty
@@ -343,6 +352,7 @@ namespace Seal.Model
         [DisplayName("Connection Script"), Description("If set, script executed to instanciate and open the connection."), Category("Definition"), Id(8, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ConnectionScript { get; set; } = null;
         /// <summary>
         /// Xml serialization helper: serialize ConnectionScript only if not empty

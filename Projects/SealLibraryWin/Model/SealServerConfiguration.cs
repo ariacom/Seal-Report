@@ -322,6 +322,7 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("Razor Forbidden Tokens"), Description("Case-insensitive substrings forbidden in Razor scripts when 'Enable Razor Script Validation' is true, one per line (lines starting with // are ignored). If empty, a conservative built-in starter list is used (Process.Start, Assembly.Load, Marshal, etc.)."), Id(25, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Metadata)]
         public string RazorForbiddenTokens { get; set; } = "";
         /// <summary>
         /// Xml serialization helper: serialize RazorForbiddenTokens only if not empty
@@ -502,6 +503,7 @@ namespace Seal.Model
         [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(3, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string AuditScript { get; set; } = null;
 
         /// <summary>
@@ -511,6 +513,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("Web Server Main Additional Script"), Description("If set, the script is executed and the string result is added at the end of the Main result page. This may be used to inject dynamic javascripts."), Id(3, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string WebMainAdditionalScript { get; set; } = null;
 
         /// <summary>
@@ -520,6 +523,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("Web Server Session Init Script"), Description("If set, the script is executed when a Web Server Session is started."), Id(4, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string WebSessionInitScript { get; set; } = null;
 
         /// <summary>
@@ -529,6 +533,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("If set, the script is executed when a report is initialized for an execution. Default values for report execution can be set here."), Id(5, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string InitScript { get; set; } = null;
 
         /// <summary>
@@ -538,6 +543,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("Report Creation Script"), Description("If set, the script is executed when a new report is created. Default values for report creation can be set here."), Id(6, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ReportCreationScript { get; set; } = null;
 
         /// <summary>
@@ -547,6 +553,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("\tRepository Translations Script"), Description("If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source."), Id(8, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string RepositoryTranslationsScript { get; set; } = null;
 
         EncryptionMode _encryptionMode = EncryptionMode.Default;

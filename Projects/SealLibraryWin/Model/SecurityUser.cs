@@ -119,7 +119,7 @@ namespace Seal.Model
             result = new SWIFolder();
             result.path = path;
             result.right = 0;
-            result.sql = SqlModel;
+            result.sql = ReportCodeLevel >= ReportCodeLevel.Sql;
             result.SetFullPath(GetFullPath(path));
 
             if (result.IsRepository)
@@ -500,13 +500,27 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
+        /// Obsolete, use <see cref="ReportCodeLevel"/>: true if the user has at least the 'Sql' level.
         /// </summary>
+        [Obsolete("Use ReportCodeLevel: SqlModel = true is ReportCodeLevel >= Sql")]
         public bool SqlModel
+        {
+            get { return ReportCodeLevel >= ReportCodeLevel.Sql; }
+        }
+
+        /// <summary>
+        /// The code the user can write in the reports he saves (Web Report Server, AI Agents) and the raw SQL queries of the AI tools ('Sql' level): the highest level of his groups.
+        /// </summary>
+        public ReportCodeLevel ReportCodeLevel
         {
             get
             {
-                return SecurityGroups.Any(group => group.SqlModel);
+                var result = ReportCodeLevel.Metadata;
+                foreach (var group in SecurityGroups)
+                {
+                    if (group.ReportCodeLevel > result) result = group.ReportCodeLevel;
+                }
+                return result;
             }
         }
 

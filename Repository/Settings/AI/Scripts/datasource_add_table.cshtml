@@ -9,6 +9,9 @@
     AIToolConfiguration tool = Model;
     var securityContext = tool.CurrentToolCall.SecurityContext;
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+    if (tool.GetReportCodeLevel() < ReportCodeLevel.Sql) { tool.ExecResult = $"Error: managing data sources requires the 'Sql' report code level (current level: '{tool.GetReportCodeLevel()}'). Do not retry with other datasource tools: tell the user in one sentence that an administrator must grant a higher 'Report code level'."; return; }
+    var razorError = tool.CheckRazorArguments(); // a SQL text or a name starting with '@' is a Razor script compiled when the source is used
+    if (razorError != null) { tool.ExecResult = razorError; return; }
 
     var args     = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;

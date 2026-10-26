@@ -39,6 +39,7 @@ namespace Seal.AI
                 GetProperty("ProviderGUID").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
                 GetProperty("SkillGUIDs").SetIsBrowsable(true);
+                GetProperty("MaxReportCodeLevel").SetIsBrowsable(true);
                 GetProperty("DefaultSystemPrompt").SetIsBrowsable(true);
                 GetProperty("SystemPromptFile").SetIsBrowsable(true);
                 GetProperty("SystemPromptScriptFile").SetIsBrowsable(true);
@@ -126,6 +127,16 @@ namespace Seal.AI
         [XmlArray("SkillGUIDs")]
         [XmlArrayItem("GUID")]
         public List<string> SkillGUIDs { get; set; } = new List<string>();
+
+        /// <summary>
+        /// The highest code level the tools of this agent can write in a report. For a tool call, the level applied is the lowest between the level of the user (security groups) and this value.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\tMaximum report code level"), Description("The highest code level the tools of this agent can write in a report: 'Metadata only' (no SQL, no script), 'Metadata and SQL' or 'Metadata, SQL and scripts'. For a tool call, the level applied is the lowest between the level of the user (Report code level of his security groups) and this value."), Id(13, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(ReportCodeLevel.Scripts)]
+#endif
+        public ReportCodeLevel MaxReportCodeLevel { get; set; } = ReportCodeLevel.Scripts;
 
         /// <summary>
         /// Inline system prompt injected at the start of every conversation.

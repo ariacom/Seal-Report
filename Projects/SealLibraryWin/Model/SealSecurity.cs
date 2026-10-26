@@ -103,6 +103,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [XmlIgnore]
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ProviderScript
         {
             get { return Provider.Script; }
@@ -133,6 +134,7 @@ namespace Seal.Model
         [Category("Security Provider Configuration"), DisplayName("Custom Security Script"), Description("The script executed to login and find the security group used to published reports. If the script is empty, the publication is done using the first security group defined."), Id(3, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string Script { get; set; }
 
         /// <summary>
@@ -151,6 +153,7 @@ namespace Seal.Model
         [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Generation Script"), Description("If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to generate and send the security code (otherwise the default implementation is used: the code is sent by email using the notification email device)."), Id(5, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string TwoFAGenerationScript { get; set; }
 
         /// <summary>
@@ -160,6 +163,7 @@ namespace Seal.Model
         [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication Check Script"), Description("If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to check the security code and validate the Two-Factor Authentication (otherwise the default implementation is used)."), Id(6, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string TwoFACheckScript { get; set; }
 
         /// <summary>
@@ -178,6 +182,7 @@ namespace Seal.Model
         [Category("Security Provider Configuration"), DisplayName("Reset Password Script (Init Reset)"), Description("If the Reset Password feature is enabled and the script is not empty, the script is executed when a user requests a password reset (otherwise the default implementation is used: a reset link is sent by email using the notification email device)."), Id(8, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ResetPasswordScript { get; set; }
 
         /// <summary>
@@ -187,6 +192,7 @@ namespace Seal.Model
         [Category("Security Provider Configuration"), DisplayName("Reset Password Script2 (Apply Reset)"), Description("If the Reset Password feature is enabled and the script is not empty, the script is executed to perform the password reset (otherwise the default implementation is used)."), Id(9, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ResetPasswordScript2 { get; set; }
 
         /// <summary>
@@ -205,6 +211,7 @@ namespace Seal.Model
         [Category("Security Provider Configuration"), DisplayName("Change Password Script"), Description("If the Change Password feature is enabled and the script is not empty, the script is executed when a user changes his password (otherwise the default implementation is used)."), Id(11, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ChangePasswordScript { get; set; }
 
         /// <summary>

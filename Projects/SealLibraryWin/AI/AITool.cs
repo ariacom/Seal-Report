@@ -46,6 +46,11 @@ namespace Seal.AI
         public SecurityUser SecurityContext = null;
 
         /// <summary>
+        /// Configuration of the agent executing the tool call (null if the tool is not called by an agent)
+        /// </summary>
+        public AIAgentConfiguration AgentConfiguration = null;
+
+        /// <summary>
         /// Current log for the tool execution
         /// </summary>
         public ReportExecutionLog ExecutionLog = null;

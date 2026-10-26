@@ -523,6 +523,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Output processing script"), Description("Script executed when the output is processed. The script can be customized."), Id(2, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ProcessingScript { get; set; } = "";
 
         /// <summary>
@@ -642,6 +643,7 @@ namespace Seal.Model
         [Category("SMTP Definition"), DisplayName("SMTP script (System.Net.Mail)"), Description("Script used to send the Email via SMTP (System.Net.Mail). The script can be customized."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string SmtpScript { get; set; } = "";
 
         /// <summary>
@@ -651,6 +653,7 @@ namespace Seal.Model
         [Category("SMTP Definition"), DisplayName("SMTP script (MimeKit)"), Description("Script used to send the Email via SMTP (MimeKit). The script can be customized."), Id(11, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MimeKitScript { get; set; } = "";
 
         /// <summary>
@@ -700,6 +703,7 @@ namespace Seal.Model
         [Category("SendGrid Definition"), DisplayName("SendGrid script"), Description("Script used to send the Email via SendGrid. The script can be customized."), Id(3, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string SendGridScript { get; set; } = "";
 
         /// <summary>
@@ -750,6 +754,7 @@ namespace Seal.Model
         [Category("Microsoft Graph Definition"), DisplayName("MS Graph script"), Description("Script used to send the Email via Microsoft Graph. The script can be customized."), Id(2, 3)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MSGraphScript { get; set; } = "";
 
         /// <summary>

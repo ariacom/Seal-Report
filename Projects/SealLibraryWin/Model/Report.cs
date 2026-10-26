@@ -104,6 +104,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Display name"), Description("The report name displayed in the result. If empty, the report file name is used. The display name may contain a Razor script  if it starts with '@'."), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Metadata)]
         public string DisplayName { get; set; } = "";
         /// <summary>
         /// True if DisplayName must be serialized
@@ -148,6 +149,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Guide"), Description("Optional HTML guide displayed below the prompted restrictions when the report is executed in a browser (e.g. to explain what the report does and how to fill the input values). The text can contain HTML and, if it starts with '@', is parsed with Razor (the report being the model)."), Id(2, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Metadata, Html = true)]
         public string Guide { get; set; } = "";
         /// <summary>
         /// True if Guide must be serialized
@@ -335,6 +337,7 @@ namespace Seal.Model
         [Category("Scripts"), DisplayName("Report Execution Init Script"), Description("A Razor script executed when the report is initialized for the execution. The script can be used to modify the report definition (e.g. set default values in restrictions)."), Id(2, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string InitScript { get; set; } = "";
         /// <summary>
         /// True if InitScript must be serialized
@@ -350,6 +353,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string NavigationScript { get; set; }
         /// <summary>
         /// True if NavigationScript must be serialized
@@ -1676,7 +1680,32 @@ namespace Seal.Model
             return report;
         }
 
+        /// <summary>
+        /// Returns the XML of the report as saved by <see cref="SaveToFile(string)"/> (e.g. to check it with the <see cref="ReportCodeGuard"/> before the save)
+        /// </summary>
+        public string GetXml()
+        {
+            string result = null;
+            Serialize(() =>
+            {
+                using (var stream = new MemoryStream())
+                {
+                    using (var writer = new XmlTextWriter(stream, new UTF8Encoding(false)) { Formatting = System.Xml.Formatting.Indented, Indentation = 2 })
+                    {
+                        new XmlSerializer(typeof(Report)).Serialize(writer, this);
+                    }
+                    result = Encoding.UTF8.GetString(stream.ToArray());
+                }
+            });
+            return result;
+        }
+
         private void Serialize(string path)
+        {
+            Serialize(() => Helper.Serialize(path, this));
+        }
+
+        private void Serialize(System.Action serialize)
         {
             try
             {
@@ -1706,7 +1735,7 @@ namespace Seal.Model
 
                     foreach (var table in source.MetaData.Tables) table.BeforeSerialization();
                 }
-                Helper.Serialize(path, this);
+                serialize();
             }
             finally
             {

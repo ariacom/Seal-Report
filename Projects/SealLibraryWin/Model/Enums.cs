@@ -1362,6 +1362,10 @@ namespace Seal.Model
         /// AI chat error
         /// </summary>
         AIChatError,
+        /// <summary>
+        /// Report write refused: content (SQL, script) above the report code level of the user or the AI Agent
+        /// </summary>
+        ReportCodeRefused,
     }
 
     /// <summary>
@@ -1765,5 +1769,27 @@ namespace Seal.Model
         /// </summary>
         [Description("Microsoft Graph")]
         MSGraph,
+    }
+
+    /// <summary>
+    /// Authorization level for the content of the reports written by a user (Web Report Server, AI Agents): defines if SQL or Razor scripts can be written in a report.
+    /// </summary>
+    public enum ReportCodeLevel
+    {
+        /// <summary>
+        /// Metadata only: no SQL and no script
+        /// </summary>
+        [Description("Metadata only")]
+        Metadata = 0,
+        /// <summary>
+        /// Metadata and SQL (custom SQL, SQL models, restriction expressions)
+        /// </summary>
+        [Description("Metadata and SQL")]
+        Sql = 1,
+        /// <summary>
+        /// Metadata, SQL and Razor scripts
+        /// </summary>
+        [Description("Metadata, SQL and scripts")]
+        Scripts = 2,
     }
 }

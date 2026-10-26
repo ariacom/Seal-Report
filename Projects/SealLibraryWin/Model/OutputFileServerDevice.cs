@@ -286,6 +286,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Output processing script"), Description("Script executed when the output is processed. The script can be modified to change the client settings (e.g. configuring FTPS)."), Id(10, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ProcessingScript { get; set; } = "";
 
         /// <summary>

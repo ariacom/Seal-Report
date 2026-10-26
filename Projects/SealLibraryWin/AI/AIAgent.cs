@@ -366,6 +366,7 @@ namespace Seal.AI
                     }
 
                     toolCall.SecurityContext = SecurityContext;
+                    toolCall.AgentConfiguration = Configuration;
                     toolCall.ExecutionLog = toolsLog;
                     toolCall.CancelOperation = cancelOperation;
 

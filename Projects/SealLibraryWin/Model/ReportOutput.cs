@@ -176,6 +176,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Pre-generation script"), Description("Optional Razor script executed before the generation. If the script returns 0, the generation is aborted."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PreScript { get; set; }
 
         /// <summary>
@@ -185,6 +186,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Post-generation script"), Description("Optional Razor script executed after the generation."), Id(5, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PostScript { get; set; }
 
         /// <summary>
@@ -328,6 +330,7 @@ namespace Seal.Model
         [Category("Email Body"), DisplayName("Body message"), Description("The body message of the email sent. If empty, a default text is used."), Id(4, 4)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Metadata, Html = true)]
         public string EmailBody { get; set; }
 
         private bool _emailSkipAttachments = false;

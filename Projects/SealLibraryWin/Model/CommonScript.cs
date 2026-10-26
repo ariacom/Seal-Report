@@ -80,6 +80,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Script"), Description("A Razor script that will be included in all executed scripts."), Id(2, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string Script { get; set; } = RazorTemplate;
     }
 

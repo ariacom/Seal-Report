@@ -346,6 +346,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Output processing script"), Description("Script executed when the output is processed. The script can be modified for specific needs (e.g. setting metadata columns on the uploaded file)."), Id(12, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string ProcessingScript { get; set; } = "";
 
         /// <summary>

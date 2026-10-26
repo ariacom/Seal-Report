@@ -51,6 +51,11 @@
     {
         var doc = XDocument.Parse(xml);
 
+        // --- Report code level (SQL, Razor scripts) of the user and the agent: checked before any save or SQL execution.
+        // Content of the report already saved is kept as is, only new or modified content is checked ---
+        var codeError = tool.CheckReportCode(xml, overwrite && File.Exists(fullPath) ? File.ReadAllText(fullPath) : null, fullPath);
+        if (codeError != null) { tool.ExecResult = codeError; return; }
+
         // --- Validate / resolve metadata column references (guard against fabricated GUIDs) ---
         Func<string, string> norm = s => (s ?? "").Replace("[", "").Replace("]", "").Trim().ToLowerInvariant();
         Func<string, string> stripCast = s => { var i = s.IndexOf("::"); return i < 0 ? s : s.Substring(0, i).Trim(); };

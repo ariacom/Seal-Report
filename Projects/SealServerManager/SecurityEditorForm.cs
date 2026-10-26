@@ -53,7 +53,7 @@ Security groups define:
 which repository folders are published,
 if the user can view reports,
 if the user has personal folders,
-whether SQL Models can be edited with the Web Report Designer and which data sources the AI Tools can access,
+the report code level (no code, SQL or scripts written in the reports saved by the web users and the AI Agents) and which data sources the AI Tools can access,
 
 The security provider performs the authentication and select the security groups of the user.
 
@@ -65,7 +65,7 @@ Rules applied if a user belongs to several groups:
 - Folders, Folder Detail and Menu Scripts are executed sequentially sorted by group name
 
 Designer and Tools Security
-- SQL Models: True if true in one group
+- Report code level: the highest level of the groups (Metadata only, Metadata and SQL, Metadata, SQL and scripts)
 - AI Tools Data Sources: a data source is allowed if it is listed in at least one group (union of all groups); if no group defines any restriction, all data sources are allowed
 
 - Default options (Edit Profile, Culture, Logo, Startup) are taken from the group having the highest weight.

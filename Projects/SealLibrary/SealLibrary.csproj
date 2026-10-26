@@ -76,6 +76,7 @@
 		<Compile Include="..\SealLibraryWin\Helpers\RazorEngineCompat.cs" Link="Helpers\RazorEngineCompat.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\TaskDatabaseHelper.cs" Link="Helpers\TaskDatabaseHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\TaskHelper.cs" Link="Helpers\TaskHelper.cs" />
+		<Compile Include="..\SealLibraryWin\Helpers\ReportCodeGuard.cs" Link="Helpers\ReportCodeGuard.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
 		<Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ClientAsset.cs" Link="Model\ClientAsset.cs" />
@@ -131,6 +132,7 @@
 		<Compile Include="..\SealLibraryWin\Model\SealReportScheduler.cs" Link="Model\SealReportScheduler.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSchedule.cs" Link="Model\SealSchedule.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
+		<Compile Include="..\SealLibraryWin\Model\SealCodeAttribute.cs" Link="Model\SealCodeAttribute.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealServerConfiguration.cs" Link="Model\SealServerConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityFolder.cs" Link="Model\SecurityFolder.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SecurityRepositoryFolder.cs" Link="Model\SecurityRepositoryFolder.cs" />

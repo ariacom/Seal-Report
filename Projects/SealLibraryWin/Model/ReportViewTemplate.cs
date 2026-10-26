@@ -204,6 +204,65 @@ namespace Seal.Model
         /// </summary>
         public List<string> PartialTemplatesPath { get; set; } = new List<string>();
 
+        HashSet<string> _rawParameterNames = null;
+        static readonly System.Text.RegularExpressions.Regex _valueRegex = new System.Text.RegularExpressions.Regex(@"(?:GetValue|GetValueOrDefault)\(\s*""(\w+)""|GetValueIfNotEmpty\(\s*""[^""]*""\s*,\s*""(\w+)""");
+        static readonly string[] _encodingFunctions = new string[] { "Helper.ToJS(", "Helper.ToHtml(", "Helper.AddAttribute(", "view.AddAttribute(", "view.GetHtmlValue(", "HttpUtility.HtmlEncode(", "HttpUtility.JavaScriptStringEncode(" };
+
+        /// <summary>
+        /// Expressions of the @Raw(...) calls of a template text, except those entirely encoded (e.g. Raw(Helper.ToJS(...)))
+        /// </summary>
+        static IEnumerable<string> GetRawExpressions(string text)
+        {
+            int index = 0;
+            while ((index = text.IndexOf("Raw(", index)) >= 0)
+            {
+                int start = index + 4, depth = 1, end = start;
+                bool inString = false;
+                for (; end < text.Length && depth > 0; end++)
+                {
+                    var c = text[end];
+                    if (c == '"' && text[end - 1] != '\\') inString = !inString;
+                    else if (!inString && c == '(') depth++;
+                    else if (!inString && c == ')') depth--;
+                }
+                var expression = text.Substring(start, Math.Max(0, end - start - 1)).Trim();
+                index = start;
+                if (_encodingFunctions.Any(i => expression.StartsWith(i))) continue;
+                yield return expression;
+            }
+        }
+
+        /// <summary>
+        /// Names of the parameters whose value is rendered without encoding by the template or its partial templates (e.g. @Raw(view.GetValue("chartjs_colors")) in a script),
+        /// and of the parameters declared with a <see cref="Parameter.CodeLevel"/>: a value written by a web user or an AI Agent is code (see <see cref="ReportCodeGuard"/>).
+        /// </summary>
+        public HashSet<string> RawParameterNames
+        {
+            get
+            {
+                if (_rawParameterNames == null)
+                {
+                    var result = new HashSet<string>();
+                    var paths = new List<string>() { FilePath };
+                    paths.AddRange(PartialTemplatesPath);
+                    if (SharedPartialTemplates != null) paths.AddRange(SharedPartialTemplates.Select(i => GetPartialTemplatePath(i)));
+                    foreach (var path in paths.Where(i => !string.IsNullOrEmpty(i) && File.Exists(i)).Distinct())
+                    {
+                        foreach (var expression in GetRawExpressions(File.ReadAllText(path)))
+                        {
+                            foreach (System.Text.RegularExpressions.Match value in _valueRegex.Matches(expression))
+                            {
+                                result.Add(value.Groups[1].Success ? value.Groups[1].Value : value.Groups[2].Value);
+                            }
+                        }
+                    }
+                    foreach (var parameter in Parameters.Where(i => i.CodeLevel > ReportCodeLevel.Metadata)) result.Add(parameter.Name);
+                    _rawParameterNames = result;
+                }
+                return _rawParameterNames;
+            }
+        }
+
         /// <summary>
         /// Returns a partial template path from a given name
         /// </summary>
@@ -226,6 +285,7 @@ namespace Seal.Model
         public bool Init(string path)
         {
             FilePath = path;
+            _rawParameterNames = null;
             LastModification = File.GetLastWriteTime(path);
             var rawName = Path.GetFileNameWithoutExtension(path);
             //Get the name from the file name (Camel case)

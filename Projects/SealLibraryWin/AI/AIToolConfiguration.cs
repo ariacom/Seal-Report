@@ -166,6 +166,74 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Returns the code level the current tool call can write in a report: the level of the user (Scripts without security context), limited by the maximum level of the agent.
+        /// </summary>
+        public ReportCodeLevel GetReportCodeLevel()
+        {
+            var user = CurrentToolCall?.SecurityContext;
+            var level = user == null ? ReportCodeLevel.Scripts : user.ReportCodeLevel;
+            var agent = CurrentToolCall?.AgentConfiguration;
+            if (agent != null && agent.MaxReportCodeLevel < level) level = agent.MaxReportCodeLevel;
+            return level;
+        }
+
+        /// <summary>
+        /// Checks the code (SQL, Razor scripts) of a report XML written by the tool against <see cref="GetReportCodeLevel"/>, see <see cref="ReportCodeGuard"/>.
+        /// Returns null if the XML is accepted, otherwise the error to return to the agent.
+        /// </summary>
+        /// <param name="newXml">The report XML to write</param>
+        /// <param name="existingXml">The XML of the report already saved (null for a new report): its content is accepted as is</param>
+        /// <param name="path">The path of the report written, for the audit of a refusal</param>
+        public string CheckReportCode(string newXml, string existingXml = null, string path = null)
+        {
+            var level = GetReportCodeLevel();
+            var messages = ReportCodeGuard.Check(newXml, existingXml, level);
+            if (messages.Count == 0) return null;
+            ReportCodeGuard.LogRefusal(CurrentToolCall?.SecurityContext, path, level, messages, $"AI tool '{Name}'" + (CurrentToolCall?.AgentConfiguration != null ? $" (agent '{CurrentToolCall.AgentConfiguration.Name}')" : ""));
+            return $"Error: the report contains content above your authorization level ('{level}'): " + string.Join("; ", messages) +
+                ". Remove this content (or keep it exactly as in the saved report) and call the tool again. Do not retry with the same content: if the request needs it, tell the user that an administrator must grant a higher 'Report code level'.";
+        }
+
+        /// <summary>
+        /// For the tools writing outside a report (e.g. in a data source): returns an error if an argument of the current tool call is a Razor script (a text starting with '@', compiled by Seal) and the code level is below Scripts, otherwise null.
+        /// </summary>
+        /// <param name="path">The path of the object written, for the audit of a refusal</param>
+        public string CheckRazorArguments(string path = null)
+        {
+            var level = GetReportCodeLevel();
+            if (level >= ReportCodeLevel.Scripts || string.IsNullOrEmpty(CurrentToolCall?.Arguments)) return null;
+
+            var scripts = new List<string>();
+            void check(System.Text.Json.JsonElement element, string name)
+            {
+                switch (element.ValueKind)
+                {
+                    case System.Text.Json.JsonValueKind.Object:
+                        foreach (var property in element.EnumerateObject()) check(property.Value, property.Name);
+                        break;
+                    case System.Text.Json.JsonValueKind.Array:
+                        foreach (var item in element.EnumerateArray()) check(item, name);
+                        break;
+                    case System.Text.Json.JsonValueKind.String:
+                        var value = element.GetString();
+                        if (value != null && value.Trim().StartsWith("@")) scripts.Add($"the argument '{name}' starts with '@' (Razor script) and requires the Scripts level");
+                        break;
+                }
+            }
+            try
+            {
+                using (var doc = System.Text.Json.JsonDocument.Parse(CurrentToolCall.Arguments)) check(doc.RootElement, "arguments");
+            }
+            catch { return null; } //invalid JSON: the tool reports it
+            if (scripts.Count == 0) return null;
+
+            scripts = scripts.Distinct().ToList();
+            ReportCodeGuard.LogRefusal(CurrentToolCall.SecurityContext, path, level, scripts, $"AI tool '{Name}'" + (CurrentToolCall.AgentConfiguration != null ? $" (agent '{CurrentToolCall.AgentConfiguration.Name}')" : ""));
+            return $"Error: the call contains content above your authorization level ('{level}'): " + string.Join("; ", scripts) +
+                ". Remove the leading '@' (a SQL text or a name must not be a Razor script) and call the tool again. Do not retry with the same content: if the request needs a script, tell the user that an administrator must grant a higher 'Report code level'.";
+        }
+
+        /// <summary>
         /// Returns the repository the tool scripts use to load or create reports (the Private Data Sources used by a report are loaded on demand).
         /// </summary>
         public Repository GetRepository()

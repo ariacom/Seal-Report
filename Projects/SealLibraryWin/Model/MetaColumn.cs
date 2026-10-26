@@ -113,6 +113,7 @@ namespace Seal.Model
         [DisplayName("Name"), Description("The name of the column in the table or the SQL Statement used for the column."), Category("Definition"), Id(1, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql, ApplyToDerived = false)]
         public override string Name
         {
             get { return _name; }

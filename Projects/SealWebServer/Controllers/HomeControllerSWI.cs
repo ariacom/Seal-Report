@@ -751,6 +751,18 @@ namespace SealWebServer.Controllers
                 if (FileHelper.HasInvalidFileNameChars(Path.GetFileName(destinationPath))) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
                 //Repository folders accept report files as plain files, other files-only folders reject them
                 if (folderDest.files && !folderDest.IsRepository && (FileHelper.IsReportFile(sourcePath) || (file.isshortcut && file.isreport))) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
+                //A report moved or copied keeps its content (allowed), but a file renamed or copied as a report is checked as a new report against the report code level of the user
+                var reportExtension = "." + Repository.SealReportFileExtension;
+                //Extensions of the normalized paths: on Windows, trailing dots and spaces of a file name are removed when the file is written
+                if (Path.GetFullPath(destinationPath).EndsWith(reportExtension, StringComparison.OrdinalIgnoreCase) && !Path.GetFullPath(sourcePath).EndsWith(reportExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    var messages = ReportCodeGuard.Check(System.IO.File.ReadAllText(sourcePath), null, WebUser.ReportCodeLevel);
+                    if (messages.Count > 0)
+                    {
+                        ReportCodeGuard.LogRefusal(WebUser, destinationPath, WebUser.ReportCodeLevel, messages, "Web move/copy");
+                        throw new Exception(string.Format(Translate("Error: the file cannot be renamed as a report, it contains content above your authorization level ({0}): {1}"), WebUser.ReportCodeLevel, string.Join("; ", messages)));
+                    }
+                }
                 if (System.IO.File.Exists(destinationPath) && copy) destinationPath = FileHelper.GetUniqueFileName(Path.GetDirectoryName(destinationPath), Path.GetFileNameWithoutExtension(destinationPath) + " - Copy" + Path.GetExtension(destinationPath), Path.GetExtension(destinationPath));
 
                 bool hasSchedule = (FileHelper.IsReportFile(sourcePath) && FileHelper.ReportHasSchedule(sourcePath));
@@ -1034,12 +1046,17 @@ namespace SealWebServer.Controllers
                     content = memory.ToArray();
                 }
                 //A report is checked against the report code level of the user: no SQL or script above his level (there is no saved version to compare with)
-                if (fileName.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+                //Extension of the final path (normalized: on Windows, trailing dots and spaces of the file name are removed)
+                if (finalPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
                 {
                     string xml;
                     using (var reader = new StreamReader(new MemoryStream(content), true)) xml = reader.ReadToEnd();
                     var messages = ReportCodeGuard.Check(xml, null, WebUser.ReportCodeLevel);
-                    if (messages.Count > 0) throw new Exception(string.Format(Translate("Error: the report cannot be uploaded, it contains content above your authorization level ({0}): {1}"), WebUser.ReportCodeLevel, string.Join("; ", messages)));
+                    if (messages.Count > 0)
+                    {
+                        ReportCodeGuard.LogRefusal(WebUser, finalPath, WebUser.ReportCodeLevel, messages, "Web upload");
+                        throw new Exception(string.Format(Translate("Error: the report cannot be uploaded, it contains content above your authorization level ({0}): {1}"), WebUser.ReportCodeLevel, string.Join("; ", messages)));
+                    }
                 }
                 System.IO.File.WriteAllBytes(finalPath, content);
                 return Json(new { Status = true, Message = Translate("The file has been uploaded.") });

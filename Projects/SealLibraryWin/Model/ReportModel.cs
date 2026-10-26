@@ -228,6 +228,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PreLoadScript { get; set; }
 
         /// <summary>
@@ -238,6 +239,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string LINQQueryScript { get; set; }
 
         /// <summary>
@@ -248,6 +250,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string LoadScript { get; set; }
 
         private bool _subModelsSetRestr = true;
@@ -313,6 +316,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string FinalScript { get; set; }
 
         /// <summary>
@@ -471,6 +475,7 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlSelect
         {
             get { return (_sqlSelect == DefaultClause) ? "" : _sqlSelect; }
@@ -486,6 +491,7 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlFrom
         {
             get { return (_sqlFrom == DefaultClause) ? "" : _sqlFrom; }
@@ -501,6 +507,7 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlGroupBy
         {
             get { return (_sqlGroupBy == DefaultClause) ? "" : _sqlGroupBy; }
@@ -516,6 +523,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Order By Clause"), Description("If not empty, overwrites the ORDER BY clause in the generated SQL statement."), Id(7, 3)]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlOrderBy
         {
             get { return (_sqlOrderBy == DefaultClause) ? "" : _sqlOrderBy; }
@@ -531,6 +539,7 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SqlCTE
         {
             get { return (_sqlSelect == DefaultClause) ? "" : _sqlCTE; }
@@ -546,6 +555,7 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PreSQL { get; set; }
 
         /// <summary>
@@ -556,6 +566,7 @@ namespace Seal.Model
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PostSQL { get; set; }
 
         /// <summary>
@@ -1049,6 +1060,7 @@ namespace Seal.Model
         /// SELECT Sql used for the model
         /// </summary>
         [XmlIgnore]
+        [SealCode(ReportCodeLevel.Sql)]
         public string Sql { get; set; }
         /// <summary>
         /// Xml serialization helper: serialize Sql only for a SQL Model

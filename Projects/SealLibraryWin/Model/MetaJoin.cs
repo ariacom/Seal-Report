@@ -20,6 +20,7 @@ namespace Seal.Model
     /// <summary>
     /// A MetaJoin defines how to join 2 MetaTables
     /// </summary>
+    [SealCode(ReportCodeLevel.Sql)]
     public class MetaJoin : RootComponent
     {
 #if WINDOWS
@@ -188,6 +189,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Join clause"), Description("SQL Clause or LINQ Clause (for No SQL Source) used to define the join between the 2 tables."), Id(7, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string Clause
         {
             get { return _clause == null ? "" : _clause; }

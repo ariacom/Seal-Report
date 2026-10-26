@@ -378,6 +378,34 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
                             <p>
                                 The same two flags exist on the <b>Security Group</b> for the user's <b>Personal folder</b>.
                             </p>
+                            <h5>Report code level</h5>
+                            <p>
+                                Web users and <b>AI Agents</b> can save reports (upload, AI tools). The <code>Report code level</code> of the <b>Security Group</b> defines the code they can write in a report:
+                            </p>
+                            <ul>
+                                <li><code>Metadata only</code> (default): elements, restrictions, views and outputs built from the Data Source metadata, no SQL and no script.</li>
+                                <li><code>Metadata and SQL</code>: also custom SQL of elements and restrictions, SQL models, enumerated lists and joins defined in the report, restriction expressions other than <code>[restriction] AND/OR/NOT</code>, and the raw SQL queries of the AI tools (<code>database_*</code>, <code>report_create_from_sql</code>). Dynamic filters set for security purpose are not applied to raw SQL.</li>
+                                <li><code>Metadata, SQL and scripts</code>: also Razor scripts (cell scripts, model and task scripts, custom templates, Pre/Post SQL...), connections, tasks and table templates (with their parameters) defined in the report, and code rendered in the browser. Any text starting with <code>@@</code> is a Razor script.</li>
+                            </ul>
+                            <p>
+                                The level of a user is the highest level of his groups. It replaces the former <code>SQL models</code> option: a group saved with this option enabled is read as <b>Metadata and SQL</b>.
+                                For an AI tool, the level applied is the lowest between the level of the user and the <code>Maximum report code level</code> of the <b>AI Agent</b> (<eg>e.g. set it to Metadata for an agent published to many users</eg>), the raw SQL queries of the tools included.
+                            </p>
+                            <p>
+                                Code rendered in the browser is also checked below the <b>Scripts</b> level:
+                            </p>
+                            <ul>
+                                <li>The view parameters rendered without encoding by their view template (<eg>e.g. the colors, sizes or CSS of a chart, the additional JavaScript of the report</eg>, detected from the <code>@@Raw()</code> calls of the template and its partial templates, or declared with <code>CodeLevel</code> in the template configuration): a value must be one of the values proposed by the template, or a plain value without quote, parenthesis, brace, angle bracket, equal sign, ampersand or backslash.</li>
+                                <li>The HTML texts (report <code>Guide</code>, email body): no active content (script, frame, embedded object, event handler or script URL).</li>
+                            </ul>
+                            <p>
+                                The AI tools managing the Data Sources (<code>datasource_*</code>) require the <b>Metadata and SQL</b> level, and a text starting with <code>@@</code> in their arguments (table SQL, column SQL, join clause, names...) requires <b>Metadata, SQL and scripts</b>: it would be compiled as a Razor script each time the source is used.
+                            </p>
+                            <div class="bs-callout bs-callout-info">
+                                The level is checked only when a report is written, and only for new or modified content: the SQL and scripts already saved in a report are kept when it is modified (<eg>e.g. an agent changing a column of a report having a cell script</eg>), removing content is always allowed, and existing reports can always be executed.<br />
+                                An uploaded report, or a file renamed or copied as a report, is checked as a new report. A report copied or moved on the server keeps its content. Each refusal is written in the audit (type <code>ReportCodeRefused</code>).<br />
+                                The Report Designer and the Server Manager are not checked, and the files uploaded to the Repository Folders (Danger Zone) are outside of this check.
+                            </div>
                             <div class="bs-callout bs-callout-info">
                                 If a user belongs to several groups, the following rules are applied:<br /><br />
                                 For the <b>Reports</b> folders<br />

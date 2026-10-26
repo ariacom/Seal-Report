@@ -156,6 +156,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("SQL Select Statement"), Description("SQL Select Statement executed to define the table. If empty, the table name is used."), Id(4, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string Sql { get; set; }
 
         /// <summary>
@@ -183,6 +184,7 @@ namespace Seal.Model
 #if WINDOWS
         [Category("Definition"), DisplayName("Template"), Description("The Template used to define the NoSQL table."), Id(3, 1)]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)] //the scripts of the template are executed on the server
         public string TemplateName { get; set; }
 
         private MetaTableTemplate _tableTemplate = null;
@@ -209,6 +211,7 @@ namespace Seal.Model
         /// <summary>
         /// List of Table Parameters
         /// </summary>
+        [SealCode(ReportCodeLevel.Scripts)] //inputs of the template scripts (e.g. file path, URL): every value requires the level
         public List<Parameter> Parameters { get; set; } = new List<Parameter>();
         /// <summary>
         /// True if Parameters must be serialized
@@ -411,6 +414,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Definition Init Script"), Description("Optional Razor Script executed before the execution of the DefinitionScript."), Id(3, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string DefinitionInitScript { get; set; }
 
         /// <summary>
@@ -420,6 +424,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Definition Script"), Description("The Razor Script used to built the DataTable object that defines the table."), Id(4, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string DefinitionScript { get; set; }
 
         /// <summary>
@@ -429,6 +434,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Mongo DB Stages Script"), Description("Razor Script executed for Mongo DB table to add stages executed on the server before the load. This script is automatically generated from the model definition. It can be overwritten if the 'Generate Mongo DB stages' parameter of the table is set to false.  Use the 'Refresh Sub-Models and Sub-Tables' button in the model to generate and view the script."), Id(6, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string MongoStagesScript { get; set; }
 
         /// <summary>
@@ -438,6 +444,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Default Load Script"), Description("The Default Razor Script used to load the data in the table. This can be overwritten in the model. If the definition script includes also the load of the data, this script can be left empty/blank."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string LoadScript { get; set; }
 
         bool hasFunctions()
@@ -567,6 +574,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Pre SQL statement"), Description("SQL Statement executed before the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(2, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PreSQL { get; set; }
 
         /// <summary>
@@ -576,6 +584,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Post SQL statement"), Description("SQL Statement executed after the query when the table is involved. The statement may contain Razor script if it starts with '@'."), Id(3, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string PostSQL { get; set; }
 
         /// <summary>
@@ -599,6 +608,7 @@ namespace Seal.Model
         [Category("SQL"), DisplayName("Additional WHERE clause"), Description("Additional SQL added in the WHERE clause when the table is involved in a query. The text may contain Razor script if it starts with '@'."), Id(5, 2)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string WhereSQL { get; set; } = null;
 
         /// <summary>

@@ -122,6 +122,7 @@ namespace Seal.Model
         [Category("Join for the model"), DisplayName("Additional clause"), Description("SQL added with an AND to the join clause for this model. For an outer join, this allows to restrict the outer table without losing the rows of the other table (e.g. Orders.OrderDate >= '2024-01-01' for a left outer join between Customers and Orders). The SQL may contain common restrictions or values with the '{CommonRestriction_' or '{CommonValue_' keywords."), Id(5, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string AdditionalClause
         {
             get { return _additionalClause ?? ""; }

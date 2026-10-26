@@ -51,7 +51,7 @@
             group.Name, 
             Helper.GetEnumDescription(group.PersFolderRight.GetType(), group.PersFolderRight),
             group.ShowFoldersView ? "Yes" : "No",
-            group.SqlModel ? "Yes" : "No",
+            Helper.GetEnumDescription(typeof(ReportCodeLevel), group.ReportCodeLevel),
             group.Weight.ToString(),
             group.EditProfile ? "Yes" : "No",
             group.Culture != null ? group.Culture : "",
@@ -87,7 +87,7 @@
                 <Name>sql_model</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Sql model</DisplayName>
+                <DisplayName>Report code level</DisplayName>
                 <DisplayOrder>4</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
@@ -386,7 +386,7 @@
                         gr,
                         Helper.GetEnumDescription(user.PersonalFolderRight.GetType(), user.PersonalFolderRight),
                         user.ShowFoldersView ? "Yes" : "No",
-                        user.SqlModel ? "Yes" : "No",
+                        Helper.GetEnumDescription(typeof(ReportCodeLevel), user.ReportCodeLevel),
                         user.DefaultGroup.Name
                         );              
                  }
@@ -427,7 +427,7 @@
                 <Name>sql_model</Name>
                 <Type>Text</Type>
                 <Category>Master</Category>
-                <DisplayName>Sql model</DisplayName>
+                <DisplayName>Report code level</DisplayName>
                 <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
               <MetaColumn>

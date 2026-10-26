@@ -38,6 +38,7 @@ namespace Seal.Model
     /// <summary>
     /// A ReportTask defines the exection of a task: SQL statement or Razor script
     /// </summary>
+    [SealCode(ReportCodeLevel.Scripts)]
     public class ReportTask : ReportComponent
 #if WINDOWS
         , ITreeSort
@@ -534,6 +535,7 @@ namespace Seal.Model
         [Category("Options"), DisplayName("Body script"), Description("Body Razor script executed for the Task."), Id(1, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string BodyScript { get; set; }
 
         /// <summary>
@@ -611,6 +613,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("SQL statement"), Description("SQL Statement executed for the task. It may be empty if a Razor Script is defined. The statement may contain Razor script if it starts with '@'."), Id(5, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SQL { get; set; }
 
         /// <summary>
@@ -620,6 +623,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("SQL separator"), Description("Separator used in the SQL Statement to split the script in several sub-scripts (e.g. GO or ;). The SQL statement must contain the separator plus a line feed to be detected."), Id(6, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Metadata)]
         public string SQLSeparator { get; set; }
 
         string _script;
@@ -630,6 +634,7 @@ namespace Seal.Model
         [Category("Definition"), DisplayName("Script"), Description("Razor script executed for the Task. It may be empty if the SQL Script is defined."), Id(7, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string Script
         {
             get

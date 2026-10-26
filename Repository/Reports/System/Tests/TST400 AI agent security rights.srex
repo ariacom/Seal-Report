@@ -134,7 +134,7 @@
     </ReportTask>
     <ReportTask>
       <GUID>c4a07400-0400-4a00-9000-000000000403</GUID>
-      <Name>SQL Models denied - Designer cannot create a SQL report</Name>
+      <Name>SQL denied (Metadata code level) - Designer cannot create a SQL report</Name>
       <Tasks />
       <ExecProcessChildren>true</ExecProcessChildren>
       <TemplateName>Default</TemplateName>
@@ -164,10 +164,10 @@
 
     task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
-    //Security context: full folder Edit (so folder rights never confound the result), but SQL Models DENIED.
+    //Security context: full folder Edit (so folder rights never confound the result), but SQL DENIED (report code level 'Metadata').
     var user = new SecurityUser(repository.Security);
     var grp = new SecurityGroup() { Name = "TST400 No-SQL group", GUID = "tst400-nosql" };
-    grp.SqlModel = false;
+    grp.ReportCodeLevel = ReportCodeLevel.Metadata;
     grp.Folders.Add(new SecurityFolder() { Path = @"\", FolderRight = FolderRight.Edit, UseSubFolders = true });
     user.SecurityGroups.Add(grp);
     user.SetFolders();
@@ -193,7 +193,7 @@
         agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
         if (report.Cancel) return;
 
-        //SECURITY CHECK: with SQL Models disabled, the agent must NOT be able to create a SQL-based report.
+        //SECURITY CHECK: at the Metadata code level, the agent must NOT be able to create a SQL-based report.
         //(A non-SQL artifact, if any, is not a security breach - just clean it up.)
         if (File.Exists(reportFull))
         {
@@ -206,12 +206,12 @@
             catch { }
             File.Delete(reportFull);
             if (isSql)
-                throw new Exception(@"SECURITY FAILURE: a SQL report was created although SQL Models are disabled for the user's security group.");
-            task.LogMessage($"[{provider.Name}] No SQL report was created (SQL Models correctly denied).");
+                throw new Exception(@"SECURITY FAILURE: a SQL report was created although the report code level of the user's security group is 'Metadata'.");
+            task.LogMessage($"[{provider.Name}] No SQL report was created (SQL correctly denied).");
         }
         else
         {
-            task.LogMessage($"[{provider.Name}] No report created (SQL Models correctly denied).");
+            task.LogMessage($"[{provider.Name}] No report created (SQL correctly denied).");
         }
     }
     catch (Exception ex)
@@ -347,7 +347,7 @@
     //Security context: SQL allowed (so only the SOURCE restriction is active), restricted to Audit SQLite only.
     var user = new SecurityUser(repository.Security);
     var grp = new SecurityGroup() { Name = "TST400 Audit-only group", GUID = "tst400-audit-only" };
-    grp.SqlModel = true;
+    grp.ReportCodeLevel = ReportCodeLevel.Sql;
     grp.Folders.Add(new SecurityFolder() { Path = @"\", FolderRight = FolderRight.Execute, UseSubFolders = true });
     grp.DataSourceGUIDs.Add(auditGuid);
     user.SecurityGroups.Add(grp);
@@ -405,6 +405,121 @@
       <SortOrder>4</SortOrder>
     </ReportTask>
     <ReportTask>
+      <GUID>c4a07400-0400-4a00-9000-000000000407</GUID>
+      <Name>Report code level - no new script, saved script kept</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>c4a07400-0400-4a00-9000-000000000101</SourceGUID>
+      <Script>@using Seal.AI;
+@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    //Security context: full folder Edit, report code level 'Metadata' (no SQL, no script)
+    var user = new SecurityUser(repository.Security);
+    var grp = new SecurityGroup() { Name = "TST400 Metadata group", GUID = "tst400-metadata", ReportCodeLevel = ReportCodeLevel.Metadata };
+    grp.Folders.Add(new SecurityFolder() { Path = @"\", FolderRight = FolderRight.Edit, UseSubFolders = true });
+    user.SecurityGroups.Add(grp);
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    var reportRel  = Path.Combine(outputDir, "code_level.srex");
+    var reportFull = Path.Combine(repository.RepositoryPath, reportRel);
+    const string savedScript = "@{\r\n    ResultCell cell = Model;\r\n    if (cell.IsTitle) { cell.FinalCssClass = \"text-primary\"; }\r\n}";
+    Func&lt;Report, string, ReportElement&gt; element = (r, column) =&gt; r.Models.SelectMany(m =&gt; m.Elements).FirstOrDefault(e =&gt; e.MetaColumn != null &amp;&amp; e.MetaColumn.Name == column);
+
+    try
+    {
+        if (File.Exists(reportFull)) File.Delete(reportFull);
+        //Setup DETERMINISTICALLY (author content, no AI): the sample list of products with a cell script on the quantity per unit
+        var setup = Report.LoadFromFile(Path.Combine(repository.ReportsFolder, "Samples", "01-Simple list (Products).srex"), repository, false);
+        setup.InitGUIDs();
+        element(setup, "Products.QuantityPerUnit").CellScript = savedScript;
+        setup.FilePath = reportFull;
+        setup.SaveToFile();
+
+        //DETERMINISTIC CHECKS of the guard used by the AI tools
+        var toolConfig = new AIToolConfiguration();
+        toolConfig.CurrentToolCall = new AIToolCall() { SecurityContext = user };
+        if (toolConfig.GetReportCodeLevel() != ReportCodeLevel.Metadata) throw new Exception($"the code level of the user is '{toolConfig.GetReportCodeLevel()}' instead of 'Metadata'");
+        var savedXml = File.ReadAllText(reportFull);
+        if (toolConfig.CheckReportCode(savedXml, null) == null) throw new Exception("SECURITY FAILURE: a new report with a cell script is accepted at the Metadata level");
+        if (toolConfig.CheckReportCode(savedXml, savedXml) != null) throw new Exception("the saved report is refused at the Metadata level although its script is unchanged");
+        toolConfig.CurrentToolCall.SecurityContext = null;
+        toolConfig.CurrentToolCall.AgentConfiguration = new AIAgentConfiguration() { MaxReportCodeLevel = ReportCodeLevel.Metadata };
+        if (toolConfig.GetReportCodeLevel() != ReportCodeLevel.Metadata) throw new Exception("the maximum code level of the agent is not applied");
+        task.LogMessage($"[{provider.Name}] Deterministic code level checks passed.");
+
+        var designerConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
+        designerConfig.ProviderGUID = provider.GUID;
+
+        //1. SECURITY CHECK: the agent must NOT be able to add a new cell script
+        var agent = new AIAgent(designerConfig);
+        agent.SecurityContext = report.SecurityContext;
+        var request = $@"
+        In the report located at '{reportRel}', add a cell script to the column 'Products.UnitPrice' that shows the prices above 50 in red.
+    ";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        var r1 = Report.LoadFromFile(reportFull, repository, false);
+        var newScripts = r1.Models.SelectMany(m =&gt; m.Elements).Where(e =&gt; !string.IsNullOrWhiteSpace(e.CellScript) &amp;&amp; e.CellScript.Replace("\r\n", "\n").Trim() != savedScript.Replace("\r\n", "\n").Trim()).ToList();
+        if (newScripts.Count &gt; 0)
+            throw new Exception($"SECURITY FAILURE: a cell script was added at the Metadata level ('{newScripts[0].DisplayNameEl}').");
+        task.LogMessage($"[{provider.Name}] No cell script was added (Metadata level correctly applied).");
+
+        //2. The saved script is kept when the agent modifies another column at the Metadata level
+        agent = new AIAgent(designerConfig);
+        agent.SecurityContext = report.SecurityContext;
+        request = $@"
+        In the report located at '{reportRel}', change the display name of the column 'Products.UnitsInStock' to 'Stock'. Keep everything else unchanged.
+    ";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        var r2 = Report.LoadFromFile(reportFull, repository, false);
+        var stock = element(r2, "Products.UnitsInStock");
+        if (stock == null || stock.DisplayNameEl != "Stock")
+            throw new Exception("the display name of 'Products.UnitsInStock' was not changed: a modification keeping the saved cell script must be accepted at the Metadata level.");
+        var kept = element(r2, "Products.QuantityPerUnit");
+        if (kept == null || string.IsNullOrEmpty(kept.CellScript))
+            task.LogMessage($"[{provider.Name}] Note: the agent removed the saved cell script (removing content is allowed).");
+        task.LogMessage($"[{provider.Name}] The column was renamed with the saved cell script in the report (existing content accepted).");
+        File.Delete(reportFull);
+    }
+    catch (Exception ex)
+    {
+        report.ResultTag = new object[] { provider.Name, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+    <ReportTask>
       <GUID>c4a07400-0400-4a00-9000-000000000406</GUID>
       <Name>Result</Name>
       <Tasks />
@@ -422,7 +537,7 @@
     task.LogMessage($"[{providerName}] All AI agent security checks passed.");
 }
 </Script>
-      <SortOrder>5</SortOrder>
+      <SortOrder>6</SortOrder>
     </ReportTask>
   </Tasks>
   <Views>

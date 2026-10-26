@@ -61,6 +61,15 @@
             { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
 
         var report = Report.LoadFromFile(fullPath, repo, false);
+        var savedXml = report.GetXml(); // content already saved, accepted by the report code level check
+        // Saves the report after the check of the report code level of the user and the agent (e.g. an email body starting with '@' is a Razor script)
+        bool SaveChecked()
+        {
+            var codeError = tool.CheckReportCode(report.GetXml(), savedXml, fullPath);
+            if (codeError != null) { tool.ExecResult = codeError; return false; }
+            report.SaveToFile();
+            return true;
+        }
         // Security Provider executed for the scheduled outputs: a new output is generated for the current user, with the
         // Data Sources built for him at the login (e.g. the source of a subscriber), instead of running without user
         void SetOutputUser(ReportOutput o) { if (repo.Security.ProviderForScheduledOutputs && string.IsNullOrEmpty(o.UserName)) o.UserName = !string.IsNullOrEmpty(securityContext.WebUserName) ? securityContext.WebUserName : securityContext.Name; }
@@ -85,7 +94,7 @@
                 if (toRemove.Count == 0) { tool.ExecResult = $"No outputs found on '{path}' to delete."; return; }
             }
             foreach (var o in toRemove) report.RemoveOutput(o); // also removes linked schedules
-            report.SaveToFile();
+            report.SaveToFile(); // removing content is always allowed
             var removed = string.Join(", ", toRemove.Select(o => $"'{o.Name}'"));
             tool.ExecResult = $"Output(s) {removed} (and all linked schedules) removed from '{path}'.";
             return;
@@ -128,7 +137,7 @@
             var param = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
             if (param != null) { param.Value = format; param.CustomValue = true; }
 
-            report.SaveToFile();
+            if (!SaveChecked()) return;
             tool.ExecResult = $"Email output configured on '{path}': to='{output.EmailTo}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
             return;
         }
@@ -157,7 +166,7 @@
             var paramFtp = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
             if (paramFtp != null) { paramFtp.Value = format; paramFtp.CustomValue = true; }
 
-            report.SaveToFile();
+            if (!SaveChecked()) return;
             tool.ExecResult = $"FTP output configured on '{path}': device='{output.Device?.Name}', remoteFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
             return;
         }
@@ -186,7 +195,7 @@
             var paramSp = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
             if (paramSp != null) { paramSp.Value = format; paramSp.CustomValue = true; }
 
-            report.SaveToFile();
+            if (!SaveChecked()) return;
             tool.ExecResult = $"SharePoint output configured on '{path}': device='{output.Device?.Name}', libraryFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
             return;
         }
@@ -256,7 +265,7 @@
         var param2 = output.ViewParameters.FirstOrDefault(p => p.Name == "report_format");
         if (param2 != null) { param2.Value = format; param2.CustomValue = true; }
 
-        report.SaveToFile();
+        if (!SaveChecked()) return;
         tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }

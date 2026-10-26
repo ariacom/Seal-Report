@@ -806,6 +806,7 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Custom SQL"), Description("If not empty, overwrite the default SQL used for the element in the SELECT statement."), Id(1, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Sql)]
         public string SQL
         {
             get { return _SQL; }
@@ -819,6 +820,7 @@ namespace Seal.Model
         [Category("Advanced"), DisplayName("Cell script"), Description("If not empty, the script is executed to calculate custom cell value and CSS."), Id(3, 5)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string CellScript { get; set; }
 
         /// <summary>
@@ -829,6 +831,7 @@ namespace Seal.Model
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
         [DefaultValue("")]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public string NavigationScript { get; set; }
 
         /// <summary>

@@ -482,6 +482,11 @@
             Current security user for the tool execution
             </summary>
         </member>
+        <member name="F:Seal.AI.AIToolCall.AgentConfiguration">
+            <summary>
+            Configuration of the agent executing the tool call (null if the tool is not called by an agent)
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIToolCall.ExecutionLog">
             <summary>
             Current log for the tool execution
@@ -589,6 +594,26 @@
             Restrictions are defined through the DataSourceGUIDs of the user's security groups.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetReportCodeLevel">
+            <summary>
+            Returns the code level the current tool call can write in a report: the level of the user (Scripts without security context), limited by the maximum level of the agent.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.CheckReportCode(System.String,System.String,System.String)">
+            <summary>
+            Checks the code (SQL, Razor scripts) of a report XML written by the tool against <see cref="M:Seal.AI.AIToolConfiguration.GetReportCodeLevel"/>, see <see cref="T:Seal.Helpers.ReportCodeGuard"/>.
+            Returns null if the XML is accepted, otherwise the error to return to the agent.
+            </summary>
+            <param name="newXml">The report XML to write</param>
+            <param name="existingXml">The XML of the report already saved (null for a new report): its content is accepted as is</param>
+            <param name="path">The path of the report written, for the audit of a refusal</param>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.CheckRazorArguments(System.String)">
+            <summary>
+            For the tools writing outside a report (e.g. in a data source): returns an error if an argument of the current tool call is a Razor script (a text starting with '@', compiled by Seal) and the code level is below Scripts, otherwise null.
+            </summary>
+            <param name="path">The path of the object written, for the audit of a refusal</param>
+        </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetRepository">
             <summary>
             Returns the repository the tool scripts use to load or create reports (the Private Data Sources used by a report are loaded on demand).
@@ -693,6 +718,11 @@
             <summary>
             GUIDs of the <see cref="T:Seal.AI.AISkillConfiguration"/> instances available to this agent.
             An empty list means no skills are available.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.MaxReportCodeLevel">
+            <summary>
+            The highest code level the tools of this agent can write in a report. For a tool call, the level applied is the lowest between the level of the user (security groups) and this value.
             </summary>
         </member>
         <member name="P:Seal.AI.AIAgentConfiguration.DefaultSystemPrompt">
@@ -2976,6 +3006,72 @@
             Sandbox method used to code, compile and debug a task Razor script within Visual Studio
             </summary>
         </member>
+        <member name="T:Seal.Helpers.ReportCodeGuard">
+            <summary>
+            Checks the code (SQL, Razor scripts, JavaScript) written in a report XML against the <see cref="T:Seal.Model.ReportCodeLevel"/> of the writer (web user, AI Agent).
+            Each XML element is mapped to a property of the Seal.Model classes by reflection, the level required by a property or a class is given by <see cref="T:Seal.Model.SealCodeAttribute"/>.
+            Content above the level is refused only if it is new or modified: it is accepted if the same class and property have the same text in the report already saved.
+            Removing content is always allowed, and the check applies only to the writing of a report (existing reports can always be executed).
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.ReportCodeGuard.ViewTemplateResolver">
+            <summary>
+            Returns the view template of a given name (null if unknown), used to know the view parameters rendered as code. By default, the templates of the repository.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.Check(System.String,System.String,Seal.Model.ReportCodeLevel,System.Collections.Generic.IEnumerable{System.String})">
+            <summary>
+            Checks a report XML.
+            </summary>
+            <param name="newXml">The report XML to write</param>
+            <param name="existingXml">The XML of the report already saved (null or empty for a new report): its content is accepted as is</param>
+            <param name="level">The level of the writer</param>
+            <param name="trustedValues">Optional texts accepted for any property (e.g. the default scripts set by a tool)</param>
+            <returns>The list of the content refused (empty if the XML is accepted), in English</returns>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.LogRefusal(Seal.Model.SecurityUser,System.String,Seal.Model.ReportCodeLevel,System.Collections.Generic.IEnumerable{System.String},System.String)">
+            <summary>
+            Writes a refused report write in the audit (AuditType.ReportCodeRefused).
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.Normalize(System.String)">
+            <summary>
+            Normalizes a text for the comparison: trim, CRLF to LF.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.HasActiveHtml(System.String)">
+            <summary>
+            True if the HTML text contains active content (script, frame, embedded object, event handler, script URL...).
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.IsPlainValue(System.String)">
+            <summary>
+            True if the value of a parameter rendered without encoding cannot leave its JavaScript, CSS or HTML context.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.ResolveType(System.Xml.Linq.XElement,System.Type)">
+            <summary>
+            Type of an XML element: its xsi:type or its name if they designate a Seal class compatible with the expected type, otherwise the expected type.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.FindProperty(System.Type,System.String)">
+            <summary>
+            Property declared by the type or its nearest base class (a property hidden with 'new', e.g. ReportRestriction.SQL, is found first).
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.AppendCanonical(System.Text.StringBuilder,System.Xml.Linq.XElement)">
+            <summary>
+            Canonical text of an element (formatting ignored) used to compare a class marked by <see cref="T:Seal.Model.SealCodeAttribute"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.Visit(System.Xml.Linq.XElement,System.Type,System.Collections.Generic.List{Seal.Helpers.ReportCodeGuard.CodeItem},Seal.Model.ReportCodeLevel)">
+            <param name="inheritedLevel">Level required by every text of the element (e.g. the parameters of a table template)</param>
+        </member>
+        <member name="M:Seal.Helpers.ReportCodeGuard.VisitViewParameters(System.Xml.Linq.XElement,System.String,System.Collections.Generic.List{Seal.Helpers.ReportCodeGuard.CodeItem},System.String,System.String)">
+            <summary>
+            Parameters of a view (or the view parameters of an output) rendered without encoding by the view template: a value must be a value of the template list or a plain value, otherwise it is code (Scripts level).
+            </summary>
+        </member>
         <member name="T:Seal.Model.ValidationException">
             <summary>
             Exception that should not be logged or audited
@@ -4582,6 +4678,11 @@
             AI chat error
             </summary>
         </member>
+        <member name="F:Seal.Model.AuditType.ReportCodeRefused">
+            <summary>
+            Report write refused: content (SQL, script) above the report code level of the user or the AI Agent
+            </summary>
+        </member>
         <member name="T:Seal.Model.TriggerType">
             <summary>
             Type of the schedule trigger
@@ -4965,6 +5066,26 @@
         <member name="F:Seal.Model.EmailServerType.MSGraph">
             <summary>
             Microsoft Graph API
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ReportCodeLevel">
+            <summary>
+            Authorization level for the content of the reports written by a user (Web Report Server, AI Agents): defines if SQL or Razor scripts can be written in a report.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportCodeLevel.Metadata">
+            <summary>
+            Metadata only: no SQL and no script
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportCodeLevel.Sql">
+            <summary>
+            Metadata and SQL (custom SQL, SQL models, restriction expressions)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportCodeLevel.Scripts">
+            <summary>
+            Metadata, SQL and Razor scripts
             </summary>
         </member>
         <member name="T:Seal.Model.ExecutionLogInterface">
@@ -8204,6 +8325,11 @@
             The parameter description
             </summary>
         </member>
+        <member name="P:Seal.Model.Parameter.CodeLevel">
+            <summary>
+            Set by a template: code level required to write a value of the parameter (e.g. Scripts for a value rendered as JavaScript). The parameters rendered with @Raw() by a view template are detected without declaration (see ReportViewTemplate.RawParameterNames).
+            </summary>
+        </member>
         <member name="P:Seal.Model.Parameter.Value">
             <summary>
             The parameter value
@@ -9009,6 +9135,11 @@
         <member name="M:Seal.Model.Report.Clone">
             <summary>
             Clone a report
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.GetXml">
+            <summary>
+            Returns the XML of the report as saved by <see cref="M:Seal.Model.Report.SaveToFile(System.String)"/> (e.g. to check it with the <see cref="T:Seal.Helpers.ReportCodeGuard"/> before the save)
             </summary>
         </member>
         <member name="M:Seal.Model.Report.CheckLinkedTablesSources">
@@ -13450,6 +13581,17 @@
             List of partial templates path
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportViewTemplate.GetRawExpressions(System.String)">
+            <summary>
+            Expressions of the @Raw(...) calls of a template text, except those entirely encoded (e.g. Raw(Helper.ToJS(...)))
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportViewTemplate.RawParameterNames">
+            <summary>
+            Names of the parameters whose value is rendered without encoding by the template or its partial templates (e.g. @Raw(view.GetValue("chartjs_colors")) in a script),
+            and of the parameters declared with a <see cref="P:Seal.Model.Parameter.CodeLevel"/>: a value written by a web user or an AI Agent is code (see <see cref="T:Seal.Helpers.ReportCodeGuard"/>).
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportViewTemplate.GetPartialTemplatePath(System.String)">
             <summary>
             Returns a partial template path from a given name
@@ -15817,6 +15959,32 @@
             Number of authenticated logged users
             </summary>
         </member>
+        <member name="T:Seal.Model.SealCodeAttribute">
+            <summary>
+            Marks a property (SQL or Razor script) or a class (e.g. a connection defined in a report) with the <see cref="T:Seal.Model.ReportCodeLevel"/> required to write it in a report.
+            Checked by <see cref="T:Seal.Helpers.ReportCodeGuard"/> when a report is saved by a web user or an AI Agent.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealCodeAttribute.Level">
+            <summary>
+            The level required to write the content
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealCodeAttribute.ApplyToDerived">
+            <summary>
+            If false, the attribute is not applied to the classes inheriting the declaring class (e.g. MetaColumn.Name for ReportElement, whose Name is not used in the SQL)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealCodeAttribute.Html">
+            <summary>
+            If true, the text is rendered as HTML without encoding: active HTML content (script, frame, embedded object, event handler, script URL) requires the Scripts level
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealCodeAttribute.#ctor(Seal.Model.ReportCodeLevel)">
+            <summary>
+            Constructor
+            </summary>
+        </member>
         <member name="T:Seal.Model.SealServerConfiguration">
             <summary>
             Main configuration of the Seal Server
@@ -16455,7 +16623,17 @@
         </member>
         <member name="P:Seal.Model.SecurityGroup.SqlModel">
             <summary>
-            If true: SQL Models and Custom SQL for elements or restrictions can be edited, and the AI Tools can query the database (raw SQL) and create reports from raw SQL. If false, these capabilities are denied.
+            Obsolete, replaced by <see cref="P:Seal.Model.SecurityGroup.ReportCodeLevel"/>: still read from the security files saved by older versions, true gives at least the 'Sql' level. Never saved.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityGroup.ShouldSerializeSqlModel">
+            <summary>
+            SqlModel is never serialized, ReportCodeLevel is saved instead
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityGroup.ReportCodeLevel">
+            <summary>
+            The code a user of the group can write in the reports he saves (Web Report Server, AI Agents): 'Metadata' (no SQL, no script), 'Sql' (custom SQL, SQL models, restriction expressions, raw SQL queries of the AI tools) or 'Scripts' (also Razor scripts). The level of a user is the highest level of his groups. Existing reports can always be executed, the level is checked only when a report is written.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.DataSourceGUIDs">
@@ -16909,7 +17087,12 @@
         </member>
         <member name="P:Seal.Model.SecurityUser.SqlModel">
             <summary>
-            True if the user has the right to edit SQL models and to query the database (raw SQL) with the AI Tools. True if at least one of the user's groups enables SQL Models.
+            Obsolete, use <see cref="P:Seal.Model.SecurityUser.ReportCodeLevel"/>: true if the user has at least the 'Sql' level.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.ReportCodeLevel">
+            <summary>
+            The code the user can write in the reports he saves (Web Report Server, AI Agents) and the raw SQL queries of the AI tools ('Sql' level): the highest level of his groups.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUser.ShowFoldersView">
