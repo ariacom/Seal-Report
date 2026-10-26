@@ -132,7 +132,10 @@ Minimal list with one prompted restriction:
   Data measure `<ChartJSSerie>Bar</ChartJSSerie>` (Line for a trend, Pie for a
   part-of-whole), optional Column element `<SerieDefinition>Splitter</SerieDefinition>`
   for several series (needed to stack), and a `Chart JS` view in the Container.
-  Without the Axis the chart is empty.
+  Without the Axis the chart is empty. Each chart view reads the serie of its own
+  engine: `Chart Echarts` → `<EChartsSerie>`, `Chart Plotly` → `<PlotlySerie>`,
+  `Chart Scottplot` → `<ScottPlotSerie>` (e.g. `<EChartsSerie>Pie</EChartsSerie>`).
+  Set the serie of every engine displayed for the model, otherwise its view is empty.
 - **Maps**: only if the source has latitude/longitude columns (as Row elements, no
   aggregation) and a `Map` view in the Container (`map_label`, `map_color_column`,
   `map_size_column`; `map_latitude`/`map_longitude` when the column names do not

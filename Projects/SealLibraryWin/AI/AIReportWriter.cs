@@ -899,6 +899,32 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Chart views whose model has no Data element with a serie of the chart engine: such a chart renders empty without any error.
+        /// </summary>
+        public static List<string> EmptyCharts(Report report)
+        {
+            var result = new List<string>();
+            foreach (var view in report.Views) emptyCharts(view, null, result);
+            return result;
+        }
+
+        static void emptyCharts(ReportView view, ReportModel model, List<string> result)
+        {
+            if (view.TemplateName == ReportViewTemplate.ModelName && view.Model != null) model = view.Model;
+            if (model != null)
+            {
+                var data = model.Elements.Where(i => i.PivotPosition == PivotPosition.Data).ToList();
+                string serie = null;
+                if (view.TemplateName == ReportViewTemplate.ChartJSName && !data.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None)) serie = "ChartJSSerie";
+                else if (view.TemplateName == ReportViewTemplate.ChartEChartsName && !data.Exists(i => i.EChartsSerie != EChartsSerieDefinition.None)) serie = "EChartsSerie";
+                else if (view.TemplateName == ReportViewTemplate.ChartPlotlyName && !data.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None)) serie = "PlotlySerie";
+                else if (view.TemplateName == ReportViewTemplate.ChartScottplotName && !data.Exists(i => i.ScottPlotSerie != ScottPlotSerieDefinition.None)) serie = "ScottPlotSerie";
+                if (serie != null) result.Add($"'{view.Name}' [{view.TemplateName}] of model '{model.Name}' (no Data element with a <{serie}>)");
+            }
+            foreach (var child in view.Views) emptyCharts(child, model, result);
+        }
+
+        /// <summary>
         /// Executes a saved report with its default criteria values (as the SealReportRunner does), then renders its views in HTML: returns the row count and a sample of each model,
         /// the errors of the execution and of the views (file and line), and optionally a picture of the result for the agent.
         /// </summary>
@@ -982,6 +1008,9 @@ namespace Seal.AI
                 }
                 if (notDisplayed.Count > 0)
                     test.Append($"\r\nTEST WARNING: model(s) {string.Join(", ", notDisplayed.Select(n => "'" + n + "'"))} are displayed by no view, so they are never executed.");
+                var charts = EmptyCharts(testReport);
+                if (charts.Count > 0)
+                    test.Append($"\r\nTEST WARNING: empty chart(s), each chart view reads the serie of its own engine: {string.Join("; ", charts)}. Set the serie on the Data element(s) of the model, or remove the chart view.");
                 if (emptyCriteria.Count > 0)
                     test.Append($"\r\nNote: prompted criteria without default value (not applied until the user fills them): {string.Join(", ", emptyCriteria)}.");
             }

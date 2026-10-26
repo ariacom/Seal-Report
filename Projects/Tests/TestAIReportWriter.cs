@@ -144,5 +144,21 @@ namespace Test
             Assert.AreEqual(2, operations.Count);
             Assert.AreEqual("prepend", operations[1].Position);
         }
+
+        [TestMethod]
+        public void EmptyCharts()
+        {
+            //Dashboard of TST040: every chart view has a serie of its engine
+            var report = Report.LoadFromFile(System.IO.Path.Combine(_repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex"), _repository);
+            Assert.AreEqual(0, AIReportWriter.EmptyCharts(report).Count);
+
+            //Without the ECharts serie, the 'Chart Echarts' view of the model is empty (the Chart JS pie is not)
+            var model = report.Models.First(i => i.Name == "Sales per category");
+            foreach (var element in model.Elements) element.EChartsSerie = EChartsSerieDefinition.None;
+            var charts = AIReportWriter.EmptyCharts(report);
+            Assert.AreEqual(1, charts.Count);
+            StringAssert.Contains(charts[0], "[Chart Echarts] of model 'Sales per category'");
+            StringAssert.Contains(charts[0], "<EChartsSerie>");
+        }
     }
 }

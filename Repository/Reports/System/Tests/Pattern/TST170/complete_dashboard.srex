@@ -1,0 +1,620 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b1a7c010-0170-4b00-9000-000000000001</GUID>
+  <Guide>&lt;ul&gt;
+&lt;li&gt;Expected report (pattern) of the AI test TST170 AI Complete dashboard, copy of the TST040 dashboard (Tests\Reports).&lt;/li&gt;
+&lt;li&gt;Tab Control with 3 pages: Overview (widgets with a KPI, a pie chart and a bar chart, cards), Map (Leaflet map and data table), Details (page tables and data tables).&lt;/li&gt;
+&lt;li&gt;An Internet connection is required to display the background tiles of the map.&lt;/li&gt;
+&lt;/ul&gt;</Guide>
+  <ViewGUID>b1a7c010-0170-4b00-9000-000000000501</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>b1a7c010-0170-4b00-9000-000000000101</GUID>
+      <Name>Northwind (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>b1a7c010-0170-4b00-9000-000000000111</GUID>
+            <Alias>SealMasterTable</Alias>
+            <DynamicColumns>true</DynamicColumns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>b1a7c010-0170-4b00-9000-000000000112</GUID>
+            <Description>Coordinates of some customer cities (WGS84 decimal degrees), Northwind has no geographical data.</Description>
+            <Sql>SELECT N'Bruxelles' AS City, 50.8503 AS Latitude, 4.3517 AS Longitude
+UNION ALL SELECT N'Charleroi', 50.4108, 4.4446
+UNION ALL SELECT N'Lille', 50.6292, 3.0573
+UNION ALL SELECT N'Lyon', 45.7640, 4.8357
+UNION ALL SELECT N'Marseille', 43.2965, 5.3698
+UNION ALL SELECT N'Nantes', 47.2184, -1.5536
+UNION ALL SELECT N'Paris', 48.8566, 2.3522
+UNION ALL SELECT N'Reims', 49.2583, 4.0317
+UNION ALL SELECT N'Strasbourg', 48.5734, 7.7521
+UNION ALL SELECT N'Toulouse', 43.6047, 1.4442
+UNION ALL SELECT N'Versailles', 48.8049, 2.1204
+UNION ALL SELECT N'Bern', 46.9480, 7.4474
+UNION ALL SELECT N'Genève', 46.2044, 6.1432</Sql>
+            <Alias>Cities</Alias>
+            <Columns>
+              <MetaColumn>
+                <GUID>b1a7c010-0170-4b00-9000-000000000121</GUID>
+                <Name>Cities.City</Name>
+                <Type>Text</Type>
+                <Category>Cities</Category>
+                <DisplayName>Map City</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b1a7c010-0170-4b00-9000-000000000122</GUID>
+                <Name>Cities.Latitude</Name>
+                <Type>Numeric</Type>
+                <Category>Cities</Category>
+                <DisplayName>Latitude</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+                <NumericStandardFormat>Custom</NumericStandardFormat>
+                <Format>0.0000</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b1a7c010-0170-4b00-9000-000000000123</GUID>
+                <Name>Cities.Longitude</Name>
+                <Type>Numeric</Type>
+                <Category>Cities</Category>
+                <DisplayName>Longitude</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+                <NumericStandardFormat>Custom</NumericStandardFormat>
+                <Format>0.0000</Format>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+        <Joins>
+          <MetaJoin>
+            <GUID>b1a7c010-0170-4b00-9000-000000000131</GUID>
+            <Name>Customers - Cities</Name>
+            <LeftTableGUID>b7b15abd-c099-42f9-a31d-88ce660ed1de</LeftTableGUID>
+            <RightTableGUID>b1a7c010-0170-4b00-9000-000000000112</RightTableGUID>
+            <Clause>Customers.City = Cities.City</Clause>
+          </MetaJoin>
+        </Joins>
+      </MetaData>
+      <MetaSourceGUID>52833575-11ae-4b7d-8b5e-0f9b29d1267a</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b1a7c010-0170-4b00-9000-000000000301</GUID>
+      <Name>Sales per month</Name>
+      <SourceGUID>b1a7c010-0170-4b00-9000-000000000101</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000311</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),month(Orders.OrderDate),1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>MM/yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>057c81db-d2c0-4938-9a64-6d6d33668baa</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000312</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b1a7c010-0170-4b00-9000-000000000321]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b1a7c010-0170-4b00-9000-000000000321</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+          <Date1>1997-01-01T00:00:00</Date1>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b1a7c010-0170-4b00-9000-000000000302</GUID>
+      <Name>Sales per category</Name>
+      <SourceGUID>b1a7c010-0170-4b00-9000-000000000101</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000331</GUID>
+          <Name>Products.CategoryID</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f1ca9f05-b6a3-46da-b753-68cb4056cb66</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000332</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <ChartJSSerie>Pie</ChartJSSerie>
+          <EChartsSerie>Pie</EChartsSerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b1a7c010-0170-4b00-9000-000000000303</GUID>
+      <Name>Sales per year</Name>
+      <SourceGUID>b1a7c010-0170-4b00-9000-000000000101</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000341</GUID>
+          <Name>DATETIME2FROMPARTS(year(Orders.OrderDate),1,1,0,0,0,0,0)</Name>
+          <DisplayName />
+          <Format>yyyy</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>64369c69-f298-466f-a241-d7388b2b0e80</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000342</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <EChartsSerie>Bar</EChartsSerie>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b1a7c010-0170-4b00-9000-000000000304</GUID>
+      <Name>Employees</Name>
+      <SourceGUID>b1a7c010-0170-4b00-9000-000000000101</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000351</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000352</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000353</GUID>
+          <Name>[Order Details].Quantity</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>cb20a340-73d5-4e52-b7fc-59dab043c176</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b1a7c010-0170-4b00-9000-000000000361]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b1a7c010-0170-4b00-9000-000000000361</GUID>
+          <Name>Employees.LastName</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>da2dbe92-e90c-4415-b354-1bc589839048</MetaColumnGUID>
+          <EnumValues>
+            <string>Buchanan</string>
+            <string>Callahan</string>
+            <string>Davolio</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b1a7c010-0170-4b00-9000-000000000305</GUID>
+      <Name>Sales per city</Name>
+      <SourceGUID>b1a7c010-0170-4b00-9000-000000000101</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000371</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000372</GUID>
+          <Name>Customers.City</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c6a7dd72-742e-4e2b-9f73-7acfcb5c8971</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000373</GUID>
+          <Name>(1-[Order Details].Discount)*[Order Details].Quantity*[Order Details].UnitPrice</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>067548ce-bc83-48b8-8212-aa359bd12f9b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000374</GUID>
+          <Name>Cities.Latitude</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b1a7c010-0170-4b00-9000-000000000122</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b1a7c010-0170-4b00-9000-000000000375</GUID>
+          <Name>Cities.Longitude</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b1a7c010-0170-4b00-9000-000000000123</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b1a7c010-0170-4b00-9000-000000000381]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b1a7c010-0170-4b00-9000-000000000381</GUID>
+          <Name>Customers.Country</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>20ed0b7a-87dd-4aaa-8d48-feab848e396b</MetaColumnGUID>
+          <EnumValues>
+            <string>Belgium</string>
+            <string>France</string>
+            <string>Switzerland</string>
+          </EnumValues>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>b1a7c010-0170-4b00-9000-000000000501</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>b1a7c010-0170-4b00-9000-000000000510</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>b1a7c010-0170-4b00-9000-000000000520</GUID>
+              <Name>Overview</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b1a7c010-0170-4b00-9000-000000000521</GUID>
+                  <Name>Widgets</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000530</GUID>
+                      <Name>KPI Sales 1997</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000531</GUID>
+                          <Name>Sales per month</Name>
+                          <Views>
+                            <ReportView>
+                              <GUID>b1a7c010-0170-4b00-9000-000000000532</GUID>
+                              <Name>KPI</Name>
+                              <TemplateName>KPI</TemplateName>
+                              <SortOrder>1</SortOrder>
+                            </ReportView>
+                          </Views>
+                          <TemplateName>Model</TemplateName>
+                          <ModelGUID>b1a7c010-0170-4b00-9000-000000000301</ModelGUID>
+                          <Parameters>
+                            <Parameter>
+                              <Name>show_summary_table</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Widget</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>widget_icon</Name>
+                          <Value>fa-solid fa-gauge</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>widget_color</Name>
+                          <Value>primary</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000540</GUID>
+                      <Name>Pie Sales per category</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000541</GUID>
+                          <Name>Sales per category</Name>
+                          <Views>
+                            <ReportView>
+                              <GUID>b1a7c010-0170-4b00-9000-000000000542</GUID>
+                              <Name>Container</Name>
+                              <Views>
+                                <ReportView>
+                                  <GUID>b1a7c010-0170-4b00-9000-000000000543</GUID>
+                                  <Name>Chart JS</Name>
+                                  <TemplateName>Chart JS</TemplateName>
+                                  <SortOrder>1</SortOrder>
+                                </ReportView>
+                              </Views>
+                              <TemplateName>Container</TemplateName>
+                              <SortOrder>1</SortOrder>
+                            </ReportView>
+                          </Views>
+                          <TemplateName>Model</TemplateName>
+                          <ModelGUID>b1a7c010-0170-4b00-9000-000000000302</ModelGUID>
+                          <Parameters>
+                            <Parameter>
+                              <Name>show_summary_table</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Widget</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>widget_icon</Name>
+                          <Value>fa-solid fa-chart-pie</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>2</SortOrder>
+                    </ReportView>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000550</GUID>
+                      <Name>Bar Sales per year</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000551</GUID>
+                          <Name>Sales per year</Name>
+                          <Views>
+                            <ReportView>
+                              <GUID>b1a7c010-0170-4b00-9000-000000000552</GUID>
+                              <Name>Container</Name>
+                              <Views>
+                                <ReportView>
+                                  <GUID>b1a7c010-0170-4b00-9000-000000000553</GUID>
+                                  <Name>Chart Echarts</Name>
+                                  <TemplateName>Chart Echarts</TemplateName>
+                                  <SortOrder>1</SortOrder>
+                                </ReportView>
+                              </Views>
+                              <TemplateName>Container</TemplateName>
+                              <SortOrder>1</SortOrder>
+                            </ReportView>
+                          </Views>
+                          <TemplateName>Model</TemplateName>
+                          <ModelGUID>b1a7c010-0170-4b00-9000-000000000303</ModelGUID>
+                          <Parameters>
+                            <Parameter>
+                              <Name>show_summary_table</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Widget</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>widget_icon</Name>
+                          <Value>fa-solid fa-chart-column</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>3</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Container</TemplateName>
+                  <Parameters>
+                    <Parameter>
+                      <Name>grid_layout</Name>
+                      <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b1a7c010-0170-4b00-9000-000000000560</GUID>
+                  <Name>Cards</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000561</GUID>
+                      <Name>Employee cards</Name>
+                      <TemplateName>Card</TemplateName>
+                      <ModelGUID>b1a7c010-0170-4b00-9000-000000000304</ModelGUID>
+                      <UseModelName>false</UseModelName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>title_column</Name>
+                          <Value>1</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>container_class</Name>
+                          <Value>tst040-cards</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>container_css</Name>
+                          <Value>display:grid;
+grid-template-columns: 1fr 1fr;</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Container Grid Flex</TemplateName>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>b1a7c010-0170-4b00-9000-000000000570</GUID>
+              <Name>Map</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b1a7c010-0170-4b00-9000-000000000571</GUID>
+                  <Name>Sales per city</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000572</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000573</GUID>
+                          <Name>Map</Name>
+                          <TemplateName>Map</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>map_label</Name>
+                              <Value>City</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>map_color_column</Name>
+                              <Value>Customer Country</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>map_size_column</Name>
+                              <Value>Amount</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000574</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b1a7c010-0170-4b00-9000-000000000305</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>b1a7c010-0170-4b00-9000-000000000580</GUID>
+              <Name>Details</Name>
+              <Views>
+                <ReportView>
+                  <GUID>b1a7c010-0170-4b00-9000-000000000581</GUID>
+                  <Name>Sales per category</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000582</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000583</GUID>
+                          <Name>Chart Echarts</Name>
+                          <TemplateName>Chart Echarts</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000584</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>grid_layout</Name>
+                          <Value>col-sm-6;col-sm-6;</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b1a7c010-0170-4b00-9000-000000000302</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>b1a7c010-0170-4b00-9000-000000000585</GUID>
+                  <Name>Employees</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b1a7c010-0170-4b00-9000-000000000586</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000587</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b1a7c010-0170-4b00-9000-000000000588</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b1a7c010-0170-4b00-9000-000000000304</ModelGUID>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

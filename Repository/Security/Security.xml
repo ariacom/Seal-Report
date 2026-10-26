@@ -288,6 +288,14 @@
         <SecurityFolder>
           <Path>\System\Tests</Path>
         </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System\Tests\Pattern</Path>
+          <FolderRight>None</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System\Tests\Reports</Path>
+          <FolderRight>None</FolderRight>
+        </SecurityFolder>
       </Folders>
       <ReportCodeLevel>Sql</ReportCodeLevel>
       <Weight>1</Weight>

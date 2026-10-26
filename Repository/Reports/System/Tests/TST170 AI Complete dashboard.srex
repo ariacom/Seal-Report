@@ -1,0 +1,575 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>b1a7c010-0170-4a00-9000-000000000001</GUID>
+  <ViewGUID>b1a7c010-0170-4a00-9000-000000000501</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>aab33159-0000-4000-8000-000000000001</GUID>
+      <Type>Text</Type>
+      <DisplayName>Provider to test</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000010</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000010</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <FirstSelection>First</FirstSelection>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000010</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>aab33159-0000-4000-8000-000000000002</GUID>
+      <Type>Text</Type>
+      <DisplayName>Log level</DisplayName>
+      <EnumGUID>aab33159-0000-4000-8000-000000000011</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>aab33159-0000-4000-8000-000000000011</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <Required>true</Required>
+      <EnumValues>
+        <string>Minimum</string>
+      </EnumValues>
+      <EnumLayout>RadioToggleButton</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>aab33159-0000-4000-8000-000000000011</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>0b32b277-d29a-4a24-9f94-f7e677d74082</GUID>
+      <Name>Audit SQLite (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>b1a7c010-0170-4a00-9000-000000000301</GUID>
+      <Name>Model</Name>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>b1a7c010-0170-4a00-9000-000000000402</GUID>
+      <Name>Init</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+
+    //Base output directory (subfolder = 6 first chars of the report name)
+    var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+    var baseDir = $@"Reports\System\Tests\Output\{subDir}";
+
+    //Single provider to test = the one selected in 'Provider to test', else the first enabled provider
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    if (enabled.Count == 0) throw new Exception("No enabled AI provider found to test.");
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+
+    //Dedicated output sub-folder for this provider (read by the next tasks from report.StringTag)
+    var safeName = string.Join("_", provider.Name.Split(Path.GetInvalidFileNameChars()));
+    var outputDir = Path.Combine(baseDir, safeName);
+    Directory.CreateDirectory(Path.Combine(repository.RepositoryPath, outputDir));
+    report.StringTag = outputDir;
+
+    //Default result (overwritten with the match rate by 'Check Pattern'); read by '900 Tests' from report.ResultTag
+    report.ResultTag = new object[] { provider.Name, 0.0, "Error", null };
+
+    //Security context with write access to the output folder
+    var user = new SecurityUser(repository.Security);
+    user.AddSecurityGroup("Group System Tests");
+    user.SetFolders();
+    report.SecurityContext = user;
+
+    task.LogMessage($"Testing provider '{provider.Name}' -&gt; {outputDir}");
+}
+</Script>
+      <SortOrder>2</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>b1a7c010-0170-4a00-9000-000000000403</GUID>
+      <Name>Cleanup</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using System.IO;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+
+    try
+    {
+        task.LogMessage($"Executing '{task.Name}'");
+        var dir = Path.Combine(repository.RepositoryPath, outputDir);
+        if (Directory.Exists(dir))
+            foreach (var f in Directory.GetFiles(dir)) File.Delete(f);
+    }
+    catch (Exception ex)
+    {
+        var pr = report.ResultTag as object[];
+        var pn = pr != null ? (string)pr[0] : null;
+        report.ResultTag = new object[] { pn, null, "Error", $"[{task.Name}] {ex.Message}" };
+        throw;
+    }
+}
+</Script>
+      <SortOrder>3</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>b1a7c010-0170-4a00-9000-000000000404</GUID>
+      <Name>Create report</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using Seal.AI;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var config = Repository.Instance.AIConfiguration;
+    var outputDir = report.StringTag;
+
+    //Provider under test and log level, resolved from the report input values
+    var enabled = config.AIProviders.Where(p =&gt; p.IsEnabled).ToList();
+    var providerSel = report.GetInputValueByName("Provider to test");
+    var provider = (providerSel != null &amp;&amp; providerSel.EnumValues.Count &gt; 0)
+        ? enabled.FirstOrDefault(p =&gt; p.GUID == providerSel.EnumValues[0]) ?? enabled.First()
+        : enabled.First();
+    var logSel = report.GetInputValueByName("Log level");
+    var logLevel = (logSel != null &amp;&amp; !string.IsNullOrEmpty(logSel.FirstStringValue)) ? logSel.FirstStringValue : "ChatAndTools";
+    ReportExecutionLog chatLog = (logLevel == "Minimum") ? null : report;
+    ReportExecutionLog toolsLog = (logLevel == "ChatAndTools") ? report : null;
+
+    task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
+
+    var agentConfig = (AIAgentConfiguration)Helper.Clone(config.AIAgents.First(a =&gt; a.Name == "Report Designer"));
+    agentConfig.ProviderGUID = provider.GUID;
+    //A dashboard with 5 models and many views needs more tool calls than the default
+    agentConfig.MaxToolCalls = 80;
+    var agent = new AIAgent(agentConfig);
+    agent.SecurityContext = report.SecurityContext;
+
+        var request = $@"
+        Create a report named 'Complete dashboard.srex' in directory {outputDir} using the Northwind data source.
+        The report has EXACTLY these five models (use these model names), all filters are FIXED (not prompted):
+          - 'Sales per month': ROW 'Order Month' as chart axis, DATA 'Amount' (Sum), filtered on 'Order Year' = 1997.
+          - 'Sales per category': ROW 'Category' as chart axis, DATA 'Amount' (Sum) as a Pie serie.
+          - 'Sales per year': ROW 'Order Year' as chart axis, DATA 'Amount' (Sum) as an ECharts Bar serie.
+          - 'Employees': ROW 'Employee', DATA 'Amount' (Sum) and 'Quantity' (Sum), filtered on the employees Buchanan, Callahan and Davolio.
+          - 'Sales per city': ROWS 'Customer Country', 'City', 'Latitude' and 'Longitude', DATA 'Amount' (Sum), filtered on the customer countries Belgium, France and Switzerland.
+            Northwind has no coordinates: reuse in the report source the table 'Cities' (with its SQL, columns and join to the Customers table) defined by the sample report 'Reports\Samples\05-Maps.srex'.
+        The report view is a TAB CONTROL with EXACTLY three tab pages:
+          1. 'Overview':
+             - a row of three WIDGETS: 'KPI Sales 1997' showing a KPI view of 'Sales per month', 'Pie Sales per category' showing a Chart JS pie chart of 'Sales per category', 'Bar Sales per year' showing a Chart Echarts bar chart of 'Sales per year';
+             - below the widgets, CARDS of 'Employees' (one card per employee, the employee name as card title).
+          2. 'Map': a MAP of 'Sales per city' (label 'City', colored by 'Customer Country', sized by 'Amount') followed by a Data Table.
+          3. 'Details': the number of records shown in the tab title; a Chart Echarts and a Data Table of 'Sales per category', then a Page Table and a Data Table of 'Employees'.
+        Force the report execution.
+    ";
+        if (chatLog != null) task.LogMessage(request);
+        agent.Chat(request, cancelOperation: report, log: chatLog, toolsLog: toolsLog);
+        if (report.Cancel) return;
+
+        //Check report created and get its file path
+        var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+        if (reportFiles.Length == 0) throw new Exception($"Report was not created in '{outputDir}' after the agent call.");
+        var r = Report.LoadFromFile(reportFiles[0], repository);
+        if (!string.IsNullOrEmpty(r.LoadErrors)) throw new Exception("Load error of the created report: " + r.LoadErrors);
+
+        //Models
+        foreach (var name in new[] { "Sales per month", "Sales per category", "Sales per year", "Employees", "Sales per city" })
+            if (GetModel(r, name) == null) throw new Exception($"Model '{name}' not found ({string.Join(", ", r.Models.Select(m =&gt; m.Name))}).");
+
+        var pie = GetModel(r, "Sales per category");
+        var pieData = pie.GetElements(PivotPosition.Data).FirstOrDefault(e =&gt; e.MetaColumn?.DisplayName == "Amount");
+        if (pieData == null || pieData.ChartJSSerie != ChartJSSerieDefinition.Pie) throw new Exception("Chart: 'Amount' of 'Sales per category' must define a Pie serie.");
+        if (!pie.GetElements(PivotPosition.Row).Any(e =&gt; e.SerieDefinition == SerieDefinition.Axis)) throw new Exception("Chart: 'Category' of 'Sales per category' must be the chart Axis.");
+
+        var city = GetModel(r, "Sales per city");
+        foreach (var coord in new[] { "latitude", "longitude" })
+            if (!city.GetElements(PivotPosition.Row).Any(e =&gt; (e.MetaColumn?.Name ?? e.Name ?? "").ToLowerInvariant().Contains(coord)))
+                throw new Exception($"Map: no '{coord}' Row element in 'Sales per city'.");
+
+        //Views: Tab Control with the three pages and their content
+        var root = r.Views.FirstOrDefault(v =&gt; v.GUID == r.ViewGUID) ?? r.Views.FirstOrDefault();
+        var tabControl = AllViews(root).FirstOrDefault(v =&gt; v.TemplateName == "Tab Control");
+        if (tabControl == null) throw new Exception("No 'Tab Control' view found.");
+        var pages = tabControl.Views.Where(v =&gt; v.TemplateName == "Tab Page").ToList();
+        if (pages.Count != 3) throw new Exception($"Expected 3 Tab Pages, found {pages.Count} ({string.Join(", ", pages.Select(p =&gt; p.Name))}).");
+        var overview = GetPage(pages, "Overview");
+        var map = GetPage(pages, "Map");
+        var details = GetPage(pages, "Details");
+
+        var widgets = AllViews(overview).Where(v =&gt; v.TemplateName == "Widget").ToList();
+        if (widgets.Count &lt; 3) throw new Exception($"Overview: expected 3 Widgets, found {widgets.Count}.");
+        foreach (var template in new[] { "KPI", "Chart JS", "Chart Echarts", "Card" })
+            if (!AllViews(overview).Any(v =&gt; v.TemplateName == template)) throw new Exception($"Overview: no '{template}' view found.");
+        if (!AllViews(map).Any(v =&gt; v.TemplateName == "Map")) throw new Exception("Map: no 'Map' view found in the tab page.");
+        //The parameters of a loaded report are not typed yet (template not initialized): read the raw value
+        if (!string.Equals(details.GetParameter("tab_show_count")?.Value, "true", StringComparison.OrdinalIgnoreCase)) throw new Exception("Details: the number of records is not shown in the tab title (tab_show_count).");
+        task.LogMessage("Structural checks passed.");
+}
+
+@functions {
+    ReportModel GetModel(Report r, string name) =&gt; r.Models.FirstOrDefault(m =&gt; string.Equals(m.Name?.Trim(), name, StringComparison.OrdinalIgnoreCase));
+
+    ReportView GetPage(List&lt;ReportView&gt; pages, string name)
+    {
+        var page = pages.FirstOrDefault(p =&gt; (p.Name ?? "").Trim().StartsWith(name, StringComparison.OrdinalIgnoreCase));
+        if (page == null) throw new Exception($"Tab Page '{name}' not found ({string.Join(", ", pages.Select(p =&gt; p.Name))}).");
+        return page;
+    }
+
+    IEnumerable&lt;ReportView&gt; AllViews(ReportView view)
+    {
+        if (view == null) yield break;
+        yield return view;
+        foreach (var child in view.Views)
+            foreach (var v in AllViews(child)) yield return v;
+    }
+}
+</Script>
+      <SortOrder>4</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>b1a7c010-0170-4a00-9000-000000000405</GUID>
+      <Name>Check rendering</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using System.IO;
+@using System.Linq;
+@using System.Threading;
+@using System.Text.RegularExpressions;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+    var errors = new List&lt;string&gt;();
+    const int TimeoutSeconds = 180;
+
+    task.LogMessage($"Executing '{task.Name}'");
+    var reportFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+    if (reportFiles.Length == 0) throw new Exception($"No generated report found in '{outputDir}'.");
+
+    //Execute the generated report and render its default view
+    var rep = Report.LoadFromFile(reportFiles[0], repository);
+    rep.SkipExternalViewer = true;
+    rep.CurrentViewGUID = rep.ViewGUID;
+    var execution = new ReportExecution() { Report = rep };
+    execution.Execute();
+    int cnt = TimeoutSeconds;
+    while (--cnt &gt; 0 &amp;&amp; rep.IsExecuting &amp;&amp; !report.Cancel) Thread.Sleep(1000);
+    if (rep.IsExecuting)
+    {
+        rep.CancelExecution();
+        throw new Exception($"Execution timeout of the generated report ({TimeoutSeconds}s).");
+    }
+    if (rep.HasErrors) throw new Exception("Execution errors of the generated report:" + Environment.NewLine + rep.ExecutionErrors);
+
+    //Models: expected minimum number of body rows
+    CheckRows(report, rep, "Sales per month", 12, errors);
+    CheckRows(report, rep, "Sales per category", 8, errors);
+    CheckRows(report, rep, "Sales per year", 3, errors);
+    CheckRows(report, rep, "Employees", 3, errors);
+    CheckRows(report, rep, "Sales per city", 10, errors);
+
+    //Rendered HTML (same checks as 'TST040 Complete dashboard rendering')
+    var htmlPath = rep.HTMLDisplayFilePath;
+    if (!File.Exists(htmlPath)) throw new Exception($"Result file not found: '{htmlPath}'");
+    var html = File.ReadAllText(htmlPath);
+    task.LogMessage($"Checking the HTML rendered ({html.Length:N0} characters)");
+
+    CheckCount(html, "_tab_page'", 3, "Tab Control: tab links", errors);
+    CheckRegex(html, @"&gt;\s*Overview", "Tab Control: page 'Overview'", errors);
+    CheckRegex(html, @"&gt;\s*Map", "Tab Control: page 'Map'", errors);
+    CheckRegex(html, @"&gt;\s*Details[^&lt;]*\(\d+\)\s*&lt;", "Tab Control: page 'Details' with its record count", errors);
+    foreach (var title in new[] { "KPI Sales 1997", "Pie Sales per category", "Bar Sales per year" }) CheckContains(html, title, $"Widget: title '{title}'", errors);
+    CheckRegex(html, @"btn btn-(danger|warning|primary|success)", "KPI: trend button", errors);
+    CheckRegex(html, @"new Chart\(ctx, \{\s*type: '(pie|doughnut)'", "Chart JS: pie chart", errors);
+    CheckCount(html, "echarts.init(dom)", 2, "ECharts: charts", errors);
+    foreach (var name in new[] { "Buchanan", "Callahan", "Davolio" }) CheckContains(html, name, $"Cards / tables: employee '{name}'", errors);
+    CheckContains(html, "L.map(container", "Map: Leaflet map", errors);
+    foreach (var city in new[] { "Paris", "Bruxelles", "Strasbourg" }) CheckContains(html, city, $"Map: city '{city}'", errors);
+
+    if (errors.Count &gt; 0)
+        throw new Exception($"Rendering checks failed ({errors.Count}):" + Environment.NewLine + string.Join(Environment.NewLine, errors));
+    task.LogMessage("Rendering checks passed.");
+}
+
+@functions {
+    void CheckRows(Report root, Report rep, string modelName, int minRows, List&lt;string&gt; errors)
+    {
+        var model = rep.Models.FirstOrDefault(i =&gt; string.Equals(i.Name?.Trim(), modelName, StringComparison.OrdinalIgnoreCase));
+        if (model == null) { errors.Add($"Model '{modelName}' not found."); return; }
+        var table = model.Pages.FirstOrDefault()?.DataTable;
+        int rows = table == null ? 0 : table.BodyEndRow - table.BodyStartRow;
+        root.LogMessage("Model '{0}': {1} row(s)", modelName, rows);
+        if (rows &lt; minRows) errors.Add($"Model '{modelName}': {rows} row(s), at least {minRows} expected.");
+    }
+
+    void CheckContains(string html, string text, string check, List&lt;string&gt; errors)
+    {
+        if (!html.Contains(text)) errors.Add($"{check}: '{text}' not found.");
+    }
+
+    void CheckRegex(string html, string pattern, string check, List&lt;string&gt; errors)
+    {
+        if (!Regex.IsMatch(html, pattern)) errors.Add($"{check}: pattern '{pattern}' not found.");
+    }
+
+    void CheckCount(string html, string text, int minCount, string check, List&lt;string&gt; errors)
+    {
+        int count = Regex.Matches(html, Regex.Escape(text)).Count;
+        if (count &lt; minCount) errors.Add($"{check}: '{text}' found {count} time(s), at least {minCount} expected.");
+    }
+}
+</Script>
+      <SortOrder>5</SortOrder>
+    </ReportTask>
+    <ReportTask>
+      <GUID>b1a7c010-0170-4a00-9000-000000000406</GUID>
+      <Name>Check Pattern</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>0b32b277-d29a-4a24-9f94-f7e677d74082</SourceGUID>
+      <Script>@using Seal.Model;
+@using System.IO;
+@using System.Linq;
+
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    var repository = report.Repository;
+    var outputDir = report.StringTag;
+    var providerName = (report.ResultTag as object[])?[0] as string;
+
+    task.LogMessage($"Executing '{task.Name}'");
+
+        //Generic Check Pattern: pair every generated report with the expected (pattern) report and compare their definition.
+        //Pattern directory = Reports\System\Tests\Pattern\&lt;6 first chars of the report name&gt; (e.g. 'TST100').
+        var subDir = Path.GetFileNameWithoutExtension(report.FilePath).Substring(0, 6);
+        var patternDir = Path.Combine(repository.RepositoryPath, "Reports", "System", "Tests", "Pattern", subDir);
+        if (!Directory.Exists(patternDir)) throw new Exception($"Pattern directory not found: '{patternDir}'.");
+
+        var generatedFiles = Directory.GetFiles(Path.Combine(repository.RepositoryPath, outputDir), "*.srex");
+        if (generatedFiles.Length == 0) throw new Exception($"No generated report found in '{outputDir}'.");
+        var patternFiles = Directory.GetFiles(patternDir, "*.srex");
+        if (patternFiles.Length == 0) throw new Exception($"No pattern report found in '{patternDir}'.");
+
+        var failures = new List&lt;string&gt;();
+        var warnings = new List&lt;string&gt;();
+        var scores = new List&lt;double&gt;();
+        foreach (var generatedFile in generatedFiles)
+        {
+            var key = Normalize(Path.GetFileNameWithoutExtension(generatedFile));
+            var patternFile = patternFiles.FirstOrDefault(p =&gt; Normalize(Path.GetFileNameWithoutExtension(p)) == key);
+            if (patternFile == null &amp;&amp; generatedFiles.Length == 1 &amp;&amp; patternFiles.Length == 1) patternFile = patternFiles[0];
+            if (patternFile == null) throw new Exception($"No pattern report matching '{Path.GetFileName(generatedFile)}' found in '{patternDir}'.");
+
+            var expected = Report.LoadFromFile(patternFile, repository);
+            var generated = Report.LoadFromFile(generatedFile, repository);
+
+            var result = CheckPattern(expected, generated);
+            scores.Add(result.Score);
+
+            task.LogMessage($"Check Pattern '{Path.GetFileName(generatedFile)}' vs '{Path.GetFileName(patternFile)}': {result.Status} ({result.Score}%)");
+            foreach (var m in result.Messages) task.LogMessage("  - " + m);
+
+            //Only FAILURE fails the test; WARNING is reported but does not cause an error.
+            if (result.Status == "FAILURE")
+                failures.Add($"{Path.GetFileName(generatedFile)}: FAILURE ({result.Score}%) - {string.Join("; ", result.Messages)}");
+
+            //Collect WARNING messages (typically raised when the match rate is below 100% without a structural failure)
+            foreach (var m in result.Messages.Where(i =&gt; i.StartsWith("WARNING:")))
+                warnings.Add($"{Path.GetFileName(generatedFile)}: {m}");
+        }
+
+        //Average pattern-match score across the generated report(s) = this provider's match rate (%)
+        var rate = scores.Count &gt; 0 ? Math.Round(scores.Average(), 1) : 0.0;
+        //Warning messages recorded by '900 Tests' (sr_test_results.warnings) - null when the report matches exactly
+        var warningText = warnings.Count &gt; 0 ? string.Join(Environment.NewLine, warnings) : null;
+
+        if (failures.Count &gt; 0)
+        {
+            //Record the failed result for '900 Tests' (report.ResultTag), then fail the report
+            report.ResultTag = new object[] { providerName, rate, "Error", string.Join(Environment.NewLine, failures), warningText };
+            throw new Exception(string.Join(Environment.NewLine, failures));
+        }
+
+        //Record the provider match rate for the test runner ('900 Tests' reads report.ResultTag)
+        report.ResultTag = new object[] { providerName, rate, "Success", null, warningText };
+}
+
+@functions {
+    //Result of a pattern check between an expected (stored pattern) and a generated report.
+    public class PatternCheckResult
+    {
+        public string Status = "OK";   //OK, WARNING or FAILURE
+        public double Score = 100;     //100 = exact match
+        public List&lt;string&gt; Messages = new List&lt;string&gt;();
+    }
+
+    //Compare two reports. 'expected' is the pattern, 'generated' is the produced report.
+    //OK = exact match, WARNING = an expected property is missing/differs, FAILURE = model definition incorrect / report not well structured.
+    PatternCheckResult CheckPattern(Report expected, Report generated)
+    {
+        var res = new PatternCheckResult();
+        int total = 0, passed = 0;
+        bool fail = false, warn = false;
+
+        if (generated == null || !string.IsNullOrEmpty(generated.LoadErrors))
+        {
+            res.Status = "FAILURE"; res.Score = 0;
+            res.Messages.Add($"Generated report is not well structured: {generated?.LoadErrors ?? "report is null"}.");
+            return res;
+        }
+
+        Check(res, ref total, ref passed, ref fail, ref warn, generated.Models.Count == expected.Models.Count, true,
+            $"Model count: expected {expected.Models.Count}, found {generated.Models.Count}.");
+
+        for (int mi = 0; mi &lt; expected.Models.Count; mi++)
+        {
+            var em = expected.Models[mi];
+            var gm = generated.Models.FirstOrDefault(x =&gt; x.Name == em.Name) ?? (mi &lt; generated.Models.Count ? generated.Models[mi] : null);
+            if (gm == null) { Check(res, ref total, ref passed, ref fail, ref warn, false, true, $"Model '{em.Name}' is missing."); continue; }
+
+            //Expected elements: presence + pivot position + data aggregate are structural; other properties are WARNING.
+            foreach (var ee in em.Elements)
+            {
+                var k = ElementKey(ee);
+                var ge = gm.Elements.FirstOrDefault(x =&gt; ElementKey(x) == k);
+                Check(res, ref total, ref passed, ref fail, ref warn, ge != null, true, $"Element '{k}' (expected {ee.PivotPosition}) is missing in model '{em.Name}'.");
+                if (ge == null) continue;
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.PivotPosition == ee.PivotPosition, true, $"Element '{k}' position: expected {ee.PivotPosition}, found {ge.PivotPosition}.");
+                if (ee.PivotPosition == PivotPosition.Data)
+                    Check(res, ref total, ref passed, ref fail, ref warn, ge.AggregateFunction == ee.AggregateFunction, true, $"Element '{k}' aggregate: expected {ee.AggregateFunction}, found {ge.AggregateFunction}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.SortOrder == ee.SortOrder, false, $"Element '{k}' sort: expected '{ee.SortOrder}', found '{ge.SortOrder}'.");
+                Check(res, ref total, ref passed, ref fail, ref warn, (ge.Format ?? "") == (ee.Format ?? ""), false, $"Element '{k}' format: expected '{ee.Format}', found '{ge.Format}'.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.ShowTotal == ee.ShowTotal, false, $"Element '{k}' total: expected {ee.ShowTotal}, found {ge.ShowTotal}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.SerieDefinition == ee.SerieDefinition, false, $"Element '{k}' chart role: expected {ee.SerieDefinition}, found {ge.SerieDefinition}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, ge.ChartJSSerie == ee.ChartJSSerie, false, $"Element '{k}' chart serie: expected {ee.ChartJSSerie}, found {ge.ChartJSSerie}.");
+            }
+            foreach (var ge in gm.Elements.Where(g =&gt; !em.Elements.Any(x =&gt; ElementKey(x) == ElementKey(g))))
+                Check(res, ref total, ref passed, ref fail, ref warn, false, false, $"Unexpected element '{ElementKey(ge)}' ({ge.PivotPosition}) in model '{em.Name}'.");
+
+            //Expected restrictions: presence is structural; operator/prompt/default value are WARNING.
+            foreach (var er in em.Restrictions)
+            {
+                var k = RestrictionKey(er);
+                var gr = gm.Restrictions.FirstOrDefault(x =&gt; RestrictionKey(x) == k);
+                Check(res, ref total, ref passed, ref fail, ref warn, gr != null, true, $"Restriction on '{k}' is missing in model '{em.Name}'.");
+                if (gr == null) continue;
+                Check(res, ref total, ref passed, ref fail, ref warn, gr.Operator == er.Operator, false, $"Restriction '{k}' operator: expected {er.Operator}, found {gr.Operator}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, gr.Prompt == er.Prompt, false, $"Restriction '{k}' prompt: expected {er.Prompt}, found {gr.Prompt}.");
+                Check(res, ref total, ref passed, ref fail, ref warn, RestrictionDefault(gr) == RestrictionDefault(er), false, $"Restriction '{k}' default: expected '{RestrictionDefault(er)}', found '{RestrictionDefault(gr)}'.");
+            }
+            foreach (var gr in gm.Restrictions.Where(g =&gt; !em.Restrictions.Any(x =&gt; RestrictionKey(x) == RestrictionKey(g))))
+                Check(res, ref total, ref passed, ref fail, ref warn, false, false, $"Unexpected restriction on '{RestrictionKey(gr)}' in model '{em.Name}'.");
+        }
+
+        //Views declared in the pattern: number of views per template and names of the tab pages (a missing view is a WARNING).
+        var expectedViews = AllViews(expected.Views.FirstOrDefault()).Skip(1).ToList();
+        var generatedViews = AllViews(generated.Views.FirstOrDefault()).Skip(1).ToList();
+        foreach (var group in expectedViews.GroupBy(v =&gt; v.TemplateName))
+        {
+            var found = generatedViews.Count(v =&gt; v.TemplateName == group.Key);
+            Check(res, ref total, ref passed, ref fail, ref warn, found &gt;= group.Count(), false,
+                $"View '{group.Key}': expected {group.Count()}, found {found}.");
+        }
+        foreach (var page in expectedViews.Where(v =&gt; v.TemplateName == "Tab Page"))
+        {
+            Check(res, ref total, ref passed, ref fail, ref warn,
+                generatedViews.Any(v =&gt; v.TemplateName == "Tab Page" &amp;&amp; string.Equals(v.Name?.Trim(), page.Name, StringComparison.OrdinalIgnoreCase)), false,
+                $"Tab Page '{page.Name}' is missing.");
+        }
+
+        //Report-level view parameters declared in the pattern (e.g. restrictions_per_row, force_execution): a different/missing value is a WARNING.
+        var ev = expected.Views.FirstOrDefault();
+        var gv = generated.Views.FirstOrDefault();
+        if (ev != null &amp;&amp; gv != null)
+        {
+            foreach (var ep in ev.Parameters.Where(p =&gt; !string.IsNullOrEmpty(p.Value)))
+            {
+                var gval = gv.GetValue(ep.Name);
+                Check(res, ref total, ref passed, ref fail, ref warn, gval == ep.Value, false,
+                    $"Report view parameter '{ep.Name}': expected '{ep.Value}', found '{(string.IsNullOrEmpty(gval) ? "(not set)" : gval)}'.");
+            }
+        }
+
+        res.Score = total == 0 ? 100 : Math.Round(100.0 * passed / total, 1);
+        res.Status = fail ? "FAILURE" : ((warn || res.Score &lt; 100) ? "WARNING" : "OK");
+        return res;
+    }
+
+    void Check(PatternCheckResult res, ref int total, ref int passed, ref bool fail, ref bool warn, bool ok, bool structural, string message)
+    {
+        total++;
+        if (ok) { passed++; return; }
+        if (structural) { fail = true; res.Messages.Add("FAILURE: " + message); }
+        else { warn = true; res.Messages.Add("WARNING: " + message); }
+    }
+
+    string Normalize(string s) =&gt; new string((s ?? "").ToLowerInvariant().Where(char.IsLetterOrDigit).ToArray());
+    string ElementKey(ReportElement e) =&gt; (e.MetaColumn != null ? e.MetaColumn.DisplayName : null) ?? e.Name ?? e.GUID;
+    string RestrictionKey(ReportRestriction r) =&gt; (r.MetaColumn != null ? r.MetaColumn.DisplayName : null) ?? r.Name ?? r.GUID;
+    string RestrictionDefault(ReportRestriction r) =&gt; $"{r.Operator}|{r.Value1}|{r.Value2}|{r.Date1:yyyy-MM-dd}|{r.Date2:yyyy-MM-dd}";
+
+    IEnumerable&lt;ReportView&gt; AllViews(ReportView view)
+    {
+        if (view == null) yield break;
+        yield return view;
+        foreach (var child in view.Views)
+            foreach (var v in AllViews(child)) yield return v;
+    }
+}
+</Script>
+      <SortOrder>6</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>b1a7c010-0170-4a00-9000-000000000501</GUID>
+      <Name>View</Name>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>messages_mode</Name>
+          <Value>enabledshown</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

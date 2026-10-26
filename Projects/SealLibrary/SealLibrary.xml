@@ -1474,6 +1474,11 @@
             Checks the code level, validates, saves the report, then executes it and renders its views. Returns the result for the agent.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.EmptyCharts(Seal.Model.Report)">
+            <summary>
+            Chart views whose model has no Data element with a serie of the chart engine: such a chart renders empty without any error.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.TestReport(System.String,System.Boolean)">
             <summary>
             Executes a saved report with its default criteria values (as the SealReportRunner does), then renders its views in HTML: returns the row count and a sample of each model,
