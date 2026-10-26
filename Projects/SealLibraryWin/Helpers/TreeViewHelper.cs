@@ -41,7 +41,7 @@ namespace Seal.Helpers
 
                 foreach (var column in columns.OrderBy(i => i.DisplayOrder))
                 {
-                    string[] categories = column.Category.Split('/');
+                    string[] categories = (column.Category ?? "").Split('/');
                     TreeNodeCollection nodes = categoryNodes;
                     TreeNode categoryNode = null;
                     string path = "";
