@@ -245,7 +245,7 @@ namespace SealWebServer.Controllers
 
             try
             {
-                if (string.IsNullOrEmpty(WebUser.SecurityCode))
+                if (WebUser == null || string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
                     return Json(new { login = true });
                 }
@@ -273,7 +273,7 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
+                if (WebUser != null) WebHelper.WriteLogEntryWeb(EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
                 return HandleSWIException(ex);
             }
         }
@@ -911,6 +911,8 @@ namespace SealWebServer.Controllers
             writeDebug("SWExecuteReport");
             try
             {
+                //No path (e.g. a report tab reloaded or restored by the browser without the posted form): back to the main page
+                if (string.IsNullOrEmpty(path) && fromMenu != true) return Redirect(Url.Content("~/"));
                 if (!CheckAuthentication(sessionId)) return Content(_loginContent);
 
                 Report report = null;
@@ -955,6 +957,8 @@ namespace SealWebServer.Controllers
             writeDebug("SWViewFile");
             try
             {
+                //No path (e.g. a file tab reloaded or restored by the browser without the posted form): back to the main page
+                if (string.IsNullOrEmpty(path)) return Redirect(Url.Content("~/"));
                 if (!CheckAuthentication(sessionId)) return Content(_loginContent);
 
                 SWIFolder folder = getParentFolder(path);
@@ -1006,6 +1010,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (!Request.HasFormContentType) throw new Exception("No file to upload");
 
                 var path = Request.Form["path"];
                 SWIFolder folder = getFolder(path);
@@ -1022,10 +1027,21 @@ namespace SealWebServer.Controllers
                 //Saving the file
                 var finalPath = Path.GetFullPath(FileHelper.GetUniqueFileName(Path.Combine(folderPath, fileName)));
                 if (!finalPath.StartsWith(Path.TrimEndingDirectorySeparator(folderPath) + Path.DirectorySeparatorChar)) throw new Exception("Error: invalid path");
-                using (var stream = System.IO.File.Create(finalPath))
+                byte[] content;
+                using (var memory = new MemoryStream())
                 {
-                    file.CopyTo(stream);
+                    file.CopyTo(memory);
+                    content = memory.ToArray();
                 }
+                //A report is checked against the report code level of the user: no SQL or script above his level (there is no saved version to compare with)
+                if (fileName.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
+                {
+                    string xml;
+                    using (var reader = new StreamReader(new MemoryStream(content), true)) xml = reader.ReadToEnd();
+                    var messages = ReportCodeGuard.Check(xml, null, WebUser.ReportCodeLevel);
+                    if (messages.Count > 0) throw new Exception(string.Format(Translate("Error: the report cannot be uploaded, it contains content above your authorization level ({0}): {1}"), WebUser.ReportCodeLevel, string.Join("; ", messages)));
+                }
+                System.IO.File.WriteAllBytes(finalPath, content);
                 return Json(new { Status = true, Message = Translate("The file has been uploaded.") });
             }
             catch (Exception ex)
