@@ -946,15 +946,57 @@ namespace Seal.AI
             if (view.TemplateName == ReportViewTemplate.ModelName && view.Model != null) model = view.Model;
             if (model != null)
             {
-                var data = model.Elements.Where(i => i.PivotPosition == PivotPosition.Data).ToList();
-                string serie = null;
-                if (view.TemplateName == ReportViewTemplate.ChartJSName && !data.Exists(i => i.ChartJSSerie != ChartJSSerieDefinition.None)) serie = "ChartJSSerie";
-                else if (view.TemplateName == ReportViewTemplate.ChartEChartsName && !data.Exists(i => i.EChartsSerie != EChartsSerieDefinition.None)) serie = "EChartsSerie";
-                else if (view.TemplateName == ReportViewTemplate.ChartPlotlyName && !data.Exists(i => i.PlotlySerie != PlotlySerieDefinition.None)) serie = "PlotlySerie";
-                else if (view.TemplateName == ReportViewTemplate.ChartScottplotName && !data.Exists(i => i.ScottPlotSerie != ScottPlotSerieDefinition.None)) serie = "ScottPlotSerie";
-                if (serie != null) result.Add($"'{view.Name}' [{view.TemplateName}] of model '{model.Name}' (no Data element with a <{serie}>)");
+                var chart = chartEngine(view.TemplateName);
+                if (chart != null && !model.Elements.Exists(i => i.PivotPosition == PivotPosition.Data && chart.Value.isSerie(i)))
+                    result.Add($"'{view.Name}' [{view.TemplateName}] of model '{model.Name}' (no Data element with a <{chart.Value.serie}>)");
             }
             foreach (var child in view.Views) emptyCharts(child, model, result);
+        }
+
+        /// <summary>
+        /// For a chart view template: the XML element of the serie of its engine, the test of this serie on an element and the parameter of the title of its secondary Y axis; null for another template
+        /// </summary>
+        static (string serie, Func<ReportElement, bool> isSerie, string y2Title)? chartEngine(string templateName)
+        {
+            if (templateName == ReportViewTemplate.ChartJSName) return ("ChartJSSerie", i => i.ChartJSSerie != ChartJSSerieDefinition.None, "chartjs_yaxis2_title");
+            if (templateName == ReportViewTemplate.ChartEChartsName) return ("EChartsSerie", i => i.EChartsSerie != EChartsSerieDefinition.None, "echarts_yaxis2_title");
+            if (templateName == ReportViewTemplate.ChartPlotlyName) return ("PlotlySerie", i => i.PlotlySerie != PlotlySerieDefinition.None, "plotly_yaxis2_title");
+            if (templateName == ReportViewTemplate.ChartScottplotName) return ("ScottPlotSerie", i => i.ScottPlotSerie != ScottPlotSerieDefinition.None, "chartsp_yaxis2_label");
+            return null;
+        }
+
+        /// <summary>
+        /// Chart wiring errors that render without any error: a SerieDefinition on a Data element (ignored, only Row and Column elements make the X axis and the splitters),
+        /// a chart whose model has dimensions but no Axis (only the first row is drawn), a secondary Y axis title without any serie on the secondary axis.
+        /// </summary>
+        public static List<string> ChartWiring(Report report)
+        {
+            var result = new List<string>();
+            foreach (var model in report.Models)
+            {
+                foreach (var element in model.Elements.Where(i => i.PivotPosition == PivotPosition.Data && (i.SerieDefinition == SerieDefinition.Axis || i.SerieDefinition == SerieDefinition.Splitter || i.SerieDefinition == SerieDefinition.SplitterBoth)))
+                    result.Add($"'{element.Name}' of model '{model.Name}' is a Data element: its <SerieDefinition>{element.SerieDefinition}</SerieDefinition> is ignored (Axis and Splitter apply only to Row or Column elements), remove it");
+            }
+            foreach (var view in report.Views) chartWiring(view, null, result);
+            return result;
+        }
+
+        static void chartWiring(ReportView view, ReportModel model, List<string> result)
+        {
+            if (view.TemplateName == ReportViewTemplate.ModelName && view.Model != null) model = view.Model;
+            var chart = chartEngine(view.TemplateName);
+            if (model != null && chart != null)
+            {
+                var series = model.Elements.Where(i => i.PivotPosition == PivotPosition.Data && chart.Value.isSerie(i)).ToList();
+                var dimensions = model.Elements.Where(i => i.PivotPosition == PivotPosition.Row || i.PivotPosition == PivotPosition.Column).ToList();
+                var name = $"'{view.Name}' [{view.TemplateName}] of model '{model.Name}'";
+                //Without Axis, the chart draws only the first row with the measure names as labels: wrong as soon as the model has dimensions
+                if (series.Count > 0 && dimensions.Count > 0 && !dimensions.Exists(i => i.SerieDefinition == SerieDefinition.Axis))
+                    result.Add($"{name} has no X axis: only the first row is drawn. Set <SerieDefinition>Axis</SerieDefinition> on the Row element of the axis (e.g. '{dimensions[0].Name}')");
+                if (series.Count > 0 && !string.IsNullOrEmpty(view.GetValue(chart.Value.y2Title)) && !series.Exists(i => i.YAxisType == AxisType.Secondary))
+                    result.Add($"{name} has a secondary Y axis title ({chart.Value.y2Title}) but no serie on it: set <YAxisType>Secondary</YAxisType> on the Data element(s) of the secondary axis");
+            }
+            foreach (var child in view.Views) chartWiring(child, model, result);
         }
 
         /// <summary>
@@ -1044,6 +1086,9 @@ namespace Seal.AI
                 var charts = EmptyCharts(testReport);
                 if (charts.Count > 0)
                     test.Append($"\r\nTEST WARNING: empty chart(s), each chart view reads the serie of its own engine: {string.Join("; ", charts)}. Set the serie on the Data element(s) of the model, or remove the chart view.");
+                var wiring = ChartWiring(testReport);
+                if (wiring.Count > 0)
+                    test.Append($"\r\nTEST WARNING: chart(s) wrongly built, rendered without error but not as described: {string.Join("; ", wiring)}. Fix the model and save it again; never describe these charts as working.");
                 if (emptyCriteria.Count > 0)
                     test.Append($"\r\nNote: prompted criteria without default value (not applied until the user fills them): {string.Join(", ", emptyCriteria)}.");
             }

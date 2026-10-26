@@ -60,6 +60,11 @@ a pie but the series of a bar or a line (status as Splitter); a Map view uses
   element with `<SerieDefinition>Splitter</SerieDefinition>`; with a single Data
   series there is nothing to stack. If the report has only one series, say so
   rather than silently producing an unstacked chart.
+- **The X axis, the measures drawn and a second Y axis are not view parameters**:
+  they are set on the elements of the model (`<SerieDefinition>Axis</SerieDefinition>`
+  on the Row element, the serie of each measure, `<YAxisType>Secondary</YAxisType>`):
+  patch them as in `build-report-from-metadata`. `chartjs_yaxis2_title` alone draws
+  nothing on a second axis.
 - Boolean values are the literal strings `True` / `False` (capitalised).
 - Only set the parameters the user actually asked for — never write a full list
   of defaults.

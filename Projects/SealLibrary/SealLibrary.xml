@@ -1484,6 +1484,17 @@
             Chart views whose model has no Data element with a serie of the chart engine: such a chart renders empty without any error.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.chartEngine(System.String)">
+            <summary>
+            For a chart view template: the XML element of the serie of its engine, the test of this serie on an element and the parameter of the title of its secondary Y axis; null for another template
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.ChartWiring(Seal.Model.Report)">
+            <summary>
+            Chart wiring errors that render without any error: a SerieDefinition on a Data element (ignored, only Row and Column elements make the X axis and the splitters),
+            a chart whose model has dimensions but no Axis (only the first row is drawn), a secondary Y axis title without any serie on the secondary axis.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.TestReport(System.String,System.Boolean)">
             <summary>
             Executes a saved report with its default criteria values (as the SealReportRunner does), then renders its views in HTML: returns the row count and a sample of each model,

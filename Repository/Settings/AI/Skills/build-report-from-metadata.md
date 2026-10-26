@@ -129,13 +129,21 @@ Minimal list with one prompted restriction:
   with `LeftOuter`/`RightOuter` (Left/Right as listed by `datasource_get_detail`); a
   filter on the optional table goes in `<AdditionalClause>`, not in a restriction.
 - **Charts** (Chart JS by default): Row dimension `<SerieDefinition>Axis</SerieDefinition>`,
-  Data measure `<ChartJSSerie>Bar</ChartJSSerie>` (Line for a trend, Pie for a
-  part-of-whole), optional Column element `<SerieDefinition>Splitter</SerieDefinition>`
-  for several series (needed to stack), and a `Chart JS` view in the Container.
-  Without the Axis the chart is empty. Each chart view reads the serie of its own
+  each Data measure drawn `<ChartJSSerie>Bar</ChartJSSerie>` (Line for a trend, Pie
+  for a part-of-whole; a measure not drawn has no serie), optional Column element
+  `<SerieDefinition>Splitter</SerieDefinition>` for several series (needed to stack),
+  and a `Chart JS` view in the Container. `<SerieDefinition>` goes only on a Row or
+  Column element, never on a Data element (ignored). Without the Axis only the first
+  row is drawn. Each chart view reads the serie of its own
   engine: `Chart Echarts` → `<EChartsSerie>`, `Chart Plotly` → `<PlotlySerie>`,
   `Chart Scottplot` → `<ScottPlotSerie>` (e.g. `<EChartsSerie>Pie</EChartsSerie>`).
   Set the serie of every engine displayed for the model, otherwise its view is empty.
+- **Two Y axes**: measures of different scales or units in one chart (a count or a
+  population with percentages) → `<YAxisType>Secondary</YAxisType>` on the Data
+  element(s) of the second axis, the others stay on the primary axis; axis titles
+  `chartjs_yaxis_title` / `chartjs_yaxis2_title` (`echarts_yaxis2_title`,
+  `plotly_yaxis2_title`). A title alone creates no axis. Bars on one axis and a
+  `Line` on the other read best.
 - **Maps**: only if the source has latitude/longitude columns (as Row elements, no
   aggregation) and a `Map` view in the Container (`map_label`, `map_color_column`,
   `map_size_column`; `map_latitude`/`map_longitude` when the column names do not

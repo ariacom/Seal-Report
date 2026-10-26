@@ -162,6 +162,46 @@ namespace Test
         }
 
         [TestMethod]
+        public void ChartWiring()
+        {
+            //Dashboard of TST040 and the sample reports: charts correctly built
+            var report = Report.LoadFromFile(System.IO.Path.Combine(_repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex"), _repository);
+            Assert.AreEqual(0, AIReportWriter.ChartWiring(report).Count);
+            foreach (var path in System.IO.Directory.GetFiles(System.IO.Path.Combine(_repository.ReportsFolder, "Samples"), "*.srex", System.IO.SearchOption.AllDirectories)
+                .Concat(System.IO.Directory.GetFiles(System.IO.Path.Combine(_repository.ReportsFolder, "System", "Tests"), "*.srex", System.IO.SearchOption.AllDirectories)))
+            {
+                var issues = AIReportWriter.ChartWiring(Report.LoadFromFile(path, _repository));
+                Assert.AreEqual(0, issues.Count, path + ": " + string.Join("; ", issues));
+            }
+
+            //Serie definitions on the measures instead of the dimension (as written by an agent): the Data elements are reported, and the chart has no X axis
+            var model = report.Models.First(i => i.Name == "Sales per category");
+            var axis = model.Elements.First(i => i.SerieDefinition == SerieDefinition.Axis);
+            axis.SerieDefinition = SerieDefinition.None;
+            var measure = model.Elements.First(i => i.PivotPosition == PivotPosition.Data);
+            measure.SerieDefinition = SerieDefinition.Splitter;
+            var issues2 = AIReportWriter.ChartWiring(report);
+            Assert.IsTrue(issues2.Exists(i => i.Contains($"'{measure.Name}' of model 'Sales per category' is a Data element") && i.Contains("<SerieDefinition>Splitter</SerieDefinition>")), string.Join("; ", issues2));
+            Assert.IsTrue(issues2.Exists(i => i.Contains("[Chart JS] of model 'Sales per category' has no X axis") && i.Contains($"'{axis.Name}'")), string.Join("; ", issues2));
+
+            //Secondary Y axis title without any serie on the secondary axis
+            measure.SerieDefinition = SerieDefinition.None;
+            axis.SerieDefinition = SerieDefinition.Axis;
+            Assert.AreEqual(0, AIReportWriter.ChartWiring(report).Count);
+            var modelView = report.AllViews.First(i => i.TemplateName == ReportViewTemplate.ModelName && i.Model == model);
+            IEnumerable<ReportView> descendants(ReportView view) => view.Views.SelectMany(i => new[] { i }.Concat(descendants(i)));
+            var chartView = descendants(modelView).First(i => i.TemplateName == ReportViewTemplate.ChartJSName);
+            var y2Title = chartView.Parameters.FirstOrDefault(i => i.Name == "chartjs_yaxis2_title");
+            if (y2Title == null) chartView.Parameters.Add(y2Title = new Parameter() { Name = "chartjs_yaxis2_title" });
+            y2Title.Value = "Population";
+            var issues3 = AIReportWriter.ChartWiring(report);
+            Assert.AreEqual(1, issues3.Count, string.Join("; ", issues3));
+            StringAssert.Contains(issues3[0], "chartjs_yaxis2_title");
+            measure.YAxisType = AxisType.Secondary;
+            Assert.AreEqual(0, AIReportWriter.ChartWiring(report).Count);
+        }
+
+        [TestMethod]
         public void UnreadableXmlIsRejected()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));
