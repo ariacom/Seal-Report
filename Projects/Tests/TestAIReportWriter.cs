@@ -160,5 +160,19 @@ namespace Test
             StringAssert.Contains(charts[0], "[Chart Echarts] of model 'Sales per category'");
             StringAssert.Contains(charts[0], "<EChartsSerie>");
         }
+
+        [TestMethod]
+        public void UnreadableXmlIsRejected()
+        {
+            var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));
+            Assert.IsNull(Validate(doc));
+            Assert.IsNull(AIReportWriter.CheckDeserialization(AIReportWriter.ToXmlText(doc)));
+
+            //A label in an enumerated element: the cause and the line are given, not only the position
+            doc.Descendants("ReportRestriction").Single().Element("Prompt").Value = "Département";
+            var error = AIReportWriter.CheckDeserialization(AIReportWriter.ToXmlText(doc));
+            StringAssert.Contains(error, "<Prompt>Département</Prompt>");
+            StringAssert.Contains(error, "PromptType");
+        }
     }
 }

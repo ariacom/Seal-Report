@@ -878,9 +878,14 @@ namespace Seal.AI
                 var error = Validate(doc, existingXml, regenerateAllGuids, inserted, noRecordLimit, warnings, out int limitedModels);
                 if (error != null) return error;
 
+                //--- The report must deserialize (e.g. a label in an enumerated element): never save a file that does not load
+                var text = ToXmlText(doc);
+                error = CheckDeserialization(text);
+                if (error != null) return error;
+
                 var dir = Path.GetDirectoryName(fullPath);
                 if (!Directory.Exists(dir)) Directory.CreateDirectory(dir);
-                File.WriteAllText(fullPath, ToXmlText(doc), Encoding.UTF8);
+                File.WriteAllText(fullPath, text, Encoding.UTF8);
 
                 var result = new StringBuilder($"{action}: {path}");
                 if (limitedModels > 0) result.Append($"\r\nNote: the result is limited to {DefaultMaxNumberOfRecords} records (default limit of the reports created by the AI agent, <MaxNumberOfRecords>). Mention it to the user.");
@@ -890,6 +895,34 @@ namespace Seal.AI
                 return result.ToString();
             }
             catch (Exception ex) { return $"Error: {ex.Message}"; }
+        }
+
+        /// <summary>
+        /// Deserializes the report XML as Report.LoadFromFile does: returns the cause and the line in error, or null if the report can be read.
+        /// </summary>
+        public static string CheckDeserialization(string xml)
+        {
+            try
+            {
+                using var reader = new StringReader(xml);
+                using var xr = XmlReader.Create(reader);
+                new System.Xml.Serialization.XmlSerializer(typeof(Report)).Deserialize(xr);
+                return null;
+            }
+            catch (Exception ex)
+            {
+                var cause = ex.InnerException ?? ex;
+                while (cause.InnerException != null) cause = cause.InnerException;
+                var line = "";
+                var match = Regex.Match(ex.Message, @"\((\d+), (\d+)\)");
+                if (match.Success)
+                {
+                    var lines = xml.Split('\n');
+                    var index = int.Parse(match.Groups[1].Value) - 1;
+                    if (index >= 0 && index < lines.Length) line = $" at '{lines[index].Trim()}'";
+                }
+                return $"Error: the report XML cannot be read{line}: {cause.Message} Check the type and the allowed values of the element with seal_describe_class. The report is not saved: fix the XML and save it again.";
+            }
         }
 
         static void viewTree(StringBuilder sb, ReportView view, int level)
