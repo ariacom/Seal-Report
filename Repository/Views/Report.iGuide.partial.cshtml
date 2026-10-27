@@ -8,13 +8,15 @@
     //The visibility is toggled by the #guide_button in the header (animated Bootstrap collapse).
     var content = (report.GenerateHTMLDisplay && !report.PrintLayout && !string.IsNullOrEmpty(report.Guide))
         ? report.GuideHtml : "";
+    //Optional maximum height (0 = no limit): set on the card body so the collapse animation of #guide_div is unchanged.
+    var maxHeight = view.GetNumericValue("guide_max_height");
 }
 
 @if (!string.IsNullOrEmpty(content))
 {
     <div id="guide_div" class="collapse @(view.GetBoolValue("show_guide") ? "show" : "")">
         <div class="card guide mb-3">
-            <div class="card-body">
+            <div class="card-body" @Raw(maxHeight > 0 ? $"style=\"max-height:{maxHeight}px;overflow-y:auto\"" : "")>
                 @Raw(content)
             </div>
         </div>
