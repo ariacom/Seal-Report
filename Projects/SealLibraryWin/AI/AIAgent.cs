@@ -133,7 +133,7 @@ namespace Seal.AI
         /// </summary>
         public const string ChatSuggestionsInstruction =
             "## Clickable suggestions\r\n" +
-            "The chat interface renders `[[text]]` as a clickable link that sends `text` as the user's next message. " +
+            "The chat interface renders `[[text]]` as a clickable link that puts `text` in the user's input box, where the user can edit it before sending it as the next message. " +
             "When you end your reply by offering follow-up options or asking the user to choose between alternatives, " +
             "write each option as `[[short label]]`, or `[[short label|full message to send]]` when the label alone would be ambiguous out of context. " +
             "Write the label as the user would phrase the request, in the user's language. " +

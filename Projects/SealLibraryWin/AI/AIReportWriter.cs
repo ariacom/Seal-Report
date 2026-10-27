@@ -1000,6 +1000,100 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Containers showing a chart or a map after a table: the chart or the map comes first, the tables after it.
+        /// </summary>
+        public static List<string> ViewOrder(Report report)
+        {
+            var result = new List<string>();
+            foreach (var view in report.Views) viewOrder(view, result);
+            return result;
+        }
+
+        static void viewOrder(ReportView view, List<string> result)
+        {
+            if (view.TemplateName == ReportViewTemplate.ContainerName)
+            {
+                var children = view.Views.OrderBy(i => i.SortOrder).ToList();
+                var table = children.FirstOrDefault(i => i.TemplateName == ReportViewTemplate.DataTableName || i.TemplateName == ReportViewTemplate.PageTableName);
+                if (table != null)
+                {
+                    foreach (var after in children.Skip(children.IndexOf(table) + 1).Where(i => chartEngine(i.TemplateName) != null || i.TemplateName == ReportViewTemplate.MapName))
+                        result.Add($"'{after.Name}' [{after.TemplateName}] is shown below the table '{table.Name}' [{table.TemplateName}] in the Container '{view.Name}': give it the lowest <SortOrder> and renumber the tables after it");
+                }
+            }
+            foreach (var child in view.Views) viewOrder(child, result);
+        }
+
+        /// <summary>
+        /// Color mappings of an executed report (map_colors of a Map, chartjs_color_mappings, plotly_color_mappings) whose keys match none of the displayed values:
+        /// every value keeps the default color, without any error.
+        /// </summary>
+        public static List<string> ColorMappings(Report report)
+        {
+            var result = new List<string>();
+            foreach (var view in report.Views) colorMappings(view, null, result);
+            return result;
+        }
+
+        static void colorMappings(ReportView view, ReportModel model, List<string> result)
+        {
+            if (view.TemplateName == ReportViewTemplate.ModelName && view.Model != null) model = view.Model;
+            if (model != null && model.Pages.Count > 0)
+            {
+                string parameter = null, colorColumn = null;
+                var keys = new List<string>();
+                if (view.TemplateName == ReportViewTemplate.MapName && view.HasValue("map_colors"))
+                {
+                    //'value=color' entries, a 'color' entry is a palette color
+                    parameter = "map_colors";
+                    colorColumn = view.GetValue("map_color_column");
+                    foreach (var entry in view.GetValue("map_colors").Replace("\r", "").Split(new char[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries))
+                    {
+                        var index = entry.LastIndexOf('=');
+                        if (index > 0) keys.Add(entry.Substring(0, index).Trim());
+                    }
+                }
+                else if ((view.TemplateName == ReportViewTemplate.ChartJSName && view.HasValue("chartjs_color_mappings")) || (view.TemplateName == ReportViewTemplate.ChartPlotlyName && view.HasValue("plotly_color_mappings")))
+                {
+                    //'label':'color' pairs of a JavaScript object
+                    parameter = view.TemplateName == ReportViewTemplate.ChartJSName ? "chartjs_color_mappings" : "plotly_color_mappings";
+                    keys.AddRange(Regex.Matches(view.GetValue(parameter), @"['""]([^'""]*)['""]\s*:").Select(m => m.Groups[1].Value.Trim()));
+                }
+
+                if (parameter != null && keys.Count > 0)
+                {
+                    //displayed values: the cells of the pages (axis labels, splitter values, color column of a map) and the names of the series
+                    var values = new HashSet<string>();
+                    foreach (var page in model.Pages)
+                    {
+                        foreach (var table in new[] { page.PageTable, page.DataTable }.Where(i => i != null))
+                        {
+                            //for a map, only the color column when it is found in the title row
+                            int colorCol = -1;
+                            if (!string.IsNullOrEmpty(colorColumn) && table == page.DataTable && table.BodyStartRow > 0)
+                                for (int col = 0; col < table.ColumnCount; col++)
+                                {
+                                    var element = table[table.BodyStartRow - 1, col].Element;
+                                    if (element != null && new[] { element.DisplayNameElTranslated, element.DisplayNameEl }.Any(n => string.Compare(n?.Trim(), colorColumn.Trim(), true) == 0)) { colorCol = col; break; }
+                                }
+                            for (int row = colorCol == -1 ? 0 : table.BodyStartRow; row < table.Lines.Count; row++)
+                                for (int col = 0; col < table.Lines[row].Length; col++)
+                                    if (colorCol == -1 || col == colorCol) values.Add((table.Lines[row][col]?.DisplayValue ?? "").Trim());
+                        }
+                        foreach (var serie in page.Series) values.Add((serie.SerieDisplayName ?? "").Trim());
+                    }
+                    if (!keys.Exists(values.Contains))
+                    {
+                        var sample = values.Where(i => i != "" && (string.IsNullOrEmpty(colorColumn) || i.Length < 80)).Take(6).ToList();
+                        result.Add($"'{view.Name}' [{view.TemplateName}] of model '{model.Name}': no key of {parameter} ({string.Join(", ", keys.Take(6).Select(k => "'" + k + "'"))}) matches a displayed value"
+                            + (sample.Count > 0 ? $" (displayed: {string.Join(", ", sample.Select(v => "'" + v + "'"))})" : ""));
+                    }
+                }
+            }
+            foreach (var child in view.Views) colorMappings(child, model, result);
+        }
+
+        /// <summary>
         /// Executes a saved report with its default criteria values (as the SealReportRunner does), then renders its views in HTML: returns the row count and a sample of each model,
         /// the errors of the execution and of the views (file and line), and optionally a picture of the result for the agent.
         /// </summary>
@@ -1079,6 +1173,9 @@ namespace Seal.AI
                         test.Append($"\r\nViews rendered without error ({new FileInfo(htmlPath).Length / 1024} KB of HTML):");
                         if (testReport.ExecutionView != null) viewTree(test, testReport.ExecutionView, 0);
                         if (renderPicture) test.Append("\r\n" + takePicture(htmlPath));
+                        var colors = ColorMappings(testReport);
+                        if (colors.Count > 0)
+                            test.Append($"\r\nTEST WARNING: color mapping(s) without effect, every value keeps the default color: {string.Join("; ", colors)}. Use the labels exactly as displayed (case, accents, spaces) and save it again; never describe these colors as applied.");
                     }
                 }
                 if (notDisplayed.Count > 0)
@@ -1089,6 +1186,9 @@ namespace Seal.AI
                 var wiring = ChartWiring(testReport);
                 if (wiring.Count > 0)
                     test.Append($"\r\nTEST WARNING: chart(s) wrongly built, rendered without error but not as described: {string.Join("; ", wiring)}. Fix the model and save it again; never describe these charts as working.");
+                var order = ViewOrder(testReport);
+                if (order.Count > 0)
+                    test.Append($"\r\nTEST WARNING: chart or map below a table: {string.Join("; ", order)}.");
                 if (emptyCriteria.Count > 0)
                     test.Append($"\r\nNote: prompted criteria without default value (not applied until the user fills them): {string.Join(", ", emptyCriteria)}.");
             }

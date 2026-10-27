@@ -1495,6 +1495,17 @@
             a chart whose model has dimensions but no Axis (only the first row is drawn), a secondary Y axis title without any serie on the secondary axis.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.ViewOrder(Seal.Model.Report)">
+            <summary>
+            Containers showing a chart or a map after a table: the chart or the map comes first, the tables after it.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.ColorMappings(Seal.Model.Report)">
+            <summary>
+            Color mappings of an executed report (map_colors of a Map, chartjs_color_mappings, plotly_color_mappings) whose keys match none of the displayed values:
+            every value keeps the default color, without any error.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.TestReport(System.String,System.Boolean)">
             <summary>
             Executes a saved report with its default criteria values (as the SealReportRunner does), then renders its views in HTML: returns the row count and a sample of each model,

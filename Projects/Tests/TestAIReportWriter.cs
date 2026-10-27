@@ -202,6 +202,53 @@ namespace Test
         }
 
         [TestMethod]
+        public void ViewOrder()
+        {
+            //Dashboard of TST040: no chart below a table
+            var report = Report.LoadFromFile(System.IO.Path.Combine(_repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex"), _repository);
+            Assert.AreEqual(0, AIReportWriter.ViewOrder(report).Count, string.Join("; ", AIReportWriter.ViewOrder(report)));
+
+            //Sample 05-Maps: map then table in the Container; the map moved after the table (a map appended by an agent) is reported
+            report = Report.LoadFromFile(System.IO.Path.Combine(_repository.ReportsFolder, "Samples", "05-Maps.srex"), _repository);
+            Assert.AreEqual(0, AIReportWriter.ViewOrder(report).Count, string.Join("; ", AIReportWriter.ViewOrder(report)));
+            var container = report.AllViews.First(i => i.TemplateName == ReportViewTemplate.ContainerName && i.Views.Exists(j => j.TemplateName == ReportViewTemplate.MapName));
+            var map = container.Views.First(i => i.TemplateName == ReportViewTemplate.MapName);
+            map.SortOrder = container.Views.Max(i => i.SortOrder) + 1;
+            var issues = AIReportWriter.ViewOrder(report);
+            Assert.AreEqual(1, issues.Count, string.Join("; ", issues));
+            StringAssert.Contains(issues[0], $"'{map.Name}' [Map] is shown below the table");
+        }
+
+        [TestMethod]
+        public void ColorMappings()
+        {
+            //Sample 05-Maps executed: map colored by 'Customer Country'
+            var report = Report.LoadFromFile(System.IO.Path.Combine(_repository.ReportsFolder, "Samples", "05-Maps.srex"), _repository);
+            var execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(100);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            var map = report.AllViews.First(i => i.TemplateName == ReportViewTemplate.MapName && i.HasValue("map_color_column"));
+            var colors = map.Parameters.FirstOrDefault(i => i.Name == "map_colors");
+            if (colors == null) map.Parameters.Add(colors = new Parameter() { Name = "map_colors" });
+
+            //No 'value=color' entry (palette only): nothing to check
+            colors.Value = "#1f77b4\n#ff7f0e";
+            Assert.AreEqual(0, AIReportWriter.ColorMappings(report).Count);
+
+            //Keys that are not displayed values (labels invented by an agent): reported with the displayed values
+            colors.Value = "Faible=#2ca02c\nFort=#d62728";
+            var issues = AIReportWriter.ColorMappings(report);
+            Assert.AreEqual(1, issues.Count, string.Join("; ", issues));
+            StringAssert.Contains(issues[0], "no key of map_colors ('Faible', 'Fort') matches a displayed value");
+            StringAssert.Contains(issues[0], "displayed:");
+
+            //One key matching a value of the color column is enough
+            colors.Value = "Faible=#2ca02c\nFrance=#d62728";
+            Assert.AreEqual(0, AIReportWriter.ColorMappings(report).Count, string.Join("; ", AIReportWriter.ColorMappings(report)));
+        }
+
+        [TestMethod]
         public void UnreadableXmlIsRejected()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));

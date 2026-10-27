@@ -148,6 +148,10 @@ Minimal list with one prompted restriction:
   aggregation) and a `Map` view in the Container (`map_label`, `map_color_column`,
   `map_size_column`; `map_latitude`/`map_longitude` when the column names do not
   contain latitude/longitude). Without coordinates, say a map is not possible.
+- **Order in a Container**: a chart or a map comes first, the tables after it
+  (`<SortOrder>` 1 for the chart or map, then 2, 3 for the tables). When you add a
+  chart or a map to an existing report, give it the lowest `<SortOrder>` and renumber
+  the tables after it: never append it below the tables.
 - **Status colors**: when a chart or a map shows a status, a level or a rating (OK/KO,
   Good/Average/Poor, Excellent/Insufficient, Error…), color each value by its meaning
   unless the user chose other colors: positive → green `#2ca02c`, intermediate or

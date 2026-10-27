@@ -65,7 +65,7 @@
             .replace(/'/g, '&#39;');
         // Inline formatting applied within a single (already escaped) line.
         function inline(s) {
-            // [[label]] or [[label|message]]: clickable suggestion sending the message as the next prompt
+            // [[label]] or [[label|message]]: clickable suggestion putting the message in the prompt input
             s = s.replace(SuggestionRegex, function (_m, label, message) {
                 return '<a href="#" class="ai-suggest" data-prompt="' + (message || label).trim() + '"><i class="fa fa-share"></i> ' + label.trim() + '</a>';
             });
@@ -270,15 +270,17 @@
             downloadCsv(rowsToCsv(rows, csvSeparator()), sanitizeFileName(SWIUtil.tr2('AI Agent')) + '.csv');
         }
     });
-    // Suggestion link: send its message as the next prompt (delegated, works for restored chats too)
+    // Suggestion link: put its message in the prompt input so it can be edited before sending (delegated, works for restored chats too)
     $messages.on('click', 'a.ai-suggest', function (e) {
         e.preventDefault();
         e.stopPropagation();
-        if (_requesting)
-            return;
-        $input.val($(this).attr('data-prompt') || '').trigger('input');
-        if (!$send.prop('disabled'))
-            $send.trigger('click');
+        const text = $(this).attr('data-prompt') || '';
+        $input.val(text).trigger('input');
+        const el = $input[0];
+        if (el) {
+            el.focus();
+            el.setSelectionRange(text.length, text.length);
+        }
     });
     // ── Bubble factories with hover action toolbars ─────────────
     function bubbleActionBtn(iconClass, title, handler) {
