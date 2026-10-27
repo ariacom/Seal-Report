@@ -28,6 +28,7 @@ Run these with `report_execute_get_data`, using the exact path shown.
 | `System\300 Reports - Inventory` | Full list of reports in the repository |
 | `System\320 Reports - Server Schedule Definitions` | All configured schedules |
 | `System\420 Sources - Documentation` | Datasource schema documentation |
+| `System\430 AI - Documentation` | AI agents, skills, tools (with parameters), providers and the security groups using each agent |
 | `System\500 Publication - Web Report Server` | Web server publication configuration |
 | `System\510 Publication - Repository` | Repository publication details |
 | `System\600 System - Repository Size` | Disk usage by folder |

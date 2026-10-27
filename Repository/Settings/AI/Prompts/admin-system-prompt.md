@@ -65,6 +65,7 @@ run these with `report_execute_get_data`. Always use the exact path shown.
 |---|---|
 | `System\400 Sources - Check Sources` | Datasource connectivity check |
 | `System\420 Sources - Documentation` | Datasource schema documentation |
+| `System\430 AI - Documentation` | AI agents, skills, tools (with parameters), providers and the security groups using each agent |
 
 ### Publication & System
 | Path | Purpose |

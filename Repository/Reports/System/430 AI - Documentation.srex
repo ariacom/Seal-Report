@@ -1,0 +1,1662 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>81d63e2d-ddef-44dc-b568-b61d392e8c10</GUID>
+  <ViewGUID>54b6bed3-7f6f-4130-aeea-aaa39e37ea78</ViewGUID>
+  <InputValues>
+    <ReportRestriction>
+      <GUID>3364b58c-bed4-40b0-bf58-83b410ab4772</GUID>
+      <Type>Text</Type>
+      <DisplayName>AI Agents</DisplayName>
+      <EnumGUID>fb5047d3-783f-4c50-8f60-3ab0074d43ad</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>fb5047d3-783f-4c50-8f60-3ab0074d43ad</EnumGUIDEL>
+      <Prompt>Prompt</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>fb5047d3-783f-4c50-8f60-3ab0074d43ad</EnumGUIDRE>
+    </ReportRestriction>
+  </InputValues>
+  <Sources>
+    <ReportSource>
+      <GUID>033cdcf1-75a4-4099-b379-4523120cb940</GUID>
+      <Name>AIConfiguration</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>aa74f8ae-0e9e-4ebd-91cb-f5de72bbdbde</GUID>
+          <Name>connection</Name>
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>aa74f8ae-0e9e-4ebd-91cb-f5de72bbdbde</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>fe8cf2de-a0ad-44ed-94a5-45ca6f6fed66</GUID>
+            <Name>Agents</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("agent", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("enabled", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("is_default", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("provider", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("max_report_code_level", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("max_tool_calls", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("temperature", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("max_tokens", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("top_p", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("system_prompt", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("sample_prompts", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("tools", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("skills", typeof(double)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var a in config.AIAgents)
+	{
+		var provider = a.GetProviderConfiguration();
+		string providerName = provider != null ? provider.Name : "";
+		if (a.ProviderGUID == AIProviderConfiguration.DefaultProviderGUID) providerName = "Default provider" + (provider != null ? " (" + provider.Name + ")" : "");
+
+		var prompt = new List&lt;string&gt;();
+		if (!string.IsNullOrEmpty(a.SystemPromptFile)) prompt.Add("File: " + a.SystemPromptFile);
+		if (!string.IsNullOrEmpty(a.SystemPromptScriptFile)) prompt.Add("Script: " + a.SystemPromptScriptFile);
+		if (!string.IsNullOrWhiteSpace(a.DefaultSystemPrompt)) prompt.Add(a.DefaultSystemPrompt.Length &gt; 200 ? a.DefaultSystemPrompt.Substring(0, 200) + "..." : a.DefaultSystemPrompt);
+		var samples = new List&lt;string&gt;();
+		if (!string.IsNullOrEmpty(a.SamplePromptsFile)) samples.Add("File: " + a.SamplePromptsFile);
+		if (!string.IsNullOrEmpty(a.SamplePromptsScriptFile)) samples.Add("Script: " + a.SamplePromptsScriptFile);
+
+		table.Rows.Add(a.Name, a.Description ?? "", yesNo(a.IsEnabled), yesNo(a.GUID == config.DefaultAgentGUID), providerName, a.MaxReportCodeLevel.ToString(), a.MaxToolCalls, a.Temperature, a.MaxTokens, a.TopP,
+			string.Join("\r\n", prompt), string.Join("\r\n", samples), a.ToolGUIDs.Count, a.SkillGUIDs.Count);
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>2eed7c13-1782-4ca4-8d09-0ae0a59872ab</GUID>
+                <Name>agent</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Agent</DisplayName>
+                <EnumGUID>fb5047d3-783f-4c50-8f60-3ab0074d43ad</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>db7630b2-2761-42ab-99bc-4ab11ba86474</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e4d50f75-c31b-4aad-882b-bf1f692d0a16</GUID>
+                <Name>enabled</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Enabled</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7301ab43-093d-4cd6-af87-b9c0fabf756f</GUID>
+                <Name>is_default</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Default</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>8b5f71e3-802b-4db4-9bff-636c89af23b3</GUID>
+                <Name>provider</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Provider</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c9d31ddb-f15d-4098-b336-8f51bd561e11</GUID>
+                <Name>max_report_code_level</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Max Report Code Level</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a7ebd9e5-a6e9-49fe-8d83-a90ce67ccf75</GUID>
+                <Name>max_tool_calls</Name>
+                <Type>Numeric</Type>
+                <Category>Agents</Category>
+                <DisplayName>Max Tool Calls</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>0e620daf-b845-414f-8aba-eec08783d84d</GUID>
+                <Name>temperature</Name>
+                <Type>Numeric</Type>
+                <Category>Agents</Category>
+                <DisplayName>Temperature</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b635f8a9-6423-4b7f-9ae5-53ea74d68380</GUID>
+                <Name>max_tokens</Name>
+                <Type>Numeric</Type>
+                <Category>Agents</Category>
+                <DisplayName>Max Tokens</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>35c8047f-443a-4b22-9314-8fa02c941a45</GUID>
+                <Name>top_p</Name>
+                <Type>Numeric</Type>
+                <Category>Agents</Category>
+                <DisplayName>Top P</DisplayName>
+                <DisplayOrder>10</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>8bce927b-7557-4a35-ac3d-393916ba1a5d</GUID>
+                <Name>system_prompt</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>System Prompt</DisplayName>
+                <DisplayOrder>11</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>86c5bc5d-efa6-41c1-877b-c6821d54f2dd</GUID>
+                <Name>sample_prompts</Name>
+                <Type>Text</Type>
+                <Category>Agents</Category>
+                <DisplayName>Sample Prompts</DisplayName>
+                <DisplayOrder>12</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>13bec175-4d1e-4952-8cf7-7c479b4b9835</GUID>
+                <Name>tools</Name>
+                <Type>Numeric</Type>
+                <Category>Agents</Category>
+                <DisplayName>Tools</DisplayName>
+                <DisplayOrder>13</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>74fee3b5-e12c-419f-b609-55e3caf6f28f</GUID>
+                <Name>skills</Name>
+                <Type>Numeric</Type>
+                <Category>Agents</Category>
+                <DisplayName>Skills</DisplayName>
+                <DisplayOrder>14</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>0c258bb6-abeb-4fa3-abba-121966deb5f8</GUID>
+            <Name>AgentLinks</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("agent", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("kind", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("name", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("via_skill", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("enabled", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var a in config.AIAgents)
+	{
+		foreach (var guid in a.ToolGUIDs)
+		{
+			var tool = config.AITools.FirstOrDefault(i =&gt; i.GUID == guid);
+			table.Rows.Add(a.Name, "Tool", toolName(guid), "", yesNo(tool != null &amp;&amp; tool.IsEnabled), tool?.Description ?? "Unknown tool");
+		}
+		foreach (var guid in a.SkillGUIDs)
+		{
+			var skill = config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid);
+			table.Rows.Add(a.Name, "Skill", skillName(guid), "", yesNo(skill != null &amp;&amp; skill.IsEnabled), skill?.Description ?? "Unknown skill");
+			if (skill == null) continue;
+			foreach (var toolGuid in skill.ToolGUIDs)
+			{
+				var tool = config.AITools.FirstOrDefault(i =&gt; i.GUID == toolGuid);
+				table.Rows.Add(a.Name, "Tool (skill)", toolName(toolGuid), skill.Name, yesNo(tool != null &amp;&amp; tool.IsEnabled), tool?.Description ?? "Unknown tool");
+			}
+		}
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>efe62c96-5c72-4990-b1b3-8ae75081b68d</GUID>
+                <Name>agent</Name>
+                <Type>Text</Type>
+                <Category>AgentLinks</Category>
+                <DisplayName>Agent</DisplayName>
+                <EnumGUID>fb5047d3-783f-4c50-8f60-3ab0074d43ad</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5669d245-110c-46c3-8c0d-4f7ce0b64772</GUID>
+                <Name>kind</Name>
+                <Type>Text</Type>
+                <Category>AgentLinks</Category>
+                <DisplayName>Kind</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>33b7d9c4-3206-4b0c-ab6e-5636c2b04f0f</GUID>
+                <Name>name</Name>
+                <Type>Text</Type>
+                <Category>AgentLinks</Category>
+                <DisplayName>Name</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5301efd3-d1c8-40bb-84a2-06b860b00b83</GUID>
+                <Name>via_skill</Name>
+                <Type>Text</Type>
+                <Category>AgentLinks</Category>
+                <DisplayName>Via Skill</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>d004e8d4-734d-4d64-933b-ef939ff7152e</GUID>
+                <Name>enabled</Name>
+                <Type>Text</Type>
+                <Category>AgentLinks</Category>
+                <DisplayName>Enabled</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7ecb9214-a421-45e7-b577-2888472b704c</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>AgentLinks</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>fac11252-3691-410c-98ec-59f7a5e01822</GUID>
+            <Name>AgentGroups</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("agent", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("security_group", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var a in config.AIAgents)
+	{
+		foreach (var group in Repository.Instance.Security.Groups.Where(i =&gt; i.AgentGUIDs.Contains(a.GUID)))
+		{
+			table.Rows.Add(a.Name, group.Name);
+		}
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>682b30a7-c537-454d-89db-7dd10b15dec7</GUID>
+                <Name>agent</Name>
+                <Type>Text</Type>
+                <Category>AgentGroups</Category>
+                <DisplayName>Agent</DisplayName>
+                <EnumGUID>fb5047d3-783f-4c50-8f60-3ab0074d43ad</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>6e882fb8-5167-4c98-9824-878b6c5ae9de</GUID>
+                <Name>security_group</Name>
+                <Type>Text</Type>
+                <Category>AgentGroups</Category>
+                <DisplayName>Security Group</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>6c525af1-a28f-4c55-a956-5f57cd93eb8b</GUID>
+            <Name>Skills</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("skill", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("enabled", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("progress_label", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("instructions_file", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("tools", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("agents", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var s in config.AISkills)
+	{
+		var agents = config.AIAgents.Where(i =&gt; i.SkillGUIDs.Contains(s.GUID)).Select(i =&gt; i.Name);
+		table.Rows.Add(s.Name, s.Description ?? "", yesNo(s.IsEnabled), s.ProgressLabel ?? "", s.InstructionsFile ?? "", string.Join(", ", s.ToolGUIDs.Select(i =&gt; toolName(i))), string.Join(", ", agents));
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>8bbc35b7-11e8-48ea-9457-e2c52f95aa21</GUID>
+                <Name>skill</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Skill</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>36ff2cc5-543f-494f-8cf4-a4c13e9fb81a</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7f1fcf75-e24f-40e4-ac6c-25497ba4b4b5</GUID>
+                <Name>enabled</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Enabled</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>afdc3d31-8223-4f2e-b091-d31d06089e4b</GUID>
+                <Name>progress_label</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Progress Label</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>a8db7289-4b33-4d6d-84c3-0df6c96e5227</GUID>
+                <Name>instructions_file</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Instructions File</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>88259d87-f438-40e8-b20b-f736b52fc5d6</GUID>
+                <Name>tools</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Tools</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9e39d747-fa45-4634-a0aa-3bd777db17bb</GUID>
+                <Name>agents</Name>
+                <Type>Text</Type>
+                <Category>Skills</Category>
+                <DisplayName>Agents</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>c55449fa-3265-48ed-9240-90fb1d3b91e9</GUID>
+            <Name>Tools</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("tool", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("enabled", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("progress_label", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("execution_script_file", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("parameters", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("skills", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("agents", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var t in config.AITools)
+	{
+		var parameters = new List&lt;string[]&gt;();
+		Newtonsoft.Json.Linq.JObject schema = null;
+		try { if (!string.IsNullOrWhiteSpace(t.ParametersSchema)) schema = Newtonsoft.Json.Linq.JObject.Parse(t.ParametersSchema); } catch { }
+		var required = new List&lt;string&gt;();
+		if (schema != null &amp;&amp; schema["required"] is Newtonsoft.Json.Linq.JArray requiredArray) foreach (var r in requiredArray) required.Add(r.ToString());
+		var properties = schema?["properties"] as Newtonsoft.Json.Linq.JObject;
+		if (properties != null)
+		{
+			foreach (var property in properties.Properties())
+			{
+				var typeToken = property.Value["type"];
+				string type = typeToken is Newtonsoft.Json.Linq.JArray typeArray ? string.Join("|", typeArray) : (typeToken?.ToString() ?? "");
+				if (type == "array") type = "array of " + (property.Value["items"]?["type"]?.ToString() ?? "object");
+				var enumToken = property.Value["enum"] as Newtonsoft.Json.Linq.JArray;
+				if (enumToken != null) type += " (" + string.Join(", ", enumToken) + ")";
+				parameters.Add(new string[] { property.Name, type, yesNo(required.Contains(property.Name)), property.Value["description"]?.ToString() ?? "" });
+			}
+		}
+		parameters = parameters.OrderBy(i =&gt; i[2] == "Yes" ? 0 : 1).ToList();
+		var skills = config.AISkills.Where(i =&gt; i.ToolGUIDs.Contains(t.GUID)).Select(i =&gt; i.Name);
+		var agents = config.AIAgents.Where(i =&gt; i.ToolGUIDs.Contains(t.GUID)).Select(i =&gt; i.Name);
+		table.Rows.Add(t.Name, t.Description ?? "", yesNo(t.IsEnabled), t.ProgressLabel ?? "", t.ExecutionScriptFile ?? "",
+			string.Join(", ", parameters.Select(i =&gt; i[0] + (i[2] == "Yes" ? "*" : ""))), string.Join(", ", skills), string.Join(", ", agents));
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>d66d8942-5c4a-4c12-925c-7ff36789e748</GUID>
+                <Name>tool</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Tool</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>325933fa-651a-4458-a91f-cc5ff7345cae</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>1f38483f-bfca-432c-be1c-01b9b2e674c3</GUID>
+                <Name>enabled</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Enabled</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>3de79338-3402-4ccc-95a7-d82285a9ac89</GUID>
+                <Name>progress_label</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Progress Label</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>21f9c167-e879-4a24-8e98-840f2c2b81b7</GUID>
+                <Name>execution_script_file</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Execution Script File</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>2e287b8d-c577-4457-b485-79375912f519</GUID>
+                <Name>parameters</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Parameters</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>e73be0eb-46af-4936-998b-2e1aa59e55c6</GUID>
+                <Name>skills</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Skills</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>af122e8f-9ccf-45ea-a15c-cf7a460a1cea</GUID>
+                <Name>agents</Name>
+                <Type>Text</Type>
+                <Category>Tools</Category>
+                <DisplayName>Agents</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>2777e85d-a82d-4b07-98b3-400f48000b06</GUID>
+            <Name>ToolParameters</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("tool", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("parameter", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("type", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("required", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("description", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var t in config.AITools)
+	{
+		var parameters = new List&lt;string[]&gt;();
+		Newtonsoft.Json.Linq.JObject schema = null;
+		try { if (!string.IsNullOrWhiteSpace(t.ParametersSchema)) schema = Newtonsoft.Json.Linq.JObject.Parse(t.ParametersSchema); } catch { }
+		var required = new List&lt;string&gt;();
+		if (schema != null &amp;&amp; schema["required"] is Newtonsoft.Json.Linq.JArray requiredArray) foreach (var r in requiredArray) required.Add(r.ToString());
+		var properties = schema?["properties"] as Newtonsoft.Json.Linq.JObject;
+		if (properties != null)
+		{
+			foreach (var property in properties.Properties())
+			{
+				var typeToken = property.Value["type"];
+				string type = typeToken is Newtonsoft.Json.Linq.JArray typeArray ? string.Join("|", typeArray) : (typeToken?.ToString() ?? "");
+				if (type == "array") type = "array of " + (property.Value["items"]?["type"]?.ToString() ?? "object");
+				var enumToken = property.Value["enum"] as Newtonsoft.Json.Linq.JArray;
+				if (enumToken != null) type += " (" + string.Join(", ", enumToken) + ")";
+				parameters.Add(new string[] { property.Name, type, yesNo(required.Contains(property.Name)), property.Value["description"]?.ToString() ?? "" });
+			}
+		}
+		parameters = parameters.OrderBy(i =&gt; i[2] == "Yes" ? 0 : 1).ToList();
+		foreach (var p in parameters) table.Rows.Add(t.Name, p[0], p[1], p[2], p[3]);
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>7444f965-b8c0-4958-be3c-91f2c947b634</GUID>
+                <Name>tool</Name>
+                <Type>Text</Type>
+                <Category>ToolParameters</Category>
+                <DisplayName>Tool</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>47bac875-c2eb-4d72-a387-bb7683355c37</GUID>
+                <Name>parameter</Name>
+                <Type>Text</Type>
+                <Category>ToolParameters</Category>
+                <DisplayName>Parameter</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5400ebb1-dceb-4700-9d29-07eb7f1d7a57</GUID>
+                <Name>type</Name>
+                <Type>Text</Type>
+                <Category>ToolParameters</Category>
+                <DisplayName>Type</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>61a4be5d-a2da-45f1-9bfb-57b5fa6b3387</GUID>
+                <Name>required</Name>
+                <Type>Text</Type>
+                <Category>ToolParameters</Category>
+                <DisplayName>Required</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>864e59ea-58cc-4ed9-81b7-22cc0e16e447</GUID>
+                <Name>description</Name>
+                <Type>Text</Type>
+                <Category>ToolParameters</Category>
+                <DisplayName>Description</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+          <MetaTable>
+            <GUID>c9ef66ff-cc50-4c3a-8c83-ae7b74fd49cd</GUID>
+            <Name>Providers</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("provider", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("enabled", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("is_default", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("type", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("model", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("endpoint", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("input_token_cost", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("output_token_cost", typeof(double)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("agents", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	Func&lt;string, string&gt; toolName = (guid) =&gt; config.AITools.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;string, string&gt; skillName = (guid) =&gt; config.AISkills.FirstOrDefault(i =&gt; i.GUID == guid)?.Name ?? guid;
+	Func&lt;bool, string&gt; yesNo = (value) =&gt; value ? "Yes" : "No";
+	foreach (var p in config.AIProviders)
+	{
+		var agents = config.AIAgents.Where(i =&gt; i.GetProviderConfiguration()?.GUID == p.GUID).Select(i =&gt; i.Name);
+		table.Rows.Add(p.Name, yesNo(p.IsEnabled), yesNo(p.GUID == config.DefaultProviderGUID), p.Type.ToString(), p.Model ?? "", p.EndPoint ?? "", p.InputTokenCost, p.OutputTokenCost, string.Join(", ", agents));
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>d5f75724-6a14-4016-8a21-add718e8a97b</GUID>
+                <Name>provider</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>Provider</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>8b28398c-357a-4eca-91ed-2f8ab3d72b0b</GUID>
+                <Name>enabled</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>Enabled</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c04d93c3-78cb-4d4e-a64d-3562e0c4c6d3</GUID>
+                <Name>is_default</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>Default</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>2964373e-b11f-4da4-b775-f38fa64eb5c6</GUID>
+                <Name>type</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>Type</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>391c9430-71b7-452b-aac4-ffdcf68293b9</GUID>
+                <Name>model</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>Model</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>76425067-cd4d-4e64-b420-2dee32e11747</GUID>
+                <Name>endpoint</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>End Point</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>31196dfd-c649-4f3e-b2dd-eafa05e506f3</GUID>
+                <Name>input_token_cost</Name>
+                <Type>Numeric</Type>
+                <Category>Providers</Category>
+                <DisplayName>Input Token Cost</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b2aba74e-869d-4a64-9d2e-23c5b3387b09</GUID>
+                <Name>output_token_cost</Name>
+                <Type>Numeric</Type>
+                <Category>Providers</Category>
+                <DisplayName>Output Token Cost</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9ea90897-6f22-4f2b-91bc-87d5f3f7fbf7</GUID>
+                <Name>agents</Name>
+                <Type>Text</Type>
+                <Category>Providers</Category>
+                <DisplayName>Agents</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+        <Enums>
+          <MetaEnum>
+            <GUID>fb5047d3-783f-4c50-8f60-3ab0074d43ad</GUID>
+            <Name>_agent</Name>
+          </MetaEnum>
+        </Enums>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>d786fa7e-7970-4c06-81c2-073f37ba9894</GUID>
+      <Name>Agents</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>fe8cf2de-a0ad-44ed-94a5-45ca6f6fed66</GUID>
+          <Name>Agents</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>23c4a988-f8c7-440a-927b-013070eed3ec</GUID>
+          <Name>agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2eed7c13-1782-4ca4-8d09-0ae0a59872ab</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>78801645-0b52-4427-8364-b33f79654214</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>db7630b2-2761-42ab-99bc-4ab11ba86474</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fddec500-6a28-4418-b2de-9be7d6fad39c</GUID>
+          <Name>enabled</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e4d50f75-c31b-4aad-882b-bf1f692d0a16</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>25bb1094-9988-4e7f-91ee-0e33aa0b039f</GUID>
+          <Name>is_default</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7301ab43-093d-4cd6-af87-b9c0fabf756f</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5815df77-1fd7-4eeb-9815-dde9d3ce848c</GUID>
+          <Name>provider</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8b5f71e3-802b-4db4-9bff-636c89af23b3</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e17bcd99-e6de-4ec0-8097-ec53f7bc2394</GUID>
+          <Name>max_report_code_level</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c9d31ddb-f15d-4098-b336-8f51bd561e11</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b6e18d51-f25f-46bb-a958-755844aad32f</GUID>
+          <Name>max_tool_calls</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>a7ebd9e5-a6e9-49fe-8d83-a90ce67ccf75</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>19bf760c-e90d-4621-b64f-82b7f1f5ba95</GUID>
+          <Name>temperature</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>0e620daf-b845-414f-8aba-eec08783d84d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>65c35ce4-2ef2-4daa-aeb7-dd87ce0c96b4</GUID>
+          <Name>max_tokens</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b635f8a9-6423-4b7f-9ae5-53ea74d68380</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4925e01a-d157-4cf9-aff7-12d9ff3a9d9f</GUID>
+          <Name>top_p</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>35c8047f-443a-4b22-9314-8fa02c941a45</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>aa09b902-d719-4828-97b1-fa3c37730c04</GUID>
+          <Name>system_prompt</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8bce927b-7557-4a35-ac3d-393916ba1a5d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>db87ac51-d776-4c99-877d-ba6422e4c304</GUID>
+          <Name>sample_prompts</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>86c5bc5d-efa6-41c1-877b-c6821d54f2dd</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>88ab4dac-bbd9-4ca5-ab10-a620d7906c76</GUID>
+          <Name>tools</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>13bec175-4d1e-4952-8cf7-7c479b4b9835</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1715ffa8-9f17-4773-9b2d-b0b757b6d61e</GUID>
+          <Name>skills</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>74fee3b5-e12c-419f-b609-55e3caf6f28f</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[1af0f457-c4eb-48aa-af0e-d706f297616a]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>1af0f457-c4eb-48aa-af0e-d706f297616a</GUID>
+          <Name>agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>2eed7c13-1782-4ca4-8d09-0ae0a59872ab</MetaColumnGUID>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>3c4cea1e-68ec-4b63-98cf-176c3ba6255c</GUID>
+      <Name>AgentLinks</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>0c258bb6-abeb-4fa3-abba-121966deb5f8</GUID>
+          <Name>AgentLinks</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>33046502-76fb-4d63-81cf-bc2132cfdaee</GUID>
+          <Name>agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>efe62c96-5c72-4990-b1b3-8ae75081b68d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e015e689-835a-4908-87c5-5c4a2b550af4</GUID>
+          <Name>kind</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5669d245-110c-46c3-8c0d-4f7ce0b64772</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0c871b19-fb94-4a1e-bc90-e2ec4c362e35</GUID>
+          <Name>name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>33b7d9c4-3206-4b0c-ab6e-5636c2b04f0f</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>64fe3343-eeec-4f95-ad75-e60a76e09484</GUID>
+          <Name>via_skill</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5301efd3-d1c8-40bb-84a2-06b860b00b83</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>91998f72-2dd0-474f-b746-3617897280a9</GUID>
+          <Name>enabled</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d004e8d4-734d-4d64-933b-ef939ff7152e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>92eb6ef8-4acb-4525-a597-a3a38f01a728</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7ecb9214-a421-45e7-b577-2888472b704c</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[826eb911-3b98-42a0-9e91-e62141802dbb]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>826eb911-3b98-42a0-9e91-e62141802dbb</GUID>
+          <Name>agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>efe62c96-5c72-4990-b1b3-8ae75081b68d</MetaColumnGUID>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>2515fae5-502d-4fcd-971d-60dfa065c5a5</GUID>
+      <Name>AgentGroups</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>fac11252-3691-410c-98ec-59f7a5e01822</GUID>
+          <Name>AgentGroups</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>e76bbd7a-19ab-4709-a7de-6958866015d2</GUID>
+          <Name>agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>682b30a7-c537-454d-89db-7dd10b15dec7</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ff2a591c-bd30-4494-9485-bb560b0fe9fb</GUID>
+          <Name>security_group</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>6e882fb8-5167-4c98-9824-878b6c5ae9de</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[a69d5c8d-2d63-4cef-8970-38deb8e8a15a]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>a69d5c8d-2d63-4cef-8970-38deb8e8a15a</GUID>
+          <Name>agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>682b30a7-c537-454d-89db-7dd10b15dec7</MetaColumnGUID>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e5ebba76-8c0e-41f0-94a5-17e57d840fde</GUID>
+      <Name>Skills</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>6c525af1-a28f-4c55-a956-5f57cd93eb8b</GUID>
+          <Name>Skills</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>ba267954-1fc9-4f71-8784-fb59ba80fb64</GUID>
+          <Name>skill</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8bbc35b7-11e8-48ea-9457-e2c52f95aa21</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>b6470a8a-d279-4882-8301-1366deb71505</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>36ff2cc5-543f-494f-8cf4-a4c13e9fb81a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e6b84b25-88c9-4701-b5eb-1dfc6d661054</GUID>
+          <Name>enabled</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7f1fcf75-e24f-40e4-ac6c-25497ba4b4b5</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5d23ca75-ef4a-4a6b-840a-53c8eab79f08</GUID>
+          <Name>progress_label</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>afdc3d31-8223-4f2e-b091-d31d06089e4b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fa33cb98-3976-4450-8afa-8762198167dc</GUID>
+          <Name>instructions_file</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>a8db7289-4b33-4d6d-84c3-0df6c96e5227</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8a47b9fe-db52-4d4e-8833-4b2a1667fb99</GUID>
+          <Name>tools</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>88259d87-f438-40e8-b20b-f736b52fc5d6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>bcd15cb6-62db-4743-a405-5da5ffeb98f4</GUID>
+          <Name>agents</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9e39d747-fa45-4634-a0aa-3bd777db17bb</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>19b3ee97-c4fc-49c0-9ddb-7671eb3923f9</GUID>
+      <Name>Tools</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>c55449fa-3265-48ed-9240-90fb1d3b91e9</GUID>
+          <Name>Tools</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>7347e025-34cf-45a3-b930-2d8eddd449a0</GUID>
+          <Name>tool</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d66d8942-5c4a-4c12-925c-7ff36789e748</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>756e9dae-8e9d-4266-a8b8-e804ebc4698e</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>325933fa-651a-4458-a91f-cc5ff7345cae</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>aeb3d02c-e392-4e5c-90c8-a9c33188094f</GUID>
+          <Name>enabled</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>1f38483f-bfca-432c-be1c-01b9b2e674c3</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f82c6cbf-fce7-478e-9a1f-73b15308812d</GUID>
+          <Name>progress_label</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>3de79338-3402-4ccc-95a7-d82285a9ac89</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ac7e6b5b-0099-4e2a-9ae6-f3def7c6caf3</GUID>
+          <Name>execution_script_file</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>21f9c167-e879-4a24-8e98-840f2c2b81b7</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2ce7eaab-1ac6-43c5-9326-498f86120136</GUID>
+          <Name>parameters</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e287b8d-c577-4457-b485-79375912f519</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>44e54c32-b132-48cf-8653-34874c420eaa</GUID>
+          <Name>skills</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>e73be0eb-46af-4936-998b-2e1aa59e55c6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e09800b9-61d6-4c65-8ac1-31b3ba6d7a83</GUID>
+          <Name>agents</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>af122e8f-9ccf-45ea-a15c-cf7a460a1cea</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>b0684ff9-78ca-4ac9-b8b3-9c9b66ae869c</GUID>
+      <Name>ToolParameters</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>2777e85d-a82d-4b07-98b3-400f48000b06</GUID>
+          <Name>ToolParameters</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>a76fa512-be08-4c1b-8996-fe1fbdea9d75</GUID>
+          <Name>tool</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>7444f965-b8c0-4958-be3c-91f2c947b634</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6c826be9-4808-4fb8-a637-b2e659634fa9</GUID>
+          <Name>parameter</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>47bac875-c2eb-4d72-a387-bb7683355c37</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2a621af2-0c96-4340-ba29-0ff38b689351</GUID>
+          <Name>type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5400ebb1-dceb-4700-9d29-07eb7f1d7a57</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3b294e2f-146a-46c0-b9c7-cddeeed53566</GUID>
+          <Name>required</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>61a4be5d-a2da-45f1-9bfb-57b5fa6b3387</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>597f1de4-f234-4192-bd8c-169b39ce6c3a</GUID>
+          <Name>description</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>864e59ea-58cc-4ed9-81b7-22cc0e16e447</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>18b31772-5480-4832-9284-8329db0fbedb</GUID>
+      <Name>Providers</Name>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>c9ef66ff-cc50-4c3a-8c83-ae7b74fd49cd</GUID>
+          <Name>Providers</Name>
+          <TemplateName>Default</TemplateName>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>39774d98-98ee-465c-81b9-c124708d2b7a</GUID>
+          <Name>provider</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>d5f75724-6a14-4016-8a21-add718e8a97b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e0c893a2-f98c-4d00-855e-ceb99e4f3321</GUID>
+          <Name>enabled</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8b28398c-357a-4eca-91ed-2f8ab3d72b0b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>7cf5433f-1757-49bb-8ed2-43d782964b91</GUID>
+          <Name>is_default</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>c04d93c3-78cb-4d4e-a64d-3562e0c4c6d3</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>83a7ab21-5b4c-45fe-8eb1-5ce8331a297f</GUID>
+          <Name>type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2964373e-b11f-4da4-b775-f38fa64eb5c6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>18c47a22-cb36-4ad7-a640-a228f61d93b8</GUID>
+          <Name>model</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>391c9430-71b7-452b-aac4-ffdcf68293b9</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a480709c-0800-428e-aa37-4cffa858343f</GUID>
+          <Name>endpoint</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>76425067-cd4d-4e64-b420-2dee32e11747</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>debb0d7c-d768-422f-8d1d-46dfa9c108cf</GUID>
+          <Name>input_token_cost</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>31196dfd-c649-4f3e-b2dd-eafa05e506f3</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>f1da3359-d36e-4ad5-8547-70d8fc9afc87</GUID>
+          <Name>output_token_cost</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b2aba74e-869d-4a64-9d2e-23c5b3387b09</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>186d8dcb-6c5a-4a81-b03f-0562d5892b52</GUID>
+          <Name>agents</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9ea90897-6f22-4f2b-91bc-87d5f3f7fbf7</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Tasks>
+    <ReportTask>
+      <GUID>42fb4105-dca6-413f-a83b-72987f198814</GUID>
+      <Name>Default</Name>
+      <Tasks />
+      <ExecProcessChildren>true</ExecProcessChildren>
+      <TemplateName>Default</TemplateName>
+      <SourceGUID>033cdcf1-75a4-4099-b379-4523120cb940</SourceGUID>
+      <Script>@using System.Data
+@using System.Data.Common
+@{
+    ReportTask task = Model;
+    Report report = task.Report;
+    //Apply the agents selected in the input value to the restrictions of the models
+    var inputValue = report.InputValues[0];
+    foreach (var model in report.Models) {
+        foreach (var restriction in model.Restrictions) {
+            restriction.EnumValues = inputValue.EnumValues;
+        }
+    }
+}</Script>
+      <SortOrder>1</SortOrder>
+    </ReportTask>
+  </Tasks>
+  <Views>
+    <ReportView>
+      <GUID>54b6bed3-7f6f-4130-aeea-aaa39e37ea78</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>426f314b-7265-4bb2-a4ae-aaf5d4d2b6de</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>df3b3793-bd5d-4a96-bbf2-dbf6965f2586</GUID>
+              <Name>Agents</Name>
+              <Views>
+                <ReportView>
+                  <GUID>494deb4a-d529-475d-9b71-dbc621b05a71</GUID>
+                  <Name>Agents</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b0c1845f-8e90-4010-bb8f-04a0bbb9e5ea</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>9c9592e3-33d1-4580-b50f-7425dc5fc8ef</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>eb64b726-0d9b-487c-adb9-e89937538b6a</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>d786fa7e-7970-4c06-81c2-073f37ba9894</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>75883cb6-cc70-438f-8402-f24f8ce8937c</GUID>
+              <Name>Agent Links</Name>
+              <Views>
+                <ReportView>
+                  <GUID>88aaa628-c6b1-4e8f-9e8e-66bfb9268f68</GUID>
+                  <Name>AgentLinks</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>1a6ccee1-7404-4011-852d-6705ec627975</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>e56822d7-cb1c-481b-8dbf-f2274a82682f</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>f7cc03cb-9618-4c74-9e60-93615ac661e1</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>3c4cea1e-68ec-4b63-98cf-176c3ba6255c</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>eaa542be-025d-4b25-b341-9fa08500cd11</GUID>
+              <Name>Access</Name>
+              <Views>
+                <ReportView>
+                  <GUID>0bf217b3-9e9a-462e-8a3d-ffbc397e8e80</GUID>
+                  <Name>AgentGroups</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>9dbb7f36-dcff-4879-aabb-7f77af1d8915</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>e0bdbb81-8500-43ca-bd9e-522868cb3fe6</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>02bfa36b-237b-47d0-a0f2-d0886d0bc333</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>2515fae5-502d-4fcd-971d-60dfa065c5a5</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>711144fe-7910-472d-8130-53417e2f0ae9</GUID>
+              <Name>Skills</Name>
+              <Views>
+                <ReportView>
+                  <GUID>ca71bbcd-f388-4334-90f5-4d148b39da19</GUID>
+                  <Name>Skills</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>a60e9a61-1683-4356-9391-9e5ad448cc1a</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>1cedb29d-27fa-46f5-89e7-bf4308d11fcb</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>7e5fd88d-ef4b-49e2-b413-26001f2dcb6b</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>e5ebba76-8c0e-41f0-94a5-17e57d840fde</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>3db1492c-08e2-4c66-8e61-0153d803ab1a</GUID>
+              <Name>Tools</Name>
+              <Views>
+                <ReportView>
+                  <GUID>50a9b8c7-ed7d-41d0-b8eb-f7721c31f7df</GUID>
+                  <Name>Tools</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>218c6490-63ef-459a-b5d4-93649c3897bc</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>00cc0eb6-3895-4f58-a5cf-c45e950699b5</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>3c43d02b-6d94-4b40-be92-9752a437c4e6</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>19b3ee97-c4fc-49c0-9ddb-7671eb3923f9</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>5</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>bb00d446-b7ce-43be-8cd4-aa0fb0fa8ed1</GUID>
+              <Name>Tool Parameters</Name>
+              <Views>
+                <ReportView>
+                  <GUID>9047dceb-892e-466e-b5d4-471971676bb2</GUID>
+                  <Name>ToolParameters</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>dace98f4-7f53-4811-9cf3-860135f79165</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>47407aaa-0a7b-43b2-bb0c-6e1dd3b9c193</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>e8971eaf-cab9-41de-a60e-ab9846682a3c</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>b0684ff9-78ca-4ac9-b8b3-9c9b66ae869c</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>6</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>413770b3-9326-40ab-8925-2a994d8c970f</GUID>
+              <Name>Providers</Name>
+              <Views>
+                <ReportView>
+                  <GUID>131e5eb0-8847-4bbc-a148-a400bab27ba8</GUID>
+                  <Name>Providers</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>bc6e63c6-8b86-4919-a0a7-e7f888549099</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>a6f401f8-cef0-40c8-8b4c-055804ed709c</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>71f7c43b-1669-4c8b-8eff-36fe180d1bc0</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>18b31772-5480-4832-9284-8329db0fbedb</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>7</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <InitScript>@{
+    Report report = Model;
+	ReportExecutionLog log = report;
+
+    //Fill the list of agents
+    var anEnum = report.Sources.First().MetaData.Enums.First();
+    anEnum.Values.Clear();
+    foreach (var agent in Repository.Instance.AIConfiguration.AIAgents.OrderBy(i =&gt; i.Name)) {
+        anEnum.Values.Add(new MetaEV() {Id=agent.Name, Val = agent.Name});
+    }
+}</InitScript>
+  <Cancel>false</Cancel>
+</Report>
