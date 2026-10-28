@@ -414,7 +414,9 @@ namespace Seal.AI
         /// <summary>
         /// Returns the metadata of the authorization server (RFC 8414)
         /// </summary>
-        public static Dictionary<string, object> GetAuthorizationServerMetadata(string publicBaseUrl)
+        /// <param name="publicBaseUrl">Public base URL of the server (issuer)</param>
+        /// <param name="openIdConfiguration">True for the document served as OpenID Connect discovery: the fields required by its schema are added (the MCP clients validate it strictly, e.g. for an issuer in a virtual directory found at {path}/.well-known/openid-configuration), no ID token is issued (empty key set)</param>
+        public static Dictionary<string, object> GetAuthorizationServerMetadata(string publicBaseUrl, bool openIdConfiguration = false)
         {
             var result = new Dictionary<string, object>()
             {
@@ -433,6 +435,12 @@ namespace Seal.AI
                 { "authorization_response_iss_parameter_supported", true }
             };
             if (Configuration.McpOAuthDynamicRegistration) result.Add("registration_endpoint", publicBaseUrl + OAuthPath + "/register");
+            if (openIdConfiguration)
+            {
+                result.Add("jwks_uri", publicBaseUrl + OAuthPath + "/jwks");
+                result.Add("subject_types_supported", new[] { "public" });
+                result.Add("id_token_signing_alg_values_supported", new[] { "RS256" });
+            }
             return result;
         }
 

@@ -1933,10 +1933,12 @@
         <member name="M:Seal.AI.McpOAuth.GetResourceMetadataUrl(System.String,System.String)">
             <summary>Returns the URL of the protected resource metadata of an agent (RFC 9728), given in the header WWW-Authenticate of the 401 responses</summary>
         </member>
-        <member name="M:Seal.AI.McpOAuth.GetAuthorizationServerMetadata(System.String)">
+        <member name="M:Seal.AI.McpOAuth.GetAuthorizationServerMetadata(System.String,System.Boolean)">
             <summary>
             Returns the metadata of the authorization server (RFC 8414)
             </summary>
+            <param name="publicBaseUrl">Public base URL of the server (issuer)</param>
+            <param name="openIdConfiguration">True for the document served as OpenID Connect discovery: the fields required by its schema are added (the MCP clients validate it strictly, e.g. for an issuer in a virtual directory found at {path}/.well-known/openid-configuration), no ID token is issued (empty key set)</param>
         </member>
         <member name="M:Seal.AI.McpOAuth.GetProtectedResourceMetadata(System.String,System.String,System.String)">
             <summary>

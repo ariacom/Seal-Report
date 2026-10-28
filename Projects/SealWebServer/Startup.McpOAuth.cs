@@ -77,17 +77,28 @@ namespace SealWebServer
             }).RequireCors("cors");
 
             //Metadata of the authorization server (RFC 8414), also served as OpenID Connect discovery for the issuers having a path (e.g. a virtual directory of IIS)
-            RequestDelegate serverMetadata = httpContext =>
+            RequestDelegate serverMetadata(bool openIdConfiguration) => httpContext =>
             {
                 if (!IsMcpOAuthEnabled())
                 {
                     httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
                     return Task.CompletedTask;
                 }
-                return writeJson(httpContext, McpOAuth.GetAuthorizationServerMetadata(GetMcpPublicBaseUrl(httpContext.Request)));
+                return writeJson(httpContext, McpOAuth.GetAuthorizationServerMetadata(GetMcpPublicBaseUrl(httpContext.Request), openIdConfiguration));
             };
-            endpoints.MapGet("/.well-known/oauth-authorization-server", serverMetadata).RequireCors("cors");
-            endpoints.MapGet("/.well-known/openid-configuration", serverMetadata).RequireCors("cors");
+            endpoints.MapGet("/.well-known/oauth-authorization-server", serverMetadata(false)).RequireCors("cors");
+            endpoints.MapGet("/.well-known/openid-configuration", serverMetadata(true)).RequireCors("cors");
+
+            //Key set of the OpenID Connect discovery: empty, no ID token is issued
+            endpoints.MapGet(McpOAuth.OAuthPath + "/jwks", httpContext =>
+            {
+                if (!IsMcpOAuthEnabled())
+                {
+                    httpContext.Response.StatusCode = StatusCodes.Status404NotFound;
+                    return Task.CompletedTask;
+                }
+                return writeJson(httpContext, new { keys = Array.Empty<object>() });
+            }).RequireCors("cors");
 
             //Token endpoint: authorization code and refresh token
             endpoints.MapPost(McpOAuth.OAuthPath + "/token", async httpContext =>

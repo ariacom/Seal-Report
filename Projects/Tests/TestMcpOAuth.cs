@@ -157,6 +157,10 @@ namespace Test
             CollectionAssert.Contains((string[])server["token_endpoint_auth_methods_supported"], "none");
             Assert.AreEqual(true, server["client_id_metadata_document_supported"], "Claude uses a Client ID Metadata Document only if advertised");
             Assert.IsTrue(server.ContainsKey("registration_endpoint"));
+            Assert.IsFalse(server.ContainsKey("jwks_uri"));
+            //OpenID Connect discovery: the fields required by its schema (validated strictly by the MCP clients)
+            var oidc = McpOAuth.GetAuthorizationServerMetadata(BaseUrl, true);
+            foreach (var field in new[] { "issuer", "authorization_endpoint", "jwks_uri", "response_types_supported", "subject_types_supported", "id_token_signing_alg_values_supported" }) Assert.IsTrue(oidc.ContainsKey(field), field);
 
             var resource = McpOAuth.GetProtectedResourceMetadata(BaseUrl, _slug, _agent.Name);
             Assert.AreEqual(BaseUrl + "/mcp/" + _slug, resource["resource"], "the resource must be the URL entered in the client");
