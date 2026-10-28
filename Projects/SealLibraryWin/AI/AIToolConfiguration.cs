@@ -94,6 +94,16 @@ namespace Seal.AI
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>
+        /// Effect of the tool, published to the MCP clients as tool annotations so that they can ask a confirmation before the tools that write or delete.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Access"), Description("Effect of the tool: 'Read only', 'Write' (creates or adds) or 'Destructive' (deletes, overwrites or modifies existing items). Published to the MCP clients as tool annotations so that they can ask a confirmation before the tools that write or delete. 'Not specified': the clients consider the tool as possibly destructive."), Id(5, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(AIToolAccess.Unspecified)]
+#endif
+        public AIToolAccess Access { get; set; } = AIToolAccess.Unspecified;
+
+        /// <summary>
         /// JSON Schema string describing the function's parameters, sent to the AI model.
         /// Example: <c>{"type":"object","properties":{"city":{"type":"string"}},"required":["city"]}</c>
         /// Leave empty for tools that take no parameters.
@@ -154,8 +164,15 @@ namespace Seal.AI
         /// </summary>
         public IEnumerable<MetaSource> GetAvailableSources()
         {
+            return GetAvailableSources(CurrentToolCall?.SecurityContext);
+        }
+
+        /// <summary>
+        /// Returns the data sources a security context is allowed to access with the AI tools (all the repository sources when <paramref name="user"/> is null).
+        /// </summary>
+        public static IEnumerable<MetaSource> GetAvailableSources(SecurityUser user)
+        {
             var repository = Repository.Instance;
-            var user = CurrentToolCall?.SecurityContext;
             if (user == null) return repository.Sources;
             //Private Data Sources listed explicitly by the groups of the user are added
             var privateSources = user.SecurityGroups.SelectMany(g => g.DataSourceGUIDs).Distinct()
@@ -335,7 +352,8 @@ namespace Seal.AI
         {
             Name = Name,
             Description = Description,
-            ParametersSchema = ParametersSchema
+            ParametersSchema = ParametersSchema,
+            Access = Access
         };
 
         /// <summary>

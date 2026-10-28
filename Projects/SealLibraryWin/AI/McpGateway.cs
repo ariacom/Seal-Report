@@ -34,6 +34,48 @@ namespace Seal.AI
     }
 
     /// <summary>
+    /// A prompt of the MCP server: a sample prompt of the agent
+    /// </summary>
+    public class McpPrompt
+    {
+        /// <summary>Name of the prompt (sample-1, sample-2...)</summary>
+        public string Name;
+
+        /// <summary>Text of the prompt translated for the user</summary>
+        public string Text;
+    }
+
+    /// <summary>
+    /// A resource of the MCP server: a report or a data source described by a tool of the agent
+    /// </summary>
+    public class McpResource
+    {
+        /// <summary>URI of the resource (seal://report/... or seal://source/...)</summary>
+        public string Uri;
+
+        /// <summary>Name of the resource</summary>
+        public string Name;
+
+        /// <summary>Description of the resource</summary>
+        public string Description;
+    }
+
+    /// <summary>
+    /// A resource template of the MCP server
+    /// </summary>
+    public class McpResourceTemplate
+    {
+        /// <summary>URI template (RFC 6570)</summary>
+        public string UriTemplate;
+
+        /// <summary>Name of the template</summary>
+        public string Name;
+
+        /// <summary>Description of the template</summary>
+        public string Description;
+    }
+
+    /// <summary>
     /// Server side of the MCP server independent of the transport: authentication of the requests with the personal access tokens, agents of a user, limit of the calls, execution of the tools with an <see cref="AIToolHost"/>.
     /// </summary>
     public static class McpGateway
@@ -215,6 +257,164 @@ namespace Seal.AI
             var isError = IsError(result);
             Audit.LogMcpAudit(isError ? AuditType.AIMcpCallError : AuditType.AIMcpCall, context.User, context.Agent.Name, toolName, isError ? Truncate(result.Text, 250) : null, (int)Math.Round((DateTime.Now - now).TotalSeconds), context.ClientAddress, context.ClientApplication);
             return result;
+        }
+
+        /// <summary>
+        /// Returns the progress label of a tool call, translated for the user, sent to the MCP client while the tool runs.
+        /// </summary>
+        public static string GetProgressLabel(McpRequestContext context, string toolName, string arguments)
+        {
+            var toolCall = new AIToolCall() { Name = toolName, Arguments = string.IsNullOrWhiteSpace(arguments) ? "{}" : arguments };
+            return GetToolHost(context).GetProgressLabel(toolCall);
+        }
+
+        /// <summary>
+        /// Returns the prompts of a request: the sample prompts of the agent for the user, translated in his culture.
+        /// </summary>
+        public static List<McpPrompt> GetPrompts(McpRequestContext context)
+        {
+            var result = new List<McpPrompt>();
+            try
+            {
+                var culture = context.User.Profile?.Culture;
+                var prompts = AIAgent.CreateWithoutProvider(context.Agent, context.User, culture).GetSamplePrompts();
+                foreach (var prompt in prompts.Where(p => !string.IsNullOrWhiteSpace(p)))
+                {
+                    var text = string.IsNullOrEmpty(culture)
+                        ? Repository.Instance.RepositoryTranslate("AISamplePrompt", "*", prompt)
+                        : Repository.Instance.RepositoryTranslate(culture, "AISamplePrompt", "*", prompt);
+                    result.Add(new McpPrompt() { Name = "sample-" + (result.Count + 1), Text = text });
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.Helper.WriteLogException("McpGateway.GetPrompts", ex);
+            }
+            return result;
+        }
+
+        /// <summary>URI prefix of the report resources</summary>
+        public const string ReportResourcePrefix = "seal://report/";
+
+        /// <summary>URI prefix of the data source resources</summary>
+        public const string SourceResourcePrefix = "seal://source/";
+
+        /// <summary>Tool describing a report resource</summary>
+        public const string ReportResourceTool = "report_get_detail";
+
+        /// <summary>Tool describing a data source resource</summary>
+        public const string SourceResourceTool = "datasource_get_detail";
+
+        /// <summary>Maximum number of reports listed as resources</summary>
+        public const int MaxReportResources = 500;
+
+        static HashSet<string> getToolNames(McpRequestContext context)
+        {
+            return new HashSet<string>(GetToolHost(context).GetTools().Select(t => t.Name));
+        }
+
+        /// <summary>
+        /// Returns the URI of a report resource from its path as returned by the tools (e.g. Reports\Sales\monthly.srex).
+        /// </summary>
+        public static string GetReportResourceUri(string path)
+        {
+            return ReportResourcePrefix + string.Join("/", path.Split('\\', '/').Where(s => s.Length > 0).Select(Uri.EscapeDataString));
+        }
+
+        /// <summary>
+        /// Returns the resource templates of a request: reports and data sources, if the agent has the tools describing them.
+        /// </summary>
+        public static List<McpResourceTemplate> GetResourceTemplates(McpRequestContext context)
+        {
+            var result = new List<McpResourceTemplate>();
+            var tools = getToolNames(context);
+            if (tools.Contains(ReportResourceTool)) result.Add(new McpResourceTemplate() { UriTemplate = ReportResourcePrefix + "{+path}", Name = "Report", Description = "Detail of a report (models, columns, restrictions, views, outputs and schedules) from its path, e.g. Reports/Sales/monthly.srex" });
+            if (tools.Contains(SourceResourceTool)) result.Add(new McpResourceTemplate() { UriTemplate = SourceResourcePrefix + "{name}", Name = "Data source", Description = "Detail of a data source (connections, tables, columns, joins and enumerated lists) from its name" });
+            return result;
+        }
+
+        /// <summary>
+        /// Returns the resources of a request: the reports of the folders of the user (at most <see cref="MaxReportResources"/>) and the data sources he can access, if the agent has the tools describing them.
+        /// </summary>
+        public static List<McpResource> GetResources(McpRequestContext context)
+        {
+            var result = new List<McpResource>();
+            var tools = getToolNames(context);
+            var user = context.User;
+            try
+            {
+                if (tools.Contains(ReportResourceTool))
+                {
+                    var repository = Repository.Instance;
+                    string personalFolder = user.PersonalFolderRight != PersonalFolderRight.None ? repository.GetPersonalFolder(user) : null;
+                    foreach (var folder in user.AllFolders)
+                    {
+                        if (result.Count >= MaxReportResources) break;
+                        //Same rules as the tool report_list: no hidden folder, no files-only folder, no personal recycle bin
+                        if (folder.right == 0 || folder.files) continue;
+                        if (folder.IsPersonal && folder.FinalPath.TrimStart(System.IO.Path.DirectorySeparatorChar).Split(System.IO.Path.DirectorySeparatorChar).FirstOrDefault() == "BIN") continue;
+                        string physicalPath, displayPath;
+                        if (folder.IsPersonal)
+                        {
+                            if (personalFolder == null) continue;
+                            physicalPath = personalFolder + folder.FinalPath;
+                            displayPath = "Personal" + folder.FinalPath;
+                        }
+                        else
+                        {
+                            physicalPath = repository.ReportsFolder + folder.path;
+                            displayPath = "Reports" + folder.path;
+                        }
+                        if (!System.IO.Directory.Exists(physicalPath)) continue;
+                        foreach (var file in System.IO.Directory.GetFiles(physicalPath, "*." + Repository.SealReportFileExtension).OrderBy(f => f))
+                        {
+                            if (result.Count >= MaxReportResources) break;
+                            var path = displayPath.TrimEnd(System.IO.Path.DirectorySeparatorChar) + System.IO.Path.DirectorySeparatorChar + System.IO.Path.GetFileName(file);
+                            result.Add(new McpResource() { Uri = GetReportResourceUri(path), Name = System.IO.Path.GetFileNameWithoutExtension(file), Description = "Report " + path });
+                        }
+                    }
+                }
+                if (tools.Contains(SourceResourceTool))
+                {
+                    foreach (var source in AIToolConfiguration.GetAvailableSources(user).OrderBy(s => s.Name))
+                    {
+                        result.Add(new McpResource() { Uri = SourceResourcePrefix + Uri.EscapeDataString(source.Name), Name = source.Name, Description = "Data source " + source.Name });
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                Helpers.Helper.WriteLogException("McpGateway.GetResources", ex);
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Reads a resource: executes the tool of the agent describing it (same security, limit of the calls and audit as a tool call).
+        /// Returns null with the reason in <paramref name="error"/> if the URI is not a resource of the agent.
+        /// </summary>
+        public static AIToolHostResult ReadResource(McpRequestContext context, string uri, out string error, ICancelOperation cancelOperation = null)
+        {
+            error = null;
+            string toolName = null, arguments = null;
+            var tools = getToolNames(context);
+            if (uri != null && uri.StartsWith(ReportResourcePrefix) && tools.Contains(ReportResourceTool))
+            {
+                var segments = uri.Substring(ReportResourcePrefix.Length).Split('/').Where(s => s.Length > 0).Select(Uri.UnescapeDataString);
+                toolName = ReportResourceTool;
+                arguments = Newtonsoft.Json.JsonConvert.SerializeObject(new { path = string.Join(System.IO.Path.DirectorySeparatorChar.ToString(), segments) });
+            }
+            else if (uri != null && uri.StartsWith(SourceResourcePrefix) && tools.Contains(SourceResourceTool))
+            {
+                toolName = SourceResourceTool;
+                arguments = Newtonsoft.Json.JsonConvert.SerializeObject(new { name = Uri.UnescapeDataString(uri.Substring(SourceResourcePrefix.Length).TrimEnd('/')) });
+            }
+            if (toolName == null)
+            {
+                error = $"unknown resource '{uri}'";
+                return null;
+            }
+            return ExecuteTool(context, toolName, arguments, cancelOperation);
         }
 
         /// <summary>True if the result of a tool is an error (text starting with 'Error:' or script failure)</summary>

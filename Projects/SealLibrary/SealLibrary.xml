@@ -505,6 +505,9 @@
             Pass <c>null</c> or an empty string for tools that take no parameters.
             </summary>
         </member>
+        <member name="P:Seal.AI.AITool.Access">
+            <summary>Effect of the tool (published to the MCP clients as tool annotations)</summary>
+        </member>
         <member name="T:Seal.AI.AIToolCall">
             <summary>
             Represents a single tool-call request returned by the AI.
@@ -623,6 +626,11 @@
             When <c>false</c>, this tool is excluded from all agent calls without being deleted.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIToolConfiguration.Access">
+            <summary>
+            Effect of the tool, published to the MCP clients as tool annotations so that they can ask a confirmation before the tools that write or delete.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIToolConfiguration.ParametersSchema">
             <summary>
             JSON Schema string describing the function's parameters, sent to the AI model.
@@ -658,6 +666,11 @@
             Returns the data sources the current security context is allowed to access with the AI tools.
             When no security context is set, or the context defines no restriction, all repository sources are returned.
             Restrictions are defined through the DataSourceGUIDs of the user's security groups.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetAvailableSources(Seal.Model.SecurityUser)">
+            <summary>
+            Returns the data sources a security context is allowed to access with the AI tools (all the repository sources when <paramref name="user"/> is null).
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.GetReportCodeLevel">
@@ -1471,6 +1484,45 @@
         <member name="F:Seal.AI.McpRequestContext.ClientApplication">
             <summary>Application of the MCP client (HTTP header 'User-Agent')</summary>
         </member>
+        <member name="T:Seal.AI.McpPrompt">
+            <summary>
+            A prompt of the MCP server: a sample prompt of the agent
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpPrompt.Name">
+            <summary>Name of the prompt (sample-1, sample-2...)</summary>
+        </member>
+        <member name="F:Seal.AI.McpPrompt.Text">
+            <summary>Text of the prompt translated for the user</summary>
+        </member>
+        <member name="T:Seal.AI.McpResource">
+            <summary>
+            A resource of the MCP server: a report or a data source described by a tool of the agent
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpResource.Uri">
+            <summary>URI of the resource (seal://report/... or seal://source/...)</summary>
+        </member>
+        <member name="F:Seal.AI.McpResource.Name">
+            <summary>Name of the resource</summary>
+        </member>
+        <member name="F:Seal.AI.McpResource.Description">
+            <summary>Description of the resource</summary>
+        </member>
+        <member name="T:Seal.AI.McpResourceTemplate">
+            <summary>
+            A resource template of the MCP server
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpResourceTemplate.UriTemplate">
+            <summary>URI template (RFC 6570)</summary>
+        </member>
+        <member name="F:Seal.AI.McpResourceTemplate.Name">
+            <summary>Name of the template</summary>
+        </member>
+        <member name="F:Seal.AI.McpResourceTemplate.Description">
+            <summary>Description of the template</summary>
+        </member>
         <member name="T:Seal.AI.McpGateway">
             <summary>
             Server side of the MCP server independent of the transport: authentication of the requests with the personal access tokens, agents of a user, limit of the calls, execution of the tools with an <see cref="T:Seal.AI.AIToolHost"/>.
@@ -1519,6 +1571,52 @@
         <member name="M:Seal.AI.McpGateway.ExecuteTool(Seal.AI.McpRequestContext,System.String,System.String,Seal.AI.ICancelOperation)">
             <summary>
             Executes a tool call of a request (limit of the calls, tool host, audit) and returns its result.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetProgressLabel(Seal.AI.McpRequestContext,System.String,System.String)">
+            <summary>
+            Returns the progress label of a tool call, translated for the user, sent to the MCP client while the tool runs.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetPrompts(Seal.AI.McpRequestContext)">
+            <summary>
+            Returns the prompts of a request: the sample prompts of the agent for the user, translated in his culture.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.ReportResourcePrefix">
+            <summary>URI prefix of the report resources</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.SourceResourcePrefix">
+            <summary>URI prefix of the data source resources</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.ReportResourceTool">
+            <summary>Tool describing a report resource</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.SourceResourceTool">
+            <summary>Tool describing a data source resource</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.MaxReportResources">
+            <summary>Maximum number of reports listed as resources</summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetReportResourceUri(System.String)">
+            <summary>
+            Returns the URI of a report resource from its path as returned by the tools (e.g. Reports\Sales\monthly.srex).
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetResourceTemplates(Seal.AI.McpRequestContext)">
+            <summary>
+            Returns the resource templates of a request: reports and data sources, if the agent has the tools describing them.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetResources(Seal.AI.McpRequestContext)">
+            <summary>
+            Returns the resources of a request: the reports of the folders of the user (at most <see cref="F:Seal.AI.McpGateway.MaxReportResources"/>) and the data sources he can access, if the agent has the tools describing them.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.ReadResource(Seal.AI.McpRequestContext,System.String,System.String@,Seal.AI.ICancelOperation)">
+            <summary>
+            Reads a resource: executes the tool of the agent describing it (same security, limit of the calls and audit as a tool call).
+            Returns null with the reason in <paramref name="error"/> if the URI is not a resource of the agent.
             </summary>
         </member>
         <member name="M:Seal.AI.McpGateway.IsError(Seal.AI.AIToolHostResult)">
@@ -5832,6 +5930,31 @@
         <member name="F:Seal.Model.AIAgentChannel.WebAndMcp">
             <summary>
             Web chat and MCP server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.AIToolAccess">
+            <summary>
+            Effect of an AI tool on the repository or the databases, published to the MCP clients as tool annotations (readOnlyHint, destructiveHint)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIToolAccess.Unspecified">
+            <summary>
+            Not specified: no annotation is published, the clients consider the tool as possibly destructive
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIToolAccess.ReadOnly">
+            <summary>
+            The tool only reads
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIToolAccess.Write">
+            <summary>
+            The tool creates or adds without deleting or overwriting
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIToolAccess.Destructive">
+            <summary>
+            The tool can delete, overwrite or modify existing items
             </summary>
         </member>
         <member name="T:Seal.Model.ExecutionLogInterface">

@@ -8,6 +8,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Routing;
 using Microsoft.Extensions.DependencyInjection;
+using ModelContextProtocol;
 using ModelContextProtocol.AspNetCore;
 using ModelContextProtocol.Protocol;
 using ModelContextProtocol.Server;
@@ -62,6 +63,8 @@ namespace SealWebServer
             serverOptions.ServerInstructions = McpGateway.GetInstructions(context);
             serverOptions.Capabilities ??= new ServerCapabilities();
             serverOptions.Capabilities.Tools = new ToolsCapability();
+            serverOptions.Capabilities.Prompts = new PromptsCapability();
+            serverOptions.Capabilities.Resources = new ResourcesCapability();
 
             serverOptions.Handlers.ListToolsHandler = (request, cancellationToken) =>
             {
@@ -69,7 +72,8 @@ namespace SealWebServer
                 {
                     Name = t.Name,
                     Description = t.Description,
-                    InputSchema = getInputSchema(t.ParametersSchema)
+                    InputSchema = getInputSchema(t.ParametersSchema),
+                    Annotations = getAnnotations(t.Access)
                 }).ToList();
                 return ValueTask.FromResult(new ListToolsResult() { Tools = tools });
             };
@@ -79,12 +83,96 @@ namespace SealWebServer
                 var name = request.Params?.Name;
                 var arguments = request.Params?.Arguments != null ? JsonSerializer.Serialize(request.Params.Arguments) : "{}";
                 var cancel = new McpCancelOperation() { Token = cancellationToken };
-                var result = await Task.Run(() => McpGateway.ExecuteTool(context, name, arguments, cancel), cancellationToken);
+                var result = await runWithProgress(request.Server, request.Params?.ProgressToken, () => McpGateway.GetProgressLabel(context, name, arguments),
+                    () => McpGateway.ExecuteTool(context, name, arguments, cancel), cancellationToken);
 
                 var callResult = new CallToolResult() { IsError = McpGateway.IsError(result) };
                 callResult.Content.Add(new TextContentBlock() { Text = string.IsNullOrEmpty(result.Text) ? " " : result.Text });
                 foreach (var image in result.Images) callResult.Content.Add(ImageContentBlock.FromBytes(image.Data, image.MediaType));
                 return callResult;
+            };
+
+            serverOptions.Handlers.ListPromptsHandler = (request, cancellationToken) =>
+            {
+                var prompts = McpGateway.GetPrompts(context).Select(p => new Prompt() { Name = p.Name, Title = p.Text, Description = p.Text }).ToList();
+                return ValueTask.FromResult(new ListPromptsResult() { Prompts = prompts });
+            };
+
+            serverOptions.Handlers.GetPromptHandler = (request, cancellationToken) =>
+            {
+                var prompt = McpGateway.GetPrompts(context).FirstOrDefault(p => p.Name == request.Params?.Name);
+                if (prompt == null) throw new McpProtocolException($"Unknown prompt '{request.Params?.Name}'", McpErrorCode.InvalidParams);
+                var result = new GetPromptResult() { Description = prompt.Text };
+                result.Messages.Add(new PromptMessage() { Role = Role.User, Content = new TextContentBlock() { Text = prompt.Text } });
+                return ValueTask.FromResult(result);
+            };
+
+            serverOptions.Handlers.ListResourcesHandler = (request, cancellationToken) =>
+            {
+                var resources = McpGateway.GetResources(context).Select(r => new Resource() { Uri = r.Uri, Name = r.Name, Description = r.Description, MimeType = "text/plain" }).ToList();
+                return ValueTask.FromResult(new ListResourcesResult() { Resources = resources });
+            };
+
+            serverOptions.Handlers.ListResourceTemplatesHandler = (request, cancellationToken) =>
+            {
+                var templates = McpGateway.GetResourceTemplates(context).Select(r => new ResourceTemplate() { UriTemplate = r.UriTemplate, Name = r.Name, Description = r.Description, MimeType = "text/plain" }).ToList();
+                return ValueTask.FromResult(new ListResourceTemplatesResult() { ResourceTemplates = templates });
+            };
+
+            serverOptions.Handlers.ReadResourceHandler = async (request, cancellationToken) =>
+            {
+                var uri = request.Params?.Uri;
+                var cancel = new McpCancelOperation() { Token = cancellationToken };
+                string error = null;
+                var result = await Task.Run(() => McpGateway.ReadResource(context, uri, out error, cancel), cancellationToken);
+                if (result == null) throw new McpProtocolException(error, McpErrorCode.ResourceNotFound);
+                if (McpGateway.IsError(result)) throw new McpProtocolException(result.Text, McpErrorCode.InvalidParams);
+                var readResult = new ReadResourceResult();
+                readResult.Contents.Add(new TextResourceContents() { Uri = uri, MimeType = "text/plain", Text = result.Text ?? "" });
+                return readResult;
+            };
+        }
+
+        /// <summary>Interval of the progress notifications sent while a tool runs</summary>
+        const int McpProgressIntervalSeconds = 5;
+
+        /// <summary>
+        /// Runs a tool and, if the client sent a progress token, notifies the progress label of the tool at the start and then every <see cref="McpProgressIntervalSeconds"/> seconds until the tool ends
+        /// (the notifications are part of the response of the request, allowed by the stateless mode).
+        /// </summary>
+        static async Task<AIToolHostResult> runWithProgress(McpServer server, ProgressToken? progressToken, Func<string> getLabel, Func<AIToolHostResult> execute, CancellationToken cancellationToken)
+        {
+            var task = Task.Run(execute, cancellationToken);
+            if (progressToken == null || server == null) return await task;
+
+            string label = null;
+            try { label = getLabel(); } catch { }
+            var start = DateTime.Now;
+            while (true)
+            {
+                var elapsed = (int)(DateTime.Now - start).TotalSeconds;
+                try
+                {
+                    await server.NotifyProgressAsync(progressToken.Value, new ProgressNotificationValue() { Progress = elapsed, Message = elapsed == 0 ? label : $"{label} ({elapsed} s)" }, cancellationToken: cancellationToken);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    //A client that cannot receive the notifications must not fail the tool call
+                    break;
+                }
+                if (await Task.WhenAny(task, Task.Delay(TimeSpan.FromSeconds(McpProgressIntervalSeconds), cancellationToken)) == task) break;
+            }
+            return await task;
+        }
+
+        static ToolAnnotations getAnnotations(AIToolAccess access)
+        {
+            return access switch
+            {
+                AIToolAccess.ReadOnly => new ToolAnnotations() { ReadOnlyHint = true },
+                AIToolAccess.Write => new ToolAnnotations() { ReadOnlyHint = false, DestructiveHint = false },
+                AIToolAccess.Destructive => new ToolAnnotations() { ReadOnlyHint = false, DestructiveHint = true },
+                _ => null
             };
         }
 

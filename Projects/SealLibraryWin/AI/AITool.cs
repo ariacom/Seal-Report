@@ -21,6 +21,9 @@ namespace Seal.AI
         /// Pass <c>null</c> or an empty string for tools that take no parameters.
         /// </summary>
         public string ParametersSchema { get; set; }
+
+        /// <summary>Effect of the tool (published to the MCP clients as tool annotations)</summary>
+        public Seal.Model.AIToolAccess Access { get; set; } = Seal.Model.AIToolAccess.Unspecified;
     }
 
     /// <summary>

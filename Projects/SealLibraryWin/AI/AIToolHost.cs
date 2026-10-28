@@ -263,7 +263,7 @@ namespace Seal.AI
                 required = new[] { "skill_name" }
             });
 
-            return new AITool { Name = LoadSkillToolName, Description = description, ParametersSchema = schema };
+            return new AITool { Name = LoadSkillToolName, Description = description, ParametersSchema = schema, Access = Model.AIToolAccess.ReadOnly };
         }
 
         /// <summary>

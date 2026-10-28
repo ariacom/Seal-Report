@@ -152,6 +152,76 @@ namespace Test
         }
 
         [TestMethod]
+        public void ToolAccess()
+        {
+            //Every tool of the configuration declares its effect (published as MCP tool annotations)
+            var unspecified = _repository.AIConfiguration.AITools.Where(t => t.Access == AIToolAccess.Unspecified).Select(t => t.Name).ToList();
+            Assert.AreEqual(0, unspecified.Count, "tools without access: " + string.Join(", ", unspecified));
+            Assert.AreEqual(AIToolAccess.ReadOnly, _repository.AIConfiguration.AITools.First(t => t.Name == "report_list").ToAITool().Access);
+            Assert.AreEqual(AIToolAccess.Destructive, _repository.AIConfiguration.AITools.First(t => t.Name == "file_manage").ToAITool().Access);
+        }
+
+        [TestMethod]
+        public void PromptsAndResources()
+        {
+            Assert.AreEqual("seal://report/Reports/Sales/my%20report.srex", McpGateway.GetReportResourceUri(@"Reports\Sales\my report.srex"));
+
+            //Agent of the group having the most tools describing the resources
+            var agent = _repository.AIConfiguration.AIAgents.Where(a => _group.AgentGUIDs.Contains(a.GUID) && a.IsEnabled)
+                .OrderByDescending(a => new AIToolHost(a).GetTools().Count(t => t.Name == McpGateway.ReportResourceTool || t.Name == McpGateway.SourceResourceTool))
+                .First();
+            var channel = agent.Channel;
+            var serverEnabled = _repository.AIConfiguration.McpServerEnabled;
+            var token = McpGateway.TokenStore.Create(_login.Id, "test", DateTime.Now.AddDays(1), out var clear);
+            try
+            {
+                _repository.AIConfiguration.McpServerEnabled = true;
+                agent.Channel = AIAgentChannel.WebAndMcp;
+                var context = McpGateway.Authenticate("Bearer " + clear, McpGateway.GetAgentSlug(agent), null, out var error, out _);
+                Assert.IsNotNull(context?.Agent, error);
+
+                //Annotations: the built-in load_skill only reads
+                var tools = McpGateway.GetToolHost(context).GetTools();
+                if (agent.GetSkillConfigurations().Count > 0) Assert.AreEqual(AIToolAccess.ReadOnly, tools.First(t => t.Name == AIToolHost.LoadSkillToolName).Access);
+
+                //Prompts: the sample prompts of the agent
+                var prompts = McpGateway.GetPrompts(context);
+                Assert.AreEqual(AIAgent.CreateWithoutProvider(agent, context.User).GetSamplePrompts().Count(p => !string.IsNullOrWhiteSpace(p)), prompts.Count);
+                for (int i = 0; i < prompts.Count; i++) Assert.AreEqual("sample-" + (i + 1), prompts[i].Name);
+
+                //Resources: reports and data sources described by the tools of the agent
+                var names = tools.Select(t => t.Name).ToList();
+                var templates = McpGateway.GetResourceTemplates(context);
+                Assert.AreEqual(names.Contains(McpGateway.ReportResourceTool), templates.Any(t => t.UriTemplate.StartsWith(McpGateway.ReportResourcePrefix)));
+                Assert.AreEqual(names.Contains(McpGateway.SourceResourceTool), templates.Any(t => t.UriTemplate.StartsWith(McpGateway.SourceResourcePrefix)));
+                var resources = McpGateway.GetResources(context);
+                Assert.IsTrue(resources.Count <= McpGateway.MaxReportResources + _repository.Sources.Count);
+                var report = resources.FirstOrDefault(r => r.Uri.StartsWith(McpGateway.ReportResourcePrefix));
+                if (names.Contains(McpGateway.ReportResourceTool))
+                {
+                    Assert.IsNotNull(report, "the reports of the user are listed");
+                    var result = McpGateway.ReadResource(context, report.Uri, out error);
+                    Assert.IsNotNull(result, error);
+                    Assert.IsFalse(McpGateway.IsError(result), result.Text);
+                }
+                var source = resources.FirstOrDefault(r => r.Uri.StartsWith(McpGateway.SourceResourcePrefix));
+                if (source != null)
+                {
+                    var result = McpGateway.ReadResource(context, source.Uri, out error);
+                    Assert.IsFalse(McpGateway.IsError(result), result.Text);
+                }
+                Assert.IsNull(McpGateway.ReadResource(context, "seal://other/x", out error));
+                Assert.IsNotNull(error);
+            }
+            finally
+            {
+                agent.Channel = channel;
+                _repository.AIConfiguration.McpServerEnabled = serverEnabled;
+                McpGateway.TokenStore.Revoke(_login.Id, token.Id);
+            }
+        }
+
+        [TestMethod]
         public void CallRate()
         {
             var max = _repository.AIConfiguration.McpMaxCallsPerMinute;

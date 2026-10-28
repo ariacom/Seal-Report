@@ -1826,4 +1826,31 @@ namespace Seal.Model
         [Description("Web and MCP")]
         WebAndMcp = 2,
     }
+
+    /// <summary>
+    /// Effect of an AI tool on the repository or the databases, published to the MCP clients as tool annotations (readOnlyHint, destructiveHint)
+    /// </summary>
+    public enum AIToolAccess
+    {
+        /// <summary>
+        /// Not specified: no annotation is published, the clients consider the tool as possibly destructive
+        /// </summary>
+        [Description("Not specified")]
+        Unspecified = 0,
+        /// <summary>
+        /// The tool only reads
+        /// </summary>
+        [Description("Read only")]
+        ReadOnly = 1,
+        /// <summary>
+        /// The tool creates or adds without deleting or overwriting
+        /// </summary>
+        [Description("Write")]
+        Write = 2,
+        /// <summary>
+        /// The tool can delete, overwrite or modify existing items
+        /// </summary>
+        [Description("Destructive")]
+        Destructive = 3,
+    }
 }

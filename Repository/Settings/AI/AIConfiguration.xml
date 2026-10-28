@@ -5,6 +5,7 @@
     <AIToolConfiguration>
       <GUID>975395e7-8f7f-47a8-84a7-dbf7bb3bec44</GUID>
       <Name>database_execute_query</Name>
+      <Access>ReadOnly</Access>
       <Description>Executes a SQL SELECT statement against a data source and returns up to 50 rows as a tab-separated table.
 Use it to validate generated SQL, check sample data, debug wrong results, or preview table contents.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -15,6 +16,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>f56c62db-9a53-413e-8df4-6dde496adff4</GUID>
       <Name>database_get_columns</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns the column names and data types of a table.
 Use it to confirm column names before generating report elements, or to discover schema when scanning a data source.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -25,6 +27,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
       <Name>database_get_sample_values</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns up to 50 distinct non-null values from the given column.
 Use it to discover what enum or category values exist when building restriction filters or display labels.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -35,6 +38,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
       <Name>database_count_rows</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns the row count of a table, optionally filtered by a WHERE clause.
 Use it to decide whether TopRecords makes sense or to check the cardinality of a filter before applying it.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
@@ -45,6 +49,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
     <AIToolConfiguration>
       <GUID>21865749-3026-4f91-8b66-17d25cfc5d81</GUID>
       <Name>datasource_list</Name>
+      <Access>ReadOnly</Access>
       <Description>Lists all configured data sources with their GUID, database type, available connections (each with its GUID), and tables.
 Call this first to discover which sources, connections, and tables are available before querying or inspecting them.
 Use the returned GUIDs with datasource_guid and connection_guid parameters in database tools.</Description>
@@ -54,6 +59,7 @@ Use the returned GUIDs with datasource_guid and connection_guid parameters in da
     <AIToolConfiguration>
       <GUID>c3f46643-52cc-4570-b580-c2b787bb4de9</GUID>
       <Name>datasource_get_detail</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns a structured summary of a data source:
 connection info (no credentials), tables with their columns and types, and joins between tables.
 Use this to understand the schema and relationships before writing SQL.
@@ -65,6 +71,7 @@ For a large data source, pass "tables" (table names or prefixes, e.g. ["dg."]) t
     <AIToolConfiguration>
       <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
       <Name>report_get_detail</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns full details of a report:
 display name, description, and for each model its source, elements (columns with pivot position and aggregate), and restrictions (with prompt and required flags).
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
@@ -75,6 +82,7 @@ Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.sr
     <AIToolConfiguration>
       <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
       <Name>report_get_xml</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns the raw XML content of a report file.
 Use this to inspect the full report definition, or to modify a metadata report: get its XML, change it, then save it with report_create_from_xml (same path, overwrite=true).
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
@@ -85,6 +93,7 @@ Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.sr
     <AIToolConfiguration>
       <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
       <Name>report_check_model_type</Name>
+      <Access>ReadOnly</Access>
       <Description>Analyses a report request and returns whether it requires a SQL model (report_create_from_sql) or a metadata model (report_create_from_xml), with the reasoning.
 Always call this before creating any report.</Description>
       <ProgressLabel>Analyzing the report request</ProgressLabel>
@@ -94,6 +103,7 @@ Always call this before creating any report.</Description>
     <AIToolConfiguration>
       <GUID>aa2baa07-6828-4f6c-9640-466feb5e1b22</GUID>
       <Name>report_create_from_sql</Name>
+      <Access>Destructive</Access>
       <Description>Creates a new report with a single SQL model using the Seal Report API.
 The SQL is executed at runtime against the chosen data source; columns are resolved dynamically so no metadata GUIDs are required.
 Use datasource_get_detail to obtain the correct table and column names before writing the SQL.</Description>
@@ -104,6 +114,7 @@ Use datasource_get_detail to obtain the correct table and column names before wr
     <AIToolConfiguration>
       <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
       <Name>report_create_from_xml</Name>
+      <Access>Destructive</Access>
       <Description>Creates a new metadata report by writing a complete XML definition.
 Use for reports built on the data source's defined metadata columns (tabular, pivot, search reports).
 Before calling this tool, set &lt;MetaSourceGUID&gt; to the GUID from datasource_list and every &lt;MetaColumnGUID&gt; to the matching column GUID from datasource_get_detail.
@@ -117,6 +128,7 @@ For SQL-based reports use report_create_from_sql instead.</Description>
     <AIToolConfiguration>
       <GUID>e8f1a2b3-c4d5-4e6f-9a0b-1c2d3e4f5a6b</GUID>
       <Name>device_list</Name>
+      <Access>ReadOnly</Access>
       <Description>Lists the output devices the current user is allowed to use, each with its name, type (email, ftp, sharepoint, or folder) and GUID.
 Call this before report_configure_output when several devices may exist or the user must choose where the output is delivered, then pass the chosen device_name (with a matching device_type) to report_configure_output.
 Read-only.</Description>
@@ -126,6 +138,7 @@ Read-only.</Description>
     <AIToolConfiguration>
       <GUID>f1a2b3c4-d5e6-4f7a-8b9c-0d1e2f3a4b5c</GUID>
       <Name>report_configure_output</Name>
+      <Access>Destructive</Access>
       <Description>Configures or removes an output on an existing report.
 Use action=configure (default) to add or update a delivery output; device_type selects the delivery method:
 folder (default), email, ftp, or sharepoint.
@@ -142,6 +155,7 @@ Always call this before report_configure_schedule.</Description>
     <AIToolConfiguration>
       <GUID>a2b3c4d5-e6f7-4a8b-9c0d-1e2f3a4b5c6d</GUID>
       <Name>report_configure_schedule</Name>
+      <Access>Destructive</Access>
       <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's output.
 Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one.
 Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets.
@@ -158,6 +172,7 @@ Use when the user wants automated execution:
     <AIToolConfiguration>
       <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
       <Name>report_execute_get_data</Name>
+      <Access>ReadOnly</Access>
       <Description>Executes a report and returns its result tables as structured JSON data, followed by the execution messages.
 Use it to fetch the actual data produced by an existing report for analysis, answering data questions, generating a summary, or diagnosing execution issues.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex).
@@ -169,6 +184,7 @@ Optionally pass model_name to restrict the output to a single model.</Descriptio
     <AIToolConfiguration>
       <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
       <Name>file_list</Name>
+      <Access>ReadOnly</Access>
       <Description>Browses files in the folders the current user has access to, across the Reports and Personal roots.
 Returns relative paths in the same format file_manage expects (e.g. Reports\Sales\monthly.srex, Personal\user\notes.txt) together with size and last-modified date.
 Lists every file type, not only reports, and includes files-only folders.
@@ -181,6 +197,7 @@ Optionally filter by sub-folder name(s) via 'folders', or by file extension via 
     <AIToolConfiguration>
       <GUID>c3b1942e-fa0b-48c5-84f1-dc19709d4e07</GUID>
       <Name>file_manage</Name>
+      <Access>Destructive</Access>
       <Description>File-level operations on a file in the repository:
 delete, rename (new filename in the same folder), move (to a different folder or root), or copy (to a new path).
 Works on any repository file (reports .srex, etc.).
@@ -196,6 +213,7 @@ Always call file_list first to discover and confirm the exact source path before
     <AIToolConfiguration>
       <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
       <Name>report_list</Name>
+      <Access>ReadOnly</Access>
       <Description>Lists reports accessible to the current web user.
 Only folders with access rights are browsed — hidden folders (right=0) and files-only folders are excluded — and Personal folders are included when the user has personal folder rights.
 Display paths use "Reports\..." or "Personal\username\..." format compatible with other report tools.
@@ -207,6 +225,7 @@ Pass an optional list of sub-folder names to restrict the scan; omit or pass [] 
     <AIToolConfiguration>
       <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
       <Name>get_current_folder</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns the user's current working folder — the folder the user is currently browsing in the web interface — in the display-path format used by report_list and the report creation tools (e.g. "Reports\Sales").
 Also lists all folders where the user has write access.
 Always call this tool fresh every time you need the current folder; never reuse a result from earlier in the conversation, as the user may have navigated to a different folder since then.</Description>
@@ -217,6 +236,7 @@ Always call this tool fresh every time you need the current folder; never reuse 
     <AIToolConfiguration>
       <GUID>a8b9c0d1-e2f3-4a4b-5c6d-7e8f9a0b1c2d</GUID>
       <Name>log_read</Name>
+      <Access>ReadOnly</Access>
       <Description>Reads Seal Report log files for the given date.
 Type must be one of:
 events (server start/stop, authentication, errors), executions (report execution traces), schedules (scheduler runs).
@@ -230,6 +250,7 @@ Returns up to max_lines lines (default 200).</Description>
     <AIToolConfiguration>
       <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
       <Name>view_get_parameters</Name>
+      <Access>ReadOnly</Access>
       <Description>Lists the configurable rendering parameters of a report's view (e.g. the "Chart JS" view), with each parameter's type, current value, default, allowed values and description.
 Call with only 'path' to list every view in the report; then call again with view_name (e.g. "Chart JS") to see that view's parameters.
 Use this before report_configure_view to discover valid parameter names and values.
@@ -241,6 +262,7 @@ Read-only.</Description>
     <AIToolConfiguration>
       <GUID>2a3b4c5d-6e7f-4890-9a1b-2c3d4e5f6a7b</GUID>
       <Name>report_configure_view</Name>
+      <Access>Destructive</Access>
       <Description>Sets one or more rendering parameters on an existing report's view, in place, without rewriting the report.
 Use it to change how a view renders - for example to make a Chart JS view horizontal and stacked (chartjs_bar_horizontal=True, chartjs_bar_stacked=True), hide a legend, set a chart title, or switch a pie to a doughnut.
 Always call view_get_parameters first to discover valid parameter names and allowed values for the target view.
@@ -253,6 +275,7 @@ For stacked bar charts the model must have a series Splitter (a Column element),
     <AIToolConfiguration>
       <GUID>5e1a0001-1111-4aaa-bbbb-d5e000000001</GUID>
       <Name>datasource_find_usage</Name>
+      <Access>ReadOnly</Access>
       <Description>Lists the reports that reference a given metadata column (or any column of a given table) of a data source.
 This is the safety primitive: ALWAYS call it before any destructive data-source change (datasource_set_column_sql, datasource_apply_join, datasource_remove, datasource_refresh_schema) and show the user the affected reports.
 Read-only. Provide column_guid (from datasource_get_detail) or table_name.</Description>
@@ -263,6 +286,7 @@ Read-only. Provide column_guid (from datasource_get_detail) or table_name.</Desc
     <AIToolConfiguration>
       <GUID>5e1a0006-1111-4aaa-bbbb-d5e000000006</GUID>
       <Name>datasource_suggest_joins</Name>
+      <Access>ReadOnly</Access>
       <Description>Inspects the tables of a SQL data source and proposes joins based on shared key columns (names ending with id/code/key).
 Read-only: nothing is changed. Present the suggestions to the user, then apply the chosen one with datasource_apply_join.</Description>
       <ProgressLabel>Suggesting joins between tables</ProgressLabel>
@@ -272,6 +296,7 @@ Read-only: nothing is changed. Present the suggestions to the user, then apply t
     <AIToolConfiguration>
       <GUID>5e1a0002-1111-4aaa-bbbb-d5e000000002</GUID>
       <Name>datasource_add_table</Name>
+      <Access>Write</Access>
       <Description>Adds a table to a SQL data source, with its columns. Additive — never breaks an existing report.
 Pass table_name for a database table (columns are read from the catalog), OR sql for a custom dynamic table defined by a SELECT.
 Use datasource_get_detail first to avoid duplicating an existing table.</Description>
@@ -282,6 +307,7 @@ Use datasource_get_detail first to avoid duplicating an existing table.</Descrip
     <AIToolConfiguration>
       <GUID>5e1a0003-1111-4aaa-bbbb-d5e000000003</GUID>
       <Name>datasource_add_column</Name>
+      <Access>Write</Access>
       <Description>Adds a derived/computed column to an existing table of a data source. Additive — never breaks an existing report.
 column_name is the SQL name or expression (e.g. Customers.FirstName + ' ' + Customers.LastName).</Description>
       <ProgressLabel>Adding column {column_name}</ProgressLabel>
@@ -291,6 +317,7 @@ column_name is the SQL name or expression (e.g. Customers.FirstName + ' ' + Cust
     <AIToolConfiguration>
       <GUID>5e1a0004-1111-4aaa-bbbb-d5e000000004</GUID>
       <Name>datasource_set_column</Name>
+      <Access>Write</Access>
       <Description>Updates the display properties of an existing metadata column: display name, category, format, or type.
 Cosmetic — reports bind columns by GUID, so this never breaks references. Identify the column by column_guid (preferred) or table_name + column_name.</Description>
       <ProgressLabel>Updating column display</ProgressLabel>
@@ -300,6 +327,7 @@ Cosmetic — reports bind columns by GUID, so this never breaks references. Iden
     <AIToolConfiguration>
       <GUID>5e1a0005-1111-4aaa-bbbb-d5e000000005</GUID>
       <Name>datasource_manage_enum</Name>
+      <Access>Write</Access>
       <Description>Creates an enumerated list (a set of allowed values) on a data source and optionally attaches it to a column.
 action=add creates a static list (optionally seeded with values); action=create_from_column builds a dynamic list from a column's distinct values.
 Use assign_to_column_guid to attach the enum to a column so its restrictions show a dropdown.</Description>
@@ -310,6 +338,7 @@ Use assign_to_column_guid to attach the enum to a column so its restrictions sho
     <AIToolConfiguration>
       <GUID>5e1a0007-1111-4aaa-bbbb-d5e000000007</GUID>
       <Name>datasource_set_column_sql</Name>
+      <Access>Destructive</Access>
       <Description>Changes a column's underlying SQL expression, type, or aggregate flag.
 HIGH IMPACT: this changes results in EVERY report that uses the column. You MUST first call datasource_find_usage, show the affected reports to the user, get explicit approval, then call this with confirm=true.</Description>
       <ProgressLabel>Changing the SQL of a column</ProgressLabel>
@@ -319,6 +348,7 @@ HIGH IMPACT: this changes results in EVERY report that uses the column. You MUST
     <AIToolConfiguration>
       <GUID>5e1a0008-1111-4aaa-bbbb-d5e000000008</GUID>
       <Name>datasource_apply_join</Name>
+      <Access>Destructive</Access>
       <Description>Adds or updates a join between two tables of a SQL data source.
 A wrong join skews results across reports — review it with the user first, then call with confirm=true.
 Pass join_guid to update an existing join; omit it to add a new one (both left_table and right_table required).</Description>
@@ -329,6 +359,7 @@ Pass join_guid to update an existing join; omit it to add a new one (both left_t
     <AIToolConfiguration>
       <GUID>5e1a0009-1111-4aaa-bbbb-d5e000000009</GUID>
       <Name>datasource_remove</Name>
+      <Access>Destructive</Access>
       <Description>Removes a table, column, join, or enum from a data source.
 Can break reports that use the removed object. You MUST first call datasource_find_usage, show the affected reports, get explicit approval, then call this with confirm=true.
 Identify the object by guid (preferred) or name.</Description>
@@ -339,6 +370,7 @@ Identify the object by guid (preferred) or name.</Description>
     <AIToolConfiguration>
       <GUID>5e1a000a-1111-4aaa-bbbb-d5e00000000a</GUID>
       <Name>datasource_refresh_schema</Name>
+      <Access>Destructive</Access>
       <Description>Re-reads the database schema into the source's dynamic-column tables (adds new columns, updates types, DROPS columns no longer in the database).
 Standard (non-dynamic) tables are not affected. Can change reports — you MUST first call datasource_find_usage, get explicit approval, then call with confirm=true.
 Pass table_name to refresh a single table, or omit to refresh all dynamic tables.</Description>
@@ -349,6 +381,7 @@ Pass table_name to refresh a single table, or omit to refresh all dynamic tables
     <AIToolConfiguration>
       <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a1</GUID>
       <Name>seal_read</Name>
+      <Access>ReadOnly</Access>
       <Description>Reads a file of the Seal knowledge folders of the repository: view templates and their configuration (Views\*.cshtml, Views\*.config.cshtml), sample reports (Reports\Samples\*.srex), skills (Settings\AI\Skills).
 Use it to learn Seal like a developer: copy the XML structure of a sample report, check how a view template renders its parameters.
 Give a path relative to the repository; a folder path lists its files. Long files are returned by pages of lines (offset = first line, length = number of lines).
@@ -360,6 +393,7 @@ The data sources, the security, the settings and the logs are never readable. Re
     <AIToolConfiguration>
       <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a2</GUID>
       <Name>seal_search</Name>
+      <Access>ReadOnly</Access>
       <Description>Searches a regular expression in the files of the Seal knowledge folders (view templates, sample reports, skills) and returns the matching lines as 'file:line: text'.
 Use it to find an example: a sample report using a view template (TemplateName&gt;Tab Page&lt;), a parameter name, an XML element.
 Then read the file around the line with seal_read. Read-only.</Description>
@@ -370,6 +404,7 @@ Then read the file around the line with seal_read. Read-only.</Description>
     <AIToolConfiguration>
       <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a3</GUID>
       <Name>seal_describe_class</Name>
+      <Access>ReadOnly</Access>
       <Description>Describes a Seal class serialized in a report XML (Report, ReportSource, ReportModel, ReportElement, ReportRestriction, ReportView, MetaEnum, ReportOutput, ReportSchedule, ReportTask...):
 its XML elements with their type, default value (an omitted element keeps it), enumeration values, description, and the code level (Sql, Scripts) required to write them.
 Use it to know which elements a class accepts and their valid values before writing or patching a report. Read-only.</Description>
@@ -380,6 +415,7 @@ Use it to know which elements a class accepts and their valid values before writ
     <AIToolConfiguration>
       <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a4</GUID>
       <Name>view_template_list</Name>
+      <Access>ReadOnly</Access>
       <Description>Lists the view templates usable in a &lt;ReportView&gt;&lt;TemplateName&gt; (Report, Model, Container, Tab Control, Tab Page, Page Table, Data Table, Chart JS, Map, Card, KPI, Widget...), with the parent templates allowed, whether it is a model view (needs a &lt;ModelGUID&gt;), its number of parameters and its description. Read-only.</Description>
       <ProgressLabel>Listing the view templates</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{},"required":[]}</ParametersSchema>
@@ -388,6 +424,7 @@ Use it to know which elements a class accepts and their valid values before writ
     <AIToolConfiguration>
       <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a5</GUID>
       <Name>view_template_get_parameters</Name>
+      <Access>ReadOnly</Access>
       <Description>Returns the parameters of a view template (name, label, type, default value, allowed values, description), to set in &lt;ReportView&gt;&lt;Parameters&gt; when writing a report.
 For a view of an existing report, view_get_parameters also gives the current values. Read-only.</Description>
       <ProgressLabel>Reading the parameters of the view template {template}</ProgressLabel>
@@ -397,6 +434,7 @@ For a view of an existing report, view_get_parameters also gives the current val
     <AIToolConfiguration>
       <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a6</GUID>
       <Name>report_patch_xml</Name>
+      <Access>Destructive</Access>
       <Description>Modifies an existing report by XPath operations on its XML, without rewriting it: change a value, add or remove an element, a restriction, a view, a model...
 Operations: set (text of the selected elements or attributes; created in its parent when missing; or 'xml' to replace the selected elements), insert (XML fragment, position append/prepend/before/after), remove.
 The GUIDs of the report are kept: give short placeholders (e.g. e9, v3) as &lt;GUID&gt; of the new elements, they are regenerated with their references. The whole patch is applied or nothing.

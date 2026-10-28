@@ -14,6 +14,7 @@
                         <li><a href="#lineProviders">AI Providers</a></li>
                         <li><a href="#lineAgents">The Agents</a></li>
                         <li><a href="#lineSecurity">Security</a></li>
+                        <li><a href="#lineMcp">MCP Server</a></li>
                         <li><a href="#lineSemantic">The Semantic Layer</a></li>
                         <li><a href="#lineTasks">AI Tasks in Reports</a></li>
                         <li><a href="#lineCustom">Customization</a></li>
@@ -172,6 +173,63 @@
                             </ul>
                             <div class="bs-callout bs-callout-warning">
                                 <ck>Check <a href="~/Server#lineSecurity_group">Security Groups</a> for the rights configuration</ck>.
+                            </div>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                </section>
+                <!-- end section -->
+                <section id="lineMcp" class="section">
+                    <div class="row">
+                        <div class="col-md-12 left-align">
+                            <h2 class="dark-text">MCP Server <hr></h2>
+                        </div>
+                        <!-- end col -->
+                    </div>
+                    <!-- end row -->
+                    <div class="row">
+                        <div class="col-md-12">
+                            <p>
+                                The <b>Web Report Server</b> can also serve the AI agents to <strong>external AI clients</strong> (<eg>e.g. Claude Code, Claude Desktop, VS Code Copilot, Cursor</eg>) with the <a href="https://modelcontextprotocol.io" target="_blank">Model Context Protocol</a>.<br />
+                                The client uses <b>its own AI model</b>: the provider of the agent is not used. The tools are executed by the server <b>with the rights of the user</b>, exactly as in the chat panel.
+                            </p>
+                            <p>
+                                <strong>Enabling the MCP server</strong>
+                            </p>
+                            <ul>
+                                <li>Run the <b>Server Manager</b>, select <srmenu>Configuration->Configure AI...</srmenu> and set <code>MCP server enabled</code> (<i>Danger Zone</i>, disabled by default).</li>
+                                <li>The <code>Channel</code> of each agent defines where it is served: <i>Web</i> (chat panel only), <i>MCP</i> or <i>Web and MCP</i> (default). Set <i>Web</i> for an agent whose data must not leave its own provider.</li>
+                                <li>An agent is published at <code>https://&lt;server&gt;/mcp/&lt;agent&gt;</code>, the agent being its name in lower case with the other characters replaced by '-' (<eg>e.g. <code>/mcp/report-designer</code>, <code>/mcp/data-analyst</code></eg>). A user only reaches the agents assigned to his security groups.</li>
+                                <li>The limits of the <i>MCP Server</i> category: <code>MCP token maximum validity</code> (365 days), <code>MCP token maximum inactivity</code> (no limit) and <code>MCP maximum calls per minute</code> per user (60).</li>
+                            </ul>
+                            <p>
+                                <strong>Connecting a client</strong>
+                            </p>
+                            <ul>
+                                <li>In the Web Report Server, open the user profile, tab <b>MCP access</b> (shown only if the user has MCP agents): create a <b>personal access token</b> with a name and a validity, and copy it: it is displayed only once. The tab also lists the MCP URLs of the agents of the user.</li>
+                                <li>Declare the server in the client with the URL of the agent and the header <code>Authorization: Bearer &lt;token&gt;</code>. With Claude Code:</li>
+                            </ul>
+                            <pre><code>claude mcp add --transport http seal-designer https://&lt;server&gt;/mcp/report-designer --header "Authorization: Bearer seal_mcp_..."</code></pre>
+                            <p>
+                                The instructions sent to the client are the system prompt of the agent. All the tools of the agent and of its skills are listed upfront: a tool belonging to a skill is described as <i>Requires the skill ...</i> and the client calls <code>load_skill</code> before using it.
+                            </p>
+                            <ul>
+                                <li><b>Tool annotations</b>: the <code>Access</code> property of each tool (<i>Read only</i>, <i>Write</i> or <i>Destructive</i>) is published as MCP tool annotations, so that the client can ask a confirmation before the tools that write or delete.</li>
+                                <li><b>Prompts</b>: the sample prompts of the agent, translated in the user language, are published as MCP prompts (<eg>e.g. the slash commands of Claude Code</eg>).</li>
+                                <li><b>Resources</b>: the reports of the user folders (<code>seal://report/Reports/...</code>, 500 at most) and the data sources he can access (<code>seal://source/&lt;name&gt;</code>) can be attached to a conversation (<eg>e.g. with @@ in Claude Code</eg>). Reading a resource executes the tool <code>report_get_detail</code> or <code>datasource_get_detail</code> of the agent: it is published only if the agent has this tool.</li>
+                                <li><b>Progress</b>: when the client requests it, the progress text of a tool is notified at its start, then every 5 seconds until the end of a long execution.</li>
+                            </ul>
+                            <p>
+                                <strong>Security and monitoring</strong>
+                            </p>
+                            <ul>
+                                <li>Each request is authenticated on its own: the user of the token is loaded again by the Security Provider, so a change of his groups or rights applies immediately.</li>
+                                <li>Only the SHA-256 hash of a token is stored (<i>/Security/McpTokens</i>). A token is revoked from the profile; an expired or inactive token is refused.</li>
+                                <li>Every tool call, error and refusal is written in the audit (types <code>AIMcpCall</code>, <code>AIMcpCallError</code>, <code>AIMcpRefused</code>) with the IP address and the application of the client. The System report <i>270 Audit - MCP Activity</i> shows the activity per day, user and tool, the errors and the inventory of the tokens of all the users.</li>
+                            </ul>
+                            <div class="bs-callout bs-callout-warning">
+                                The MCP server authenticates the clients with personal access tokens only: the clients requiring an OAuth authorization (<eg>e.g. the connectors of claude.ai</eg>) are not supported yet.
                             </div>
                         </div>
                         <!-- end col -->
