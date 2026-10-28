@@ -1,0 +1,1289 @@
+<?xml version="1.0" encoding="utf-8"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>153d6b71-326d-4d5f-8124-573fd3b5b9d2</GUID>
+  <ViewGUID>2ceb127c-a969-4077-83fc-6371dfb20db7</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>83b08782-3e6e-428f-905f-90ba15ee32c0</GUID>
+      <Name>Audit (Repository)</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData />
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+    <ReportSource>
+      <GUID>0e01948d-7f9d-4ffd-9561-7d1ae3550b26</GUID>
+      <Name>MCP Tokens</Name>
+      <Connections>
+        <MetaConnection>
+          <GUID>4230ee3a-5d08-40fd-bea7-6c665e286dbb</GUID>
+          <Name>connection</Name>
+        </MetaConnection>
+      </Connections>
+      <ConnectionGUID>4230ee3a-5d08-40fd-bea7-6c665e286dbb</ConnectionGUID>
+      <IsNoSQL>true</IsNoSQL>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>4d77c9e6-3b7a-4079-9807-79201a5d31c4</GUID>
+            <Name>Tokens</Name>
+            <TemplateName>Default</TemplateName>
+            <DefinitionScript>@using System.Data
+@{
+	MetaTable metaTable = Model;
+	metaTable.NoSQLTable = new DataTable();
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("user", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("token", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("id", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("status", typeof(string)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("creation", typeof(DateTime)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("expiration", typeof(DateTime)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("last_use", typeof(DateTime)));
+	metaTable.NoSQLTable.Columns.Add(new DataColumn("information", typeof(string)));
+
+	metaTable.LogMessage("{0} column(s) defined", metaTable.NoSQLTable.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using Seal.AI
+@{
+	MetaTable metaTable = Model;
+	DataTable table = metaTable.NoSQLTable;
+	ReportExecutionLog log = metaTable;
+	var config = Repository.Instance.AIConfiguration;
+	var now = DateTime.Now;
+	//Tokens of all the users read from the token store: name, dates and status only (the hash of a token is never shown)
+	foreach (var t in McpGateway.TokenStore.GetAllTokens())
+	{
+		var error = t.CheckValidity(now, config.McpTokenIdleDays);
+		var status = error == null ? "Active" : (t.Expiration != null &amp;&amp; now &gt;= t.Expiration.Value ? "Expired" : "Inactive");
+		if (error == null &amp;&amp; t.Expiration != null &amp;&amp; t.Expiration.Value &lt; now.AddDays(7)) status = "Expires soon";
+		table.Rows.Add(t.UserName, t.Name, t.Id, status, t.Creation, t.Expiration.HasValue ? (object)t.Expiration.Value : DBNull.Value, t.LastUse.HasValue ? (object)t.LastUse.Value : DBNull.Value, error ?? "");
+	}
+	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>8a1194b9-a49e-40a6-9f10-61ed95ef8fe6</GUID>
+                <Name>user</Name>
+                <Type>Text</Type>
+                <Category>Tokens</Category>
+                <DisplayName>User</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>69c9c448-1cf2-4381-a0c0-08d740cf2a6a</GUID>
+                <Name>token</Name>
+                <Type>Text</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Token name</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>325b48b4-cc11-4f3e-aeeb-15eafcd2232e</GUID>
+                <Name>id</Name>
+                <Type>Text</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Token id</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>247ae6fc-2467-4514-affd-c276a757062a</GUID>
+                <Name>status</Name>
+                <Type>Text</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Status</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>4efb8bcd-be84-4a36-ab27-c6c1d7a41734</GUID>
+                <Name>creation</Name>
+                <Type>DateTime</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Creation</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+                <DateTimeStandardFormat>ShortDateTime</DateTimeStandardFormat>
+                <Format>g</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>9f7d61e1-4c0f-4cd0-aedf-a9643288603e</GUID>
+                <Name>expiration</Name>
+                <Type>DateTime</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Expiration</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+                <DateTimeStandardFormat>ShortDateTime</DateTimeStandardFormat>
+                <Format>g</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>46a1e95c-378e-40db-b888-c6742cd97236</GUID>
+                <Name>last_use</Name>
+                <Type>DateTime</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Last use</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+                <DateTimeStandardFormat>ShortDateTime</DateTimeStandardFormat>
+                <Format>g</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>0fc6a145-f998-4ad6-aafb-aa4b80d71ff4</GUID>
+                <Name>information</Name>
+                <Type>Text</Type>
+                <Category>Tokens</Category>
+                <DisplayName>Information</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>6ac7047f-6583-48e6-809c-3f4120505913</GUID>
+      <Name>MCP calls per day</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>6961ca1a-559f-4846-82f6-e3bfc98033b5</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>28036dd1-6c08-4994-9bcd-c61cbb0f410a</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a96018a1-7959-4033-a6fb-00108e64c5e8</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName>Calls</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[bd03f790-6c90-4e77-aeea-8ef22a22b6ba]
+AND [902ff544-8ef4-478d-94e2-a1df5ecebfa5]
+AND [e32e18f6-ba65-4b6c-ba09-674ac3c49078]
+AND [6978adb8-7686-42c8-9385-2e92006b9527]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>bd03f790-6c90-4e77-aeea-8ef22a22b6ba</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>902ff544-8ef4-478d-94e2-a1df5ecebfa5</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+            <string>AIMcpRefused</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>e32e18f6-ba65-4b6c-ba09-674ac3c49078</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6978adb8-7686-42c8-9385-2e92006b9527</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>28c7d163-6a5a-4406-a9e0-5748abb15ef1</GUID>
+      <Name>MCP calls per user</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>6137e602-9dae-4929-b370-5ad4857d966c</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>415c3330-c541-4218-8b79-96fb4dcfa180</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>993a5687-d532-4076-af26-daa4dac2fb53</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName>Calls</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[e5eb82ce-2b83-4603-aa70-2b1be85e4bf3]
+AND [9677d87c-6ce9-4cb7-949f-4d6827e018e3]
+AND [58088046-628e-4731-9c59-5f5088f61eca]
+AND [0d880342-e72f-4d52-adb3-87e34014b631]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>e5eb82ce-2b83-4603-aa70-2b1be85e4bf3</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>9677d87c-6ce9-4cb7-949f-4d6827e018e3</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+            <string>AIMcpRefused</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>58088046-628e-4731-9c59-5f5088f61eca</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>0d880342-e72f-4d52-adb3-87e34014b631</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>085dfb1b-ad0c-4f73-8055-c38d690f529f</GUID>
+      <Name>MCP clients per user</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>f0bc24ad-35cd-4b3d-a78a-a6604d77a351</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6abcc2dc-93cc-4a47-ab18-012f03a4bb3d</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5597ec55-8800-4e69-afa3-315828322a40</GUID>
+          <Name>sr_audit.user_session</Name>
+          <DisplayName>Client address</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>75786853-d11f-40d6-b43f-b8c896a2ee1d</GUID>
+          <Name>sr_audit.execution_name</Name>
+          <DisplayName>Client application</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>70f67b5b-c78f-4e5e-b82b-88dc50bace67</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName>Calls</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>fde28a96-cb28-4bbb-abc0-31f4682ec56b</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName>Last call</DisplayName>
+          <Format>g</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[de32dee9-340c-45c2-9ab9-6cf6cc47da38]
+AND [56b82d7d-4eda-40db-ae52-34e636ba44b2]
+AND [20c65a2e-0421-4291-b833-39f6df3b7d60]
+AND [97bf7ae0-56a8-4148-ab23-1a43c26819ed]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>de32dee9-340c-45c2-9ab9-6cf6cc47da38</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>56b82d7d-4eda-40db-ae52-34e636ba44b2</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+            <string>AIMcpRefused</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>20c65a2e-0421-4291-b833-39f6df3b7d60</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>97bf7ae0-56a8-4148-ab23-1a43c26819ed</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>66df1aaa-b606-4727-b464-0aa6d1d97d61</GUID>
+      <Name>MCP calls per tool</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>3412d44f-bd05-457f-ab86-cc9efd7bf196</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8f4b85cd-f895-48fb-bcbc-a14a2ed08a88</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName>Tool</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>700aafdc-1702-4b5f-b20d-9d4b9a20b660</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9141c6aa-2441-43e0-846a-ed5d5a79d623</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName>Calls</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>RowColumn</ShowTotal>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[b78f968b-4978-4aa1-988a-6f69055c4b63]
+AND [6eb1aeae-6a13-4445-ae02-2e80d32e5c19]
+AND [71ff3f5e-6209-4701-8632-8bfc7119c987]
+AND [1754ef19-fd1f-4919-be99-7eab6ad48a7f]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>b78f968b-4978-4aa1-988a-6f69055c4b63</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6eb1aeae-6a13-4445-ae02-2e80d32e5c19</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>71ff3f5e-6209-4701-8632-8bfc7119c987</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>1754ef19-fd1f-4919-be99-7eab6ad48a7f</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>e3149972-dfd7-4bea-a572-7835bb1f3ade</GUID>
+      <Name>MCP tool durations</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>afc12001-630d-451c-b13b-8d838d5fff92</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2ffc4d76-491e-400e-8548-4e2d08c20120</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName>Tool</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>aef9c735-42e5-43c2-a31d-ebfa1d7a7956</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName>Calls</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8d47c0a6-f84b-4d94-b5e5-456d25eec2ae</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName>Avg duration (s)</DisplayName>
+          <Format>N1</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Avg</AggregateFunction>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>c18b0638-9eb2-43ad-83b4-9f40554bdf9e</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName>Max duration (s)</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[28f595b4-a059-45fe-ad82-f21a5f68336f]
+AND [c8f6a4ca-8374-4d84-a806-e27e4cf4b16b]
+AND [3ee8c315-48bb-48f7-a41c-9fbdb7496f14]
+AND [e1804941-2f68-4e48-8bdc-95427c01b7d9]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>28f595b4-a059-45fe-ad82-f21a5f68336f</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>c8f6a4ca-8374-4d84-a806-e27e4cf4b16b</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>3ee8c315-48bb-48f7-a41c-9fbdb7496f14</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>e1804941-2f68-4e48-8bdc-95427c01b7d9</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>6f8abe20-9e75-482b-8d42-85f42ff7171f</GUID>
+      <Name>MCP refusals and errors</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>ce33bf38-84bf-41ba-baca-37099f6fe7f7</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName />
+          <Format>g</Format>
+          <SortOrder>1 Descendant</SortOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>bd1b46cc-3f2f-4d73-834d-be0b0c9a3e4f</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>90f0e4e3-87b7-48ac-b5c1-d627c5f2d686</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>30390b0d-59b9-4471-9bf0-bd34254befb8</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>a275613a-8e50-4fba-8bf4-d23e499ad031</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName>Tool or request</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ba61d7e4-9a73-4d6c-9230-eb21ec7cd0f7</GUID>
+          <Name>sr_audit.event_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>023903db-20f0-48e7-9268-e3f056be46ef</GUID>
+          <Name>sr_audit.user_session</Name>
+          <DisplayName>Client address</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>39b12f20-91b4-491e-8454-fd314cac4882</GUID>
+          <Name>sr_audit.execution_name</Name>
+          <DisplayName>Client application</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[3b7717f6-8c51-48db-a679-ac1f610d5de2]
+AND [6c1a7bf8-8236-4635-9375-7facc44cf8e0]
+AND [138638d0-75b2-475d-9d4e-267270ec35e6]
+AND [664f4a52-ee6b-4855-9007-07dc0600c408]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>3b7717f6-8c51-48db-a679-ac1f610d5de2</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6c1a7bf8-8236-4635-9375-7facc44cf8e0</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCallError</string>
+            <string>AIMcpRefused</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>138638d0-75b2-475d-9d4e-267270ec35e6</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>664f4a52-ee6b-4855-9007-07dc0600c408</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>c986c153-7773-4d08-8e8f-ade3b07bee0f</GUID>
+      <Name>MCP calls detail</Name>
+      <SourceGUID>83b08782-3e6e-428f-905f-90ba15ee32c0</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>ec31ead3-06bc-4e27-924d-d5f1ffecc5f3</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName />
+          <Format>g</Format>
+          <SortOrder>1 Descendant</SortOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d19c2e5b-ef1a-469a-9779-568a017296ce</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cb1beacb-5996-4f16-99ff-5c67a783283d</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>11df4188-4c11-49cb-a663-368c9e1ed81f</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>60f931d7-cd00-4261-8d70-1e5c98f68ca6</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName>Tool or request</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>46e1b505-542c-4941-b20f-7c7f16896a8c</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2aa21480-d9e3-485b-aac1-c2d408b3fd89</GUID>
+          <Name>sr_audit.event_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1f26993a-9643-41fc-8450-e96e3811ad0b</GUID>
+          <Name>sr_audit.user_session</Name>
+          <DisplayName>Client address</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>79fd8a55-4e7b-4e1c-b05d-3b2c486cad77</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>e62fc16f-4d30-4eba-abb5-5c29ed2a8272</GUID>
+          <Name>sr_audit.execution_name</Name>
+          <DisplayName>Client application</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[07c36608-9b82-4816-b314-d5a8fc8a134c]
+AND [51926429-6ec4-4049-a2e7-9e8c326ef8cf]
+AND [0b9b72bd-b5e9-4d8f-acff-4226d9d8424d]
+AND [90287f5f-e786-406d-be8f-632af9a9b15a]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>07c36608-9b82-4816-b314-d5a8fc8a134c</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <TriggerExecution>true</TriggerExecution>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>51926429-6ec4-4049-a2e7-9e8c326ef8cf</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <Prompt>None</Prompt>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+            <string>AIMcpRefused</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>0b9b72bd-b5e9-4d8f-acff-4226d9d8424d</GUID>
+          <Name>sr_audit.ai_agent</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>56e4fac8-c593-42a0-9b9c-2eef3054af8b</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>90287f5f-e786-406d-be8f-632af9a9b15a</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Contains</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>777778d6-04e6-4be8-aa2a-547963f05eb6</GUID>
+      <Name>MCP access tokens</Name>
+      <SourceGUID>0e01948d-7f9d-4ffd-9561-7d1ae3550b26</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>23318d7d-e63e-4835-aba3-aca5b1075dba</GUID>
+          <Name>user</Name>
+          <DisplayName />
+          <SortOrder>1 Ascendant</SortOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>8a1194b9-a49e-40a6-9f10-61ed95ef8fe6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>d960c0d0-ae6c-4acc-86e4-3218fb2a7fe6</GUID>
+          <Name>token</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>69c9c448-1cf2-4381-a0c0-08d740cf2a6a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>bfb09f00-220a-438d-9e3b-b44119e831ce</GUID>
+          <Name>id</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>325b48b4-cc11-4f3e-aeeb-15eafcd2232e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>2f037f6f-2b28-4d75-8bcb-f0349538eff1</GUID>
+          <Name>status</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>247ae6fc-2467-4514-affd-c276a757062a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>cc282128-6131-4453-b6e9-37caf10125e4</GUID>
+          <Name>creation</Name>
+          <DisplayName />
+          <SortOrder>2 Descendant</SortOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4efb8bcd-be84-4a36-ab27-c6c1d7a41734</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>1180c0c1-90b3-43e6-bf53-fa5432ff3046</GUID>
+          <Name>expiration</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9f7d61e1-4c0f-4cd0-aedf-a9643288603e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>6393e5db-50ba-4fcc-a3c3-8c357e21259c</GUID>
+          <Name>last_use</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>46a1e95c-378e-40db-b888-c6742cd97236</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>0634d593-101d-4c28-bf03-e02eaf774ce1</GUID>
+          <Name>information</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>0fc6a145-f998-4ad6-aafb-aa4b80d71ff4</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>2ceb127c-a969-4077-83fc-6371dfb20db7</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>592352dc-33a9-435d-84c0-121780c25431</GUID>
+          <Name>Tab Control</Name>
+          <Views>
+            <ReportView>
+              <GUID>95579495-8deb-4a24-8f85-a7b23d1ba37c</GUID>
+              <Name>Activity</Name>
+              <Views>
+                <ReportView>
+                  <GUID>730be8c7-5f82-4cb2-99f3-323b48c0e42f</GUID>
+                  <Name>MCP calls per day</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>4bbc881b-0f2b-45e2-809b-e4906152cc45</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>ae317992-ecc6-40f6-831b-690e77427ce7</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>chartjs_contheight</Name>
+                              <Value>350px</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_title</Name>
+                              <Value>MCP calls per day</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_title_position</Name>
+                              <Value>bottom</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_bar_stacked</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_color_mappings</Name>
+                              <Value>'AIMcpCall':'#2ca02c','AIMcpCallError':'#ff7f0e','AIMcpRefused':'#d62728'</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>b884532b-3da7-4982-b628-844a15258eb6</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>6ac7047f-6583-48e6-809c-3f4120505913</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>ca6c5090-fcf9-49dc-a457-8b1e5640a298</GUID>
+              <Name>Users</Name>
+              <Views>
+                <ReportView>
+                  <GUID>0525617e-46d0-4c5b-9340-d5bcd4781348</GUID>
+                  <Name>MCP calls per user</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>053b1e89-6ab3-4238-82cc-8a9eed0513a5</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>9c875d0d-c6d4-4f73-a968-88f150db85b5</GUID>
+                          <Name>Chart JS</Name>
+                          <TemplateName>Chart JS</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>chartjs_contheight</Name>
+                              <Value>250px</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_title</Name>
+                              <Value>MCP calls per user</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_title_position</Name>
+                              <Value>bottom</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_bar_stacked</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_color_mappings</Name>
+                              <Value>'AIMcpCall':'#2ca02c','AIMcpCallError':'#ff7f0e','AIMcpRefused':'#d62728'</Value>
+                            </Parameter>
+                            <Parameter>
+                              <Name>chartjs_bar_horizontal</Name>
+                              <Value>True</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>30949390-b144-4edc-a0d4-3c675b055d98</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>28c7d163-6a5a-4406-a9e0-5748abb15ef1</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>6fb9ff2c-02c9-4e5d-8f6b-eabfee7699c7</GUID>
+                  <Name>MCP clients per user</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>5a268a10-9e2c-430b-a5c9-5a964d3cbb4f</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>c861fe13-f040-4e36-b314-39849f8da8dc</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>085dfb1b-ad0c-4f73-8055-c38d690f529f</ModelGUID>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>2</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>fcbdd055-5e2a-4e76-b62e-90ef9871caff</GUID>
+              <Name>Tools</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c0ac31ad-3c9f-4812-98bd-5b5253337fc1</GUID>
+                  <Name>MCP calls per tool</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b807fff1-9393-435a-919f-7a0034acc848</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>9018fb64-567f-4641-9838-9967b383ecf5</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>66df1aaa-b606-4727-b464-0aa6d1d97d61</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+                <ReportView>
+                  <GUID>e3bb3c83-e80f-4b15-812f-66d2b3243241</GUID>
+                  <Name>MCP tool durations</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>a8917bd2-c907-4f47-a1af-b9fa8006f198</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>8c733812-458e-440c-90a5-6e26336dc164</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>e3149972-dfd7-4bea-a572-7835bb1f3ade</ModelGUID>
+                  <SortOrder>2</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <SortOrder>3</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>29754fa6-be5e-4aa9-8da6-6d0d1b008528</GUID>
+              <Name>Refusals and errors</Name>
+              <Views>
+                <ReportView>
+                  <GUID>eaf0d059-63fb-4fa2-9802-1b74ac111a36</GUID>
+                  <Name>MCP refusals and errors</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>58b43763-6a54-4baf-ae92-95ab69e87f92</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>ce17a6b7-881d-4c8b-9590-baefaa106e5b</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>6f8abe20-9e75-482b-8d42-85f42ff7171f</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>12dfb2ea-b7bb-4cc0-9001-d936f4083cd0</GUID>
+              <Name>Detail</Name>
+              <Views>
+                <ReportView>
+                  <GUID>c0674453-112e-4781-9f05-66a274e90918</GUID>
+                  <Name>MCP calls detail</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>751919f8-dd9a-440f-a181-7e9a99d0e2a7</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>e4f337b0-0169-4b06-9b27-697c5097a5e9</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_responsive</Name>
+                              <Value>False</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>c986c153-7773-4d08-8e8f-ade3b07bee0f</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>5</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>b89350fb-5477-4a5a-afd8-a89018f8c796</GUID>
+              <Name>Access tokens</Name>
+              <Views>
+                <ReportView>
+                  <GUID>1804d265-e1e2-4bff-bf24-f39db040a0f5</GUID>
+                  <Name>MCP access tokens</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b3cf1a77-77f4-41e1-ad47-09b66909ead2</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>7932be80-d481-4261-a224-394d131e482c</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>777778d6-04e6-4be8-aa2a-547963f05eb6</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>tab_description</Name>
+                  <Value>Personal access tokens of the MCP server (Security\McpTokens): an expired or inactive token is refused, a user revokes his tokens in his profile.</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>6</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Tab Control</TemplateName>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

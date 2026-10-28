@@ -25,6 +25,12 @@ namespace Seal.AI
 
         /// <summary>The agent requested, assigned to the user and served on the MCP channel</summary>
         public AIAgentConfiguration Agent;
+
+        /// <summary>IP address of the MCP client</summary>
+        public string ClientAddress;
+
+        /// <summary>Application of the MCP client (HTTP header 'User-Agent')</summary>
+        public string ClientApplication;
     }
 
     /// <summary>
@@ -72,7 +78,8 @@ namespace Seal.AI
         /// <param name="hostName">Host name of the client</param>
         /// <param name="error">The reason of the refusal</param>
         /// <param name="unauthorized">True if the refusal is an authentication failure (401), false if the agent is not available (404)</param>
-        public static McpRequestContext Authenticate(string authorization, string agentSlug, string hostName, out string error, out bool unauthorized)
+        /// <param name="clientApplication">Application of the client (HTTP header 'User-Agent'), audited with the requests</param>
+        public static McpRequestContext Authenticate(string authorization, string agentSlug, string hostName, out string error, out bool unauthorized, string clientApplication = null)
         {
             error = null;
             unauthorized = true;
@@ -131,10 +138,10 @@ namespace Seal.AI
             {
                 unauthorized = false;
                 error = $"the agent '{agentSlug}' is not available on the MCP server for the user '{token.UserName}'";
-                return new McpRequestContext() { Token = token, User = user };
+                return new McpRequestContext() { Token = token, User = user, ClientAddress = hostName, ClientApplication = clientApplication };
             }
             unauthorized = false;
-            return new McpRequestContext() { Token = token, User = user, Agent = agent };
+            return new McpRequestContext() { Token = token, User = user, Agent = agent, ClientAddress = hostName, ClientApplication = clientApplication };
         }
 
         static readonly ConcurrentDictionary<string, Queue<DateTime>> _calls = new ConcurrentDictionary<string, Queue<DateTime>>(StringComparer.OrdinalIgnoreCase);
@@ -198,7 +205,7 @@ namespace Seal.AI
             {
                 var max = Repository.Instance.AIConfiguration.McpMaxCallsPerMinute;
                 var refused = new AIToolHostResult() { Text = $"Error: the limit of {max} tool calls per minute is reached for the user, this call was not executed. Wait one minute before calling the tools again." };
-                Audit.LogMcpAudit(AuditType.AIMcpRefused, context.User, context.Agent?.Name, toolName, "too many calls");
+                Audit.LogMcpAudit(AuditType.AIMcpRefused, context.User, context.Agent?.Name, toolName, "too many calls", null, context.ClientAddress, context.ClientApplication);
                 return refused;
             }
 
@@ -206,7 +213,7 @@ namespace Seal.AI
             var toolCall = new AIToolCall() { Id = Guid.NewGuid().ToString("N"), Name = toolName, Arguments = string.IsNullOrWhiteSpace(arguments) ? "{}" : arguments };
             var result = host.Execute(toolCall, cancelOperation);
             var isError = IsError(result);
-            Audit.LogMcpAudit(isError ? AuditType.AIMcpCallError : AuditType.AIMcpCall, context.User, context.Agent.Name, toolName, isError ? Truncate(result.Text, 250) : null, (int)Math.Round((DateTime.Now - now).TotalSeconds));
+            Audit.LogMcpAudit(isError ? AuditType.AIMcpCallError : AuditType.AIMcpCall, context.User, context.Agent.Name, toolName, isError ? Truncate(result.Text, 250) : null, (int)Math.Round((DateTime.Now - now).TotalSeconds), context.ClientAddress, context.ClientApplication);
             return result;
         }
 

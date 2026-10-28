@@ -422,7 +422,9 @@ var SWIUtil;
             location.reload();
     }
     function initMcpTokens(profile) {
-        SWIUtil.ShowHideControl($("#profile-mcp"), profile.hasmcp);
+        //Dedicated tab 'MCP access', the tab bar is shown only if the user has MCP agents; the dialog always opens on the general tab
+        SWIUtil.ShowHideControl($("#profile-tabs"), profile.hasmcp);
+        window.bootstrap.Tab.getOrCreateInstance($("#profile-tab-general-button")[0]).show();
         if (!profile.hasmcp)
             return;
         $("#mcp-token-new,#mcp-token-error").addClass("d-none");

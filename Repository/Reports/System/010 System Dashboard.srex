@@ -760,6 +760,80 @@ AND [a94ba383-b513-4152-8d92-2263528e1ccc]</Restriction>
       </Restrictions>
     </ReportModel>
     <ReportModel>
+      <GUID>4f0b8f8e-6a35-4c8e-9a51-2d6f3b7c9e10</GUID>
+      <Name>MCP calls per day</Name>
+      <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
+      <ShowFirstLine>false</ShowFirstLine>
+      <Elements>
+        <ReportElement>
+          <GUID>0c5d2a7e-91b4-4f6a-8e3d-7a2b6c1f4e21</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <DateTimeStandardFormat>Custom</DateTimeStandardFormat>
+          <Format>dd/MM</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <SerieDefinition>Axis</SerieDefinition>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5e8f1b3c-2d47-4a96-b0c8-3f9e6d2a7b32</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Column</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <SerieDefinition>Splitter</SerieDefinition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9a2c4e6f-7b18-4d3a-a5e9-1c8f0b4d6e43</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName>Calls</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <ChartJSSerie>Bar</ChartJSSerie>
+          <SerieSortType>AxisLabel</SerieSortType>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <SetNullToZero>true</SetNullToZero>
+        </ReportElement>
+      </Elements>
+      <Restriction>[3b7d9f1a-c2e4-4b68-9a0d-5e1f3c7b9d54]
+AND [6d1e3a5c-8f2b-4c79-b4e6-0a2d8f6c1e65]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>3b7d9f1a-c2e4-4b68-9a0d-5e1f3c7b9d54</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <EnumValues>
+            <string>AIMcpCall</string>
+            <string>AIMcpCallError</string>
+            <string>AIMcpRefused</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>6d1e3a5c-8f2b-4c79-b4e6-0a2d8f6c1e65</GUID>
+          <Name>date(sr_audit.event_date, 'start of day')</Name>
+          <DisplayName />
+          <DisplayOrder>2</DisplayOrder>
+          <Format>d</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>f55cc735-d7e2-4724-9f1a-8c484b6ba251</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <DisplayOrderRE>2</DisplayOrderRE>
+          <Date1Keyword>Today-20D</Date1Keyword>
+          <FormatRe>d</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
       <GUID>6ebe985a-7d47-43b5-879c-af6d1f896c05</GUID>
       <Name>Last AI chats</Name>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
@@ -1463,12 +1537,77 @@ fa-solid fa-xmark</Value>
               </Parameters>
               <SortOrder>2</SortOrder>
             </ReportView>
+            <ReportView>
+              <GUID>2a6c8e0f-4b1d-4e73-9c25-7f3a1d5b8e76</GUID>
+              <Name>MCP calls</Name>
+              <Views>
+                <ReportView>
+                  <GUID>7e9a1c3d-5f20-4b84-a6d7-2c4e8a0f3b87</GUID>
+                  <Name>MCP calls per day</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>1f3b5d7e-9a42-4c95-b8e0-4d6a2c8e1f98</GUID>
+                      <Name>Chart JS</Name>
+                      <TemplateName>Chart JS</TemplateName>
+                      <Parameters>
+                        <Parameter>
+                          <Name>chartjs_contheight</Name>
+                          <Value>300px</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartjs_bar_stacked</Name>
+                          <Value>True</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartjs_unit</Name>
+                          <Value>day</Value>
+                        </Parameter>
+                        <Parameter>
+                          <Name>chartjs_color_mappings</Name>
+                          <Value>'AIMcpCall':'#2ca02c','AIMcpCallError':'#ff7f0e','AIMcpRefused':'#d62728'</Value>
+                        </Parameter>
+                      </Parameters>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>4f0b8f8e-6a35-4c8e-9a51-2d6f3b7c9e10</ModelGUID>
+                  <Parameters>
+                    <Parameter>
+                      <Name>show_data_tables</Name>
+                      <Value>False</Value>
+                    </Parameter>
+                  </Parameters>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Widget</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>widget_exec_report</Name>
+                  <Value>\System\270 Audit - MCP Activity.srex</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_icon</Name>
+                  <Value>fa-solid fa-plug</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_color</Name>
+                  <Value>info</Value>
+                </Parameter>
+                <Parameter>
+                  <Name>widget_css</Name>
+                  <Value>page-break-inside:avoid;overflow:auto;height:450px</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>3</SortOrder>
+            </ReportView>
           </Views>
           <TemplateName>Container</TemplateName>
           <Parameters>
             <Parameter>
               <Name>grid_layout</Name>
-              <Value>col-sm-6;col-sm-6;</Value>
+              <Value>col-sm-4;col-sm-4;col-sm-4;</Value>
             </Parameter>
           </Parameters>
           <SortOrder>6</SortOrder>

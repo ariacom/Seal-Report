@@ -151,6 +151,16 @@ namespace Seal.Model
         /// </summary>
         public double? AICost;
 
+        //MCP server events
+        /// <summary>
+        /// For MCP server events, IP address of the client (logged in the column 'user_session')
+        /// </summary>
+        public string ClientAddress;
+        /// <summary>
+        /// For MCP server events, application of the client: HTTP header 'User-Agent' (logged in the column 'execution_name')
+        /// </summary>
+        public string ClientApplication;
+
         static string Key = Guid.NewGuid().ToString();
 
         /// <summary>
@@ -210,7 +220,15 @@ namespace Seal.Model
         /// Audit a request of the MCP server: a tool call (<see cref="AuditType.AIMcpCall"/>, <see cref="AuditType.AIMcpCallError"/>) or a refusal (<see cref="AuditType.AIMcpRefused"/>).
         /// The detail is the tool name (or the request refused).
         /// </summary>
-        public static void LogMcpAudit(AuditType type, SecurityUser user, string agentName, string detail, string error = null, int? durationSeconds = null)
+        /// <param name="type">Type of the event</param>
+        /// <param name="user">User of the access token</param>
+        /// <param name="agentName">Name of the agent requested</param>
+        /// <param name="detail">Name of the tool, or the request refused</param>
+        /// <param name="error">Error or reason of the refusal</param>
+        /// <param name="durationSeconds">Duration of the tool call</param>
+        /// <param name="clientAddress">IP address of the client</param>
+        /// <param name="clientApplication">Application of the client (HTTP header 'User-Agent')</param>
+        public static void LogMcpAudit(AuditType type, SecurityUser user, string agentName, string detail, string error = null, int? durationSeconds = null, string clientAddress = null, string clientApplication = null)
         {
             try
             {
@@ -223,7 +241,9 @@ namespace Seal.Model
                     Error = error,
                     Duration = durationSeconds,
                     AIAgentName = agentName,
-                    AIToolCalls = type == AuditType.AIMcpRefused ? 0 : 1
+                    AIToolCalls = type == AuditType.AIMcpRefused ? 0 : 1,
+                    ClientAddress = string.IsNullOrEmpty(clientAddress) ? null : clientAddress,
+                    ClientApplication = string.IsNullOrEmpty(clientApplication) ? null : (clientApplication.Length > 250 ? clientApplication.Substring(0, 250) : clientApplication)
                 };
                 ExecuteAuditScript(audit);
             }
@@ -313,8 +333,8 @@ namespace Seal.Model
                     Tuple.Create("event_error", DbType.AnsiString, (object)Error),
                     Tuple.Create("user_name", DbType.AnsiString, (object)User?.Name),
                     Tuple.Create("user_groups", DbType.AnsiString, (object)User?.SecurityGroupsDisplay),
-                    Tuple.Create("user_session", DbType.AnsiString, (object)User?.SessionID),
-                    Tuple.Create("execution_name", DbType.AnsiString, (object)Report?.ExecutionName),
+                    Tuple.Create("user_session", DbType.AnsiString, (object)(ClientAddress ?? User?.SessionID)),
+                    Tuple.Create("execution_name", DbType.AnsiString, (object)(Report?.ExecutionName ?? ClientApplication)),
                     Tuple.Create("execution_context", DbType.AnsiString, (object)Report?.ExecutionContext.ToString()),
                     Tuple.Create("execution_view", DbType.AnsiString, (object)Report?.ExecutionView.Name),
                     Tuple.Create("execution_duration", DbType.Int32, Report != null ? (object)Convert.ToInt32(Report.ExecutionFullDuration.TotalSeconds) : (object)Duration),

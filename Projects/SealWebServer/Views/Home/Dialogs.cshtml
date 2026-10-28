@@ -273,6 +273,17 @@
             </div>
             <div class="modal-body" style="max-height:90vh;overflow-y:auto;">
 
+                <ul id="profile-tabs" class="nav nav-tabs mb-3 d-none" role="tablist">
+                    <li class="nav-item" role="presentation">
+                        <button id="profile-tab-general-button" class="nav-link active" data-bs-toggle="tab" data-bs-target="#profile-tab-general" type="button" role="tab" aria-controls="profile-tab-general" aria-selected="true">@repository.TranslateWeb("Profile")</button>
+                    </li>
+                    <li class="nav-item" role="presentation">
+                        <button id="profile-tab-mcp-button" class="nav-link" data-bs-toggle="tab" data-bs-target="#profile-tab-mcp" type="button" role="tab" aria-controls="profile-tab-mcp" aria-selected="false"><i class="fa-solid fa-plug me-1"></i>@repository.TranslateWeb("MCP access")</button>
+                    </li>
+                </ul>
+
+                <div class="tab-content">
+                <div id="profile-tab-general" class="tab-pane fade show active" role="tabpanel" aria-labelledby="profile-tab-general-button">
                 <div class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("User name")</span>
                     <input class="form-control config-input-field" id="profile-user" disabled="disabled" />
@@ -320,42 +331,40 @@
                 <div class="config-input-row">
                     <div id="default-connections" class="config-input-field"></div>
                 </div>
+                </div>
 
-                <div id="profile-mcp" class="d-none">
-                    <hr />
-                    <div class="config-input-row">
-                        <span class="config-input-label">@repository.TranslateWeb("MCP access tokens")</span>
-                        <div class="config-input-field">
-                            <div class="form-text mb-2">@repository.TranslateWeb("A personal access token connects an AI client (Claude, Copilot, Cursor...) to the AI agents with your rights: set it in the header 'Authorization: Bearer <token>' of the MCP server URL.")</div>
-                            <table id="mcp-tokens-table" class="table table-sm align-middle mb-2">
-                                <thead>
-                                    <tr>
-                                        <th>@repository.TranslateWeb("Name")</th>
-                                        <th>@repository.TranslateWeb("Created")</th>
-                                        <th>@repository.TranslateWeb("Expires")</th>
-                                        <th>@repository.TranslateWeb("Last use")</th>
-                                        <th></th>
-                                    </tr>
-                                </thead>
-                                <tbody></tbody>
-                            </table>
-                            <div class="input-group input-group-sm flex-nowrap mb-2">
-                                <input id="mcp-token-name" class="form-control" style="width:1%;" maxlength="60" placeholder="@repository.TranslateWeb("Token name (e.g. Claude Code)")" />
-                                <select id="mcp-token-days" class="form-select" style="flex:0 0 8rem;width:8rem;"></select>
-                                <button id="mcp-token-create" type="button" class="btn btn-primary">@repository.TranslateWeb("Create")</button>
-                            </div>
-                            <div id="mcp-token-error" class="alert alert-danger d-none p-2"></div>
-                            <div id="mcp-token-new" class="alert alert-warning d-none p-2">
-                                <div class="mb-1">@repository.TranslateWeb("Copy this token now: it will not be shown again.")</div>
-                                <div class="input-group input-group-sm flex-nowrap">
-                                    <input id="mcp-token-value" class="form-control font-monospace" style="width:1%;" readonly="readonly" />
-                                    <button id="mcp-token-copy" type="button" class="btn btn-secondary" title="@repository.TranslateWeb("Copy")"><i class="fa fa-copy"></i></button>
-                                </div>
-                            </div>
-                            <div class="form-text">@repository.TranslateWeb("MCP server URLs of your agents:")</div>
-                            <ul id="mcp-agents" class="list-unstyled small mb-0"></ul>
+                <div id="profile-tab-mcp" class="tab-pane fade" role="tabpanel" aria-labelledby="profile-tab-mcp-button">
+                <div id="profile-mcp">
+                    <div class="form-text mb-2">@repository.TranslateWeb("A personal access token connects an AI client (Claude, Copilot, Cursor...) to the AI agents with your rights: set it in the header 'Authorization: Bearer <token>' of the MCP server URL.")</div>
+                    <table id="mcp-tokens-table" class="table table-sm align-middle mb-2">
+                        <thead>
+                            <tr>
+                                <th>@repository.TranslateWeb("Name")</th>
+                                <th>@repository.TranslateWeb("Created")</th>
+                                <th>@repository.TranslateWeb("Expires")</th>
+                                <th>@repository.TranslateWeb("Last use")</th>
+                                <th></th>
+                            </tr>
+                        </thead>
+                        <tbody></tbody>
+                    </table>
+                    <div class="input-group input-group-sm flex-nowrap mb-2">
+                        <input id="mcp-token-name" class="form-control" style="width:1%;" maxlength="60" placeholder="@repository.TranslateWeb("Token name (e.g. Claude Code)")" />
+                        <select id="mcp-token-days" class="form-select" style="flex:0 0 8rem;width:8rem;"></select>
+                        <button id="mcp-token-create" type="button" class="btn btn-primary">@repository.TranslateWeb("Create")</button>
+                    </div>
+                    <div id="mcp-token-error" class="alert alert-danger d-none p-2"></div>
+                    <div id="mcp-token-new" class="alert alert-warning d-none p-2">
+                        <div class="mb-1">@repository.TranslateWeb("Copy this token now: it will not be shown again.")</div>
+                        <div class="input-group input-group-sm flex-nowrap">
+                            <input id="mcp-token-value" class="form-control font-monospace" style="width:1%;" readonly="readonly" />
+                            <button id="mcp-token-copy" type="button" class="btn btn-secondary" title="@repository.TranslateWeb("Copy")"><i class="fa fa-copy"></i></button>
                         </div>
                     </div>
+                    <div class="form-text">@repository.TranslateWeb("MCP server URLs of your agents:")</div>
+                    <ul id="mcp-agents" class="list-unstyled small mb-0"></ul>
+                </div>
+                </div>
                 </div>
             </div>
             <div class="modal-footer">

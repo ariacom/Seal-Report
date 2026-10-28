@@ -74,6 +74,9 @@ namespace Seal.AI
         /// <summary>Returns the tokens of a user</summary>
         List<McpAccessToken> GetUserTokens(string userName);
 
+        /// <summary>Returns the tokens of all the users (e.g. for the inventory of the tokens in a System report)</summary>
+        List<McpAccessToken> GetAllTokens();
+
         /// <summary>Deletes a token of a user, returns false if it does not exist</summary>
         bool Revoke(string userName, string id);
 
@@ -179,10 +182,16 @@ namespace Seal.AI
         /// <inheritdoc/>
         public List<McpAccessToken> GetUserTokens(string userName)
         {
+            return GetAllTokens().Where(t => string.Equals(t.UserName, userName, StringComparison.OrdinalIgnoreCase)).ToList();
+        }
+
+        /// <inheritdoc/>
+        public List<McpAccessToken> GetAllTokens()
+        {
             if (!Directory.Exists(_folder)) return new List<McpAccessToken>();
             return Directory.GetFiles(_folder, "*.json")
                 .Select(read)
-                .Where(t => t != null && string.Equals(t.UserName, userName, StringComparison.OrdinalIgnoreCase))
+                .Where(t => t != null)
                 .OrderBy(t => t.Creation)
                 .ToList();
         }

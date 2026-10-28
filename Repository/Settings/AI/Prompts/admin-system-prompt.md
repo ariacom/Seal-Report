@@ -51,6 +51,8 @@ run these with `report_execute_get_data`. Always use the exact path shown.
 | `System\210 Audit - Last Errors` | Most recent server errors |
 | `System\220 Audit - Login Failures` | Failed authentication attempts |
 | `System\250 Audit - Users Activity` | User activity history |
+| `System\260 Audit - AI Chat Activity` | AI chats of the web interface: tokens, cost and tool calls per user, agent and model |
+| `System\270 Audit - MCP Activity` | MCP server traffic: calls per day, user, client (address and application) and tool, refusals and errors, inventory of the MCP access tokens (status, expiration, last use) |
 
 ### Reports
 | Path | Purpose |

@@ -1399,6 +1399,9 @@
         <member name="M:Seal.AI.IMcpTokenStore.GetUserTokens(System.String)">
             <summary>Returns the tokens of a user</summary>
         </member>
+        <member name="M:Seal.AI.IMcpTokenStore.GetAllTokens">
+            <summary>Returns the tokens of all the users (e.g. for the inventory of the tokens in a System report)</summary>
+        </member>
         <member name="M:Seal.AI.IMcpTokenStore.Revoke(System.String,System.String)">
             <summary>Deletes a token of a user, returns false if it does not exist</summary>
         </member>
@@ -1439,6 +1442,9 @@
         <member name="M:Seal.AI.McpFileTokenStore.GetUserTokens(System.String)">
             <inheritdoc/>
         </member>
+        <member name="M:Seal.AI.McpFileTokenStore.GetAllTokens">
+            <inheritdoc/>
+        </member>
         <member name="M:Seal.AI.McpFileTokenStore.Revoke(System.String,System.String)">
             <inheritdoc/>
         </member>
@@ -1459,6 +1465,12 @@
         <member name="F:Seal.AI.McpRequestContext.Agent">
             <summary>The agent requested, assigned to the user and served on the MCP channel</summary>
         </member>
+        <member name="F:Seal.AI.McpRequestContext.ClientAddress">
+            <summary>IP address of the MCP client</summary>
+        </member>
+        <member name="F:Seal.AI.McpRequestContext.ClientApplication">
+            <summary>Application of the MCP client (HTTP header 'User-Agent')</summary>
+        </member>
         <member name="T:Seal.AI.McpGateway">
             <summary>
             Server side of the MCP server independent of the transport: authentication of the requests with the personal access tokens, agents of a user, limit of the calls, execution of the tools with an <see cref="T:Seal.AI.AIToolHost"/>.
@@ -1477,7 +1489,7 @@
             Returns the identifier of an agent in the URL of the MCP server (/mcp/{slug}): its name in lower case, the characters other than letters and digits replaced by '-'.
             </summary>
         </member>
-        <member name="M:Seal.AI.McpGateway.Authenticate(System.String,System.String,System.String,System.String@,System.Boolean@)">
+        <member name="M:Seal.AI.McpGateway.Authenticate(System.String,System.String,System.String,System.String@,System.Boolean@,System.String)">
             <summary>
             Authenticates a request of the MCP server from its 'Authorization' header and returns its context, or null with the reason of the refusal in <paramref name="error"/>.
             The user of the token is authenticated by the Security Provider from his name (<see cref="F:Seal.Model.SecurityUser.ForSchedule"/>), then the agent <paramref name="agentSlug"/> must be one of his MCP agents.
@@ -1487,6 +1499,7 @@
             <param name="hostName">Host name of the client</param>
             <param name="error">The reason of the refusal</param>
             <param name="unauthorized">True if the refusal is an authentication failure (401), false if the agent is not available (404)</param>
+            <param name="clientApplication">Application of the client (HTTP header 'User-Agent'), audited with the requests</param>
         </member>
         <member name="M:Seal.AI.McpGateway.CheckCallRate(System.String,System.DateTime)">
             <summary>
@@ -3877,6 +3890,16 @@
             For AI Chat events, cost of the exchange based on the provider token costs
             </summary>
         </member>
+        <member name="F:Seal.Model.Audit.ClientAddress">
+            <summary>
+            For MCP server events, IP address of the client (logged in the column 'user_session')
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.ClientApplication">
+            <summary>
+            For MCP server events, application of the client: HTTP header 'User-Agent' (logged in the column 'execution_name')
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.LogReportAudit(Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>
             Audit a report execution
@@ -3893,11 +3916,19 @@
             Token usage is taken from the agent's last exchange, the detail is the chat title.
             </summary>
         </member>
-        <member name="M:Seal.Model.Audit.LogMcpAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,System.Nullable{System.Int32})">
+        <member name="M:Seal.Model.Audit.LogMcpAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.String)">
             <summary>
             Audit a request of the MCP server: a tool call (<see cref="F:Seal.Model.AuditType.AIMcpCall"/>, <see cref="F:Seal.Model.AuditType.AIMcpCallError"/>) or a refusal (<see cref="F:Seal.Model.AuditType.AIMcpRefused"/>).
             The detail is the tool name (or the request refused).
             </summary>
+            <param name="type">Type of the event</param>
+            <param name="user">User of the access token</param>
+            <param name="agentName">Name of the agent requested</param>
+            <param name="detail">Name of the tool, or the request refused</param>
+            <param name="error">Error or reason of the refusal</param>
+            <param name="durationSeconds">Duration of the tool call</param>
+            <param name="clientAddress">IP address of the client</param>
+            <param name="clientApplication">Application of the client (HTTP header 'User-Agent')</param>
         </member>
         <member name="M:Seal.Model.Audit.LogAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>

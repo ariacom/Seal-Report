@@ -112,7 +112,9 @@ namespace SealWebServer
             {
                 var segments = httpContext.Request.Path.Value.Substring(McpPath.Length).Trim('/').Split('/');
                 var slug = segments.Length == 1 ? segments[0] : "";
-                var context = McpGateway.Authenticate(httpContext.Request.Headers.Authorization.ToString(), slug, httpContext.Connection.RemoteIpAddress?.ToString(), out var error, out var unauthorized);
+                var clientAddress = httpContext.Connection.RemoteIpAddress?.ToString();
+                var clientApplication = httpContext.Request.Headers.UserAgent.ToString();
+                var context = McpGateway.Authenticate(httpContext.Request.Headers.Authorization.ToString(), slug, clientAddress, out var error, out var unauthorized, clientApplication);
                 if (context?.Agent != null)
                 {
                     httpContext.Items[McpContextKey] = context;
@@ -124,7 +126,7 @@ namespace SealWebServer
                 {
                     var user = context?.User ?? new SecurityUser(Repository.Instance.Security);
                     if (string.IsNullOrEmpty(user.Name)) user.Name = context?.Token?.UserName;
-                    Audit.LogMcpAudit(AuditType.AIMcpRefused, user, null, httpContext.Request.Path.Value, error);
+                    Audit.LogMcpAudit(AuditType.AIMcpRefused, user, null, httpContext.Request.Path.Value, error, null, clientAddress, clientApplication);
                 }
                 httpContext.Response.StatusCode = unauthorized ? StatusCodes.Status401Unauthorized : StatusCodes.Status404NotFound;
                 if (unauthorized) httpContext.Response.Headers.WWWAuthenticate = $"Bearer realm=\"Seal Report MCP\", error=\"invalid_token\", error_description=\"{error?.Replace("\"", "'")}\"";

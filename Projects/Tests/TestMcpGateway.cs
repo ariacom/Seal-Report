@@ -56,6 +56,9 @@ namespace Test
             Assert.IsNull(store.Find("not a token"));
             Assert.AreEqual(1, store.GetUserTokens("SOMEONE").Count, "user names are not case sensitive");
             Assert.AreEqual(0, store.GetUserTokens("other").Count);
+            store.Create("other", "Copilot", DateTime.Now.AddDays(30), out _);
+            Assert.AreEqual(2, store.GetAllTokens().Count, "inventory of the tokens of all the users");
+            Assert.AreEqual(1, store.GetUserTokens("other").Count);
 
             //Validity: expiration and inactivity
             var now = DateTime.Now;
@@ -107,8 +110,10 @@ namespace Test
 
                 //Valid token: user loaded from his name without password, with the groups of his login
                 agent.Channel = AIAgentChannel.WebAndMcp;
-                var context = McpGateway.Authenticate("Bearer " + clear, slug, null, out error, out unauthorized);
+                var context = McpGateway.Authenticate("Bearer " + clear, slug, "10.0.0.1", out error, out unauthorized, "claude-code/2.1");
                 Assert.IsNotNull(context?.Agent, error);
+                Assert.AreEqual("10.0.0.1", context.ClientAddress);
+                Assert.AreEqual("claude-code/2.1", context.ClientApplication, "client audited with the tool calls");
                 Assert.AreEqual(agent.GUID, context.Agent.GUID);
                 Assert.IsTrue(context.User.SecurityGroups.Contains(_group));
                 Assert.IsTrue(context.User.ForSchedule);
