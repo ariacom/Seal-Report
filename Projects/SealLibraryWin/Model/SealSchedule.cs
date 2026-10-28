@@ -345,10 +345,15 @@ namespace Seal.Model
                 case TriggerType.Weekly:
                     while (true)
                     {
-                        if (Weekdays.Length == 0) break;
+                        if (Weekdays.Length == 0)
+                        {
+                            NextExecution = DateTime.MaxValue;
+                            break;
+                        }
 
-                        //Check day of week
-                        for (int i = 0; i < 6; i++)
+                        //Check the 7 days of the week, only the selected weekdays can be found
+                        bool found = false;
+                        for (int i = 0; i < 7; i++)
                         {
                             var nextWeekExecution = NextExecution.AddDays(i);
                             if (!Weekdays.Contains((int)nextWeekExecution.DayOfWeek))
@@ -360,6 +365,7 @@ namespace Seal.Model
                             {
                                 //Found
                                 NextExecution = nextWeekExecution;
+                                found = true;
                                 break;
                             }
 
@@ -381,26 +387,28 @@ namespace Seal.Model
                                 {
                                     //Found within repeat
                                     NextExecution = nextRepeatExecution;
+                                    found = true;
                                     break;
                                 }
                             }
                         }
 
-                        if (NextExecution > DateTime.Now || NextExecution > EndFinal)
-                        {
-                            //Found
-                            break;
-                        }
+                        if (found) break;
 
                         NextExecution = NextExecution.AddDays(7 * WeeksInterval);
                     }
                     break;
 
                 case TriggerType.Monthly:
+                    //Limit of the search: no date exists for an impossible combination (e.g. day 30 of February), 9 years cover the day 29 of February
+                    var monthlyLimit = (Start > DateTime.Now ? Start : DateTime.Now).AddYears(9);
                     while (true)
                     {
-                        if (Months.Length == 0) break;
-                        if (Days.Length == 0) break;
+                        if (Months.Length == 0 || Days.Length == 0 || NextExecution > monthlyLimit)
+                        {
+                            NextExecution = DateTime.MaxValue;
+                            break;
+                        }
 
                         //Check days and months
                         bool isLastDayOfMonth = (Days.Contains(32) && Months.Contains(NextExecution.Month) && NextExecution.Day == DateTime.DaysInMonth(NextExecution.Year, NextExecution.Month));
