@@ -410,6 +410,15 @@ namespace SealWebServer.Controllers
                 if (string.IsNullOrWhiteSpace(swi.file)) throw new ValidationException(Translate("Please define the file name"));
                 if (swi.file.IndexOfAny(new char[] { '\\', '/' }) >= 0 || swi.file.Contains("..")) throw new ValidationException(Translate("The file name is invalid"));
                 output.FileName = swi.file.Trim().Replace(Repository.SealReportDisplayNameKeyword2, Repository.SealReportDisplayNameKeyword);
+                //The file name is formatted with the execution date time (e.g. {0:yyyy-MM-dd})
+                try
+                {
+                    string.Format(output.FileName, DateTime.Now);
+                }
+                catch
+                {
+                    throw new ValidationException(Translate("The format of the execution date in the file name is invalid"));
+                }
                 if (device is OutputFolderDevice)
                 {
                     if (string.IsNullOrEmpty(swi.folder)) throw new ValidationException(Translate("Please select a folder"));

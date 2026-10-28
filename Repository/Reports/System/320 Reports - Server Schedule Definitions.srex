@@ -62,7 +62,35 @@
     Report report = (reportModel != null ? reportModel.Report : null);
 
     if (report != null &amp;&amp; report.Tag != null) {
-        foreach (var item in ((List&lt;Report&gt;) report.Tag)) {
+        //Web schedules stored in the personal folders of their owners: injected in their report to be listed with the schedules of the report
+        var reports = (List&lt;Report&gt;) report.Tag;
+        foreach (var file in report.Repository.GetWebScheduleFiles("*.xml")) {
+            try {
+                var webSchedule = SealSchedule.LoadFromFile(file);
+                if (!webSchedule.IsWebSchedule) continue;
+                ReportSchedule reportSchedule = null;
+                var item = reports.FirstOrDefault(i =&gt; i.GUID == webSchedule.ReportGUID);
+                if (item != null) {
+                    reportSchedule = webSchedule.InjectWebSchedule(item);
+                }
+                else {
+                    //Report not scanned (e.g. personal folder of another user): loaded from the schedule
+                    item = SealReportScheduler.GetScheduledReport(webSchedule);
+                    if (item == null) {
+                        log.LogMessage("Report of the web schedule '{0}' not found: {1}", file, webSchedule.WebPath);
+                        continue;
+                    }
+                    reportSchedule = item.Schedules.First(i =&gt; i.GUID == webSchedule.GUID);
+                    reports.Add(item);
+                }
+                reportSchedule.Output.Name = string.Format("Web schedule of '{0}'", webSchedule.UserName);
+            }
+            catch (Exception ex) {
+                log.LogMessage("Error loading the web schedule '{0}': {1}", file, ex.Message);
+            }
+        }
+
+        foreach (var item in reports) {
             foreach (var schedule in item.Schedules) {
                 var sequencerScheduleName = "";
                 if (!string.IsNullOrEmpty(schedule.ScheduleSequencerGUID))

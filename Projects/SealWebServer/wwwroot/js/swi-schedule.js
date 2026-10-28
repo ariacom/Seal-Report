@@ -1,6 +1,4 @@
 "use strict";
-// Web schedules: a user schedules a report he can execute (one output + one schedule).
-// The schedule is stored in his personal folder and executed by the Seal Report Scheduler with his security context.
 var SWISchedule;
 (function (SWISchedule) {
     var _edit = null;
@@ -136,6 +134,18 @@ var SWISchedule;
                 refreshControls();
             });
             $("#webschedule-type,#webschedule-zip").unbind("change").on("change", refreshControls);
+            //File names proposed in the editable combo: the name is formatted with the execution date time ({0:format})
+            var $files = $("#webschedule-file-dropdown");
+            $files.empty();
+            [displayNameKeyword, s.reportname].forEach(function (name) {
+                ["", "_{0:yyyy_MM_dd}", "_{0:yyyy_MM_dd HH_mm_ss}"].forEach(function (suffix) {
+                    $files.append($("<li>").append($("<a class='dropdown-item' href='#'>").text(name + suffix)));
+                });
+            });
+            $files.find("a").unbind("click").on("click", function (e) {
+                e.preventDefault();
+                $("#webschedule-file").val($(this).text()).trigger("focus");
+            });
             SWIUtil.ShowHideControl($("#webschedule-delete"), s.guid);
             $("#webschedule-delete").unbind("click").on("click", function () {
                 confirmDelete(s, function () { SWIUtil.HideModal($("#webschedule-dialog")); });

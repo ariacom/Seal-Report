@@ -496,7 +496,12 @@
                     </div>
                     <div class="col-sm-6">
                         <label class="form-label small mb-0" for="webschedule-file">@repository.TranslateWeb("File name")</label>
-                        <input id="webschedule-file" class="form-control form-control-sm" />
+                        <!-- Editable combo: free text or a proposed name, {0:format} is replaced by the execution date time -->
+                        <div class="input-group input-group-sm">
+                            <input id="webschedule-file" class="form-control form-control-sm" />
+                            <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false" title="@repository.TranslateWeb("File names with the execution date time")"></button>
+                            <ul id="webschedule-file-dropdown" class="dropdown-menu dropdown-menu-end"></ul>
+                        </div>
                     </div>
                 </div>
                 <div class="row g-2 mb-2">
