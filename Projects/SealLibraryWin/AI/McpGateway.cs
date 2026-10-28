@@ -76,6 +76,8 @@ namespace Seal.AI
         {
             error = null;
             unauthorized = true;
+            //Configuration or security modified (e.g. by the Server Manager): reload the repository as the web menu does
+            if (Repository.Instance.MustReload()) Repository.ReloadInstance();
             var configuration = Repository.Instance.AIConfiguration;
             if (!configuration.McpServerEnabled)
             {
