@@ -236,27 +236,9 @@ namespace Seal.AI
         // ----------------------------------------------------------------
 
         /// <summary>
-        /// Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
+        /// Hard ceiling (in characters) for a single tool result appended to the conversation, see <see cref="AIToolHost.MaxToolResultLength"/>.
         /// </summary>
-        internal const string LoadSkillToolName = "load_skill";
-
-        /// <summary>
-        /// Hard ceiling (in characters) for a single tool result appended to the conversation.
-        /// A result larger than this (roughly 50k tokens) would risk exceeding the model's context
-        /// window — and since the history is resent on every turn, it would brick the whole session.
-        /// </summary>
-        public const int MaxToolResultLength = 200000;
-
-        /// <summary>
-        /// Returns <paramref name="result"/> truncated to <see cref="MaxToolResultLength"/> characters,
-        /// with an explicit marker so the model knows data is missing and can narrow its request.
-        /// </summary>
-        internal static string TruncateToolResult(string result)
-        {
-            if (result == null || result.Length <= MaxToolResultLength) return result;
-            return result.Substring(0, MaxToolResultLength) +
-                $"\r\n[Result truncated: {result.Length - MaxToolResultLength} characters removed — the tool returned too much data for the conversation. Retry with a more specific request (filters, restrictions, fewer columns).]";
-        }
+        public const int MaxToolResultLength = AIToolHost.MaxToolResultLength;
 
         /// <summary>
         /// Appends a user message to the conversation history, calls the AI using
@@ -293,46 +275,37 @@ namespace Seal.AI
             }
             Messages.Add(new UserChatMessage(userMessage));
 
-            var toolConfigs = Configuration.GetToolConfigurations();
-            var skillConfigs = Configuration.GetSkillConfigurations();
+            var host = new AIToolHost(Configuration)
+            {
+                SecurityContext = SecurityContext,
+                Culture = Culture,
+                AcceptsImages = _provider is AIProvider aiProvider && aiProvider.SupportsToolResultImages,
+                ExecutionLog = toolsLog
+            };
 
             if (log != null)
             {
                 var pc = Configuration.GetProviderConfiguration();
                 var systemPrompt = Messages.OfType<SystemChatMessage>().FirstOrDefault()?.Content[0].Text;
-                log.LogMessage($"[AIAgent] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, Skills: {skillConfigs.Count}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
+                log.LogMessage($"[AIAgent] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, Skills: {host.Skills.Count}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
             }
 
             // No tools and no skills — plain chat, no tool loop.
-            if (toolConfigs.Count == 0 && skillConfigs.Count == 0)
+            if (!host.HasTools)
             {
                 var plainReply = _provider.HandleChat(Messages);
                 addUsage();
                 return plainReply;
             }
 
-            // Tools currently callable, keyed by name. Starts with the agent's base tools and grows as
-            // skills are loaded. Pre-activate the tools of any skill already loaded earlier in this
+            // Pre-activate the tools of any skill already loaded earlier in this
             // conversation (e.g. a reloaded session) so unlocked tools survive across turns.
-            var activeToolConfigs = new Dictionary<string, AIToolConfiguration>();
-            foreach (var t in toolConfigs) activeToolConfigs[t.Name] = t;
-
-            var loadedSkills = new HashSet<string>();
-            foreach (var s in skillConfigs)
+            foreach (var s in host.Skills)
             {
-                if (IsSkillAlreadyLoaded(s.Name) && loadedSkills.Add(s.Name))
-                    foreach (var t in s.GetToolConfigurations()) activeToolConfigs[t.Name] = t;
+                if (IsSkillAlreadyLoaded(s.Name)) host.ActivateSkill(s.Name);
             }
 
-            List<AITool> BuildTools()
-            {
-                var list = activeToolConfigs.Values.Select(t => t.ToAITool()).ToList();
-                if (skillConfigs.Count > 0) list.Add(BuildLoadSkillTool(skillConfigs));
-                return list;
-            }
-
-            var tools = BuildTools();
-            var acceptsImages = _provider is AIProvider aiProvider && aiProvider.SupportsToolResultImages;
+            var tools = host.GetTools();
             //Ceiling of the tool calls of the turn: each round-trip makes at least one call
             var maxToolCalls = Configuration.MaxToolCalls > 0 ? Configuration.MaxToolCalls : AIAgentConfiguration.DefaultMaxToolCalls;
             if (maxIterations <= 0) maxIterations = maxToolCalls;
@@ -369,65 +342,33 @@ namespace Seal.AI
                         continue;
                     }
 
-                    // Built-in skill loader: return the skill instructions and unlock its tools.
-                    if (toolCall.Name == LoadSkillToolName)
+                    progress?.Invoke(host.GetProgressLabel(toolCall));
+                    var result = host.Execute(toolCall, cancelOperation);
+                    if (result.ToolsChanged) toolsChanged = true;
+
+                    if (result.IsSkillLoad)
                     {
-                        var skillName = ExtractSkillName(toolCall.Arguments);
-                        var skillCfg = skillConfigs.FirstOrDefault(s => s.Name == skillName);
-                        progress?.Invoke(skillCfg?.GetProgressLabel(Culture) ?? $"Loading skill '{skillName}'");
-                        var skillResult = LoadSkill(toolCall, skillConfigs, loadedSkills, activeToolConfigs, ref toolsChanged);
-                        if (log != null) log.LogMessage($"****** Skill Load {i}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{skillResult}");
-                        Messages.Add(new ToolChatMessage(toolCall.Id, skillResult));
+                        if (log != null) log.LogMessage($"****** Skill Load {i}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result.Text}");
+                        Messages.Add(new ToolChatMessage(toolCall.Id, result.Text));
                         continue;
                     }
 
-                    toolCall.SecurityContext = SecurityContext;
-                    toolCall.AgentConfiguration = Configuration;
-                    toolCall.ExecutionLog = toolsLog;
-                    toolCall.CancelOperation = cancelOperation;
-                    toolCall.AcceptsImages = acceptsImages;
-
-                    var toolConfig = activeToolConfigs.TryGetValue(toolCall.Name, out var tc) ? tc : null;
-                    progress?.Invoke(toolConfig?.GetProgressLabel(toolCall, Culture) ?? $"Running '{toolCall.Name}'");
-                    // The tool is not active yet. It almost always belongs to a skill that has not been
-                    // loaded: returning an empty result silently misleads the model (it reads it as "no
-                    // data" and answers wrong). Return an actionable error so it loads the skill and retries.
-                    string result;
-                    if (toolConfig != null)
-                    {
-                        try
-                        {
-                            result = TruncateToolResult(toolConfig.Execute(toolCall) ?? string.Empty);
-                        }
-                        catch (Exception ex)
-                        {
-                            // Tool scripts are user-editable Razor: a crash there (e.g. GetProperty on a
-                            // missing JSON argument) must become a tool error the model can recover from,
-                            // not abort the whole chat exchange.
-                            var hint = ex is KeyNotFoundException ? " A required argument is probably missing: check the call arguments against the tool's parameters schema and retry." : "";
-                            result = $"Error: tool '{toolCall.Name}' failed: {ex.Message}{hint}";
-                            if (log != null) log.LogMessage($"****** Tool Call Error {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\n{ex}");
-                        }
-                    }
-                    else
-                    {
-                        result = $"Error: tool '{toolCall.Name}' is not available. If it belongs to a skill, call '{LoadSkillToolName}' to load that skill first, then retry.";
-                    }
-                    if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result}" + (toolCall.ResultImages.Count > 0 ? $"\r\n({toolCall.ResultImages.Count} image(s))" : ""));
-                    if (acceptsImages && toolCall.ResultImages.Count > 0)
+                    if (log != null && result.Error != null) log.LogMessage($"****** Tool Call Error {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\n{result.Error}");
+                    if (log != null) log.LogMessage($"****** Tool Call {i} {toolCall.Name}\r\nArguments:\r\n{toolCall.Arguments}\r\nReply:\r\n{result.Text}" + (toolCall.ResultImages.Count > 0 ? $"\r\n({toolCall.ResultImages.Count} image(s))" : ""));
+                    if (result.Images.Count > 0)
                     {
                         // Text first: the saved conversation keeps the text of the first part
-                        var parts = new List<ChatMessageContentPart>() { ChatMessageContentPart.CreateTextPart(string.IsNullOrEmpty(result) ? " " : result) };
-                        foreach (var image in toolCall.ResultImages.Where(img => img.Data != null && img.Data.Length > 0))
+                        var parts = new List<ChatMessageContentPart>() { ChatMessageContentPart.CreateTextPart(string.IsNullOrEmpty(result.Text) ? " " : result.Text) };
+                        foreach (var image in result.Images)
                             parts.Add(ChatMessageContentPart.CreateImagePart(BinaryData.FromBytes(image.Data), image.MediaType));
                         Messages.Add(new ToolChatMessage(toolCall.Id, parts));
                     }
-                    else Messages.Add(new ToolChatMessage(toolCall.Id, result));
+                    else Messages.Add(new ToolChatMessage(toolCall.Id, result.Text));
                 }
                 if (cancelOperation?.Cancel == true) break;
 
                 // A skill unlocked new tools — rebuild the tool list for the next iteration.
-                if (toolsChanged) tools = BuildTools();
+                if (toolsChanged) tools = host.GetTools();
                 // Continue: send again with the tool results now in the history
             }
 
@@ -458,93 +399,6 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Builds the synthetic <c>load_skill</c> tool. Its description embeds the live catalog of the
-        /// agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
-        /// the available skill names.
-        /// </summary>
-        private static AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs)
-        {
-            var catalog = string.Join("\n", skillConfigs.Select(s => $"- {s.Name}: {s.Description}"));
-            var description =
-                "Load the detailed instructions for a skill before performing related work. " +
-                "Call this as soon as a user request matches one of the skills below; the full instructions " +
-                "(and any tools the skill needs) become available after loading. Available skills:\n" + catalog;
-
-            var schema = JsonConvert.SerializeObject(new
-            {
-                type = "object",
-                properties = new
-                {
-                    skill_name = new
-                    {
-                        type = "string",
-                        description = "Name of the skill to load.",
-                        @enum = skillConfigs.Select(s => s.Name).ToList()
-                    }
-                },
-                required = new[] { "skill_name" }
-            });
-
-            return new AITool { Name = LoadSkillToolName, Description = description, ParametersSchema = schema };
-        }
-
-        /// <summary>
-        /// Resolves the skill requested by a <c>load_skill</c> tool call, returns its instructions as the
-        /// tool result, and merges the skill's tools into <paramref name="activeToolConfigs"/> the first
-        /// time it is loaded. Sets <paramref name="toolsChanged"/> to <c>true</c> when new tools were added.
-        /// </summary>
-        private string LoadSkill(AIToolCall toolCall, List<AISkillConfiguration> skillConfigs, HashSet<string> loadedSkills, Dictionary<string, AIToolConfiguration> activeToolConfigs, ref bool toolsChanged)
-        {
-            var skillName = ExtractSkillName(toolCall.Arguments);
-            var skill = skillConfigs.FirstOrDefault(s => s.Name == skillName);
-            if (skill == null)
-                return $"Unknown skill '{skillName}'. Available skills: {string.Join(", ", skillConfigs.Select(s => s.Name))}.";
-
-            // Unlock the skill's tools the first time it is loaded.
-            if (loadedSkills.Add(skill.Name))
-            {
-                foreach (var t in skill.GetToolConfigurations())
-                {
-                    if (!activeToolConfigs.ContainsKey(t.Name))
-                    {
-                        activeToolConfigs[t.Name] = t;
-                        toolsChanged = true;
-                    }
-                }
-            }
-
-            try
-            {
-                var instructions = skill.EffectiveInstructions;
-                return string.IsNullOrWhiteSpace(instructions)
-                    ? $"Skill '{skill.Name}' has no instructions configured."
-                    : instructions;
-            }
-            catch (Exception ex)
-            {
-                return $"Unable to load skill '{skill.Name}': {ex.Message}";
-            }
-        }
-
-        /// <summary>
-        /// Extracts the <c>skill_name</c> argument from a <c>load_skill</c> tool call's JSON arguments.
-        /// Returns <c>null</c> when it cannot be parsed.
-        /// </summary>
-        private static string ExtractSkillName(string arguments)
-        {
-            if (string.IsNullOrWhiteSpace(arguments)) return null;
-            try
-            {
-                var obj = JsonConvert.DeserializeObject<Newtonsoft.Json.Linq.JObject>(arguments);
-                return obj?["skill_name"]?.ToString();
-            }
-            catch
-            {
-                return null;
-            }
-        }
-
-        /// <summary>
         /// Returns <c>true</c> when a <c>load_skill</c> call for <paramref name="skillName"/> already appears
         /// in the conversation history, so its tools can be pre-activated on a resumed session.
         /// </summary>
@@ -555,12 +409,12 @@ namespace Seal.AI
                 // AssistantToolCallsChatMessage (raw-HTTP providers) extends AssistantChatMessage — check first.
                 if (m is AssistantToolCallsChatMessage atcm)
                 {
-                    if (atcm.AIToolCalls.Any(tc => tc.Name == LoadSkillToolName && ExtractSkillName(tc.Arguments) == skillName))
+                    if (atcm.AIToolCalls.Any(tc => tc.Name == AIToolHost.LoadSkillToolName && AIToolHost.ExtractSkillName(tc.Arguments) == skillName))
                         return true;
                 }
                 else if (m is AssistantChatMessage asst && asst.ToolCalls != null)
                 {
-                    if (asst.ToolCalls.Any(tc => tc.FunctionName == LoadSkillToolName && ExtractSkillName(tc.FunctionArguments?.ToString()) == skillName))
+                    if (asst.ToolCalls.Any(tc => tc.FunctionName == AIToolHost.LoadSkillToolName && AIToolHost.ExtractSkillName(tc.FunctionArguments?.ToString()) == skillName))
                         return true;
                 }
             }

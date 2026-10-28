@@ -716,9 +716,11 @@
         </member>
         <member name="M:Seal.AI.AIToolConfiguration.Execute(Seal.AI.AIToolCall)">
             <summary>
-            Sets <see cref="P:Seal.AI.AIToolConfiguration.CurrentToolCall"/> to <paramref name="toolCall"/>, clears
-            <see cref="P:Seal.AI.AIToolConfiguration.ExecResult"/>, runs the <see cref="P:Seal.AI.AIToolConfiguration.ExecutionScriptFile"/> via the Razor engine,
-            and returns <see cref="P:Seal.AI.AIToolConfiguration.ExecResult"/> as the tool result string to send back to the AI.
+            Runs the <see cref="P:Seal.AI.AIToolConfiguration.ExecutionScriptFile"/> via the Razor engine for <paramref name="toolCall"/>
+            and returns the <see cref="P:Seal.AI.AIToolConfiguration.ExecResult"/> set by the script as the tool result string to send back to the AI.
+            The script runs on a copy of this configuration having <see cref="P:Seal.AI.AIToolConfiguration.CurrentToolCall"/> set to <paramref name="toolCall"/>:
+            the configuration is shared by all the agents of the repository, concurrent calls of the same tool (several users, several calls of a reply)
+            must not see the call or the result of each other.
             Returns <see cref="F:System.String.Empty"/> if no script is configured.
             </summary>
         </member>
@@ -1042,22 +1044,9 @@
             <see cref="P:Seal.AI.AIAgentConfiguration.SamplePromptsFile"/> when the script is not set, fails (the error is logged) or renders nothing.
             </summary>
         </member>
-        <member name="F:Seal.AI.AIAgent.LoadSkillToolName">
-            <summary>
-            Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
-            </summary>
-        </member>
         <member name="F:Seal.AI.AIAgent.MaxToolResultLength">
             <summary>
-            Hard ceiling (in characters) for a single tool result appended to the conversation.
-            A result larger than this (roughly 50k tokens) would risk exceeding the model's context
-            window — and since the history is resent on every turn, it would brick the whole session.
-            </summary>
-        </member>
-        <member name="M:Seal.AI.AIAgent.TruncateToolResult(System.String)">
-            <summary>
-            Returns <paramref name="result"/> truncated to <see cref="F:Seal.AI.AIAgent.MaxToolResultLength"/> characters,
-            with an explicit marker so the model knows data is missing and can narrow its request.
+            Hard ceiling (in characters) for a single tool result appended to the conversation, see <see cref="F:Seal.AI.AIToolHost.MaxToolResultLength"/>.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})">
@@ -1081,26 +1070,6 @@
         <member name="M:Seal.AI.AIAgent.removeToolResultImages">
             <summary>
             Replaces the tool results having images by their text only, so that the images are sent to the model once.
-            </summary>
-        </member>
-        <member name="M:Seal.AI.AIAgent.BuildLoadSkillTool(System.Collections.Generic.List{Seal.AI.AISkillConfiguration})">
-            <summary>
-            Builds the synthetic <c>load_skill</c> tool. Its description embeds the live catalog of the
-            agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
-            the available skill names.
-            </summary>
-        </member>
-        <member name="M:Seal.AI.AIAgent.LoadSkill(Seal.AI.AIToolCall,System.Collections.Generic.List{Seal.AI.AISkillConfiguration},System.Collections.Generic.HashSet{System.String},System.Collections.Generic.Dictionary{System.String,Seal.AI.AIToolConfiguration},System.Boolean@)">
-            <summary>
-            Resolves the skill requested by a <c>load_skill</c> tool call, returns its instructions as the
-            tool result, and merges the skill's tools into <paramref name="activeToolConfigs"/> the first
-            time it is loaded. Sets <paramref name="toolsChanged"/> to <c>true</c> when new tools were added.
-            </summary>
-        </member>
-        <member name="M:Seal.AI.AIAgent.ExtractSkillName(System.String)">
-            <summary>
-            Extracts the <c>skill_name</c> argument from a <c>load_skill</c> tool call's JSON arguments.
-            Returns <c>null</c> when it cannot be parsed.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.IsSkillAlreadyLoaded(System.String)">
@@ -1207,6 +1176,122 @@
             </summary>
             <param name="path">Full file-system path to the file.</param>
             <returns>A tuple of the restored agent and the raw session file.</returns>
+        </member>
+        <member name="T:Seal.AI.AIToolHostResult">
+            <summary>
+            Result of a tool call executed by an <see cref="T:Seal.AI.AIToolHost"/>.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHostResult.Text">
+            <summary>Text result to send back to the AI (an error starts with 'Error:')</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHostResult.Images">
+            <summary>Images returned with the text (only when <see cref="F:Seal.AI.AIToolHost.AcceptsImages"/> is true)</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHostResult.IsSkillLoad">
+            <summary>True if the call was the built-in <see cref="F:Seal.AI.AIToolHost.LoadSkillToolName"/> tool</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHostResult.ToolsChanged">
+            <summary>True if the call unlocked new tools: the tool list must be sent again (see <see cref="M:Seal.AI.AIToolHost.GetTools"/>)</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHostResult.Error">
+            <summary>Exception raised by the tool script, its message is in <see cref="F:Seal.AI.AIToolHostResult.Text"/></summary>
+        </member>
+        <member name="T:Seal.AI.AIToolHost">
+            <summary>
+            Executes the tools of an AI agent configuration for a security context, independently of the AI provider and of the transport:
+            the tools of the agent, the built-in <c>load_skill</c> tool and the tools unlocked by the skills loaded (progressive disclosure).
+            Used by the tool loop of <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/>. An instance holds the skills loaded by one conversation, it is not shared by several conversations.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.LoadSkillToolName">
+            <summary>
+            Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.MaxToolResultLength">
+            <summary>
+            Hard ceiling (in characters) for a single tool result appended to the conversation.
+            A result larger than this (roughly 50k tokens) would risk exceeding the model's context
+            window — and since the history is resent on every turn, it would brick the whole session.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIToolHost.Configuration">
+            <summary>The agent configuration defining the tools and the skills</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.SecurityContext">
+            <summary>Security context of the tool calls</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.Culture">
+            <summary>Culture used to translate the progress labels (null for the repository culture)</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.AcceptsImages">
+            <summary>True if the AI accepts images in a tool result</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.ExecutionLog">
+            <summary>Log of the tool executions</summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.#ctor(Seal.AI.AIAgentConfiguration)">
+            <summary>
+            Creates the host of the tools of <paramref name="configuration"/>: the tools of the agent are active, no skill is loaded.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIToolHost.HasTools">
+            <summary>True if the agent has tools or skills (otherwise a plain chat without tool loop)</summary>
+        </member>
+        <member name="P:Seal.AI.AIToolHost.Skills">
+            <summary>The enabled skills of the agent</summary>
+        </member>
+        <member name="P:Seal.AI.AIToolHost.LoadedSkills">
+            <summary>The names of the skills loaded</summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.ActivateSkill(System.String)">
+            <summary>
+            Marks a skill as loaded and activates its tools, without returning its instructions (e.g. a skill loaded earlier in a resumed conversation).
+            Returns true if new tools were activated.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.GetTools">
+            <summary>
+            Returns the tools to send to the AI: the active tools plus the built-in <c>load_skill</c> tool when the agent has skills.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.GetProgressLabel(Seal.AI.AIToolCall)">
+            <summary>
+            Returns the progress label of a tool call shown to the user while it runs.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.Execute(Seal.AI.AIToolCall,Seal.AI.ICancelOperation)">
+            <summary>
+            Executes a tool call: loads a skill for <c>load_skill</c>, otherwise runs the active tool with the security context of the host.
+            A script failure or an inactive tool becomes an error text the AI can recover from, the text is truncated to <see cref="F:Seal.AI.AIToolHost.MaxToolResultLength"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.TruncateToolResult(System.String)">
+            <summary>
+            Returns <paramref name="result"/> truncated to <see cref="F:Seal.AI.AIToolHost.MaxToolResultLength"/> characters,
+            with an explicit marker so the model knows data is missing and can narrow its request.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.ExtractSkillName(System.String)">
+            <summary>
+            Extracts the <c>skill_name</c> argument from a <c>load_skill</c> tool call's JSON arguments.
+            Returns <c>null</c> when it cannot be parsed.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.BuildLoadSkillTool(System.Collections.Generic.List{Seal.AI.AISkillConfiguration})">
+            <summary>
+            Builds the synthetic <c>load_skill</c> tool. Its description embeds the live catalog of the
+            agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
+            the available skill names.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolHost.loadSkill(Seal.AI.AIToolCall,System.Boolean@)">
+            <summary>
+            Resolves the skill requested by a <c>load_skill</c> tool call, returns its instructions as the
+            tool result, and activates the skill's tools the first time it is loaded.
+            Sets <paramref name="toolsChanged"/> to <c>true</c> when new tools were activated.
+            </summary>
         </member>
         <member name="T:Seal.AI.AIUsage">
             <summary>

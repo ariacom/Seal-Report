@@ -61,6 +61,7 @@
 		<Compile Include="..\SealLibraryWin\AI\AIAgentConfiguration.cs" Link="AI\AIAgentConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AISkillConfiguration.cs" Link="AI\AISkillConfiguration.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIAgent.cs" Link="AI\AIAgent.cs" />
+		<Compile Include="..\SealLibraryWin\AI\AIToolHost.cs" Link="AI\AIToolHost.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIUsage.cs" Link="AI\AIUsage.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIKnowledge.cs" Link="AI\AIKnowledge.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIReportWriter.cs" Link="AI\AIReportWriter.cs" />

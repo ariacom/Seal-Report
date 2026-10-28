@@ -339,17 +339,21 @@ namespace Seal.AI
         };
 
         /// <summary>
-        /// Sets <see cref="CurrentToolCall"/> to <paramref name="toolCall"/>, clears
-        /// <see cref="ExecResult"/>, runs the <see cref="ExecutionScriptFile"/> via the Razor engine,
-        /// and returns <see cref="ExecResult"/> as the tool result string to send back to the AI.
+        /// Runs the <see cref="ExecutionScriptFile"/> via the Razor engine for <paramref name="toolCall"/>
+        /// and returns the <see cref="ExecResult"/> set by the script as the tool result string to send back to the AI.
+        /// The script runs on a copy of this configuration having <see cref="CurrentToolCall"/> set to <paramref name="toolCall"/>:
+        /// the configuration is shared by all the agents of the repository, concurrent calls of the same tool (several users, several calls of a reply)
+        /// must not see the call or the result of each other.
         /// Returns <see cref="string.Empty"/> if no script is configured.
         /// </summary>
         public string Execute(AIToolCall toolCall)
         {
-            CurrentToolCall = toolCall;
-            ExecResult = string.Empty;
             var script = EffectiveExecutionScript;
             if (string.IsNullOrWhiteSpace(script)) return string.Empty;
+
+            var execution = (AIToolConfiguration)MemberwiseClone();
+            execution.CurrentToolCall = toolCall;
+            execution.ExecResult = string.Empty;
 
             //File-backed: cache the compiled script by tool and file date, a modified file is compiled again
             //(the in-memory cache of a keyed script is never invalidated, the date must be part of the key)
@@ -357,8 +361,8 @@ namespace Seal.AI
                 ? ExecutionScriptFile
                 : Path.Combine(Repository.Instance.AIScriptsFolder, ExecutionScriptFile);
             var lastWrite = File.GetLastWriteTime(path);
-            RazorHelper.CompileExecute(script, this, GetType().Name + "_" + GUID + "_" + lastWrite.Ticks, lastWrite);
-            return ExecResult;
+            RazorHelper.CompileExecute(script, execution, GetType().Name + "_" + GUID + "_" + lastWrite.Ticks, lastWrite);
+            return execution.ExecResult;
         }
     }
 }
