@@ -11671,6 +11671,11 @@
             Execute a report schedule
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportExecution.saveWebScheduleExecution(Seal.Model.SealSchedule,System.String)">
+            <summary>
+            Save the result of the last execution in the web schedule file. The next execution is also calculated as the file may be saved by an outer process.
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportExecution.GenerateHTMLResult(System.Boolean,System.String)">
             <summary>
             Generate the HTML result of the current execution. If filePath is not specified, a unique file is created in the generation folder.
@@ -13464,6 +13469,11 @@
         <member name="P:Seal.Model.ReportSchedule.SealSchedule">
             <summary>
             Current schedule if the Seal Scheduler is used
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportSchedule.IsWebSchedule">
+            <summary>
+            True if the schedule is a web schedule injected in the report for its execution (see <see cref="P:Seal.Model.SealSchedule.IsWebSchedule"/>)
             </summary>
         </member>
         <member name="M:Seal.Model.ReportSchedule.GetTaskSourceDetail(System.String,System.Int32)">
@@ -15553,6 +15563,26 @@
             SpecialsFolder Schedules folder
             </summary>
         </member>
+        <member name="F:Seal.Model.Repository.WebSchedulesFolderName">
+            <summary>
+            Name of the hidden sub-folder created in each user's personal folder to store his web schedules
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.GetWebSchedulesFolder(Seal.Model.SecurityUser)">
+            <summary>
+            Returns the folder of the web schedules of a user (PersonalFolder/{user}/_Schedules), the folder is not created
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.GetWebScheduleFiles(System.String)">
+            <summary>
+            Returns the web schedule files of all the users matching a search pattern
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.IsPersonalSystemFolder(System.String)">
+            <summary>
+            True if the name is a hidden system sub-folder of a personal folder (agent chat sessions, web schedules): never exposed in the Web Report Server
+            </summary>
+        </member>
         <member name="M:Seal.Model.Repository.GetPersonalFolder(Seal.Model.SecurityUser)">
             <summary>
             Returns the personal folder path of a user
@@ -16790,6 +16820,11 @@
             Loads a schedule from its identifier, returns null if the schedule file does not exist
             </summary>
         </member>
+        <member name="M:Seal.Model.SealReportScheduler.getScheduleFiles(System.String)">
+            <summary>
+            Schedule files of the repository and web schedule files of the personal folders
+            </summary>
+        </member>
         <member name="F:Seal.Model.SealReportScheduler.Running">
             <summary>
             True if the scheduler is running
@@ -16803,6 +16838,11 @@
         <member name="M:Seal.Model.SealReportScheduler.GetScheduledReport(Seal.Model.SealSchedule)">
             <summary>
             Loads the report of a schedule, returns null if the report file does not exist
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealReportScheduler.disableWebSchedule(Seal.Model.SealSchedule,System.String)">
+            <summary>
+            Disable a web schedule that cannot be executed anymore, the error is displayed to its owner
             </summary>
         </member>
         <member name="M:Seal.Model.SealReportScheduler.Run">
@@ -16955,6 +16995,62 @@
             Xml serialization helper: serialize MetaInfo only if not empty
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSchedule.Output">
+            <summary>
+            Web schedule: output of the schedule. A web schedule is created from the Web Report Server and stored in the personal folder of its owner: the report file is not modified, the output is injected in the report when the schedule is executed.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.IsWebSchedule">
+            <summary>
+            True if the schedule is a web schedule (stored in the personal folder of its owner)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.Name">
+            <summary>
+            Web schedule: name of the schedule
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.UserName">
+            <summary>
+            Web schedule: name of the owner, authenticated by the Security Provider without password when the schedule is executed
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.WebHostName">
+            <summary>
+            Web schedule: host name of the owner when the schedule was saved (used for the personal folder if 'Use host name for Personal Folder' is set)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.WebPath">
+            <summary>
+            Web schedule: path of the report in the Web Report Server
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.LastExecution">
+            <summary>
+            Web schedule: date time of the last execution
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.ShouldSerializeLastExecution">
+            <summary>
+            Xml serialization helper: serialize LastExecution only if set
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.LastError">
+            <summary>
+            Web schedule: error of the last execution, empty if the execution was successful
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.InjectWebSchedule(Seal.Model.Report)">
+            <summary>
+            Web schedule: add the output and the schedule in the report loaded for the execution (the report is not saved)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.AuthenticateOwner(Seal.Model.Report)">
+            <summary>
+            Web schedule: authenticate the owner with the Security Provider (without password) and check that he can still schedule the report.
+            The schedule file must be located in the personal folder of the owner. Throws an exception if the owner cannot execute the schedule.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSchedule.LoadFromFile(System.String)">
             <summary>
             Load a web schedule from a file
@@ -16975,6 +17071,82 @@
             True is the next execution is reached
             </summary>
             <returns></returns>
+        </member>
+        <member name="T:Seal.Model.WebScheduleOutput">
+            <summary>
+            Output of a web schedule: a web schedule is stored in the personal folder of its owner (see <see cref="P:Seal.Model.SealSchedule.IsWebSchedule"/>),
+            the report file is never modified. The output is injected in the report when the schedule is executed.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.DeviceGUID">
+            <summary>
+            Identifier of the output device
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.Format">
+            <summary>
+            Format of the result
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.FolderPath">
+            <summary>
+            Folder device: folder path (with the repository keywords), File Server and SharePoint devices: directory
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.FileName">
+            <summary>
+            Name of the file generated, can contain the report display name keyword and date time formats
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.EmailTo">
+            <summary>
+            Email device: TO addresses separated by semi-column
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.EmailCC">
+            <summary>
+            Email device: CC addresses separated by semi-column
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.EmailBCC">
+            <summary>
+            Email device: BCC addresses separated by semi-column
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.EmailSubject">
+            <summary>
+            Email device: subject, the report name is used if empty
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.EmailBody">
+            <summary>
+            Email device: body, a default text is used if empty
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.EmailHtmlBody">
+            <summary>
+            Email device: if true, the HTML result is copied in the email body
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.ZipResult">
+            <summary>
+            If true, the result file is compressed in a zip file
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.ZipPassword">
+            <summary>
+            Password of the zip file, no password if empty
+            </summary>
+        </member>
+        <member name="P:Seal.Model.WebScheduleOutput.CancelIfNoRecords">
+            <summary>
+            If true, the generation is cancelled if the models have no record
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.CreateReportOutput(Seal.Model.Report,System.String,System.String)">
+            <summary>
+            Create the report output in the report (not saved in the report file)
+            </summary>
         </member>
         <member name="T:Seal.Model.SealSecurity">
             <summary>
@@ -18421,6 +18593,12 @@
             True if user can edit his profile
             </summary>
         </member>
+        <member name="P:Seal.Model.SecurityUser.CanUseWebSchedules">
+            <summary>
+            True if the web schedules are available for the user: the Seal Report Scheduler is used and the user can be authenticated from his name.
+            A report can be scheduled with the right 'Edit schedules' (FolderRight.Schedule) or 'Edit' on its folder.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SecurityUser.ShowErrorDetail">
             <summary>
             True if user can see the detail of exceptions (error message and stack trace) in the Web Report Server.
@@ -18550,7 +18728,7 @@
             with at least <paramref name="minRight"/>.
             Mirrors SWIMoveFile: resolves physDir to a SWIFolder path, looks it up in
             AllFolders, then applies the same right checks (right==0 → no access;
-            FolderRight.Edit required for write operations).
+            otherwise the folder right must be at least minRight, e.g. FolderRight.Edit for write operations).
             </summary>
         </member>
         <member name="T:Seal.Model.RecentFileItem">
@@ -18741,6 +18919,21 @@
         <member name="T:Seal.Model.SWIUserProfile">
             <summary>
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SWIWebSchedule">
+            <summary>
+            Class used for the Seal Web Interface: web schedule of a user (see SealSchedule.IsWebSchedule)
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SWIWebScheduleDevice">
+            <summary>
+            Class used for the Seal Web Interface: output device available for a web schedule
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SWIWebScheduleEdit">
+            <summary>
+            Class used for the Seal Web Interface: web schedule to edit with the choices available
             </summary>
         </member>
         <member name="T:Seal.Model.SWIFolder">

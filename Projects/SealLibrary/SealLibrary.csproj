@@ -137,6 +137,7 @@
 		<Compile Include="..\SealLibraryWin\Model\RootEditor.cs" Link="Model\RootEditor.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealReportScheduler.cs" Link="Model\SealReportScheduler.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSchedule.cs" Link="Model\SealSchedule.cs" />
+		<Compile Include="..\SealLibraryWin\Model\WebScheduleOutput.cs" Link="Model\WebScheduleOutput.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealSecurity.cs" Link="Model\SealSecurity.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealCodeAttribute.cs" Link="Model\SealCodeAttribute.cs" />
 		<Compile Include="..\SealLibraryWin\Model\SealServerConfiguration.cs" Link="Model\SealServerConfiguration.cs" />

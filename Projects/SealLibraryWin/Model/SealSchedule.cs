@@ -141,6 +141,95 @@ namespace Seal.Model
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeMetaInfo() { return MetaInfo.Count > 0; }
 
+        #region Web schedule
+
+        /// <summary>
+        /// Web schedule: output of the schedule. A web schedule is created from the Web Report Server and stored in the personal folder of its owner: the report file is not modified, the output is injected in the report when the schedule is executed.
+        /// </summary>
+        public WebScheduleOutput Output { get; set; } = null;
+
+        /// <summary>
+        /// True if the schedule is a web schedule (stored in the personal folder of its owner)
+        /// </summary>
+        [XmlIgnore]
+        public bool IsWebSchedule
+        {
+            get { return Output != null; }
+        }
+
+        /// <summary>
+        /// Web schedule: name of the schedule
+        /// </summary>
+        public string Name { get; set; }
+
+        /// <summary>
+        /// Web schedule: name of the owner, authenticated by the Security Provider without password when the schedule is executed
+        /// </summary>
+        public string UserName { get; set; }
+
+        /// <summary>
+        /// Web schedule: host name of the owner when the schedule was saved (used for the personal folder if 'Use host name for Personal Folder' is set)
+        /// </summary>
+        public string WebHostName { get; set; }
+
+        /// <summary>
+        /// Web schedule: path of the report in the Web Report Server
+        /// </summary>
+        public string WebPath { get; set; }
+
+        /// <summary>
+        /// Web schedule: date time of the last execution
+        /// </summary>
+        public DateTime LastExecution { get; set; } = DateTime.MinValue;
+        /// <summary>
+        /// Xml serialization helper: serialize LastExecution only if set
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeLastExecution() { return LastExecution != DateTime.MinValue; }
+
+        /// <summary>
+        /// Web schedule: error of the last execution, empty if the execution was successful
+        /// </summary>
+        public string LastError { get; set; }
+
+        /// <summary>
+        /// Web schedule: add the output and the schedule in the report loaded for the execution (the report is not saved)
+        /// </summary>
+        public ReportSchedule InjectWebSchedule(Report report)
+        {
+            var output = Output.CreateReportOutput(report, GUID, Name);
+            var schedule = report.AddSchedule(output);
+            schedule.GUID = GUID;
+            schedule.Name = Name;
+            schedule.SealSchedule = this;
+            report.SchedulesModified = false;
+            return schedule;
+        }
+
+        /// <summary>
+        /// Web schedule: authenticate the owner with the Security Provider (without password) and check that he can still schedule the report.
+        /// The schedule file must be located in the personal folder of the owner. Throws an exception if the owner cannot execute the schedule.
+        /// </summary>
+        public SecurityUser AuthenticateOwner(Report report)
+        {
+            var repository = report.Repository;
+            var user = new SecurityUser(repository.Security) { WebUserName = UserName, WebHostName = WebHostName, ForSchedule = true };
+            user.Authenticate();
+            if (!user.IsAuthenticated) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' is not authenticated by the Security Provider" + (string.IsNullOrEmpty(user.Error) ? "" : ": " + user.Error));
+            if (!string.Equals(Path.GetFullPath(Path.GetDirectoryName(FilePath)), Path.GetFullPath(repository.GetWebSchedulesFolder(user)), StringComparison.OrdinalIgnoreCase))
+            {
+                throw new Exception($"The web schedule file '{FilePath}' is not located in the personal folder of its owner '{UserName}'");
+            }
+            user.SetFolders();
+            if (!user.HasFolderRight(Path.GetDirectoryName(report.FilePath), (int)FolderRight.Schedule)) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' has no right to schedule the report '{report.FilePath}'");
+            var device = repository.Devices.FirstOrDefault(i => i.GUID == Output.DeviceGUID);
+            if (device == null || !user.CanAccessDevice(device)) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' cannot use the output device");
+            if (device is OutputFolderDevice && !user.HasFolderRight(repository.ReplaceRepositoryKeyword(Output.FolderPath), (int)FolderRight.Edit)) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' has no right to write in the folder '{Output.FolderPath}'");
+            return user;
+        }
+
+        #endregion
+
         /// <summary>
         /// Load a web schedule from a file
         /// </summary>

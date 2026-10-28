@@ -304,13 +304,14 @@
         var displayNameKeyword = '@Repository.SealReportDisplayNameKeyword2';
     </script>
 
-    @* Web Interface scripts: load order matters (swi-utils -> swi-gateway -> swi-main -> swi-ai).
+    @* Web Interface scripts: load order matters (swi-utils -> swi-gateway -> swi-schedule -> swi-main -> swi-ai).
        Development serves the readable sources; other environments serve the per-file minified
        swi-*.min.js produced at build time by minify-swi.ps1 (uglify-js). *@
     @if (HostingEnv.IsDevelopment())
     {
         <script src="~/js/swi-utils.js" asp-append-version="true"></script>
         <script src="~/js/swi-gateway.js" asp-append-version="true"></script>
+        <script src="~/js/swi-schedule.js" asp-append-version="true"></script>
         <script src="~/js/swi-main.js" asp-append-version="true"></script>
         <script src="~/js/swi-ai.js" asp-append-version="true"></script>
     }
@@ -318,6 +319,7 @@
     {
         <script src="~/js/swi-utils.min.js" asp-append-version="true"></script>
         <script src="~/js/swi-gateway.min.js" asp-append-version="true"></script>
+        <script src="~/js/swi-schedule.min.js" asp-append-version="true"></script>
         <script src="~/js/swi-main.min.js" asp-append-version="true"></script>
         <script src="~/js/swi-ai.min.js" asp-append-version="true"></script>
     }

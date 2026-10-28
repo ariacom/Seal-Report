@@ -241,7 +241,7 @@ namespace Seal.Model
         /// For the AI Tools: The output devices (identified by their GUID) that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed.
         /// </summary>
 #if WINDOWS
-        [Category("Tools Security"), DisplayName("\tAI tools output devices"), Description("The output devices that the AI tools can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(3, 4)]
+        [Category("Tools Security"), DisplayName("\tAI tools output devices"), Description("The output devices that the AI tools and the web schedules can use for this group (e.g. to configure email or file server outputs). If the list is empty, all output devices are allowed."), Id(3, 4)]
         [Editor(typeof(SecurityDevicesEditor), typeof(UITypeEditor))]
 #endif
         public List<string> OutputDeviceGUIDs { get; set; } = new List<string>();

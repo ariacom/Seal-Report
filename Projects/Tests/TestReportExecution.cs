@@ -4,7 +4,7 @@
 //
 using Microsoft.VisualStudio.TestTools.UnitTesting;
 using Seal.Model;
-using System.Diagnostics;
+using System.IO;
 using System.Linq;
 
 namespace Test
@@ -22,9 +22,17 @@ namespace Test
             execution.Execute();
             while (report.IsExecuting) System.Threading.Thread.Sleep(100);
             string result = execution.GenerateResult(ReportFormat.html);
-            var p = new Process();
-            p.StartInfo = new ProcessStartInfo(result) { UseShellExecute = true };
-            p.Start();
+            checkResult(report, result);
+        }
+
+        /// <summary>
+        /// Check the HTML result file without opening it (no browser launched by the tests)
+        /// </summary>
+        static void checkResult(Report report, string result)
+        {
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            Assert.IsTrue(File.Exists(result), "result file generated");
+            Assert.IsTrue(new FileInfo(result).Length > 0, "result file not empty");
         }
 
         [TestMethod]
@@ -77,9 +85,7 @@ namespace Test
             execution.Execute();
             while (report.IsExecuting) System.Threading.Thread.Sleep(100);
             string result = execution.GenerateResult(ReportFormat.html);
-            var p = new Process();
-            p.StartInfo = new ProcessStartInfo(result) { UseShellExecute = true };
-            p.Start();
+            checkResult(report, result);
         }
     }
 }

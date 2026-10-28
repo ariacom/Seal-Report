@@ -1555,6 +1555,42 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Name of the hidden sub-folder created in each user's personal folder to store his web schedules
+        /// </summary>
+        public const string WebSchedulesFolderName = "_Schedules";
+
+        /// <summary>
+        /// Returns the folder of the web schedules of a user (PersonalFolder/{user}/_Schedules), the folder is not created
+        /// </summary>
+        public string GetWebSchedulesFolder(SecurityUser user)
+        {
+            return Path.Combine(GetPersonalFolder(user), WebSchedulesFolderName);
+        }
+
+        /// <summary>
+        /// Returns the web schedule files of all the users matching a search pattern
+        /// </summary>
+        public List<string> GetWebScheduleFiles(string searchPattern)
+        {
+            var result = new List<string>();
+            if (!Directory.Exists(PersonalFolder)) return result;
+            foreach (var folder in Directory.GetDirectories(PersonalFolder))
+            {
+                var schedulesFolder = Path.Combine(folder, WebSchedulesFolderName);
+                if (Directory.Exists(schedulesFolder)) result.AddRange(Directory.GetFiles(schedulesFolder, searchPattern));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// True if the name is a hidden system sub-folder of a personal folder (agent chat sessions, web schedules): never exposed in the Web Report Server
+        /// </summary>
+        public static bool IsPersonalSystemFolder(string name)
+        {
+            return name == AgentFolders.FolderName || name == WebSchedulesFolderName;
+        }
+
+        /// <summary>
         /// Returns the personal folder path of a user
         /// </summary>
         public string GetPersonalFolder(SecurityUser user)

@@ -108,6 +108,42 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public GetWebSchedules(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIGetWebSchedules")
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public GetWebSchedule(path: string, guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIGetWebSchedule", {
+            path: path,
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public SaveWebSchedule(path: string, schedule: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISaveWebSchedule", {
+            path: path,
+            schedule: JSON.stringify(schedule)
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public DeleteWebSchedule(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIDeleteWebSchedule", {
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public ExecuteWebSchedule(path: string, guid: string) {
+        postForm(_server + "SWExecuteReport", "_blank", { path: path, scheduleGUID: guid });
+    }
+
     public GetCultures(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

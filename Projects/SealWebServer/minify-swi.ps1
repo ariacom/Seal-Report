@@ -11,7 +11,7 @@
 
 $ErrorActionPreference = 'Stop'
 $jsDir = Join-Path $PSScriptRoot 'wwwroot\js'
-$files = 'swi-utils', 'swi-gateway', 'swi-main', 'swi-ai'
+$files = 'swi-utils', 'swi-gateway', 'swi-schedule', 'swi-main', 'swi-ai'
 
 if (-not (Get-Command uglifyjs -ErrorAction SilentlyContinue)) {
     Write-Warning "uglifyjs not found (npm install -g uglify-js); keeping existing swi-*.min.js"

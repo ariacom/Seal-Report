@@ -1597,7 +1597,7 @@ namespace Seal.Model
             try
             {
                 //Synchronize all schedules...
-                foreach (ReportSchedule schedule in Schedules)
+                foreach (ReportSchedule schedule in Schedules.Where(i => !i.IsWebSchedule))
                 {
                     try
                     {
@@ -1612,7 +1612,8 @@ namespace Seal.Model
                 //Clear unused tasks
                 if (Repository.UseSealScheduler)
                 {
-                    foreach (var schedule in SealReportScheduler.Instance.GetSchedules().Where(i => i.ReportGUID == GUID).ToList())
+                    //The web schedules of the report are stored in the personal folders of their owners
+                    foreach (var schedule in SealReportScheduler.Instance.GetSchedules().Where(i => i.ReportGUID == GUID && !i.IsWebSchedule).ToList())
                     {
                         if (!Schedules.Exists(i => i.GUID == schedule.GUID))
                         {

@@ -39,6 +39,77 @@ namespace Seal.Model
         public bool aipanelopen;
         public int aipanelwidth;
         public bool hasmcp;
+        public bool webschedules;
+    }
+
+    /// <summary>
+    /// Class used for the Seal Web Interface: web schedule of a user (see SealSchedule.IsWebSchedule)
+    /// </summary>
+    public class SWIWebSchedule
+    {
+        public string guid;
+        public string name;
+        public bool enabled;
+        public string path;
+        public string reportname;
+        //Output
+        public string deviceguid;
+        public string devicename;
+        public string devicetype;
+        public ReportFormat format;
+        public string formatname;
+        public string folder;
+        public string file;
+        public string to;
+        public string cc;
+        public string bcc;
+        public string subject;
+        public string body;
+        public bool html;
+        public bool zip;
+        public string zippassword;
+        public bool haszippassword;
+        public bool removezippassword;
+        public bool cancel;
+        //Schedule
+        public TriggerType type;
+        public string start;
+        public string end;
+        public int interval;
+        public int[] weekdays;
+        public int[] months;
+        public int[] days;
+        public int repeatinterval;
+        public int repeatduration;
+        //Information
+        public string recurrence;
+        public string nextexecution;
+        public string lastexecution;
+        public string lasterror;
+    }
+
+    /// <summary>
+    /// Class used for the Seal Web Interface: output device available for a web schedule
+    /// </summary>
+    public class SWIWebScheduleDevice
+    {
+        public string guid;
+        public string name;
+        public string type;
+        public List<string> directories = new List<string>();
+    }
+
+    /// <summary>
+    /// Class used for the Seal Web Interface: web schedule to edit with the choices available
+    /// </summary>
+    public class SWIWebScheduleEdit
+    {
+        public SWIWebSchedule schedule;
+        public List<SWIWebScheduleDevice> devices = new List<SWIWebScheduleDevice>();
+        public List<SWIItem> folders = new List<SWIItem>();
+        public List<SWIItem> formats = new List<SWIItem>();
+        public List<SWIItem> weekdays = new List<SWIItem>();
+        public List<SWIItem> months = new List<SWIItem>();
     }
 
 
@@ -300,6 +371,8 @@ namespace Seal.Model
     {
         public List<SWIView> views = new List<SWIView>();
         public List<SWIOutput> outputs = new List<SWIOutput>();
+        public bool canschedule;
+        public List<SWIWebSchedule> webschedules = new List<SWIWebSchedule>();
     }
 
     /// <summary>

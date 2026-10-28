@@ -162,7 +162,8 @@ namespace SealWebServer.Controllers
                 aipanelopen = WebUser.Profile.AIPanelOpen,
                 aipanelwidth = WebUser.Profile.AIPanelWidth,
                 //The tokens authenticate the user from his login name
-                hasmcp = WebUser.McpAgentConfigurations.Count > 0 && !string.IsNullOrEmpty(WebUser.WebUserName)
+                hasmcp = WebUser.McpAgentConfigurations.Count > 0 && !string.IsNullOrEmpty(WebUser.WebUserName),
+                webschedules = showWebSchedules()
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))
@@ -738,6 +739,10 @@ namespace SealWebServer.Controllers
                 };
                 if (result.views.Count == 0 && result.outputs.Count == 0) result.views = (from i in report.Views.Where(i => i.WebExec) select new SWIView() { guid = i.GUID, name = i.Name, displayname = report.TranslateViewName(i.Name) }).ToList();
 
+                //Web schedules of the user for this report (without the right, they are still listed in 'My schedules' to be deleted)
+                result.canschedule = WebUser.CanUseWebSchedules && (FolderRight)effRight >= FolderRight.Schedule && !folder.IsRepository;
+                if (result.canschedule) result.webschedules = getUserWebSchedules().Where(i => i.ReportGUID == report.GUID).OrderBy(i => i.Name).Select(i => toSWIWebSchedule(i, false)).ToList();
+
                 return Json(result);
 
             }
@@ -1026,7 +1031,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Execute a report and returns the report html display result content (e.g. html with prompted restrictions). Check API of Seal Web Interface for more information.
         /// </summary>
-        public ActionResult SWExecuteReport(string path, string viewGUID, string outputGUID, bool? fromMenu, string sessionId)
+        public ActionResult SWExecuteReport(string path, string viewGUID, string outputGUID, bool? fromMenu, string sessionId, string scheduleGUID = null)
         {
             writeDebug("SWExecuteReport");
             try
@@ -1054,10 +1059,21 @@ namespace SealWebServer.Controllers
                 report = Report.LoadFromFile(filePath, repository);
                 report.OnlyBody = (fromMenu != null && fromMenu.Value);
 
+                if (!string.IsNullOrEmpty(scheduleGUID))
+                {
+                    //Web schedule of the user executed now: its output is injected in the report
+                    checkWebScheduleUser();
+                    if ((FolderRight)effRight < FolderRight.Schedule) throw new ValidationException(Translate("You have no right to schedule this report"));
+                    var webSchedule = getUserWebSchedule(scheduleGUID);
+                    if (webSchedule.ReportGUID != report.GUID) throw new Exception("Error: invalid schedule for this report");
+                    webSchedule.InjectWebSchedule(report);
+                    outputGUID = webSchedule.GUID;
+                }
+
                 var execution = initReportExecution(report, viewGUID, outputGUID, false);
                 execution.RenderHTMLDisplayForViewer();
 
-                WebUser.Profile.SetRecentReports(execPath, report, viewGUID, outputGUID);
+                if (string.IsNullOrEmpty(scheduleGUID)) WebUser.Profile.SetRecentReports(execPath, report, viewGUID, outputGUID);
                 WebUser.SaveProfile();
 
                 if (fromMenu != null && fromMenu.Value) return Json(System.IO.File.ReadAllText(report.HTMLDisplayFilePath));

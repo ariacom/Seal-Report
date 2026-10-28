@@ -26,11 +26,21 @@ namespace Seal.Model
         /// </summary>
         public static SealSchedule LoadSealSchedule(string scheduleGUID)
         {
-            foreach (var file in Directory.GetFiles(Repository.Instance.SchedulesFolder, $"*{scheduleGUID}.xml"))
+            foreach (var file in getScheduleFiles($"*{scheduleGUID}.xml"))
             {
                 return loadSealSchedule(file);
             }
             return null;
+        }
+
+        /// <summary>
+        /// Schedule files of the repository and web schedule files of the personal folders
+        /// </summary>
+        static List<string> getScheduleFiles(string searchPattern)
+        {
+            var result = Directory.GetFiles(Repository.Instance.SchedulesFolder, searchPattern).ToList();
+            result.AddRange(Repository.Instance.GetWebScheduleFiles(searchPattern));
+            return result;
         }
 
         static SealSchedule loadSealSchedule(string file)
@@ -52,7 +62,7 @@ namespace Seal.Model
             if (_schedules == null) _schedules = new Dictionary<string, SealSchedule>();
             lock (_schedules)
             {
-                foreach (var file in Directory.GetFiles(Repository.Instance.SchedulesFolder, "*.xml"))
+                foreach (var file in getScheduleFiles("*.xml"))
                 {
                     var schedule = _schedules.Values.FirstOrDefault(i => i.FilePath == file);
                     if (schedule == null || (!schedule.BeingExecuted && File.GetLastWriteTime(file) != schedule.LastModification))
@@ -122,17 +132,26 @@ namespace Seal.Model
                     Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Report of schedule '{0}' has changed to '{1}'", refSchedule.FilePath, report.FilePath));
                 }
             }
+
+            //Web schedule: the output and the schedule are not in the report file
+            if (report != null && refSchedule.IsWebSchedule) refSchedule.InjectWebSchedule(report);
             return report;
         }
 
         Report getScheduledReport(SealSchedule refSchedule)
         {
             Report report = GetScheduledReport(refSchedule);
-            if (report == null)
+            if (report == null && refSchedule.IsWebSchedule)
+            {
+                //A web schedule belongs to its owner: disabled but never deleted
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Report of the web schedule '{0}' not found, the schedule is disabled", refSchedule.FilePath));
+                disableWebSchedule(refSchedule, "Report not found");
+            }
+            else if (report == null)
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Report of schedule '{0}' not found, removing all schedules for the report GUID '{1}'", refSchedule.FilePath, refSchedule.ReportGUID));
-                //Remove the schedules of the report
-                var reportSchedules = _schedules.Values.Where(i => i.ReportGUID == refSchedule.ReportGUID).ToList();
+                //Remove the schedules of the report (not the web schedules)
+                var reportSchedules = _schedules.Values.Where(i => i.ReportGUID == refSchedule.ReportGUID && !i.IsWebSchedule).ToList();
                 foreach (var schedule in reportSchedules)
                 {
                     if (File.Exists(schedule.FilePath)) File.Delete(schedule.FilePath);
@@ -150,8 +169,8 @@ namespace Seal.Model
             ReportSchedule reportSchedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
             if (reportSchedule == null)
             {
-                //Remove the schedule
-                var reportSchedules = _schedules.Values.Where(i => i.GUID == scheduleGUID).ToList();
+                //Remove the schedule (a web schedule is always injected in the report)
+                var reportSchedules = _schedules.Values.Where(i => i.GUID == scheduleGUID && !i.IsWebSchedule).ToList();
                 foreach (var schedule in reportSchedules)
                 {
                     File.Delete(schedule.FilePath);
@@ -252,7 +271,29 @@ namespace Seal.Model
             catch (Exception ex)
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Error, "Unexpected Scheduler Error:\r\n" + ex.Message + "\r\n" + ex.StackTrace);
+                //A web schedule that cannot be prepared (e.g. output device deleted) is disabled
+                var schedule = param as SealSchedule;
+                if (schedule != null && schedule.IsWebSchedule && schedule.BeingExecuted) disableWebSchedule(schedule, ex.Message);
             }
+        }
+
+        /// <summary>
+        /// Disable a web schedule that cannot be executed anymore, the error is displayed to its owner
+        /// </summary>
+        static void disableWebSchedule(SealSchedule schedule, string error)
+        {
+            try
+            {
+                schedule.Enabled = false;
+                schedule.LastError = error;
+                schedule.LastExecution = DateTime.Now;
+                schedule.SaveToFile();
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Unable to disable the web schedule '{0}':\r\n{1}", schedule.FilePath, ex.Message));
+            }
+            schedule.BeingExecuted = false;
         }
 
         /// <summary>

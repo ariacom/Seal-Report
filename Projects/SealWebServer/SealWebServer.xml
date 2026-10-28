@@ -117,6 +117,21 @@
             Does not throw: a shortcut that cannot be resolved is flagged as broken.
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.McpAuthorize(System.String)">
+            <summary>
+            Authorization endpoint of the OAuth authorization server of the MCP server: validates the request of the client, then shows the login and the consent page.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.McpAuthorize(System.String,System.String)">
+            <summary>
+            Consent of the user: redirects to the client with an authorization code, or with the error 'access_denied' if the user refused.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIRevokeMcpAuthorization(System.String,System.String)">
+            <summary>
+            Revokes an OAuth authorization of the user (profile)
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWILogin(System.String,System.String,System.String)">
             <summary>
             Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
@@ -140,6 +155,26 @@
         <member name="M:SealWebServer.Controllers.HomeController.SWIChangePassword(System.String,System.String,System.String,System.String)">
             <summary>
             Change a user password
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.checkMcpUser">
+            <summary>
+            Returns the user name of the MCP access tokens of the current user (the name the Security Provider authenticates without password), checks that the MCP server is available for the user
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetMcpTokens(System.String)">
+            <summary>
+            Returns the MCP access tokens of the user and the URLs of his MCP agents
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWICreateMcpToken(System.String,System.Int32,System.String)">
+            <summary>
+            Creates a MCP access token for the user: valid for the number of days given (0 for no expiration, only if the server has no maximum validity). The token is returned once.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIRevokeMcpToken(System.String,System.String)">
+            <summary>
+            Revokes a MCP access token of the user
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetRootMenu(System.String)">
@@ -388,6 +423,38 @@
             Returns the version of the Seal Web Interface and the version of the Seal Library.
             </summary>
         </member>
+        <member name="T:SealWebServer.Controllers.McpAuthorizeModel">
+            <summary>
+            Model of the page McpAuthorize: login and consent of the user for an OAuth client of the MCP server
+            </summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.Repository">
+            <summary>The repository of the session</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.Request">
+            <summary>The authorization request, null if there is an error</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.Error">
+            <summary>Error shown instead of the consent</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.Agent">
+            <summary>The agent of the request</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.AgentName">
+            <summary>Name of the agent translated</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.Tools">
+            <summary>Tools of the agent and of its skills</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.User">
+            <summary>The user logged in (null if not logged in)</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.StrongLoginRequired">
+            <summary>True if a strong login is required and the user has not logged in with it</summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.McpAuthorizeModel.SsoEnabled">
+            <summary>True if the OpenID Connect single sign-on is configured</summary>
+        </member>
         <member name="T:SealWebServer.Controllers.WebHelper">
             <summary>
             Helper to log messages from the HomeController
@@ -439,6 +506,16 @@
             Optional path of the session cookie. If not set, the IIS application path is used (or "/" when not hosted in a sub-application).
             </summary>
         </member>
+        <member name="T:SealWebServer.Startup">
+            <summary>
+            MCP server of the Web Report Server: the AI agents having the channel MCP are served at /mcp/{agent} to the external AI clients,
+            the requests are authenticated with the personal access tokens of the users (see <see cref="T:Seal.AI.McpGateway"/>).
+            </summary>
+            <summary>
+            OAuth 2.1 authorization server of the MCP server (see <see cref="T:Seal.AI.McpOAuth"/>): metadata, token, dynamic registration and revocation endpoints.
+            The authorization endpoint (login and consent of the user) is the action McpAuthorize of the Home controller.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Startup.NormalizeCookiePath(System.String)">
             <summary>
             Normalized cookie path ("/xxx" without trailing slash), null if empty or root
@@ -464,6 +541,30 @@
             <summary>
             Path base of the request with the casing sent by the browser (the PathBase may carry the configured casing with some hosting models), "/" if none
             </summary>
+        </member>
+        <member name="F:SealWebServer.Startup.McpPath">
+            <summary>Base path of the MCP server</summary>
+        </member>
+        <member name="F:SealWebServer.Startup.McpProgressIntervalSeconds">
+            <summary>Interval of the progress notifications sent while a tool runs</summary>
+        </member>
+        <member name="M:SealWebServer.Startup.runWithProgress(ModelContextProtocol.Server.McpServer,System.Nullable{ModelContextProtocol.Protocol.ProgressToken},System.Func{System.String},System.Func{Seal.AI.AIToolHostResult},System.Threading.CancellationToken)">
+            <summary>
+            Runs a tool and, if the client sent a progress token, notifies the progress label of the tool at the start and then every <see cref="F:SealWebServer.Startup.McpProgressIntervalSeconds"/> seconds until the tool ends
+            (the notifications are part of the response of the request, allowed by the stateless mode).
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Startup.UseMcpAuthentication(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
+            <summary>
+            Authenticates the requests of the MCP server before the MCP endpoint: 404 if the server is not enabled or the agent not available, 401 for a missing, invalid or expired token
+            (with the URL of the protected resource metadata if the OAuth authorization server is enabled).
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Startup.IsMcpOAuthEnabled">
+            <summary>True if the MCP server and its OAuth authorization server are enabled (the repository is reloaded if it has been modified)</summary>
+        </member>
+        <member name="M:SealWebServer.Startup.GetMcpPublicBaseUrl(Microsoft.AspNetCore.Http.HttpRequest)">
+            <summary>Returns the public base URL of the server for a request (see <see cref="M:Seal.AI.McpOAuth.GetPublicBaseUrl(System.String)"/>)</summary>
         </member>
     </members>
 </doc>

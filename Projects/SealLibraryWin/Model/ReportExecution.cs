@@ -2315,6 +2315,25 @@ namespace Seal.Model
                     InitReportSchedule(scheduleGUID, reportPath, out report, out schedule);
                 }
 
+                //Web schedule: executed with the security context of its owner, authenticated by the Security Provider
+                SealSchedule webSchedule = schedule.IsWebSchedule ? schedule.SealSchedule : null;
+                SecurityUser webScheduleOwner = null;
+                if (webSchedule != null)
+                {
+                    try
+                    {
+                        webScheduleOwner = webSchedule.AuthenticateOwner(report);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("The web schedule '{0}' ({1}) is disabled:\r\n{2}", schedule.Name, webSchedule.FilePath, ex.Message));
+                        webSchedule.Enabled = false;
+                        saveWebScheduleExecution(webSchedule, ex.Message);
+                        return;
+                    }
+                }
+                string lastError = "";
+
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName));
                 int retries = schedule.ErrorNumberOfRetries + 1;
                 bool isFirst = true;
@@ -2326,6 +2345,7 @@ namespace Seal.Model
                         if (useSealScheduler)
                         {
                             report = Report.LoadFromFile(refReport.FilePath, Repository.Instance);
+                            if (webSchedule != null) webSchedule.InjectWebSchedule(report);
                             schedule = report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
                         }
                         else
@@ -2335,7 +2355,8 @@ namespace Seal.Model
                     }
                     isFirst = false;
 
-                    if (!schedule.IsTasksSchedule) InitScheduleSecurityContext(report, schedule);
+                    if (webScheduleOwner != null) report.SecurityContext = webScheduleOwner;
+                    else if (!schedule.IsTasksSchedule) InitScheduleSecurityContext(report, schedule);
 
                     ReportExecution reportExecution = new ReportExecution() { Report = report };
                     report.ExecutionContext = ReportExecutionContext.TaskScheduler;
@@ -2370,6 +2391,7 @@ namespace Seal.Model
 
                     if (report.HasErrors)
                     {
+                        lastError = report.ExecutionErrors;
                         string errorMessage = string.Format("Error: Schedule '{0}' has been executed with errors.\r\nReport '{1}'\r\n{2}\r\n", schedule.Name, report.FilePath, report.ExecutionErrors);
                         if (schedule.ErrorNumberOfRetries > 0)
                         {
@@ -2411,6 +2433,7 @@ namespace Seal.Model
                     }
                     else
                     {
+                        lastError = "";
                         Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath));
 
                         if (!string.IsNullOrEmpty(schedule.NotificationEmailTo) && !report.Cancel)
@@ -2424,11 +2447,32 @@ namespace Seal.Model
                     }
                 }
 
+                if (webSchedule != null) saveWebScheduleExecution(webSchedule, lastError);
+
                 FileHelper.PurgeTempApplicationDirectory();
             }
             catch (Exception ex)
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Error, string.Format("Error got when executing schedule '{0}':\r\n{1}\r\n\r\n{2}", scheduleGUID, ex.Message, ex.StackTrace));
+            }
+        }
+
+        /// <summary>
+        /// Save the result of the last execution in the web schedule file. The next execution is also calculated as the file may be saved by an outer process.
+        /// </summary>
+        static void saveWebScheduleExecution(SealSchedule webSchedule, string lastError)
+        {
+            try
+            {
+                webSchedule.LastExecution = DateTime.Now;
+                webSchedule.LastError = lastError;
+                webSchedule.CalculateNextExecution();
+                webSchedule.SaveToFile();
+            }
+            catch (Exception ex)
+            {
+                //e.g. schedule modified by its owner during the execution
+                Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Unable to save the execution of the web schedule '{0}':\r\n{1}", webSchedule.FilePath, ex.Message));
             }
         }
 

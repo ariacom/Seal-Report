@@ -1,0 +1,287 @@
+// Web schedules: a user schedules a report he can execute (one output + one schedule).
+// The schedule is stored in his personal folder and executed by the Seal Report Scheduler with his security context.
+namespace SWISchedule {
+    var _edit: any = null;
+    var _onSaved: (() => void) | null = null;
+
+    //Repeat choices in minutes (0 = no repetition / indefinitely)
+    const RepeatIntervals = [0, 5, 10, 15, 30, 60, 120, 240, 480, 720];
+    const RepeatDurations = [0, 60, 120, 240, 480, 720, 1440];
+
+    /** Refreshes the reports of the current folder: the schedule icon of the report may have changed */
+    function refreshReports() {
+        if (_main._currentView == "folders" && _main._folder) _main.ReloadReportsTable();
+    }
+
+    function minutesText(minutes: number, zeroText: string): string {
+        if (minutes == 0) return SWIUtil.tr(zeroText);
+        if (minutes % 1440 == 0) return (minutes / 1440) + " " + SWIUtil.tr(minutes == 1440 ? "day" : "days");
+        if (minutes % 60 == 0) return (minutes / 60) + " " + SWIUtil.tr(minutes == 60 ? "hour" : "hours");
+        return minutes + " " + SWIUtil.tr("minutes");
+    }
+
+    function fillSelect($select: JQuery, items: any[], value: any) {
+        $select.empty();
+        items.forEach(function (item: any) {
+            $select.append($("<option>").val(item.id).text(item.val));
+        });
+        if (value !== undefined && value !== null) $select.val(String(value));
+    }
+
+    function fillChecks($container: JQuery, prefix: string, items: any[], values: number[]) {
+        $container.empty();
+        items.forEach(function (item: any) {
+            var id = prefix + item.id;
+            var $div = $("<div class='form-check form-check-inline'>");
+            $div.append($("<input type='checkbox' class='form-check-input'>").attr("id", id).val(item.id).prop("checked", values && values.indexOf(parseInt(item.id)) >= 0));
+            $div.append($("<label class='form-check-label small'>").attr("for", id).text(item.val));
+            $container.append($div);
+        });
+    }
+
+    function getChecks($container: JQuery): number[] {
+        var result: number[] = [];
+        $container.find("input:checked").each(function () { result.push(parseInt($(this).val() as string)); });
+        return result;
+    }
+
+    function currentDevice(): any {
+        var guid = $("#webschedule-device").val();
+        return _edit.devices.find(function (d: any) { return d.guid == guid; });
+    }
+
+    /** Fills the folder list according to the device: folders of the user for a Folder device, directories for a File Server or SharePoint device */
+    function initFolders(value: string) {
+        var device = currentDevice();
+        var items: any[] = [];
+        if (device && device.type == "folder") items = _edit.folders;
+        else if (device && device.directories) items = device.directories.map(function (d: string) { return { id: d, val: d }; });
+        fillSelect($("#webschedule-folder"), items, value);
+        if (!$("#webschedule-folder").val() && items.length > 0) $("#webschedule-folder").val(items[0].id);
+        SWIUtil.ShowHideControl($("#webschedule-folder").parent(), items.length > 0);
+    }
+
+    function refreshControls() {
+        var device = currentDevice();
+        var isEmail = device && device.type == "email";
+        SWIUtil.ShowHideControl($(".webschedule-email"), isEmail);
+        SWIUtil.ShowHideControl($(".webschedule-file"), device && !isEmail);
+        SWIUtil.ShowHideControl($(".webschedule-zip"), $("#webschedule-zip").is(":checked"));
+        SWIUtil.ShowHideControl($("#webschedule-removezippassword-div"), _edit.schedule.haszippassword);
+
+        var type = parseInt($("#webschedule-type").val() as string);
+        SWIUtil.ShowHideControl($(".webschedule-interval"), type == 2 || type == 3);
+        SWIUtil.ShowHideControl($(".webschedule-weekly"), type == 3);
+        SWIUtil.ShowHideControl($(".webschedule-monthly"), type == 4);
+        $("#webschedule-interval-label").text(SWIUtil.tr(type == 3 ? "Recur every (weeks)" : "Recur every (days)"));
+    }
+
+    function showError(data: any) {
+        $("#webschedule-error").removeClass("d-none").text($("<div/>").html(data.error).text());
+        //the error is displayed at the top of the dialog body, which may be scrolled down to the Save button
+        $("#webschedule-dialog .modal-body").scrollTop(0);
+        if (!data.authenticated) location.reload();
+    }
+
+    /** Opens the schedule dialog: a new schedule of the report 'path' if guid is empty */
+    export function Edit(path: string, guid: string, onSaved?: () => void) {
+        $outputPanel.hide();
+        _onSaved = onSaved || null;
+        SWIUtil.ShowModal($waitDialog);
+        _gateway.GetWebSchedule(path, guid, function (data) {
+            SWIUtil.HideModal($waitDialog);
+            _edit = data;
+            var s = data.schedule;
+            $("#webschedule-error").addClass("d-none").text("");
+            $("#webschedule-title").text((s.guid ? SWIUtil.tr2("Schedule") : SWIUtil.tr2("New schedule")) + ": " + s.reportname);
+            $("#webschedule-name").val(s.name);
+            $("#webschedule-enabled").prop("checked", s.enabled);
+
+            fillSelect($("#webschedule-device"), data.devices.map(function (d: any) { return { id: d.guid, val: d.name }; }), s.deviceguid);
+            fillSelect($("#webschedule-format"), data.formats, s.format);
+            $("#webschedule-to").val(s.to);
+            $("#webschedule-cc").val(s.cc);
+            $("#webschedule-bcc").val(s.bcc);
+            $("#webschedule-subject").val(s.subject);
+            $("#webschedule-body").val(s.body);
+            $("#webschedule-html").prop("checked", s.html);
+            initFolders(s.folder);
+            $("#webschedule-file").val(s.file);
+            $("#webschedule-zip").prop("checked", s.zip);
+            $("#webschedule-zippassword").val("").attr("placeholder", SWIUtil.tr2(s.haszippassword ? "Password unchanged" : "Zip password"));
+            $("#webschedule-removezippassword").prop("checked", false);
+            $("#webschedule-cancel").prop("checked", s.cancel);
+
+            $("#webschedule-type").val(String(s.type));
+            $("#webschedule-start").val(s.start);
+            $("#webschedule-end").val(s.end);
+            $("#webschedule-interval").val(s.interval);
+            fillChecks($("#webschedule-weekdays"), "webschedule-weekday-", data.weekdays, s.weekdays);
+            fillChecks($("#webschedule-months"), "webschedule-month-", data.months, s.months);
+            var days: any[] = [];
+            for (var i = 1; i <= 31; i++) days.push({ id: String(i), val: String(i) });
+            days.push({ id: "32", val: SWIUtil.tr("Last") });
+            fillChecks($("#webschedule-days"), "webschedule-day-", days, s.days);
+            fillSelect($("#webschedule-repeatinterval"), RepeatIntervals.map(function (m) { return { id: String(m), val: minutesText(m, "None") }; }), s.repeatinterval || 0);
+            fillSelect($("#webschedule-repeatduration"), RepeatDurations.map(function (m) { return { id: String(m), val: minutesText(m, "Indefinitely") }; }), s.repeatduration || 0);
+            //custom values set in another tool
+            if ($("#webschedule-repeatinterval").val() === null) $("#webschedule-repeatinterval").append($("<option>").val(s.repeatinterval).text(minutesText(s.repeatinterval, "None"))).val(String(s.repeatinterval));
+            if ($("#webschedule-repeatduration").val() === null) $("#webschedule-repeatduration").append($("<option>").val(s.repeatduration).text(minutesText(s.repeatduration, "Indefinitely"))).val(String(s.repeatduration));
+            if (s.repeatinterval > 0) $("#webschedule-advanced").addClass("show");
+            else $("#webschedule-advanced").removeClass("show");
+
+            $("#webschedule-device").unbind("change").on("change", function () {
+                initFolders("");
+                refreshControls();
+            });
+            $("#webschedule-type,#webschedule-zip").unbind("change").on("change", refreshControls);
+
+            SWIUtil.ShowHideControl($("#webschedule-delete"), s.guid);
+            $("#webschedule-delete").unbind("click").on("click", function () {
+                confirmDelete(s, function () { SWIUtil.HideModal($("#webschedule-dialog")); });
+            });
+
+            $("#webschedule-save").unbind("click").on("click", function () {
+                $("#webschedule-error").addClass("d-none");
+                var schedule = {
+                    guid: s.guid,
+                    name: $("#webschedule-name").val(),
+                    enabled: $("#webschedule-enabled").is(":checked"),
+                    deviceguid: $("#webschedule-device").val(),
+                    format: parseInt($("#webschedule-format").val() as string),
+                    folder: $("#webschedule-folder").val(),
+                    file: $("#webschedule-file").val(),
+                    to: $("#webschedule-to").val(),
+                    cc: $("#webschedule-cc").val(),
+                    bcc: $("#webschedule-bcc").val(),
+                    subject: $("#webschedule-subject").val(),
+                    body: $("#webschedule-body").val(),
+                    html: $("#webschedule-html").is(":checked"),
+                    zip: $("#webschedule-zip").is(":checked"),
+                    zippassword: $("#webschedule-zippassword").val(),
+                    removezippassword: $("#webschedule-removezippassword").is(":checked"),
+                    cancel: $("#webschedule-cancel").is(":checked"),
+                    type: parseInt($("#webschedule-type").val() as string),
+                    start: $("#webschedule-start").val(),
+                    end: $("#webschedule-end").val(),
+                    interval: parseInt($("#webschedule-interval").val() as string) || 0,
+                    weekdays: getChecks($("#webschedule-weekdays")),
+                    months: getChecks($("#webschedule-months")),
+                    days: getChecks($("#webschedule-days")),
+                    repeatinterval: parseInt($("#webschedule-repeatinterval").val() as string) || 0,
+                    repeatduration: parseInt($("#webschedule-repeatduration").val() as string) || 0
+                };
+                _gateway.SaveWebSchedule(s.path, schedule, function (result) {
+                    SWIUtil.HideModal($("#webschedule-dialog"));
+                    var message = SWIUtil.tr("The schedule has been saved");
+                    if (result.nextexecution) message += ". " + SWIUtil.tr("Next execution") + ": " + result.nextexecution;
+                    SWIUtil.ShowMessage("alert-success", message, 5000);
+                    if (_onSaved) _onSaved();
+                    refreshReports();
+                }, showError);
+            });
+
+            refreshControls();
+            SWIUtil.ShowModal($("#webschedule-dialog"));
+        }, function (data) {
+            SWIUtil.HideModal($waitDialog);
+            SWIUtil.ShowMessage("alert-danger", data.error, 0);
+        });
+    }
+
+    function confirmDelete(schedule: any, onDeleted?: () => void) {
+        $("#message-title").html(SWIUtil.tr("Warning"));
+        $("#message-text").text(SWIUtil.tr2("Do you really want to delete the schedule") + " '" + schedule.name + "' ?");
+        $("#message-cancel-button").html(SWIUtil.tr("Cancel"));
+        $("#message-ok-button").html(SWIUtil.tr("OK"));
+        $("#message-ok-button").unbind("click").on("click", function () {
+            SWIUtil.HideModal($("#message-dialog"));
+            _gateway.DeleteWebSchedule(schedule.guid, function (data) {
+                SWIUtil.ShowMessage("alert-success", data.Message, 5000);
+                if (onDeleted) onDeleted();
+                if (_onSaved) _onSaved();
+                refreshReports();
+            });
+        });
+        SWIUtil.ShowModal($("#message-dialog"));
+    }
+
+    function actionButton(icon: string, title: string, cssClass: string): JQuery {
+        return $("<button type='button' class='btn btn-sm py-0 " + cssClass + "'>").attr("title", SWIUtil.tr2(title)).append($("<i>").addClass(icon));
+    }
+
+    /** Loads the web schedules of the user in the 'My schedules' dialog */
+    function loadList() {
+        _gateway.GetWebSchedules(function (schedules) {
+            var $body = $("#webschedules-table tbody");
+            $body.empty();
+            SWIUtil.ShowHideControl($("#webschedules-table"), schedules.length > 0);
+            SWIUtil.ShowHideControl($("#webschedules-none"), schedules.length == 0);
+            schedules.forEach(function (s: any) {
+                var $last = $("<td>").text(s.lastexecution);
+                if (s.lasterror) $last.append($("<i class='fa-solid fa-triangle-exclamation text-danger ms-1'>").attr("title", s.lasterror));
+                var $next = $("<td>").text(s.enabled ? s.nextexecution : SWIUtil.tr2("Disabled"));
+                if (!s.enabled) $next.addClass("text-muted");
+
+                var $edit = actionButton("fa-solid fa-pen", "Edit", "btn-outline-secondary");
+                $edit.on("click", function () { Edit(s.path, s.guid, loadList); });
+                var $execute = actionButton("fa-solid fa-play", "Execute now", "btn-outline-success");
+                $execute.on("click", function () { _gateway.ExecuteWebSchedule(s.path, s.guid); });
+                var $delete = actionButton("fa-solid fa-trash", "Delete", "btn-outline-danger");
+                $delete.on("click", function () { confirmDelete(s, loadList); });
+
+                $body.append($("<tr>")
+                    .append($("<td>").text(s.name))
+                    .append($("<td>").text(s.reportname).attr("title", s.path))
+                    .append($("<td>").text(s.devicename + " (" + s.formatname + ")"))
+                    .append($("<td>").text(s.recurrence))
+                    .append($next)
+                    .append($last)
+                    .append($("<td class='text-end text-nowrap'>").append($edit).append(" ").append($execute).append(" ").append($delete)));
+            });
+        });
+    }
+
+    /** Opens the 'My schedules' dialog */
+    export function ShowList() {
+        $outputPanel.hide();
+        _onSaved = loadList;
+        loadList();
+        SWIUtil.ShowModal($("#webschedules-dialog"));
+    }
+
+    /** Adds the web schedules of a report and the 'Schedule...' item in the panel of the views and outputs */
+    export function AddToOutputPanel($panel: JQuery, path: string, data: any) {
+        if (!data.canschedule) return;
+        (data.webschedules || []).forEach(function (s: any) {
+            var $item = $("<div>").addClass("output-item");
+            //not 'output-name': its click handler executes a view or an output
+            var $name = $("<a href='#'>").addClass("webschedule-link").text(s.name).attr("title", s.recurrence + (s.enabled ? "" : " - " + SWIUtil.tr2("Disabled")));
+            if (!s.enabled) $name.addClass("text-muted");
+            $name.on("click", function (e) { e.preventDefault(); Edit(path, s.guid); });
+            $item.append($name);
+            $item.append($("<span>").addClass("output-type-badge output-type-schedule").html(SWIUtil.tr("Schedule")));
+            var $execute = $("<button type='button' class='btn btn-secondary btn-table'>").attr("title", SWIUtil.tr2("Execute now")).append($("<span class='fa-solid fa-play'></span>"));
+            $execute.on("click", function () {
+                $outputPanel.hide();
+                _gateway.ExecuteWebSchedule(path, s.guid);
+            });
+            $item.append($execute);
+            $panel.append($item);
+        });
+        var $new = $("<div>").addClass("output-item");
+        var $link = $("<a href='#'>").addClass("webschedule-link").html("<i class='fa-solid fa-clock me-1'></i>" + SWIUtil.tr("Schedule..."));
+        $link.on("click", function (e) { e.preventDefault(); Edit(path, ""); });
+        $new.append($link);
+        $panel.append($new);
+    }
+
+    /** Shows the 'My schedules' button if the user can schedule reports or has schedules */
+    export function Init(profile: any) {
+        SWIUtil.ShowHideControl($("#webschedules-nav-item"), profile.webschedules);
+        $("#webschedules-nav-item").unbind("click").on("click", function () {
+            SWIUtil.CollapseNavbar();
+            ShowList();
+        });
+    }
+}

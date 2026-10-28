@@ -951,6 +951,8 @@ namespace SealWebServer.Controllers
             var files = new List<SWIFile>();
             if (folder.right > 0)
             {
+                //Reports scheduled by the user with a web schedule (not defined in the report file)
+                var webScheduledPaths = WebUser.CanUseWebSchedules ? new HashSet<string>(getUserWebSchedules().Select(i => i.WebPath), StringComparer.OrdinalIgnoreCase) : new HashSet<string>();
                 foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
                 {
                     //Repository folders list report and shortcut files as plain files (download/manage only, no execution through a repository path)
@@ -978,6 +980,7 @@ namespace SealWebServer.Controllers
                     {
                         //Lightweight scan of the report file to flag Task reports and scheduled reports in the listing
                         (file.istask, file.isscheduled) = Report.GetListingFlags(file.targetpath != null ? getFullPath(file.targetpath) : newPath);
+                        if (webScheduledPaths.Contains(file.targetpath ?? file.path)) file.isscheduled = true;
                     }
                     file.isfavorite = WebUser.Profile.Favorites.Exists(i => i.Path == (file.targetpath ?? file.path));
                     files.Add(file);
@@ -1119,8 +1122,8 @@ namespace SealWebServer.Controllers
 
             foreach (string subFolder in Directory.GetDirectories(folder.GetFullPath()))
             {
-                // _Agents is a hidden system folder – skip it during searches too
-                if (folder.IsPersonal && Path.GetFileName(subFolder) == AgentFolders.FolderName) continue;
+                // _Agents and _Schedules are hidden system folders – skip them during searches too
+                if (folder.IsPersonal && Repository.IsPersonalSystemFolder(Path.GetFileName(subFolder))) continue;
 
                 SWIFolder sub = getFolder(folder.Combine(subFolder));
                 if (sub.right > 0) searchFolder(sub, pattern, files);

@@ -96,6 +96,37 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    GetWebSchedules(callback, errorcb) {
+        $.post(_server + "SWIGetWebSchedules")
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    GetWebSchedule(path, guid, callback, errorcb) {
+        $.post(_server + "SWIGetWebSchedule", {
+            path: path,
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    SaveWebSchedule(path, schedule, callback, errorcb) {
+        $.post(_server + "SWISaveWebSchedule", {
+            path: path,
+            schedule: JSON.stringify(schedule)
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    DeleteWebSchedule(guid, callback, errorcb) {
+        $.post(_server + "SWIDeleteWebSchedule", {
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    ExecuteWebSchedule(path, guid) {
+        postForm(_server + "SWExecuteReport", "_blank", { path: path, scheduleGUID: guid });
+    }
     GetCultures(callback, errorcb) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

@@ -447,6 +447,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the schedule is a web schedule injected in the report for its execution (see <see cref="SealSchedule.IsWebSchedule"/>)
+        /// </summary>
+        [XmlIgnore]
+        public bool IsWebSchedule
+        {
+            get { return _sealSchedule != null && _sealSchedule.IsWebSchedule; }
+        }
+
+        /// <summary>
         /// Returns a given line from the Task Source Detail
         /// </summary>
         static public string GetTaskSourceDetail(string source, int index)

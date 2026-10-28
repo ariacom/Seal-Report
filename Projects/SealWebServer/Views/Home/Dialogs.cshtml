@@ -393,3 +393,191 @@
         </div>
     </div>
 </div>
+
+<!-- My schedules Dialog: web schedules of the user -->
+<div id="webschedules-dialog" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa-solid fa-calendar-days me-2"></i>@repository.TranslateWeb("My schedules")</h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
+            </div>
+            <div class="modal-body" style="max-height:80vh;overflow-y:auto;">
+                <div class="form-text mb-2">@repository.TranslateWeb("To schedule a report, open the list of its views and outputs and choose 'Schedule...'.")</div>
+                <table id="webschedules-table" class="table table-sm table-hover align-middle mb-0">
+                    <thead>
+                        <tr>
+                            <th>@repository.TranslateWeb("Name")</th>
+                            <th>@repository.TranslateWeb("Report")</th>
+                            <th>@repository.TranslateWeb("Destination")</th>
+                            <th>@repository.TranslateWeb("Recurrence")</th>
+                            <th>@repository.TranslateWeb("Next execution")</th>
+                            <th>@repository.TranslateWeb("Last execution")</th>
+                            <th></th>
+                        </tr>
+                    </thead>
+                    <tbody></tbody>
+                </table>
+                <div id="webschedules-none" class="small text-muted d-none">@repository.TranslateWeb("You have no schedule.")</div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@repository.TranslateWeb("Close")</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Schedule Dialog: edit a web schedule (one output + one schedule) -->
+<div id="webschedule-dialog" class="modal fade" tabindex="-1" role="dialog" data-bs-backdrop="static" data-bs-keyboard="false" data-bs-focus="false" style="z-index:24000;">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h4 class="modal-title"><i class="fa-solid fa-clock me-2"></i><span id="webschedule-title"></span></h4>
+                <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@repository.TranslateWeb("Close")"></button>
+            </div>
+            <div class="modal-body" style="max-height:80vh;overflow-y:auto;">
+                <div id="webschedule-error" class="alert alert-danger d-none p-2"></div>
+                <div class="row g-2 mb-2">
+                    <div class="col-sm-8">
+                        <label class="form-label small mb-0" for="webschedule-name">@repository.TranslateWeb("Name")</label>
+                        <input id="webschedule-name" class="form-control form-control-sm" maxlength="100" />
+                    </div>
+                    <div class="col-sm-4 d-flex align-items-end">
+                        <div class="form-check form-switch mb-1">
+                            <input id="webschedule-enabled" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label" for="webschedule-enabled">@repository.TranslateWeb("Enabled")</label>
+                        </div>
+                    </div>
+                </div>
+
+                <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Result")</h6>
+                <div class="row g-2 mb-2">
+                    <div class="col-sm-6">
+                        <label class="form-label small mb-0" for="webschedule-device">@repository.TranslateWeb("Destination")</label>
+                        <select id="webschedule-device" class="form-select form-select-sm"></select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label small mb-0" for="webschedule-format">@repository.TranslateWeb("Format")</label>
+                        <select id="webschedule-format" class="form-select form-select-sm"></select>
+                    </div>
+                </div>
+                <div class="webschedule-email">
+                    <div class="row g-2 mb-2">
+                        <div class="col-sm-12">
+                            <label class="form-label small mb-0" for="webschedule-to">@repository.TranslateWeb("To")</label>
+                            <input id="webschedule-to" class="form-control form-control-sm" placeholder="@repository.TranslateWeb("Email addresses separated by semi-column")" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small mb-0" for="webschedule-cc">@repository.TranslateWeb("CC")</label>
+                            <input id="webschedule-cc" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small mb-0" for="webschedule-bcc">@repository.TranslateWeb("BCC")</label>
+                            <input id="webschedule-bcc" class="form-control form-control-sm" />
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label small mb-0" for="webschedule-subject">@repository.TranslateWeb("Subject")</label>
+                            <input id="webschedule-subject" class="form-control form-control-sm" placeholder="@repository.TranslateWeb("Report name if empty")" />
+                        </div>
+                        <div class="col-sm-12">
+                            <label class="form-label small mb-0" for="webschedule-body">@repository.TranslateWeb("Body")</label>
+                            <textarea id="webschedule-body" rows="2" class="form-control form-control-sm" placeholder="@repository.TranslateWeb("Default text if empty")"></textarea>
+                        </div>
+                    </div>
+                    <div class="form-check mb-2">
+                        <input id="webschedule-html" class="form-check-input" type="checkbox" />
+                        <label class="form-check-label" for="webschedule-html">@repository.TranslateWeb("Copy the HTML result in the email body")</label>
+                    </div>
+                </div>
+                <div class="webschedule-file row g-2 mb-2">
+                    <div class="col-sm-6">
+                        <label class="form-label small mb-0" for="webschedule-folder">@repository.TranslateWeb("Folder")</label>
+                        <select id="webschedule-folder" class="form-select form-select-sm"></select>
+                    </div>
+                    <div class="col-sm-6">
+                        <label class="form-label small mb-0" for="webschedule-file">@repository.TranslateWeb("File name")</label>
+                        <input id="webschedule-file" class="form-control form-control-sm" />
+                    </div>
+                </div>
+                <div class="row g-2 mb-2">
+                    <div class="col-sm-4 d-flex align-items-center">
+                        <div class="form-check">
+                            <input id="webschedule-zip" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label" for="webschedule-zip">@repository.TranslateWeb("Compress the result (zip)")</label>
+                        </div>
+                    </div>
+                    <div class="col-sm-4 webschedule-zip">
+                        <input id="webschedule-zippassword" type="password" class="form-control form-control-sm" autocomplete="new-password" placeholder="@repository.TranslateWeb("Zip password")" />
+                    </div>
+                    <div class="col-sm-4 d-flex align-items-center webschedule-zip">
+                        <div id="webschedule-removezippassword-div" class="form-check">
+                            <input id="webschedule-removezippassword" class="form-check-input" type="checkbox" />
+                            <label class="form-check-label" for="webschedule-removezippassword">@repository.TranslateWeb("Remove the password")</label>
+                        </div>
+                    </div>
+                </div>
+                <div class="form-check mb-2">
+                    <input id="webschedule-cancel" class="form-check-input" type="checkbox" />
+                    <label class="form-check-label" for="webschedule-cancel">@repository.TranslateWeb("Cancel the generation if there is no record")</label>
+                </div>
+
+                <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Recurrence")</h6>
+                <div class="row g-2 mb-2">
+                    <div class="col-sm-4">
+                        <label class="form-label small mb-0" for="webschedule-type">@repository.TranslateWeb("Type")</label>
+                        <select id="webschedule-type" class="form-select form-select-sm">
+                            <option value="1">@repository.TranslateWeb("One time")</option>
+                            <option value="2">@repository.TranslateWeb("Daily")</option>
+                            <option value="3">@repository.TranslateWeb("Weekly")</option>
+                            <option value="4">@repository.TranslateWeb("Monthly")</option>
+                        </select>
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label small mb-0" for="webschedule-start">@repository.TranslateWeb("Start")</label>
+                        <input id="webschedule-start" type="datetime-local" class="form-control form-control-sm" />
+                    </div>
+                    <div class="col-sm-4">
+                        <label class="form-label small mb-0" for="webschedule-end">@repository.TranslateWeb("End (optional)")</label>
+                        <input id="webschedule-end" type="datetime-local" class="form-control form-control-sm" />
+                    </div>
+                </div>
+                <div class="row g-2 mb-2 webschedule-interval">
+                    <div class="col-sm-4">
+                        <label class="form-label small mb-0" for="webschedule-interval"><span id="webschedule-interval-label"></span></label>
+                        <input id="webschedule-interval" type="number" min="1" class="form-control form-control-sm" />
+                    </div>
+                </div>
+                <div class="mb-2 webschedule-weekly">
+                    <div class="form-label small mb-0">@repository.TranslateWeb("Days of the week")</div>
+                    <div id="webschedule-weekdays"></div>
+                </div>
+                <div class="mb-2 webschedule-monthly">
+                    <div class="form-label small mb-0">@repository.TranslateWeb("Months")</div>
+                    <div id="webschedule-months"></div>
+                </div>
+                <div class="mb-2 webschedule-monthly">
+                    <div class="form-label small mb-0">@repository.TranslateWeb("Days of the month")</div>
+                    <div id="webschedule-days"></div>
+                </div>
+                <a class="small" data-bs-toggle="collapse" href="#webschedule-advanced" role="button" aria-expanded="false" aria-controls="webschedule-advanced">@repository.TranslateWeb("Advanced")...</a>
+                <div id="webschedule-advanced" class="collapse">
+                    <div class="row g-2 mt-1">
+                        <div class="col-sm-6">
+                            <label class="form-label small mb-0" for="webschedule-repeatinterval">@repository.TranslateWeb("Repeat every")</label>
+                            <select id="webschedule-repeatinterval" class="form-select form-select-sm"></select>
+                        </div>
+                        <div class="col-sm-6">
+                            <label class="form-label small mb-0" for="webschedule-repeatduration">@repository.TranslateWeb("For a duration of")</label>
+                            <select id="webschedule-repeatduration" class="form-select form-select-sm"></select>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button id="webschedule-delete" type="button" class="btn btn-outline-danger me-auto">@repository.TranslateWeb("Delete")</button>
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@repository.TranslateWeb("Cancel")</button>
+                <button id="webschedule-save" type="button" class="btn btn-primary">@repository.TranslateWeb("Save")</button>
+            </div>
+        </div>
+    </div>
+</div>

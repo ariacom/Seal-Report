@@ -148,6 +148,8 @@ namespace Seal.Model
             {
                 //Personal
                 if (PersonalFolderRight == PersonalFolderRight.None) throw new Exception("Error: this user has no personal folder");
+                //Hidden system folders (agent chat sessions, web schedules) are managed by the server only
+                if (Repository.IsPersonalSystemFolder(result.FinalPath.TrimStart('\\', '/').Split('\\', '/')[0])) throw new Exception("Error: invalid path");
                 result.SetManageFlag(true, true, result.FinalPath == "");
                 result.expand = false;
                 string prefix = Security.Repository.GetPersonalFolderName(this);
@@ -200,8 +202,8 @@ namespace Seal.Model
             string folderPath = folder.GetFullPath();
             foreach (string subFolder in Directory.GetDirectories(folderPath))
             {
-                // _Agents is a hidden system folder – never expose it in the browser
-                if (folder.IsPersonal && Path.GetFileName(subFolder) == AgentFolders.FolderName) continue;
+                // _Agents and _Schedules are hidden system folders – never expose them in the browser
+                if (folder.IsPersonal && Repository.IsPersonalSystemFolder(Path.GetFileName(subFolder))) continue;
 
                 SWIFolder sub = GetFolder(folder.Combine(subFolder));
                 //Add if right on this folder, or a sub folder is defined with this root
@@ -560,6 +562,18 @@ namespace Seal.Model
             get
             {
                 return SecurityGroups.Any(group => group.EditProfile);
+            }
+        }
+
+        /// <summary>
+        /// True if the web schedules are available for the user: the Seal Report Scheduler is used and the user can be authenticated from his name.
+        /// A report can be scheduled with the right 'Edit schedules' (FolderRight.Schedule) or 'Edit' on its folder.
+        /// </summary>
+        public bool CanUseWebSchedules
+        {
+            get
+            {
+                return Security.Repository.UseSealScheduler && !string.IsNullOrEmpty(WebUserName);
             }
         }
 
@@ -1028,7 +1042,7 @@ namespace Seal.Model
         /// with at least <paramref name="minRight"/>.
         /// Mirrors SWIMoveFile: resolves physDir to a SWIFolder path, looks it up in
         /// AllFolders, then applies the same right checks (right==0 → no access;
-        /// FolderRight.Edit required for write operations).
+        /// otherwise the folder right must be at least minRight, e.g. FolderRight.Edit for write operations).
         /// </summary>
         public bool HasFolderRight(string physDir, int minRight)
         {
@@ -1060,8 +1074,8 @@ namespace Seal.Model
 
             var folder = AllFolders.FirstOrDefault(f => f.path == swiPath);
             if (folder == null || folder.right == 0) return false;
-            if (minRight >= (int)FolderRight.Edit) return (FolderRight)folder.right == FolderRight.Edit;
-            return true;
+            //Rights are ordered: Execute < ExecuteReportOuput < Schedule < Edit
+            return folder.right >= minRight;
         }
 
     }

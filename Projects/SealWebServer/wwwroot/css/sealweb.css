@@ -146,7 +146,8 @@ a {
     font-size: 13px;
     padding-right: 32px;
 }
-.output-item .output-name {
+.output-item .output-name,
+.output-item .webschedule-link {
     flex: 1;
     min-width: 0;
     overflow: hidden;
@@ -164,6 +165,14 @@ a {
 }
 .output-type-badge.output-type-output {
     background: #70ad47;
+}
+.output-type-badge.output-type-schedule {
+    background: #ed7d31;
+}
+.output-item .webschedule-link {
+    color: inherit;
+    text-decoration: none;
+    cursor: pointer;
 }
 
 .btn-table {

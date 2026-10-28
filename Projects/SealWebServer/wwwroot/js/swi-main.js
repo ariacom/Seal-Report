@@ -60,7 +60,7 @@ class SWIMain {
         $("#navbar").on("click", "a.nav-link:not(.dropdown-toggle), .dropdown-item, #search-nav-item", function () {
             SWIUtil.CollapseNavbar();
         });
-        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
+        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#webschedules-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
         //The authentication dialogs are real forms (Enter key and submit button both raise submit)
         $("#login-form").unbind("submit").on("submit", function (e) {
             e.preventDefault();
@@ -310,6 +310,8 @@ class SWIMain {
         });
         //Profile
         SWIUtil.InitProfile(_main._profile);
+        //My schedules
+        SWISchedule.Init(_main._profile);
         //Disconnect
         SWIUtil.ShowHideControl($("#disconnect-nav-item"), true);
         $("#disconnect-nav-item").unbind("click").on("click", function () {
@@ -319,7 +321,7 @@ class SWIMain {
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#webschedules-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
                 if (window.aiPanel)
                     window.aiPanel.reset();
                 $("#login-modal-info").text($("#login-modal-info").data("text"));
@@ -872,6 +874,8 @@ class SWIMain {
                     }
                     $tableBody.append($item);
                 }
+                //Web schedules of the user
+                SWISchedule.AddToOutputPanel($tableBody, $target.parent().data("path"), data);
                 //adjust position with the final size
                 top = ($target.offset()?.top ?? 0) + 40 - ($outputPanel.height() ?? 0);
                 $outputPanel.css({ top: top, left: ($target.offset()?.left ?? 0) - ($outputPanel.width() ?? 0), position: 'absolute' });
