@@ -8,6 +8,8 @@
     if (restrictionPerRow == 0) { restrictionPerRow = 1; }
     var restrictions = view.Template.IsRestrictionsView ? view.ExecutionPromptedRestrictions : report.ExecutionPromptedRestrictions;
     var id = "restrictions_" + view.IdSuffix;
+    //Restriction values of a web schedule: the date keywords (e.g. Today-1) are shown instead of their current date
+    var showDateKeywords = !string.IsNullOrEmpty(report.WebScheduleGUID);
 }
 
 @if (report.GenerateHTMLDisplay)
@@ -88,7 +90,7 @@
                                     {
                                         <div class="mb-3">
                                             <div class='input-group date @(restriction.HasTimeRe ? "datepicker_datetime" : "datepicker_date") @(trigger ? "trigger" : "")'>
-                                                <input type='text' class="form-control @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" data-input />
+                                                <input type='text' class="form-control @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j, showDateKeywords)" data-input />
                                                 <span class="input-group-text" data-toggle>
                                                     <span class="fa-regular fa-calendar"></span>
                                                 </span>
@@ -97,11 +99,11 @@
                                     }
                                     else if (j == 1 && restriction.InputRows1 > 0)
                                     {
-                                        <textarea class="form-control @(trigger ? "trigger" : "")" rows="@restriction.InputRows1" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j)</textarea>
+                                        <textarea class="form-control @(trigger ? "trigger" : "")" rows="@restriction.InputRows1" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId">@restriction.GetHtmlValue(j, showDateKeywords)</textarea>
                                     }
                                     else
                                     {
-                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "") @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j)" placeholder="@Raw(report.TranslateRepository("GeneralText","Report",restriction.PlaceHolder))" />
+                                            <input type='text' class="form-control @(restriction.IsNumeric ? "numeric_input" : "") @(trigger ? "trigger" : "")" name="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" id="@string.Format("{0}_{1}", restriction.ValueHtmlId, j)" opid="@restriction.OperatorHtmlId" value="@restriction.GetHtmlValue(j, showDateKeywords)" placeholder="@Raw(report.TranslateRepository("GeneralText","Report",restriction.PlaceHolder))" />
                                     }
                                     if ((restriction.Prompt == PromptType.PromptOneValue) || (restriction.Prompt == PromptType.PromptTwoValues && j == 2))
                                     {

@@ -526,6 +526,15 @@
                     <label class="form-check-label" for="webschedule-cancel">@repository.TranslateWeb("Cancel the generation if there is no record")</label>
                 </div>
 
+                <div id="webschedule-restrictions-block">
+                <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Restrictions")</h6>
+                <div class="d-flex align-items-start gap-2 mb-2">
+                    <div id="webschedule-restrictions" class="small flex-grow-1 pt-1"></div>
+                    <button id="webschedule-restrictions-edit" type="button" class="btn btn-sm btn-outline-primary text-nowrap" title="@repository.TranslateWeb("Save the schedule and open the report to edit the values of its restrictions")"><i class="fa-solid fa-filter me-1"></i>@repository.TranslateWeb("Edit restrictions")</button>
+                    <button id="webschedule-restrictions-reset" type="button" class="btn btn-sm btn-outline-secondary text-nowrap">@repository.TranslateWeb("Default values")</button>
+                </div>
+                </div>
+
                 <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Recurrence")</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-sm-4">

@@ -155,9 +155,39 @@ namespace SWISchedule {
                 confirmDelete(s, function () { SWIUtil.HideModal($("#webschedule-dialog")); });
             });
 
-            $("#webschedule-save").unbind("click").on("click", function () {
+            //Restrictions: the values are edited on the restrictions panel of the report, opened in another window
+            var setRestrictionsText = function (text: string) {
+                $("#webschedule-restrictions").text(text ? text : SWIUtil.tr2("Default values of the report"));
+                SWIUtil.ShowHideControl($("#webschedule-restrictions-reset"), !!(s.guid && text));
+            };
+            setRestrictionsText(s.restrictions);
+            //no restriction block if the report has no prompted restriction
+            SWIUtil.ShowHideControl($("#webschedule-restrictions-block"), s.hasrestrictions);
+            $("#webschedule-restrictions-edit").unbind("click").on("click", function () {
                 $("#webschedule-error").addClass("d-none");
-                var schedule = {
+                //window opened during the click (not blocked as a popup), the report is loaded once the schedule is saved
+                var target = "webschedule_restrictions_" + Date.now();
+                var win = window.open("about:blank", target);
+                _gateway.SaveWebSchedule(s.path, readSchedule(), function (result) {
+                    SWIUtil.HideModal($("#webschedule-dialog"));
+                    _gateway.EditWebScheduleRestrictions(result.path, result.guid, target);
+                    SWIUtil.ShowMessage("alert-info", SWIUtil.tr("Edit the restrictions in the report window, then click on 'Save for the schedule'"), 10000);
+                    if (_onSaved) _onSaved();
+                    refreshReports();
+                }, function (data) {
+                    if (win) win.close();
+                    showError(data);
+                });
+            });
+            $("#webschedule-restrictions-reset").unbind("click").on("click", function () {
+                _gateway.ResetWebScheduleRestrictions(s.guid, function (data) {
+                    setRestrictionsText("");
+                    SWIUtil.ShowMessage("alert-success", data.Message, 5000);
+                }, showError);
+            });
+
+            var readSchedule = function (): any {
+                return {
                     guid: s.guid,
                     name: $("#webschedule-name").val(),
                     enabled: $("#webschedule-enabled").is(":checked"),
@@ -185,7 +215,11 @@ namespace SWISchedule {
                     repeatinterval: parseInt($("#webschedule-repeatinterval").val() as string) || 0,
                     repeatduration: parseInt($("#webschedule-repeatduration").val() as string) || 0
                 };
-                _gateway.SaveWebSchedule(s.path, schedule, function (result) {
+            };
+
+            $("#webschedule-save").unbind("click").on("click", function () {
+                $("#webschedule-error").addClass("d-none");
+                _gateway.SaveWebSchedule(s.path, readSchedule(), function (result) {
                     SWIUtil.HideModal($("#webschedule-dialog"));
                     var message = SWIUtil.tr("The schedule has been saved");
                     if (result.nextexecution) message += ". " + SWIUtil.tr("Next execution") + ": " + result.nextexecution;

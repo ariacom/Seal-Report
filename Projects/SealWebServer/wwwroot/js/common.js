@@ -532,6 +532,23 @@ function resetRestrictions() {
     }
 }
 
+function saveScheduleRestrictions() {
+    if ($("#restrictions_div").hasClass("disabled")) return; //report is executing
+    $.post(_urlPrefix + "ActionSaveWebScheduleRestrictions", $("#header_form").serialize())
+        .done(function (data) {
+            //panel re-rendered with the validation errors
+            if (data.restrictions) replaceRestrictions(data.restrictions);
+            showScheduleMessage(data.error ? "alert-danger" : "alert-success", $("<div/>").html(data.error ? data.error : data.message).text());
+        });
+}
+
+function showScheduleMessage(alertClass, text) {
+    $("#schedule_message").remove();
+    var $alert = $("<div id='schedule_message' class='alert alert-dismissible m-2 " + alertClass + "' role='alert'>").text(text);
+    $alert.append($("<button type='button' class='btn-close' data-bs-dismiss='alert'>"));
+    $("#restrictions_div").addClass("show").prepend($alert);
+}
+
 function replaceRestrictions(html) {
     if (!html || html.indexOf("header_form") < 0) return;
     $("#restrictions_div .operator_select, #restrictions_div .enum").selectpicker('destroy');
@@ -560,6 +577,12 @@ function mainInit() {
         collapseNavbar();
         _inExecution = false;
         executeReport();
+    });
+
+    //web schedule: save the values of the restrictions panel for the schedule, no execution
+    $("#save_schedule_restrictions_button").unbind("click").on("click", function () {
+        collapseNavbar();
+        saveScheduleRestrictions();
     });
 
     //reset restrictions button: restore the initial values of the prompted restrictions, no execution

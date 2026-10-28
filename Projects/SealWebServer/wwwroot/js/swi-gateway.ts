@@ -144,6 +144,19 @@ class SWIGateway {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, scheduleGUID: guid });
     }
 
+    /** Opens the report in the window 'target' to edit the restriction values of a web schedule */
+    public EditWebScheduleRestrictions(path: string, guid: string, target: string) {
+        postForm(_server + "SWExecuteReport", target, { path: path, scheduleGUID: guid, scheduleRestrictions: true });
+    }
+
+    public ResetWebScheduleRestrictions(guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIResetWebScheduleRestrictions", {
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public GetCultures(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

@@ -81,6 +81,9 @@ namespace Seal.Model
         public int[] days;
         public int repeatinterval;
         public int repeatduration;
+        //Restrictions: text of the values (empty if the default values of the report are used)
+        public string restrictions;
+        public bool hasrestrictions;
         //Information
         public string recurrence;
         public string nextexecution;

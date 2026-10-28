@@ -1031,7 +1031,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Execute a report and returns the report html display result content (e.g. html with prompted restrictions). Check API of Seal Web Interface for more information.
         /// </summary>
-        public ActionResult SWExecuteReport(string path, string viewGUID, string outputGUID, bool? fromMenu, string sessionId, string scheduleGUID = null)
+        public ActionResult SWExecuteReport(string path, string viewGUID, string outputGUID, bool? fromMenu, string sessionId, string scheduleGUID = null, bool scheduleRestrictions = false)
         {
             writeDebug("SWExecuteReport");
             try
@@ -1066,8 +1066,18 @@ namespace SealWebServer.Controllers
                     if ((FolderRight)effRight < FolderRight.Schedule) throw new ValidationException(Translate("You have no right to schedule this report"));
                     var webSchedule = getUserWebSchedule(scheduleGUID);
                     if (webSchedule.ReportGUID != report.GUID) throw new Exception("Error: invalid schedule for this report");
-                    webSchedule.InjectWebSchedule(report);
-                    outputGUID = webSchedule.GUID;
+                    if (scheduleRestrictions)
+                    {
+                        //Edition of the restriction values of the schedule: the report is executed without the output
+                        webSchedule.Output.ApplyRestrictions(report);
+                        report.WebScheduleGUID = webSchedule.GUID;
+                        outputGUID = null;
+                    }
+                    else
+                    {
+                        webSchedule.InjectWebSchedule(report);
+                        outputGUID = webSchedule.GUID;
+                    }
                 }
 
                 var execution = initReportExecution(report, viewGUID, outputGUID, false);

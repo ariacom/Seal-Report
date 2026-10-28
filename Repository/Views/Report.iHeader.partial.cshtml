@@ -33,6 +33,13 @@
                 <button id="reset_restrictions_button" type="button" class="btn btn-info me-2" title="@report.Translate("Reset restrictions")">
                     <span class="fa-solid fa-rotate-left"></span>
                 </button>
+                @if (!string.IsNullOrEmpty(report.WebScheduleGUID))
+                {
+                    //Edition of the restriction values of a web schedule
+                    <button id="save_schedule_restrictions_button" type="button" class="btn btn-primary text-nowrap me-2" title="@report.Translate("Save the restriction values for the schedule")">
+                        <span class="fa-solid fa-clock me-1"></span>@report.Translate("Save for the schedule")
+                    </button>
+                }
                 <button id="execute_button" class="btn btn-success">@report.Translate("Execute")</button>
             }
             @if (report.GenerateHTMLDisplay || !report.PrintLayout)

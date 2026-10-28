@@ -48,6 +48,7 @@
     table.Columns.Add(new DataColumn("repeat_interval", typeof(string)));
     table.Columns.Add(new DataColumn("repeat_duration", typeof(string)));
     table.Columns.Add(new DataColumn("next_execution", typeof(DateTime)));
+    table.Columns.Add(new DataColumn("restrictions", typeof(string)));
     metaTable.NoSQLTable = table;
     log.LogMessage("{0} column(s) defined", table.Columns.Count);
 }
@@ -100,6 +101,10 @@
                 }
             
                 schedule.SealSchedule.CalculateNextExecution();
+                //Restriction values of a web schedule or custom restrictions of the output
+                var restrictions = "";
+                if (schedule.IsWebSchedule) restrictions = schedule.SealSchedule.Output.GetRestrictionsText(item);
+                else if (schedule.Output != null &amp;&amp; schedule.Output.UseCustomRestrictions) restrictions = string.Join("; ", schedule.Output.Restrictions.Where(i =&gt; i.Prompt != PromptType.None &amp;&amp; i.HasValue).Select(i =&gt; i.DisplayRestriction));
                 table.Rows.Add(
                     item.DisplayNameEx, 
                     item.FilePath.Replace(report.Repository.ReportsFolder, "").Replace(report.Repository.PersonalFolder, "Personal"), 
@@ -121,7 +126,8 @@
                     schedule.SealMonthsString,
                     schedule.SealRepeatInterval,
                     schedule.SealRepeatDuration,
-                    schedule.SealNextExecution
+                    schedule.SealNextExecution,
+                    restrictions
                     );
             }
         }
@@ -291,6 +297,14 @@
                 <DisplayOrder>21</DisplayOrder>
                 <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
                 <Format>G</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>3c1f7a52-8e4d-4b6a-9f0e-2d7b5a1c8e63</GUID>
+                <Name>restrictions</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Restrictions</DisplayName>
+                <DisplayOrder>22</DisplayOrder>
               </MetaColumn>
               <MetaColumn>
                 <GUID>5599701a-6dff-4731-a96b-f27313d95e72</GUID>
@@ -531,6 +545,14 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>cacebc5d-bc0a-47cb-9e24-b7e80ae881f6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>9b2e4d71-5c3a-4f8e-a6d0-7e1b3c5a9f24</GUID>
+          <Name>restrictions</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>3c1f7a52-8e4d-4b6a-9f0e-2d7b5a1c8e63</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>

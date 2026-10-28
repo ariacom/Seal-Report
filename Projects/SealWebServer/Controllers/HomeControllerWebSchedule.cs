@@ -80,6 +80,7 @@ namespace SealWebServer.Controllers
                 if (schedule != null)
                 {
                     result.schedule = toSWIWebSchedule(schedule, true);
+                    result.schedule.restrictions = schedule.Output.GetRestrictionsText(report);
                 }
                 else
                 {
@@ -105,6 +106,8 @@ namespace SealWebServer.Controllers
                         days = new int[] { 1 }
                     };
                 }
+                //The restriction values can be edited only if the report has prompted restrictions
+                result.schedule.hasrestrictions = WebScheduleOutput.GetPromptedRestrictions(report).Count > 0;
                 return Json(result);
             }
             catch (Exception ex)
@@ -152,6 +155,30 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Removes the restriction values of a web schedule of the logged user: the default values of the report are used
+        /// </summary>
+        public ActionResult SWIResetWebScheduleRestrictions(string guid, string sessionId)
+        {
+            writeDebug("SWIResetWebScheduleRestrictions");
+            try
+            {
+                SetSessionId(sessionId);
+                checkWebScheduleUser();
+                var schedule = getUserWebSchedule(guid);
+                getWebScheduleReport(schedule.WebPath, out _);
+                schedule.Output.Restrictions.Clear();
+                schedule.SaveToFile();
+
+                Audit.LogAudit(AuditType.EventServer, WebUser, schedule.WebPath, $"Restrictions of the web schedule '{schedule.Name}' reset");
+                return Json(new { Message = Translate("The default values of the report are used") });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
         /// Deletes a web schedule of the logged user
         /// </summary>
         public ActionResult SWIDeleteWebSchedule(string guid, string sessionId)
@@ -167,6 +194,53 @@ namespace SealWebServer.Controllers
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Web schedule '{schedule.Name}' deleted for '{WebUser.WebUserName}'");
                 Audit.LogAudit(AuditType.EventServer, WebUser, schedule.WebPath, $"Web schedule '{schedule.Name}' deleted");
                 return Json(new { Message = Translate("The schedule has been deleted") });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Saves the values of the prompted restrictions of a report executed to edit the restrictions of a web schedule (see SWExecuteReport scheduleRestrictions)
+        /// </summary>
+        public ActionResult ActionSaveWebScheduleRestrictions(string execution_guid, string sessionId)
+        {
+            writeDebug("ActionSaveWebScheduleRestrictions");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                checkWebScheduleUser();
+                var execution = getReportExecution(execution_guid);
+                if (execution == null) throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
+                var report = execution.Report;
+                if (string.IsNullOrEmpty(report.WebScheduleGUID)) throw new Exception("Error: the report is not executed for a schedule");
+                if (report.IsExecuting) throw new ValidationException(Translate("The report is being executed"));
+
+                var schedule = getUserWebSchedule(report.WebScheduleGUID);
+                if (schedule.ReportGUID != report.GUID) throw new Exception("Error: invalid schedule for this report");
+                //Check again the right to schedule the report
+                getWebScheduleReport(schedule.WebPath, out _);
+
+                //Values of the restrictions panel, checked as for an execution
+                foreach (var restriction in report.AllRestrictions) restriction.ValidationErrors = "";
+                report.IsNavigating = false;
+                initInputRestrictions(report);
+                execution.CheckInputRestrictions();
+                if (report.HasValidationErrors || !string.IsNullOrEmpty(report.ExecutionErrors))
+                {
+                    var error = report.HasValidationErrors ? Translate("Please check the restriction values") : report.ExecutionErrors;
+                    report.ExecutionErrors = "";
+                    return Json(new { error, restrictions = execution.RenderRestrictionsPanel() });
+                }
+
+                schedule.Output.SetRestrictions(report);
+                schedule.SaveToFile();
+
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Restrictions of the web schedule '{schedule.Name}' saved for '{WebUser.WebUserName}'");
+                Audit.LogAudit(AuditType.EventServer, WebUser, schedule.WebPath, $"Restrictions of the web schedule '{schedule.Name}' saved");
+                var text = schedule.Output.GetRestrictionsText(report);
+                return Json(new { message = Translate("The restriction values have been saved for the schedule") + (string.IsNullOrEmpty(text) ? "" : ": " + text) });
             }
             catch (Exception ex)
             {

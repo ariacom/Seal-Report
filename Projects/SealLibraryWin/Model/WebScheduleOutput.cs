@@ -3,6 +3,8 @@
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using System;
+using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 
 namespace Seal.Model
@@ -77,6 +79,58 @@ namespace Seal.Model
         /// If true, the generation is cancelled if the models have no record
         /// </summary>
         public bool CancelIfNoRecords { get; set; } = false;
+
+        /// <summary>
+        /// Values of the prompted restrictions of the report, identified by the restriction GUID. If empty, the default values of the report are used.
+        /// </summary>
+        public List<RestrictionValues> Restrictions { get; set; } = new List<RestrictionValues>();
+        /// <summary>
+        /// Xml serialization helper: serialize Restrictions only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeRestrictions() { return Restrictions.Count > 0; }
+
+        /// <summary>
+        /// Prompted restrictions of a report (main panel, Restriction Views and input values): the only restrictions that a web schedule can change
+        /// </summary>
+        public static List<ReportRestriction> GetPromptedRestrictions(Report report)
+        {
+            return report.AllRestrictions.Where(i => i.Prompt != PromptType.None).ToList();
+        }
+
+        /// <summary>
+        /// Set the restriction values of the schedule to the prompted restrictions of the report. A value is ignored if its restriction does not exist or is not prompted anymore.
+        /// </summary>
+        public void ApplyRestrictions(Report report)
+        {
+            if (Restrictions.Count == 0) return;
+            var restrictions = GetPromptedRestrictions(report);
+            foreach (var values in Restrictions)
+            {
+                foreach (var restriction in restrictions.Where(i => i.GUID == values.GUID)) values.ApplyTo(restriction, true);
+            }
+        }
+
+        /// <summary>
+        /// Store the current values of the prompted restrictions of the report
+        /// </summary>
+        public void SetRestrictions(Report report)
+        {
+            Restrictions = GetPromptedRestrictions(report).GroupBy(i => i.GUID).Select(i => RestrictionValues.FromRestriction(i.First())).ToList();
+        }
+
+        /// <summary>
+        /// Text of the restriction values of the schedule applied to the report (empty if the default values are used)
+        /// </summary>
+        public string GetRestrictionsText(Report report)
+        {
+            if (Restrictions.Count == 0) return "";
+            ApplyRestrictions(report);
+            var guids = Restrictions.Select(i => i.GUID).ToList();
+            //Restrictions having a value, with the date keywords (e.g. Today-1)
+            var texts = GetPromptedRestrictions(report).Where(i => guids.Contains(i.GUID) && i.HasValue).GroupBy(i => i.GUID).Select(i => i.First().DisplayRestriction).Where(i => !string.IsNullOrWhiteSpace(i));
+            return string.Join("; ", texts);
+        }
 
         /// <summary>
         /// Create the report output in the report (not saved in the report file)

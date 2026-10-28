@@ -61,17 +61,17 @@ namespace Test
             return user;
         }
 
-        static SealSchedule createWebSchedule(string fileName, string userName = LoginId, string folderLoginId = LoginId)
+        static SealSchedule createWebSchedule(string fileName, string userName = LoginId, string folderLoginId = LoginId, string reportWebPath = ReportWebPath, Action<WebScheduleOutput> setOutput = null)
         {
-            var report = Report.LoadFromFile(_repository.ReportsFolder + ReportWebPath, _repository, false);
+            var report = Report.LoadFromFile(_repository.ReportsFolder + reportWebPath, _repository, false);
             var schedule = new SealSchedule()
             {
                 GUID = Guid.NewGuid().ToString(),
                 Name = "Test " + fileName,
                 UserName = userName,
-                WebPath = ReportWebPath,
+                WebPath = reportWebPath,
                 ReportGUID = report.GUID,
-                ReportPath = ReportWebPath,
+                ReportPath = reportWebPath,
                 Enabled = true,
                 Type = TriggerType.Daily,
                 Start = DateTime.Now.AddDays(1),
@@ -83,6 +83,7 @@ namespace Test
                     FileName = fileName
                 }
             };
+            setOutput?.Invoke(schedule.Output);
             var folder = _repository.GetWebSchedulesFolder(getOwner(folderLoginId));
             Directory.CreateDirectory(folder);
             schedule.FilePath = Path.Combine(folder, $"{schedule.Name} {schedule.GUID}.xml");
@@ -173,6 +174,63 @@ namespace Test
             executeUser.SetFolders();
             Assert.IsTrue(executeUser.HasFolderRight(samples, (int)FolderRight.ExecuteReportOuput));
             Assert.IsFalse(executeUser.HasFolderRight(samples, (int)FolderRight.Schedule));
+        }
+
+        const string RestrictionsReportWebPath = "\\Samples\\02-Restrictions (Orders).srex";
+
+        /// <summary>
+        /// Restriction values of the report 02-Restrictions: one order, no country, orders until today (date keyword)
+        /// </summary>
+        static void setOrderRestrictions(WebScheduleOutput output)
+        {
+            var report = Report.LoadFromFile(_repository.ReportsFolder + RestrictionsReportWebPath, _repository, false);
+            var restrictions = WebScheduleOutput.GetPromptedRestrictions(report);
+            foreach (var restriction in restrictions.Where(i => i.DisplayNameEl == "Order ID"))
+            {
+                restriction.Operator = Operator.Equal;
+                restriction.Value1 = "10250";
+            }
+            foreach (var restriction in restrictions.Where(i => i.DisplayNameEl == "Customer Country")) restriction.EnumValues.Clear();
+            foreach (var restriction in restrictions.Where(i => i.DisplayNameEl == "Order Date")) restriction.Date2Keyword = "Today";
+            output.SetRestrictions(report);
+        }
+
+        [TestMethod]
+        public void RestrictionValuesAreApplied()
+        {
+            var schedule = createWebSchedule("restrictions applied", reportWebPath: RestrictionsReportWebPath, setOutput: setOrderRestrictions);
+            var saved = SealSchedule.LoadFromFile(schedule.FilePath);
+            Assert.IsTrue(saved.Output.Restrictions.Count > 0, "restriction values stored in the schedule file");
+
+            var report = SealReportScheduler.GetScheduledReport(SealReportScheduler.LoadSealSchedule(schedule.GUID));
+            var restrictions = WebScheduleOutput.GetPromptedRestrictions(report);
+            Assert.IsTrue(restrictions.Where(i => i.DisplayNameEl == "Order ID").All(i => i.Value1 == "10250"));
+            Assert.IsTrue(restrictions.Where(i => i.DisplayNameEl == "Customer Country").All(i => i.EnumValues.Count == 0));
+            Assert.IsTrue(restrictions.Where(i => i.DisplayNameEl == "Order Date").All(i => i.Date2Keyword == "Today"), "date keyword kept");
+            StringAssert.Contains(saved.Output.GetRestrictionsText(report), "Today");
+
+            //The scheduled output is generated with the values
+            ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
+            var result = SealSchedule.LoadFromFile(schedule.FilePath);
+            Assert.IsTrue(string.IsNullOrEmpty(result.LastError), result.LastError);
+            var content = File.ReadAllText(Directory.GetFiles(_personalFolder, "restrictions applied*.csv").Single());
+            //Order 10250 only (numbers are formatted with the thousand separator of the culture)
+            StringAssert.Contains(content, "Hanari Carnes");
+            Assert.IsFalse(content.Contains("1997"), "other orders filtered");
+        }
+
+        [TestMethod]
+        public void NotPromptedRestrictionIsIgnored()
+        {
+            var output = new WebScheduleOutput();
+            setOrderRestrictions(output);
+            var report = Report.LoadFromFile(_repository.ReportsFolder + RestrictionsReportWebPath, _repository, false);
+            var orderRestrictions = report.AllRestrictions.Where(i => i.DisplayNameEl == "Order ID").ToList();
+            //The designer has removed the prompt: the value of the schedule is not applied anymore
+            foreach (var restriction in orderRestrictions) restriction.Prompt = PromptType.None;
+            var initialValues = orderRestrictions.Select(i => i.Value1).ToList();
+            output.ApplyRestrictions(report);
+            CollectionAssert.AreEqual(initialValues, orderRestrictions.Select(i => i.Value1).ToList());
         }
 
         [TestMethod]

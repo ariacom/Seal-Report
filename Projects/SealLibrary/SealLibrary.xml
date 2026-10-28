@@ -10272,6 +10272,11 @@
             Current report output to execute
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.WebScheduleGUID">
+            <summary>
+            Web Report Server: identifier of the web schedule whose restriction values are being edited (the report is executed without its output and its view shows the button to save the values for the schedule)
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.ForOutput">
             <summary>
             True if the execution is for a report output
@@ -11602,9 +11607,9 @@
             Set restriction values from input 1,2,3,4
             </summary>
         </member>
-        <member name="T:Seal.Model.ReportExecution.RestrictionInitialValues">
+        <member name="F:Seal.Model.ReportExecution._initialRestrictions">
             <summary>
-            Values of a prompted restriction saved before the first user input
+            Values of the prompted restrictions saved before the first user input
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.saveInitialRestrictions">
@@ -11615,6 +11620,11 @@
         <member name="M:Seal.Model.ReportExecution.ResetPromptedRestrictions">
             <summary>
             Reset the prompted restrictions of the report to their initial values (without executing the report) and return the HTML of the restrictions panel
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.RenderRestrictionsPanel">
+            <summary>
+            Return the HTML of the restrictions panel with the current values and validation errors of the prompted restrictions
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.CheckInputRestrictions">
@@ -17145,9 +17155,160 @@
             If true, the generation is cancelled if the models have no record
             </summary>
         </member>
+        <member name="P:Seal.Model.WebScheduleOutput.Restrictions">
+            <summary>
+            Values of the prompted restrictions of the report, identified by the restriction GUID. If empty, the default values of the report are used.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.ShouldSerializeRestrictions">
+            <summary>
+            Xml serialization helper: serialize Restrictions only if not empty
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.GetPromptedRestrictions(Seal.Model.Report)">
+            <summary>
+            Prompted restrictions of a report (main panel, Restriction Views and input values): the only restrictions that a web schedule can change
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.ApplyRestrictions(Seal.Model.Report)">
+            <summary>
+            Set the restriction values of the schedule to the prompted restrictions of the report. A value is ignored if its restriction does not exist or is not prompted anymore.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.SetRestrictions(Seal.Model.Report)">
+            <summary>
+            Store the current values of the prompted restrictions of the report
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.GetRestrictionsText(Seal.Model.Report)">
+            <summary>
+            Text of the restriction values of the schedule applied to the report (empty if the default values are used)
+            </summary>
+        </member>
         <member name="M:Seal.Model.WebScheduleOutput.CreateReportOutput(Seal.Model.Report,System.String,System.String)">
             <summary>
             Create the report output in the report (not saved in the report file)
+            </summary>
+        </member>
+        <member name="T:Seal.Model.RestrictionValues">
+            <summary>
+            Values of a restriction (operator, values, dates, date keywords and enumerated values) without its definition.
+            Used to restore the initial values of the prompted restrictions and to store the restriction values of a web schedule.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.GUID">
+            <summary>
+            Identifier of the restriction
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Name">
+            <summary>
+            Name of the restriction (information only)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Operator">
+            <summary>
+            Operator of the restriction
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Value1">
+            <summary>
+            First value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Value2">
+            <summary>
+            Second value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Value3">
+            <summary>
+            Third value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Value4">
+            <summary>
+            Fourth value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date1">
+            <summary>
+            First date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date2">
+            <summary>
+            Second date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date3">
+            <summary>
+            Third date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date4">
+            <summary>
+            Fourth date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date1Keyword">
+            <summary>
+            Keyword of the first date (e.g. Today-1)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date2Keyword">
+            <summary>
+            Keyword of the second date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date3Keyword">
+            <summary>
+            Keyword of the third date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.Date4Keyword">
+            <summary>
+            Keyword of the fourth date
+            </summary>
+        </member>
+        <member name="P:Seal.Model.RestrictionValues.EnumValues">
+            <summary>
+            Identifiers of the enumerated values selected
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.ShouldSerializeEnumValues">
+            <summary>
+            Xml serialization helper: serialize EnumValues only if not empty
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.ShouldSerializeDate1">
+            <summary>
+            Xml serialization helpers: serialize the dates only if set
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.ShouldSerializeDate2">
+            <summary>
+            Xml serialization helper
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.ShouldSerializeDate3">
+            <summary>
+            Xml serialization helper
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.ShouldSerializeDate4">
+            <summary>
+            Xml serialization helper
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.FromRestriction(Seal.Model.ReportRestriction)">
+            <summary>
+            Returns the current values of a restriction
+            </summary>
+        </member>
+        <member name="M:Seal.Model.RestrictionValues.ApplyTo(Seal.Model.ReportRestriction,System.Boolean)">
+            <summary>
+            Set the values to a restriction. If onlyAllowedOperator is true, the operator is changed only if the user can change it (operator style visible).
             </summary>
         </member>
         <member name="T:Seal.Model.SealSecurity">

@@ -198,6 +198,7 @@ namespace Seal.Model
         public ReportSchedule InjectWebSchedule(Report report)
         {
             var output = Output.CreateReportOutput(report, GUID, Name);
+            Output.ApplyRestrictions(report);
             var schedule = report.AddSchedule(output);
             schedule.GUID = GUID;
             schedule.Name = Name;

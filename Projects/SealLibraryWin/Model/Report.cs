@@ -1103,6 +1103,12 @@ namespace Seal.Model
         public ReportOutput OutputToExecute = null;
 
         /// <summary>
+        /// Web Report Server: identifier of the web schedule whose restriction values are being edited (the report is executed without its output and its view shows the button to save the values for the schedule)
+        /// </summary>
+        [XmlIgnore]
+        public string WebScheduleGUID = null;
+
+        /// <summary>
         /// True if the execution is for a report output
         /// </summary>
         [XmlIgnore]
