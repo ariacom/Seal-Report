@@ -89,6 +89,13 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    RevokeMcpAuthorization(id, callback, errorcb) {
+        $.post(_server + "SWIRevokeMcpAuthorization", {
+            id: id
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     GetCultures(callback, errorcb) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

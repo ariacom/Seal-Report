@@ -48,7 +48,7 @@ namespace SealWebServer.Controllers
             = new ConcurrentDictionary<string, ConcurrentQueue<string>>();
         // ────────────────────────────────────────────────────────────────────
         [Authorize]
-        public async Task<IActionResult> Login()
+        public async Task<IActionResult> Login(string returnUrl)
         {
             var idToken = await HttpContext.GetTokenAsync(OpenIdConnectParameterNames.IdToken);
 
@@ -56,6 +56,8 @@ namespace SealWebServer.Controllers
             try
             {
                 SetWebUser(default, default, idToken);
+                //Single sign-on: strong login for the OAuth authorization of the MCP server
+                WebUser.StrongAuthentication = true;
             }
             catch (Exception ex)
             {
@@ -63,6 +65,8 @@ namespace SealWebServer.Controllers
                 return HandleSWIException(ex);
             }
 
+            //Back to a local page only (e.g. the consent page of the MCP server)
+            if (!string.IsNullOrEmpty(returnUrl) && Url.IsLocalUrl(returnUrl)) return LocalRedirect(returnUrl);
             return RedirectToAction("Main");
         }
 
@@ -265,6 +269,7 @@ namespace SealWebServer.Controllers
                 }
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode)) throw new Exception(Translate("Invalid code"));
+                WebUser.StrongAuthentication = true;
 
                 //Log and Audit
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.SuccessAudit, WebUser.AuthenticationSummary);
@@ -421,6 +426,13 @@ namespace SealWebServer.Controllers
                 {
                     var invalid = t.CheckValidity(now, configuration.McpTokenIdleDays);
                     return new { id = t.Id, name = t.Name, creation = format(t.Creation), expiration = t.Expiration == null ? Translate("Never") : format(t.Expiration), lastuse = format(t.LastUse), valid = invalid == null };
+                }).ToList(),
+                oauth = configuration.McpOAuthEnabled,
+                authorizations = McpOAuth.Store.GetUserGrants(userName).Select(g =>
+                {
+                    var agent = McpOAuth.FindMcpAgent(g.AgentSlug);
+                    var invalid = g.CheckValidity(now, configuration.McpTokenIdleDays);
+                    return new { id = g.Id, name = g.ClientName, agent = agent != null ? Repository.RepositoryTranslate("AIAgentName", "*", agent.Name) : g.AgentSlug, creation = format(g.Creation), expiration = g.Expiration == null ? Translate("Never") : format(g.Expiration), lastuse = format(g.LastUse), valid = invalid == null };
                 }).ToList()
             };
         }

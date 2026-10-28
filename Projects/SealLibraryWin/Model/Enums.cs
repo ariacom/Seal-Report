@@ -1378,6 +1378,10 @@ namespace Seal.Model
         /// Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls
         /// </summary>
         AIMcpRefused,
+        /// <summary>
+        /// OAuth authorization of an AI client by a user for an agent of the MCP server: consent given or refused, authorization revoked
+        /// </summary>
+        AIMcpAuthorization,
     }
 
     /// <summary>

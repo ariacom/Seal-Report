@@ -100,6 +100,14 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public RevokeMcpAuthorization(id: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIRevokeMcpAuthorization", {
+            id: id
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public GetCultures(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

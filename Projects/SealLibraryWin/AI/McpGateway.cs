@@ -17,8 +17,11 @@ namespace Seal.AI
     /// </summary>
     public class McpRequestContext
     {
-        /// <summary>The access token of the request</summary>
+        /// <summary>The access token of the request (for an OAuth access token: a description of its grant)</summary>
         public McpAccessToken Token;
+
+        /// <summary>The OAuth authorization of the request, null for a personal access token</summary>
+        public McpOAuthGrant Grant;
 
         /// <summary>The user authenticated from the token (loaded again for each request: his groups and rights are always the current ones)</summary>
         public SecurityUser User;
@@ -112,7 +115,7 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Authenticates a request of the MCP server from its 'Authorization' header and returns its context, or null with the reason of the refusal in <paramref name="error"/>.
+        /// Authenticates a request of the MCP server from its 'Authorization' header (personal access token or OAuth access token) and returns its context, or null with the reason of the refusal in <paramref name="error"/>.
         /// The user of the token is authenticated by the Security Provider from his name (<see cref="SecurityUser.ForSchedule"/>), then the agent <paramref name="agentSlug"/> must be one of his MCP agents.
         /// </summary>
         /// <param name="authorization">Value of the 'Authorization' header ('Bearer seal_mcp_...')</param>
@@ -141,18 +144,35 @@ namespace Seal.AI
                 error = "no access token: set the header 'Authorization: Bearer <token>' with a personal access token created in your profile";
                 return null;
             }
-            var token = TokenStore.Find(clearToken);
-            if (token == null)
-            {
-                error = "invalid or revoked access token";
-                return null;
-            }
             var now = DateTime.Now;
-            error = token.CheckValidity(now, configuration.McpTokenIdleDays);
-            if (error != null)
+            McpAccessToken token;
+            McpOAuthGrant grant = null;
+            if (McpOAuth.IsAccessToken(clearToken))
             {
-                error += ": create a new token in your profile";
-                return null;
+                //OAuth access token: valid only for the agent of its authorization
+                if (!configuration.McpOAuthEnabled)
+                {
+                    error = "the OAuth authorization is not enabled on the MCP server";
+                    return null;
+                }
+                grant = McpOAuth.AuthenticateAccessToken(clearToken, agentSlug, now, out error);
+                if (grant == null) return null;
+                token = new McpAccessToken() { Id = grant.Id, Name = grant.ClientName, UserName = grant.UserName, Creation = grant.Creation, Expiration = grant.AccessExpiration, LastUse = grant.LastUse };
+            }
+            else
+            {
+                token = TokenStore.Find(clearToken);
+                if (token == null)
+                {
+                    error = "invalid or revoked access token";
+                    return null;
+                }
+                error = token.CheckValidity(now, configuration.McpTokenIdleDays);
+                if (error != null)
+                {
+                    error += ": create a new token in your profile";
+                    return null;
+                }
             }
 
             var user = new SecurityUser(Repository.Instance.Security) { WebUserName = token.UserName, WebHostName = hostName, ForSchedule = true };
@@ -162,7 +182,7 @@ namespace Seal.AI
                 error = $"the user '{token.UserName}' of the access token is not authenticated by the Security Provider" + (string.IsNullOrEmpty(user.Error) ? "" : ": " + user.Error);
                 return null;
             }
-            TokenStore.Touch(token, now);
+            if (grant == null) TokenStore.Touch(token, now);
             try
             {
                 if (System.IO.File.Exists(user.ProfilePath)) user.Profile = SecurityUserProfile.LoadFromFile(user.ProfilePath);
@@ -180,10 +200,10 @@ namespace Seal.AI
             {
                 unauthorized = false;
                 error = $"the agent '{agentSlug}' is not available on the MCP server for the user '{token.UserName}'";
-                return new McpRequestContext() { Token = token, User = user, ClientAddress = hostName, ClientApplication = clientApplication };
+                return new McpRequestContext() { Token = token, Grant = grant, User = user, ClientAddress = hostName, ClientApplication = clientApplication };
             }
             unauthorized = false;
-            return new McpRequestContext() { Token = token, User = user, Agent = agent, ClientAddress = hostName, ClientApplication = clientApplication };
+            return new McpRequestContext() { Token = token, Grant = grant, User = user, Agent = agent, ClientAddress = hostName, ClientApplication = clientApplication };
         }
 
         static readonly ConcurrentDictionary<string, Queue<DateTime>> _calls = new ConcurrentDictionary<string, Queue<DateTime>>(StringComparer.OrdinalIgnoreCase);

@@ -71,10 +71,19 @@ namespace Seal.AI
                 GetProperty("McpTokenMaxDays").SetIsBrowsable(true);
                 GetProperty("McpTokenIdleDays").SetIsBrowsable(true);
                 GetProperty("McpMaxCallsPerMinute").SetIsBrowsable(true);
+                GetProperty("McpOAuthEnabled").SetIsBrowsable(true);
+                GetProperty("McpPublicUrl").SetIsBrowsable(true);
+                GetProperty("McpOAuthRedirectUris").SetIsBrowsable(true);
+                GetProperty("McpOAuthDynamicRegistration").SetIsBrowsable(true);
+                GetProperty("McpOAuthAccessTokenMinutes").SetIsBrowsable(true);
+                GetProperty("McpOAuthGrantMaxDays").SetIsBrowsable(true);
+                GetProperty("McpOAuthRequireStrongLogin").SetIsBrowsable(true);
 
                 GetProperty("McpTokenMaxDays").SetIsReadOnly(!McpServerEnabled);
                 GetProperty("McpTokenIdleDays").SetIsReadOnly(!McpServerEnabled);
                 GetProperty("McpMaxCallsPerMinute").SetIsReadOnly(!McpServerEnabled);
+                GetProperty("McpOAuthEnabled").SetIsReadOnly(!McpServerEnabled);
+                foreach (var name in new[] { "McpPublicUrl", "McpOAuthRedirectUris", "McpOAuthDynamicRegistration", "McpOAuthAccessTokenMinutes", "McpOAuthGrantMaxDays", "McpOAuthRequireStrongLogin" }) GetProperty(name).SetIsReadOnly(!McpServerEnabled || !McpOAuthEnabled);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -256,6 +265,75 @@ namespace Seal.AI
         [DefaultValue(60)]
 #endif
         public int McpMaxCallsPerMinute { get; set; } = 60;
+
+        /// <summary>
+        /// Web Report Server: if true, the MCP server is also an OAuth 2.1 authorization server: the AI clients (claude.ai, Claude Desktop, Claude Code...) connect to an agent with its URL only, the user logs in to the Web Report Server and gives his consent
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP OAuth enabled"), Description("Danger Zone: if true, the MCP server is also an OAuth 2.1 authorization server: an AI client (claude.ai, Claude Desktop, Claude Code...) connects to an agent with the URL of its MCP server only. The user logs in to the Web Report Server in his browser and authorizes the client for the agent, the client then receives an access token valid for this agent only (renewed with a refresh token). The authorizations are listed and revoked in the profile of the user. The MCP server must be enabled and served in HTTPS."), Category("MCP Server"), Id(5, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool McpOAuthEnabled { get; set; } = false;
+
+        /// <summary>
+        /// Web Report Server: public base URL of the Web Report Server (e.g. https://reports.mycompany.com/seal) used for the OAuth issuer and the URLs of the MCP servers. Empty to use the URL of the request.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP public URL"), Description("Public base URL of the Web Report Server used by the OAuth authorization server for its issuer and for the URLs of the MCP servers (e.g. https://reports.mycompany.com/seal). It must be the URL the users enter in their AI client. Empty to use the URL of the request, set it if the server is behind a proxy."), Category("MCP Server"), Id(6, 2)]
+        [DefaultValue("")]
+#endif
+        public string McpPublicUrl { get; set; } = "";
+
+        /// <summary>
+        /// Default value of <see cref="McpOAuthRedirectUris"/>: claude.ai, Claude Desktop and mobile, Claude Code (loopback)
+        /// </summary>
+        public const string DefaultMcpOAuthRedirectUris = "https://claude.ai/api/mcp/auth_callback\r\nhttps://claude.com/api/mcp/auth_callback\r\nhttp://localhost/callback\r\nhttp://127.0.0.1/callback";
+
+        /// <summary>
+        /// Web Report Server: redirect URIs of the OAuth clients allowed by the MCP server (one per line, the port of a loopback URI is ignored, '*' for any HTTPS or loopback URI)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP OAuth redirect URIs"), Description("Redirect URIs of the AI clients allowed to connect with OAuth (one per line). By default: claude.ai, Claude Desktop and mobile (https://claude.ai/api/mcp/auth_callback, https://claude.com/api/mcp/auth_callback) and Claude Code (http://localhost/callback, http://127.0.0.1/callback). The port of a loopback URI (localhost, 127.0.0.1) is ignored. Add the redirect URI of another AI client to allow it, '*' allows any HTTPS or loopback URI."), Category("MCP Server"), Id(7, 2)]
+        [DefaultValue(DefaultMcpOAuthRedirectUris)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string McpOAuthRedirectUris { get; set; } = DefaultMcpOAuthRedirectUris;
+
+        /// <summary>
+        /// Web Report Server: if true, the OAuth clients can register dynamically (RFC 7591), otherwise only the clients described by a Client ID Metadata Document are accepted
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP OAuth dynamic client registration"), Description("If true, the AI clients can register dynamically (RFC 7591). Otherwise only the clients identified by a Client ID Metadata Document (an HTTPS URL, e.g. claude.ai and Claude Code) are accepted. In both cases the redirect URIs must be allowed."), Category("MCP Server"), Id(8, 2)]
+        [DefaultValue(true)]
+#endif
+        public bool McpOAuthDynamicRegistration { get; set; } = true;
+
+        /// <summary>
+        /// Web Report Server: validity in minutes of an OAuth access token of the MCP server
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP OAuth access token validity"), Description("Validity in minutes of an OAuth access token: the AI client renews it with its refresh token."), Category("MCP Server"), Id(9, 2)]
+        [DefaultValue(60)]
+#endif
+        public int McpOAuthAccessTokenMinutes { get; set; } = 60;
+
+        /// <summary>
+        /// Web Report Server: maximum duration in days of an OAuth authorization, the user must then log in and authorize the client again (0 for no limit)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP OAuth authorization maximum duration"), Description("Maximum duration in days of an OAuth authorization given by a user to an AI client: the user must then log in and authorize the client again, the policies of the login (password, Two-Factor Authentication, single sign-on) are applied again. 0 for no limit (the 'MCP token maximum validity' still applies). The 'MCP token maximum inactivity' also applies to the authorizations."), Category("MCP Server"), Id(10, 2)]
+        [DefaultValue(30)]
+#endif
+        public int McpOAuthGrantMaxDays { get; set; } = 30;
+
+        /// <summary>
+        /// Web Report Server: if true, a user can authorize an OAuth client only if he has logged in with the Two-Factor Authentication or with the OpenID Connect single sign-on
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP OAuth requires a strong login"), Description("If true, a user can authorize an AI client only if he has logged in to the Web Report Server with the Two-Factor Authentication or with the OpenID Connect single sign-on, not with a user name and a password only."), Category("MCP Server"), Id(11, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool McpOAuthRequireStrongLogin { get; set; } = false;
 
         List<AIAgentConfiguration> _AIAgents = new List<AIAgentConfiguration>();
         /// <summary>

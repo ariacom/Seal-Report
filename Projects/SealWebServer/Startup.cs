@@ -140,6 +140,7 @@ namespace SealWebServer
                     new { controller = "Home", action = "Agent" }
                     );
                 MapMcp(endpoints);
+                MapMcpOAuth(endpoints);
             });
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 

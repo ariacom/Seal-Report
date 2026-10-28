@@ -363,6 +363,24 @@
                     </div>
                     <div class="form-text">@repository.TranslateWeb("MCP server URLs of your agents:")</div>
                     <ul id="mcp-agents" class="list-unstyled small mb-0"></ul>
+                    <div id="mcp-authorizations" class="mt-3 d-none">
+                        <div class="fw-semibold small">@repository.TranslateWeb("Authorized applications")</div>
+                        <div class="form-text mb-2">@repository.TranslateWeb("AI clients connected with OAuth: add the MCP server URL of an agent as a connector in your AI client (e.g. claude.ai or Claude Desktop) and log in to authorize it.")</div>
+                        <table id="mcp-authorizations-table" class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>@repository.TranslateWeb("Application")</th>
+                                    <th>@repository.TranslateWeb("Agent")</th>
+                                    <th>@repository.TranslateWeb("Authorized")</th>
+                                    <th>@repository.TranslateWeb("Expires")</th>
+                                    <th>@repository.TranslateWeb("Last use")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="mcp-authorizations-none" class="small text-muted">@repository.TranslateWeb("No application authorized.")</div>
+                    </div>
                 </div>
                 </div>
                 </div>

@@ -192,7 +192,8 @@ namespace SealWebServer
         }
 
         /// <summary>
-        /// Authenticates the requests of the MCP server before the MCP endpoint: 404 if the server is not enabled or the agent not available, 401 for a missing, invalid or expired token.
+        /// Authenticates the requests of the MCP server before the MCP endpoint: 404 if the server is not enabled or the agent not available, 401 for a missing, invalid or expired token
+        /// (with the URL of the protected resource metadata if the OAuth authorization server is enabled).
         /// </summary>
         static void UseMcpAuthentication(IApplicationBuilder app)
         {
@@ -217,7 +218,15 @@ namespace SealWebServer
                     Audit.LogMcpAudit(AuditType.AIMcpRefused, user, null, httpContext.Request.Path.Value, error, null, clientAddress, clientApplication);
                 }
                 httpContext.Response.StatusCode = unauthorized ? StatusCodes.Status401Unauthorized : StatusCodes.Status404NotFound;
-                if (unauthorized) httpContext.Response.Headers.WWWAuthenticate = $"Bearer realm=\"Seal Report MCP\", error=\"invalid_token\", error_description=\"{error?.Replace("\"", "'")}\"";
+                if (unauthorized)
+                {
+                    var header = "Bearer realm=\"Seal Report MCP\"";
+                    //OAuth: the client discovers the authorization server from the protected resource metadata of the agent (RFC 9728)
+                    if (Repository.Instance.AIConfiguration.McpOAuthEnabled && !string.IsNullOrEmpty(slug)) header += $", resource_metadata=\"{McpOAuth.GetResourceMetadataUrl(GetMcpPublicBaseUrl(httpContext.Request), slug)}\", scope=\"{McpOAuth.McpScope}\"";
+                    //No error code when no credentials are given (RFC 6750 section 3.1)
+                    if (!string.IsNullOrEmpty(httpContext.Request.Headers.Authorization.ToString())) header += $", error=\"invalid_token\", error_description=\"{error?.Replace("\"", "'")}\"";
+                    httpContext.Response.Headers.WWWAuthenticate = header;
+                }
                 await httpContext.Response.WriteAsync("Error: " + error);
             }));
         }

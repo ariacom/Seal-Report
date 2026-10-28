@@ -212,6 +212,18 @@
                             </ul>
                             <pre><code>claude mcp add --transport http seal-designer https://&lt;server&gt;/mcp/report-designer --header "Authorization: Bearer seal_mcp_..."</code></pre>
                             <p>
+                                <strong>Connecting a client with OAuth (claude.ai, Claude Desktop, Claude Code...)</strong>
+                            </p>
+                            <ul>
+                                <li>Set <code>MCP OAuth enabled</code> (<i>Danger Zone</i>, disabled by default): the MCP server is then also an <b>OAuth 2.1 authorization server</b> and a client connects to an agent with its URL only, without token to copy.</li>
+                                <li>In the client, add the URL of the agent as a connector (<eg>e.g. claude.ai or Claude Desktop: <i>Settings > Connectors > Add custom connector</i>; Claude Code: <code>claude mcp add --transport http seal-designer https://&lt;server&gt;/mcp/report-designer</code> then <code>/mcp</code> to authenticate</eg>).</li>
+                                <li>The browser opens the authorization page of the Web Report Server: the user logs in (password, Two-Factor Authentication or single sign-on), checks the client, the address it is redirected to and the tools of the agent, then authorizes it. The client receives an access token valid for this agent only, renewed with a refresh token.</li>
+                                <li>The authorizations are listed in the profile, tab <b>MCP access</b>, section <i>Authorized applications</i>, where they can be revoked.</li>
+                                <li>Settings of the <i>MCP Server</i> category: <code>MCP public URL</code> (the URL the users enter in their client, required behind a proxy), <code>MCP OAuth redirect URIs</code> (clients allowed, by default Claude: <code>https://claude.ai/api/mcp/auth_callback</code>, <code>https://claude.com/api/mcp/auth_callback</code> and the loopback addresses of Claude Code), <code>MCP OAuth dynamic client registration</code>, <code>MCP OAuth access token validity</code> (60 minutes), <code>MCP OAuth authorization maximum duration</code> (30 days, the user must then log in again) and <code>MCP OAuth requires a strong login</code> (Two-Factor Authentication or single sign-on).</li>
+                                <li>Standards: discovery by the protected resource metadata (RFC 9728) and the authorization server metadata (RFC 8414, also at <code>/.well-known/openid-configuration</code>), clients identified by a Client ID Metadata Document or registered dynamically (RFC 7591), PKCE S256 required, tokens bound to the agent (RFC 8707), rotation of the refresh tokens with revocation of the authorization if a token is reused, revocation endpoint (RFC 7009).</li>
+                                <li>The server must be served in HTTPS and, for claude.ai and Claude Desktop, be reachable from the Internet (Anthropic addresses <code>160.79.104.0/21</code>). If the Web Report Server is in a virtual directory (<eg>e.g. <code>https://&lt;server&gt;/seal</code></eg>), the clients find the authorization server with the header <code>WWW-Authenticate</code> of the MCP server and with <code>/seal/.well-known/openid-configuration</code>.</li>
+                            </ul>
+                            <p>
                                 The instructions sent to the client are the system prompt of the agent. All the tools of the agent and of its skills are listed upfront: a tool belonging to a skill is described as <i>Requires the skill ...</i> and the client calls <code>load_skill</code> before using it.
                             </p>
                             <ul>
@@ -225,12 +237,9 @@
                             </p>
                             <ul>
                                 <li>Each request is authenticated on its own: the user of the token is loaded again by the Security Provider, so a change of his groups or rights applies immediately.</li>
-                                <li>Only the SHA-256 hash of a token is stored (<i>/Security/McpTokens</i>). A token is revoked from the profile; an expired or inactive token is refused.</li>
-                                <li>Every tool call, error and refusal is written in the audit (types <code>AIMcpCall</code>, <code>AIMcpCallError</code>, <code>AIMcpRefused</code>) with the IP address and the application of the client. The System report <i>270 Audit - MCP Activity</i> shows the activity per day, user and tool, the errors and the inventory of the tokens of all the users.</li>
+                                <li>Only the SHA-256 hash of a token is stored (<i>/Security/McpTokens</i>, the OAuth clients and authorizations in its sub-folders). A token or an authorization is revoked from the profile; an expired or inactive token is refused.</li>
+                                <li>Every tool call, error and refusal is written in the audit (types <code>AIMcpCall</code>, <code>AIMcpCallError</code>, <code>AIMcpRefused</code>, and <code>AIMcpAuthorization</code> for the OAuth authorizations given, refused or revoked) with the IP address and the application of the client. The System report <i>270 Audit - MCP Activity</i> shows the activity per day, user and tool, the errors and the inventory of the tokens and OAuth authorizations of all the users.</li>
                             </ul>
-                            <div class="bs-callout bs-callout-warning">
-                                The MCP server authenticates the clients with personal access tokens only: the clients requiring an OAuth authorization (<eg>e.g. the connectors of claude.ai</eg>) are not supported yet.
-                            </div>
                         </div>
                         <!-- end col -->
                     </div>

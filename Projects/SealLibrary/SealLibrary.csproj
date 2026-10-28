@@ -64,6 +64,7 @@
 		<Compile Include="..\SealLibraryWin\AI\AIToolHost.cs" Link="AI\AIToolHost.cs" />
 		<Compile Include="..\SealLibraryWin\AI\McpTokenStore.cs" Link="AI\McpTokenStore.cs" />
 		<Compile Include="..\SealLibraryWin\AI\McpGateway.cs" Link="AI\McpGateway.cs" />
+		<Compile Include="..\SealLibraryWin\AI\McpOAuth.cs" Link="AI\McpOAuth.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIUsage.cs" Link="AI\AIUsage.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIKnowledge.cs" Link="AI\AIKnowledge.cs" />
 		<Compile Include="..\SealLibraryWin\AI\AIReportWriter.cs" Link="AI\AIReportWriter.cs" />

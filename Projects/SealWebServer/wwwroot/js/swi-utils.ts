@@ -378,6 +378,31 @@ namespace SWIUtil {
             $body.append($row);
         });
 
+        //OAuth authorizations given to AI clients
+        var authorizations = data.authorizations || [];
+        SWIUtil.ShowHideControl($("#mcp-authorizations"), data.oauth || authorizations.length > 0);
+        SWIUtil.ShowHideControl($("#mcp-authorizations-table"), authorizations.length > 0);
+        SWIUtil.ShowHideControl($("#mcp-authorizations-none"), authorizations.length == 0);
+        var $authBody = $("#mcp-authorizations-table tbody");
+        $authBody.empty();
+        authorizations.forEach(function (authorization: any) {
+            var $revoke = $("<button type='button' class='btn btn-sm btn-outline-danger py-0'><i class='fa fa-trash'></i></button>").attr("title", SWIUtil.tr2("Revoke"));
+            $revoke.on("click", function () {
+                if (!confirm(SWIUtil.tr2("Revoke this authorization? The AI client will no longer be connected."))) return;
+                _gateway.RevokeMcpAuthorization(authorization.id, function (result) {
+                    if (result) renderMcpTokens(result);
+                    else $authBody.empty();
+                }, showMcpError);
+            });
+            $authBody.append($("<tr>")
+                .append($("<td>").text(authorization.name).toggleClass("text-decoration-line-through text-muted", !authorization.valid))
+                .append($("<td>").text(authorization.agent))
+                .append($("<td>").text(authorization.creation))
+                .append($("<td>").text(authorization.expiration))
+                .append($("<td>").text(authorization.lastuse))
+                .append($("<td class='text-end'>").append($revoke)));
+        });
+
         var $days = $("#mcp-token-days");
         $days.empty();
         [30, 90, 365].filter(function (d) { return data.maxdays == 0 || d <= data.maxdays; }).forEach(function (d) {

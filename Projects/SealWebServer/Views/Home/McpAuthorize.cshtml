@@ -1,0 +1,172 @@
+@using Seal.Model
+@using Seal.AI
+@using SealWebServer.Controllers
+@{
+    McpAuthorizeModel vm = Model as McpAuthorizeModel;
+    Repository repository = vm.Repository;
+    var request = vm.Request;
+    var user = vm.User;
+    var canConsent = request != null && user != null && vm.Error == null && !vm.StrongLoginRequired;
+    string t(string text) => repository.TranslateWeb(text);
+    var returnUrl = request != null ? Context.Request.PathBase + McpOAuth.OAuthPath + "/authorize?request_id=" + request.Id : "";
+}
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="referrer" content="no-referrer">
+    <title>@repository.Configuration.WebProductName - @t("Authorize an AI client")</title>
+    <link href="~/img/faviconWebServer.ico" rel="shortcut icon" type="image/x-icon" />
+    @foreach (var asset in ClientAssets.FontAwesomeCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" asp-append-version="true" />
+    }
+    @foreach (var asset in ClientAssets.BootstrapCss)
+    {
+        <link rel="stylesheet" href="~/@asset.Path" asp-append-version="true" />
+    }
+    <style>
+        body { background: #f3f5f8; }
+        .mcp-card { max-width: 34rem; margin: 3rem auto; }
+        .mcp-host { font-family: var(--bs-font-monospace); font-weight: 600; }
+        .mcp-tools { max-height: 12rem; overflow-y: auto; }
+    </style>
+</head>
+<body>
+    <div class="mcp-card px-3">
+        <div class="card shadow-sm">
+            <div class="card-header bg-white">
+                <h1 class="h5 mb-0"><i class="fa-solid fa-plug me-2 text-primary"></i>@repository.Configuration.WebProductName</h1>
+            </div>
+            <div class="card-body">
+                @if (request == null)
+                {
+                    <div class="alert alert-danger mb-0">@vm.Error</div>
+                }
+                else
+                {
+                    <p class="mb-3">
+                        <b>@request.Client.ClientName</b> @t("requests access to the AI agent") <b>@(vm.AgentName ?? request.AgentSlug)</b> @t("with your rights.")
+                    </p>
+                    <p class="small mb-3">
+                        @t("After your authorization, you will be redirected to:") <span class="mcp-host">@request.RedirectHost</span>
+                        @if (request.IsLoopbackRedirect)
+                        {
+                            <span class="d-block alert alert-warning p-2 mt-2 mb-0"><i class="fa-solid fa-triangle-exclamation me-1"></i>@t("This client is an application of your computer (local address). Authorize it only if you have just started the connection from an AI client you trust, e.g. Claude Code.")</span>
+                        }
+                    </p>
+
+                    @if (user == null)
+                    {
+                        <form id="mcp-login" class="border rounded p-3 bg-light" autocomplete="on">
+                            <div class="fw-semibold mb-2">@t("Log in to authorize the client")</div>
+                            <div id="mcp-login-fields">
+                                <input id="mcp-user" class="form-control mb-2" autocomplete="username" placeholder="@t("User name")" />
+                                <input id="mcp-password" type="password" class="form-control mb-2" autocomplete="current-password" placeholder="@t("Password")" />
+                            </div>
+                            <div id="mcp-code-fields" class="d-none">
+                                <div id="mcp-code-message" class="small mb-1"></div>
+                                <input id="mcp-code" class="form-control mb-2" autocomplete="one-time-code" placeholder="@t("Security code")" />
+                            </div>
+                            <div id="mcp-login-error" class="alert alert-danger p-2 d-none"></div>
+                            <button id="mcp-login-button" type="submit" class="btn btn-primary w-100">@t("Log in")</button>
+                            @if (vm.SsoEnabled)
+                            {
+                                <a class="btn btn-outline-secondary w-100 mt-2" href="@Url.Content("~/Login")?returnUrl=@Uri.EscapeDataString(returnUrl)">@t("Log in with single sign-on")</a>
+                            }
+                        </form>
+                    }
+                    else
+                    {
+                        <div class="small text-muted mb-3"><i class="fa-solid fa-user me-1"></i>@t("Logged in as") <b>@(string.IsNullOrEmpty(user.Name) ? user.WebUserName : user.Name)</b></div>
+                        if (vm.Error != null)
+                        {
+                            <div class="alert alert-danger">@vm.Error</div>
+                        }
+                        else if (vm.StrongLoginRequired)
+                        {
+                            <div class="alert alert-warning">@t("The authorization of an AI client requires a login with the Two-Factor Authentication or with the single sign-on.")</div>
+                            if (vm.SsoEnabled)
+                            {
+                                <a class="btn btn-outline-secondary w-100 mb-3" href="@Url.Content("~/Login")?returnUrl=@Uri.EscapeDataString(returnUrl)">@t("Log in with single sign-on")</a>
+                            }
+                        }
+                        else
+                        {
+                            if (!string.IsNullOrEmpty(vm.Agent?.Description))
+                            {
+                                <p class="small">@repository.RepositoryTranslate("AIAgentDescription", "*", vm.Agent.Description)</p>
+                            }
+                            var readOnly = vm.Tools.Where(i => i.Access == AIToolAccess.ReadOnly).ToList();
+                            var write = vm.Tools.Where(i => i.Access == AIToolAccess.Write).ToList();
+                            var destructive = vm.Tools.Where(i => i.Access == AIToolAccess.Destructive || i.Access == AIToolAccess.Unspecified).ToList();
+                            <div class="small mb-1">@t("The client will be able to use these tools:")</div>
+                            <ul class="list-unstyled small mcp-tools border rounded p-2">
+                                @foreach (var group in new[] { (readOnly, "fa-eye text-success", t("Read only")), (write, "fa-pen text-warning", t("Write")), (destructive, "fa-triangle-exclamation text-danger", t("Modify or delete")) })
+                                {
+                                    if (group.Item1.Count == 0) { continue; }
+                                    <li class="mb-1"><i class="fa-solid @group.Item2 me-1"></i><b>@group.Item3 (@group.Item1.Count)</b>: <span class="text-muted">@string.Join(", ", group.Item1.Select(i => i.Name))</span></li>
+                                }
+                            </ul>
+                            <p class="small text-muted">@t("The data returned by the tools are sent to the AI model of the client. You can revoke this authorization at any time in your profile ('MCP access').")</p>
+                        }
+                    }
+                }
+            </div>
+            @if (request != null)
+            {
+                <div class="card-footer bg-white">
+                    <form method="post" action="@(Context.Request.PathBase + McpOAuth.OAuthPath + "/authorize")" class="d-flex gap-2 justify-content-end">
+                        @Html.AntiForgeryToken()
+                        <input type="hidden" name="request_id" value="@request.Id" />
+                        <button type="submit" name="decision" value="deny" class="btn btn-secondary">@t("Deny")</button>
+                        @if (canConsent)
+                        {
+                            <button type="submit" name="decision" value="allow" class="btn btn-primary">@t("Authorize")</button>
+                        }
+                    </form>
+                </div>
+            }
+        </div>
+    </div>
+
+    @if (request != null && user == null)
+    {
+        <script>
+            (function () {
+                var base = "@Url.Content("~/")";
+                var needCode = false;
+                function show(id, visible) { document.getElementById(id).classList.toggle("d-none", !visible); }
+                function post(action, data) {
+                    return fetch(base + action, { method: "POST", credentials: "same-origin", headers: { "Content-Type": "application/x-www-form-urlencoded" }, body: new URLSearchParams(data) }).then(function (r) { return r.json(); });
+                }
+                function error(message) {
+                    var div = document.getElementById("mcp-login-error");
+                    div.textContent = new DOMParser().parseFromString(message || "", "text/html").body.textContent;
+                    show("mcp-login-error", true);
+                }
+                document.getElementById("mcp-login").addEventListener("submit", function (ev) {
+                    ev.preventDefault();
+                    show("mcp-login-error", false);
+                    var promise = needCode
+                        ? post("SWICheckSecurityCode", { code: document.getElementById("mcp-code").value })
+                        : post("SWILogin", { user: document.getElementById("mcp-user").value, password: document.getElementById("mcp-password").value });
+                    promise.then(function (data) {
+                        if (data.error) { error(data.error); return; }
+                        if (data.securitycoderequired) {
+                            needCode = true;
+                            document.getElementById("mcp-code-message").textContent = data.message || "";
+                            show("mcp-login-fields", false);
+                            show("mcp-code-fields", true);
+                            document.getElementById("mcp-code").focus();
+                            return;
+                        }
+                        location.reload();
+                    }).catch(function (e) { error(e.message); });
+                });
+            })();
+        </script>
+    }
+</body>
+</html>

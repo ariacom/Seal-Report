@@ -239,6 +239,46 @@
             Web Report Server: maximum number of MCP tool calls per minute and per user (0 for no limit)
             </summary>
         </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpOAuthEnabled">
+            <summary>
+            Web Report Server: if true, the MCP server is also an OAuth 2.1 authorization server: the AI clients (claude.ai, Claude Desktop, Claude Code...) connect to an agent with its URL only, the user logs in to the Web Report Server and gives his consent
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpPublicUrl">
+            <summary>
+            Web Report Server: public base URL of the Web Report Server (e.g. https://reports.mycompany.com/seal) used for the OAuth issuer and the URLs of the MCP servers. Empty to use the URL of the request.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIServerConfiguration.DefaultMcpOAuthRedirectUris">
+            <summary>
+            Default value of <see cref="P:Seal.AI.AIServerConfiguration.McpOAuthRedirectUris"/>: claude.ai, Claude Desktop and mobile, Claude Code (loopback)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpOAuthRedirectUris">
+            <summary>
+            Web Report Server: redirect URIs of the OAuth clients allowed by the MCP server (one per line, the port of a loopback URI is ignored, '*' for any HTTPS or loopback URI)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpOAuthDynamicRegistration">
+            <summary>
+            Web Report Server: if true, the OAuth clients can register dynamically (RFC 7591), otherwise only the clients described by a Client ID Metadata Document are accepted
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpOAuthAccessTokenMinutes">
+            <summary>
+            Web Report Server: validity in minutes of an OAuth access token of the MCP server
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpOAuthGrantMaxDays">
+            <summary>
+            Web Report Server: maximum duration in days of an OAuth authorization, the user must then log in and authorize the client again (0 for no limit)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpOAuthRequireStrongLogin">
+            <summary>
+            Web Report Server: if true, a user can authorize an OAuth client only if he has logged in with the Two-Factor Authentication or with the OpenID Connect single sign-on
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIServerConfiguration.AIAgents">
             <summary>
             AI Agents combining a provider, an optional set of tools, and a default system prompt.
@@ -1470,7 +1510,10 @@
             </summary>
         </member>
         <member name="F:Seal.AI.McpRequestContext.Token">
-            <summary>The access token of the request</summary>
+            <summary>The access token of the request (for an OAuth access token: a description of its grant)</summary>
+        </member>
+        <member name="F:Seal.AI.McpRequestContext.Grant">
+            <summary>The OAuth authorization of the request, null for a personal access token</summary>
         </member>
         <member name="F:Seal.AI.McpRequestContext.User">
             <summary>The user authenticated from the token (loaded again for each request: his groups and rights are always the current ones)</summary>
@@ -1543,7 +1586,7 @@
         </member>
         <member name="M:Seal.AI.McpGateway.Authenticate(System.String,System.String,System.String,System.String@,System.Boolean@,System.String)">
             <summary>
-            Authenticates a request of the MCP server from its 'Authorization' header and returns its context, or null with the reason of the refusal in <paramref name="error"/>.
+            Authenticates a request of the MCP server from its 'Authorization' header (personal access token or OAuth access token) and returns its context, or null with the reason of the refusal in <paramref name="error"/>.
             The user of the token is authenticated by the Security Provider from his name (<see cref="F:Seal.Model.SecurityUser.ForSchedule"/>), then the agent <paramref name="agentSlug"/> must be one of his MCP agents.
             </summary>
             <param name="authorization">Value of the 'Authorization' header ('Bearer seal_mcp_...')</param>
@@ -1621,6 +1664,389 @@
         </member>
         <member name="M:Seal.AI.McpGateway.IsError(Seal.AI.AIToolHostResult)">
             <summary>True if the result of a tool is an error (text starting with 'Error:' or script failure)</summary>
+        </member>
+        <member name="T:Seal.AI.McpOAuthClient">
+            <summary>
+            OAuth client of the MCP server: registered dynamically (RFC 7591) or described by a Client ID Metadata Document (its client_id is the HTTPS URL of the document)
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthClient.ClientId">
+            <summary>Identifier of the client</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthClient.ClientName">
+            <summary>Name of the client shown on the consent page</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthClient.RedirectUris">
+            <summary>Redirect URIs of the client</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthClient.IsMetadataDocument">
+            <summary>True if the client is described by a Client ID Metadata Document (not stored)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthClient.Creation">
+            <summary>Registration date</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthClient.LastUse">
+            <summary>Last authorization of the client (null if never authorized)</summary>
+        </member>
+        <member name="T:Seal.AI.McpOAuthGrant">
+            <summary>
+            Authorization given by a user to an OAuth client for an agent of the MCP server: it holds the hashes of the current access token and refresh token.
+            Revoking the grant revokes its tokens.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.Id">
+            <summary>Identifier of the grant, part of its tokens</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.UserName">
+            <summary>Login name of the user (WebUserName)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.ClientId">
+            <summary>Identifier of the OAuth client</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.ClientName">
+            <summary>Name of the OAuth client</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.RedirectUri">
+            <summary>Redirect URI used for the authorization</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.AgentSlug">
+            <summary>Identifier of the agent (audience of the tokens)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.Resource">
+            <summary>URL of the MCP server of the agent (resource of RFC 8707)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.Scope">
+            <summary>Scope granted</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.Creation">
+            <summary>Date of the consent</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.Expiration">
+            <summary>End of the grant: the user must authorize the client again (null for no limit)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.LastUse">
+            <summary>Last use of the grant (request or refresh)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.AccessHash">
+            <summary>SHA-256 hash of the current access token</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.AccessExpiration">
+            <summary>Expiration of the current access token</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.RefreshHash">
+            <summary>SHA-256 hash of the current refresh token</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.PreviousRefreshHash">
+            <summary>SHA-256 hash of the previous refresh token, to detect its reuse</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthGrant.RefreshRotation">
+            <summary>Date of the last rotation of the refresh token</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuthGrant.CheckValidity(System.DateTime,System.Int32)">
+            <summary>
+            Returns null if the grant is valid at <paramref name="now"/>, otherwise the reason of the refusal.
+            </summary>
+        </member>
+        <member name="T:Seal.AI.IMcpOAuthStore">
+            <summary>
+            Store of the OAuth clients registered dynamically and of the grants of the MCP server
+            </summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.SaveClient(Seal.AI.McpOAuthClient)">
+            <summary>Saves a client</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.FindClient(System.String)">
+            <summary>Returns a client from its identifier, null if it does not exist</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.GetClientCount">
+            <summary>Returns the number of clients registered</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.PurgeClients(System.DateTime,System.Int32)">
+            <summary>Deletes the clients registered for more than one day and never authorized, or not authorized for <paramref name="unusedDays"/> days</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.SaveGrant(Seal.AI.McpOAuthGrant)">
+            <summary>Saves a grant</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.FindGrant(System.String)">
+            <summary>Returns a grant from its identifier, null if it does not exist</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.GetUserGrants(System.String)">
+            <summary>Returns the grants of a user</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.GetAllGrants">
+            <summary>Returns the grants of all the users</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpOAuthStore.DeleteGrant(System.String)">
+            <summary>Deletes a grant and its tokens, returns false if it does not exist</summary>
+        </member>
+        <member name="T:Seal.AI.McpFileOAuthStore">
+            <summary>
+            Store of the OAuth clients and grants in the folders Security\McpTokens\OAuthClients and Security\McpTokens\OAuthGrants of the repository: one JSON file per client (named by the hash of its identifier) and per grant.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.#ctor(System.String)">
+            <summary>
+            Creates a store in <paramref name="folder"/>
+            </summary>
+        </member>
+        <member name="P:Seal.AI.McpFileOAuthStore.Instance">
+            <summary>
+            The store of the current repository (Security\McpTokens)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.SaveClient(Seal.AI.McpOAuthClient)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.FindClient(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.GetClientCount">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.PurgeClients(System.DateTime,System.Int32)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.SaveGrant(Seal.AI.McpOAuthGrant)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.FindGrant(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.GetUserGrants(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.GetAllGrants">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileOAuthStore.DeleteGrant(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Seal.AI.McpOAuthException">
+            <summary>
+            Error of the OAuth authorization server (RFC 6749): <see cref="F:Seal.AI.McpOAuthException.Error"/> is the OAuth error code
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthException.Error">
+            <summary>OAuth error code (invalid_request, invalid_client, invalid_grant...)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuthException.CanRedirect">
+            <summary>True if the error can be sent to the redirect URI of the client (the client and its redirect URI are valid)</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuthException.#ctor(System.String,System.String,System.Boolean)">
+            <summary>
+            Creates an OAuth error
+            </summary>
+        </member>
+        <member name="T:Seal.AI.McpAuthorizationRequest">
+            <summary>
+            Authorization request validated, waiting for the login and the consent of the user
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.Id">
+            <summary>Identifier of the request in the consent page</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.Client">
+            <summary>The OAuth client</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.RedirectUri">
+            <summary>Redirect URI of the request</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.State">
+            <summary>State of the client, returned with the code</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.CodeChallenge">
+            <summary>PKCE code challenge (S256)</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.Resource">
+            <summary>URL of the MCP server of the agent</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.AgentSlug">
+            <summary>Identifier of the agent</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.Scope">
+            <summary>Scope requested</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.Creation">
+            <summary>Date of the request</summary>
+        </member>
+        <member name="F:Seal.AI.McpAuthorizationRequest.SessionId">
+            <summary>Web session of the browser having opened the request: the consent is accepted only from this session</summary>
+        </member>
+        <member name="P:Seal.AI.McpAuthorizationRequest.RedirectHost">
+            <summary>Host of the redirect URI, shown on the consent page</summary>
+        </member>
+        <member name="P:Seal.AI.McpAuthorizationRequest.IsLoopbackRedirect">
+            <summary>True if the redirect URI is a loopback address (a local application of the computer of the user)</summary>
+        </member>
+        <member name="T:Seal.AI.McpOAuth">
+            <summary>
+            OAuth 2.1 authorization server of the MCP server (the external AI clients like claude.ai, Claude Desktop or Claude Code connect without a personal access token):
+            metadata (RFC 8414, RFC 9728), clients registered dynamically (RFC 7591) or described by a Client ID Metadata Document, authorization code with PKCE S256,
+            tokens bound to an agent (RFC 8707), rotation of the refresh tokens with detection of their reuse, revocation (RFC 7009).
+            The user is authenticated by the login of the Web Report Server: this class is independent of the transport.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.OAuthPath">
+            <summary>Path of the endpoints of the authorization server</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.AccessTokenPrefix">
+            <summary>Prefix of the access tokens</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.RefreshTokenPrefix">
+            <summary>Prefix of the refresh tokens</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.McpScope">
+            <summary>Scope of the MCP server</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.CodeLifetime">
+            <summary>Validity of an authorization code</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.RequestLifetime">
+            <summary>Validity of an authorization request waiting for the consent</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.RefreshReuseGracePeriod">
+            <summary>A previous refresh token reused within this delay after its rotation is refused without revoking the grant (concurrent refreshes of a client)</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.MetadataDocumentCacheLifetime">
+            <summary>Validity of a Client ID Metadata Document in the cache</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.UnusedClientDays">
+            <summary>Clients registered dynamically and not used for this number of days are deleted</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.MaxRegisteredClients">
+            <summary>Maximum number of clients registered dynamically</summary>
+        </member>
+        <member name="P:Seal.AI.McpOAuth.Store">
+            <summary>Store of the clients and grants</summary>
+        </member>
+        <member name="F:Seal.AI.McpOAuth.MetadataDocumentFetcher">
+            <summary>Downloads a Client ID Metadata Document, null for the default download (replaced in the tests)</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetPublicBaseUrl(System.String)">
+            <summary>
+            Returns the public base URL of the server (issuer of the authorization server): <see cref="P:Seal.AI.AIServerConfiguration.McpPublicUrl"/> if set, otherwise the base URL of the request
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetResourceUrl(System.String,System.String)">
+            <summary>Returns the URL of the MCP server of an agent</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetResourceMetadataUrl(System.String,System.String)">
+            <summary>Returns the URL of the protected resource metadata of an agent (RFC 9728), given in the header WWW-Authenticate of the 401 responses</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetAuthorizationServerMetadata(System.String)">
+            <summary>
+            Returns the metadata of the authorization server (RFC 8414)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetProtectedResourceMetadata(System.String,System.String,System.String)">
+            <summary>
+            Returns the protected resource metadata of the MCP server of an agent (RFC 9728)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.FindMcpAgent(System.String)">
+            <summary>Returns the agent of the MCP server having the slug given, whatever the user (null if none)</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.IsLoopback(System.String)">
+            <summary>True if the URI is an HTTP loopback address (localhost, 127.0.0.1, [::1])</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.RedirectMatches(System.String,System.String)">
+            <summary>
+            True if a redirect URI requested matches a registered one: same URI, the port is ignored for a loopback address (RFC 8252: the native clients use an ephemeral port).
+            The pattern '*' matches any HTTPS or loopback URI.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetAllowedRedirectUris">
+            <summary>Returns the redirect URIs allowed by <see cref="P:Seal.AI.AIServerConfiguration.McpOAuthRedirectUris"/></summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.IsRedirectAllowed(System.String)">
+            <summary>True if a redirect URI is allowed by the configuration of the server</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.IsMetadataDocumentId(System.String)">
+            <summary>True if the client identifier is the URL of a Client ID Metadata Document</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.ResolveClient(System.String)">
+            <summary>
+            Returns the client of an authorization request: described by its Client ID Metadata Document (client_id = HTTPS URL of the document) or registered dynamically.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.ClearMetadataDocumentCache">
+            <summary>Clears the cache of the Client ID Metadata Documents</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.ParseMetadataDocument(System.String,System.String)">
+            <summary>
+            Parses and validates a Client ID Metadata Document: its client_id must be the URL of the document, it must have redirect URIs and be a public client.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.fetchMetadataDocument(System.String)">
+            <summary>
+            Downloads a Client ID Metadata Document: HTTPS only, no private or loopback address (server-side request forgery), 5 seconds and 64 KB at most.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.IsPrivateAddress(System.Net.IPAddress)">
+            <summary>True for a loopback, private, link-local or unspecified address</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.RegisterClient(System.String,System.DateTime)">
+            <summary>
+            Registers a client dynamically (RFC 7591): a public client whose redirect URIs are allowed by the configuration. Returns the registration response.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetAgentSlugFromResource(System.String,System.String,System.Boolean)">
+            <summary>
+            Returns the identifier of the agent of a resource (URL of the MCP server of an agent of this server), throws an error if the resource is not one of this server.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.ValidateAuthorizationRequest(System.Collections.Generic.IDictionary{System.String,System.String},System.String,System.DateTime)">
+            <summary>
+            Validates an authorization request (parameters of the authorization endpoint) and keeps it until the consent of the user.
+            An error with <see cref="F:Seal.AI.McpOAuthException.CanRedirect"/> false must be shown to the user (unknown client or redirect URI not allowed), the others are sent to the redirect URI.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetAuthorizationRequest(System.String,System.DateTime)">
+            <summary>Returns an authorization request waiting for the consent, null if it does not exist or has expired</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetRedirectUrl(System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Returns the URL redirecting to the client with the result of an authorization request (code or error), with the state and the issuer (RFC 9207)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.Authorize(Seal.AI.McpAuthorizationRequest,System.String,System.Boolean,System.DateTime)">
+            <summary>
+            Consent of the user: removes the authorization request and returns an authorization code for the client (or null if the user refused).
+            The caller has checked that the agent is one of the MCP agents of the user.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.Base64Url(System.Byte[])">
+            <summary>Returns the base64url encoding (without padding) of bytes</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetCodeChallenge(System.String)">
+            <summary>Returns the PKCE S256 challenge of a code verifier</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.ExecuteTokenRequest(System.Collections.Generic.IDictionary{System.String,System.String},System.DateTime)">
+            <summary>
+            Executes a request of the token endpoint (grant types authorization_code and refresh_token) and returns the token response (RFC 6749 section 5.1).
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.getGrantMaxDays">
+            <summary>Maximum duration of a grant in days: the smallest of <see cref="P:Seal.AI.AIServerConfiguration.McpOAuthGrantMaxDays"/> and <see cref="P:Seal.AI.AIServerConfiguration.McpTokenMaxDays"/> (0 for no limit)</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.findGrant(System.String,System.String)">
+            <summary>Returns the identifier of the grant of a token (access or refresh), null if the token has not the prefix given</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.IsAccessToken(System.String)">
+            <summary>True if the token is an OAuth access token of the MCP server</summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.AuthenticateAccessToken(System.String,System.String,System.DateTime,System.String@)">
+            <summary>
+            Authenticates an OAuth access token for the agent <paramref name="agentSlug"/>: returns its grant, or null with the reason in <paramref name="error"/> (invalid, expired, revoked, issued for another agent).
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.RevokeToken(System.String,System.String)">
+            <summary>
+            Revokes a token (RFC 7009): a refresh token revokes its grant, an access token only itself. An unknown token is ignored.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.RevokeGrant(System.String,System.String)">
+            <summary>Revokes a grant of a user (from his profile), returns false if it does not exist</summary>
         </member>
         <member name="T:Seal.AI.AIUsage">
             <summary>
@@ -5505,6 +5931,11 @@
         <member name="F:Seal.Model.AuditType.AIMcpRefused">
             <summary>
             Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AuditType.AIMcpAuthorization">
+            <summary>
+            OAuth authorization of an AI client by a user for an agent of the MCP server: consent given or refused, authorization revoked
             </summary>
         </member>
         <member name="T:Seal.Model.TriggerType">
@@ -17856,6 +18287,11 @@
             <summary>
             True if the user is authenticated by the server itself from his name: for a scheduled output (see SealSecurity.ProviderForScheduledOutputs) or for a personal access token of the MCP server.
             There is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.StrongAuthentication">
+            <summary>
+            True if the user has logged in to the Web Report Server with the Two-Factor Authentication or with the OpenID Connect single sign-on (see AIServerConfiguration.McpOAuthRequireStrongLogin)
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.WebUserName">

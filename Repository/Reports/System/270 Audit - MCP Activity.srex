@@ -59,6 +59,14 @@
 		if (error == null &amp;&amp; t.Expiration != null &amp;&amp; t.Expiration.Value &lt; now.AddDays(7)) status = "Expires soon";
 		table.Rows.Add(t.UserName, t.Name, t.Id, status, t.Creation, t.Expiration.HasValue ? (object)t.Expiration.Value : DBNull.Value, t.LastUse.HasValue ? (object)t.LastUse.Value : DBNull.Value, error ?? "");
 	}
+	//OAuth authorizations given by the users to the AI clients (one per client and agent)
+	foreach (var g in McpOAuth.Store.GetAllGrants())
+	{
+		var error = g.CheckValidity(now, config.McpTokenIdleDays);
+		var status = error == null ? "Active" : (g.Expiration != null &amp;&amp; now &gt;= g.Expiration.Value ? "Expired" : "Inactive");
+		if (error == null &amp;&amp; g.Expiration != null &amp;&amp; g.Expiration.Value &lt; now.AddDays(7)) status = "Expires soon";
+		table.Rows.Add(g.UserName, $"{g.ClientName} (OAuth, {g.AgentSlug})", g.Id, status, g.Creation, g.Expiration.HasValue ? (object)g.Expiration.Value : DBNull.Value, g.LastUse.HasValue ? (object)g.LastUse.Value : DBNull.Value, error ?? "");
+	}
 	log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }</LoadScript>
             <Alias />

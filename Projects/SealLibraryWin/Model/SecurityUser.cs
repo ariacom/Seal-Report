@@ -359,6 +359,11 @@ namespace Seal.Model
         public bool ForSchedule = false;
 
         /// <summary>
+        /// True if the user has logged in to the Web Report Server with the Two-Factor Authentication or with the OpenID Connect single sign-on (see AIServerConfiguration.McpOAuthRequireStrongLogin)
+        /// </summary>
+        public bool StrongAuthentication = false;
+
+        /// <summary>
         /// Parameters for authentication: User name
         /// </summary>
         public string WebUserName = "";
