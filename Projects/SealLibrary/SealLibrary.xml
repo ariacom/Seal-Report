@@ -218,6 +218,27 @@
             Returns the list of the <see cref="P:Seal.AI.AIServerConfiguration.KnowledgeFolders"/>, the default folders if none is set
             </summary>
         </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpServerEnabled">
+            <summary>
+            Web Report Server: if true, the AI agents having the channel MCP are served to the external AI clients (Claude, Copilot, Cursor...) with the Model Context Protocol at the URL /mcp/{agent},
+            the users authenticate with a personal access token created in their profile.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpTokenMaxDays">
+            <summary>
+            Web Report Server: maximum validity of a personal access token of the MCP server, in days (0 for no limit)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpTokenIdleDays">
+            <summary>
+            Web Report Server: a personal access token of the MCP server not used for this number of days is refused (0 for no limit)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpMaxCallsPerMinute">
+            <summary>
+            Web Report Server: maximum number of MCP tool calls per minute and per user (0 for no limit)
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIServerConfiguration.AIAgents">
             <summary>
             AI Agents combining a provider, an optional set of tools, and a default system prompt.
@@ -756,6 +777,21 @@
             When <c>false</c>, this agent is excluded from all operations without being deleted.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.Channel">
+            <summary>
+            The channels the agent is served on: the web chat (with the provider of the agent) and/or the MCP server (with the AI model of the external client, if <see cref="P:Seal.AI.AIServerConfiguration.McpServerEnabled"/> is true).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.IsWebAgent">
+            <summary>
+            True if the agent is enabled and served on the web chat
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.IsMcpAgent">
+            <summary>
+            True if the agent is enabled and served on the MCP server (the server itself must be enabled, see <see cref="P:Seal.AI.AIServerConfiguration.McpServerEnabled"/>)
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIAgentConfiguration.ProviderGUID">
             <summary>
             GUID of the <see cref="T:Seal.AI.AIProviderConfiguration"/> to use.
@@ -1019,6 +1055,17 @@
             <see cref="T:Seal.AI.AIAgentConfiguration"/> instance.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIAgent.CreateWithoutProvider(Seal.AI.AIAgentConfiguration,Seal.Model.SecurityUser,System.String)">
+            <summary>
+            Creates an agent without AI provider for a security context: it renders the system prompt (<see cref="P:Seal.AI.AIAgent.SystemPrompt"/>) and the sample prompts of the configuration,
+            but it cannot chat (e.g. the MCP server, where the AI model is the one of the external client).
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgent.SystemPrompt">
+            <summary>
+            The system prompt of the agent for its <see cref="F:Seal.AI.AIAgent.SecurityContext"/>: the prompt of the configuration followed by the text rendered by its system prompt script.
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIAgent.ChatSuggestionsInstruction">
             <summary>
             Instruction appended to the system prompt when <see cref="P:Seal.AI.AIAgent.ChatSuggestions"/> is set:
@@ -1251,6 +1298,12 @@
             Returns true if new tools were activated.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIToolHost.ActivateAllTools">
+            <summary>
+            Activates the tools of all the skills without loading the skills, for a client that cannot receive a new tool list during a conversation (MCP server without session):
+            the description of a tool of a skill not loaded tells the AI to load the skill first (see <see cref="M:Seal.AI.AIToolHost.GetTools"/>).
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIToolHost.GetTools">
             <summary>
             Returns the tools to send to the AI: the active tools plus the built-in <c>load_skill</c> tool when the agent has skills.
@@ -1292,6 +1345,171 @@
             tool result, and activates the skill's tools the first time it is loaded.
             Sets <paramref name="toolsChanged"/> to <c>true</c> when new tools were activated.
             </summary>
+        </member>
+        <member name="T:Seal.AI.McpAccessToken">
+            <summary>
+            Personal access token of the MCP server. Only the hash of the token is stored, the token itself is shown once to the user when it is created.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.Id">
+            <summary>Identifier of the token (shown to the user to revoke it)</summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.Name">
+            <summary>Name given by the user (e.g. the AI client using it)</summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.UserName">
+            <summary>Login name of the user (WebUserName), used to authenticate the user with the Security Provider</summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.Hash">
+            <summary>SHA-256 hash of the token (hexadecimal)</summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.Creation">
+            <summary>Creation date</summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.Expiration">
+            <summary>Expiration date (null for no expiration)</summary>
+        </member>
+        <member name="F:Seal.AI.McpAccessToken.LastUse">
+            <summary>Last use of the token (null if never used)</summary>
+        </member>
+        <member name="M:Seal.AI.McpAccessToken.CheckValidity(System.DateTime,System.Int32)">
+            <summary>
+            Returns null if the token is valid at <paramref name="now"/>, otherwise the reason of the refusal.
+            </summary>
+            <param name="now">Current date</param>
+            <param name="idleDays">Maximum inactivity in days (0 for no limit), see <see cref="P:Seal.AI.AIServerConfiguration.McpTokenIdleDays"/></param>
+        </member>
+        <member name="T:Seal.AI.IMcpTokenStore">
+            <summary>
+            Store of the personal access tokens of the MCP server
+            </summary>
+        </member>
+        <member name="M:Seal.AI.IMcpTokenStore.Create(System.String,System.String,System.Nullable{System.DateTime},System.String@)">
+            <summary>
+            Creates a token for a user and returns it with its clear value <paramref name="clearToken"/>, the only time it is available.
+            </summary>
+            <param name="userName">Login name of the user</param>
+            <param name="name">Name of the token</param>
+            <param name="expiration">Expiration date, null for no expiration</param>
+            <param name="clearToken">The value of the token to give to the user</param>
+        </member>
+        <member name="M:Seal.AI.IMcpTokenStore.Find(System.String)">
+            <summary>Returns the token having the clear value <paramref name="clearToken"/>, null if it does not exist</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpTokenStore.GetUserTokens(System.String)">
+            <summary>Returns the tokens of a user</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpTokenStore.Revoke(System.String,System.String)">
+            <summary>Deletes a token of a user, returns false if it does not exist</summary>
+        </member>
+        <member name="M:Seal.AI.IMcpTokenStore.Touch(Seal.AI.McpAccessToken,System.DateTime)">
+            <summary>Records the use of a token</summary>
+        </member>
+        <member name="T:Seal.AI.McpFileTokenStore">
+            <summary>
+            Store of the MCP access tokens in the folder Security\McpTokens of the repository: one JSON file per token, named by the hash of the token (direct lookup, no scan).
+            The last use of a token is kept in memory and written at most every <see cref="F:Seal.AI.McpFileTokenStore.LastUseWriteInterval"/>: a request does not write a file.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpFileTokenStore.TokenPrefix">
+            <summary>Prefix of the tokens, to recognize them (e.g. in a secret scanner)</summary>
+        </member>
+        <member name="F:Seal.AI.McpFileTokenStore.LastUseWriteInterval">
+            <summary>Minimum interval between two writes of the last use of a token</summary>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.#ctor(System.String)">
+            <summary>
+            Creates a store of the tokens in <paramref name="folder"/>
+            </summary>
+        </member>
+        <member name="P:Seal.AI.McpFileTokenStore.Instance">
+            <summary>
+            The store of the current repository (Security\McpTokens)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.GetHash(System.String)">
+            <summary>Returns the SHA-256 hash (hexadecimal) of a clear token</summary>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.Create(System.String,System.String,System.Nullable{System.DateTime},System.String@)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.Find(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.GetUserTokens(System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.Revoke(System.String,System.String)">
+            <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.McpFileTokenStore.Touch(Seal.AI.McpAccessToken,System.DateTime)">
+            <inheritdoc/>
+        </member>
+        <member name="T:Seal.AI.McpRequestContext">
+            <summary>
+            Context of an authenticated request of the MCP server: the token, the user and the agent requested
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpRequestContext.Token">
+            <summary>The access token of the request</summary>
+        </member>
+        <member name="F:Seal.AI.McpRequestContext.User">
+            <summary>The user authenticated from the token (loaded again for each request: his groups and rights are always the current ones)</summary>
+        </member>
+        <member name="F:Seal.AI.McpRequestContext.Agent">
+            <summary>The agent requested, assigned to the user and served on the MCP channel</summary>
+        </member>
+        <member name="T:Seal.AI.McpGateway">
+            <summary>
+            Server side of the MCP server independent of the transport: authentication of the requests with the personal access tokens, agents of a user, limit of the calls, execution of the tools with an <see cref="T:Seal.AI.AIToolHost"/>.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.McpGateway.TokenStore">
+            <summary>Store of the access tokens</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.McpInstructions">
+            <summary>
+            Instructions added to the system prompt of an agent served by the MCP server
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetAgentSlug(Seal.AI.AIAgentConfiguration)">
+            <summary>
+            Returns the identifier of an agent in the URL of the MCP server (/mcp/{slug}): its name in lower case, the characters other than letters and digits replaced by '-'.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.Authenticate(System.String,System.String,System.String,System.String@,System.Boolean@)">
+            <summary>
+            Authenticates a request of the MCP server from its 'Authorization' header and returns its context, or null with the reason of the refusal in <paramref name="error"/>.
+            The user of the token is authenticated by the Security Provider from his name (<see cref="F:Seal.Model.SecurityUser.ForSchedule"/>), then the agent <paramref name="agentSlug"/> must be one of his MCP agents.
+            </summary>
+            <param name="authorization">Value of the 'Authorization' header ('Bearer seal_mcp_...')</param>
+            <param name="agentSlug">Identifier of the agent in the URL (see <see cref="M:Seal.AI.McpGateway.GetAgentSlug(Seal.AI.AIAgentConfiguration)"/>)</param>
+            <param name="hostName">Host name of the client</param>
+            <param name="error">The reason of the refusal</param>
+            <param name="unauthorized">True if the refusal is an authentication failure (401), false if the agent is not available (404)</param>
+        </member>
+        <member name="M:Seal.AI.McpGateway.CheckCallRate(System.String,System.DateTime)">
+            <summary>
+            Records a tool call of a user and returns false if the user has made more than <see cref="P:Seal.AI.AIServerConfiguration.McpMaxCallsPerMinute"/> calls in the last minute (the call is then not counted).
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetToolHost(Seal.AI.McpRequestContext)">
+            <summary>
+            Returns the tool host of a request: all the tools of the agent and of its skills are active (the MCP client receives the tool list once), the result can contain images.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetInstructions(Seal.AI.McpRequestContext)">
+            <summary>
+            Returns the instructions of the MCP server for a request: the system prompt of the agent for the user, followed by <see cref="F:Seal.AI.McpGateway.McpInstructions"/>.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.ExecuteTool(Seal.AI.McpRequestContext,System.String,System.String,Seal.AI.ICancelOperation)">
+            <summary>
+            Executes a tool call of a request (limit of the calls, tool host, audit) and returns its result.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.IsError(Seal.AI.AIToolHostResult)">
+            <summary>True if the result of a tool is an error (text starting with 'Error:' or script failure)</summary>
         </member>
         <member name="T:Seal.AI.AIUsage">
             <summary>
@@ -3675,6 +3893,12 @@
             Token usage is taken from the agent's last exchange, the detail is the chat title.
             </summary>
         </member>
+        <member name="M:Seal.Model.Audit.LogMcpAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,System.Nullable{System.Int32})">
+            <summary>
+            Audit a request of the MCP server: a tool call (<see cref="F:Seal.Model.AuditType.AIMcpCall"/>, <see cref="F:Seal.Model.AuditType.AIMcpCallError"/>) or a refusal (<see cref="F:Seal.Model.AuditType.AIMcpRefused"/>).
+            The detail is the tool name (or the request refused).
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.LogAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,Seal.Model.Report,Seal.Model.ReportSchedule)">
             <summary>
             Execute the audit script for a given event
@@ -5139,6 +5363,21 @@
             Report write refused: content (SQL, script) above the report code level of the user or the AI Agent
             </summary>
         </member>
+        <member name="F:Seal.Model.AuditType.AIMcpCall">
+            <summary>
+            Tool call of an AI agent by an external client of the MCP server
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AuditType.AIMcpCallError">
+            <summary>
+            Tool call of the MCP server returning an error
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AuditType.AIMcpRefused">
+            <summary>
+            Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls
+            </summary>
+        </member>
         <member name="T:Seal.Model.TriggerType">
             <summary>
             Type of the schedule trigger
@@ -5542,6 +5781,26 @@
         <member name="F:Seal.Model.ReportCodeLevel.Scripts">
             <summary>
             Metadata, SQL and Razor scripts
+            </summary>
+        </member>
+        <member name="T:Seal.Model.AIAgentChannel">
+            <summary>
+            Channels an AI agent is served on: the chat of the Web Report Server (with the provider of the agent) and/or the MCP server (with the AI model of the external client)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIAgentChannel.Web">
+            <summary>
+            Web chat only
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIAgentChannel.Mcp">
+            <summary>
+            MCP server only
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIAgentChannel.WebAndMcp">
+            <summary>
+            Web chat and MCP server
             </summary>
         </member>
         <member name="T:Seal.Model.ExecutionLogInterface">
@@ -17441,7 +17700,8 @@
         </member>
         <member name="F:Seal.Model.SecurityUser.ForSchedule">
             <summary>
-            True if the user is authenticated for a scheduled output (see SealSecurity.ProviderForScheduledOutputs): there is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
+            True if the user is authenticated by the server itself from his name: for a scheduled output (see SealSecurity.ProviderForScheduledOutputs) or for a personal access token of the MCP server.
+            There is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.WebUserName">
@@ -17593,8 +17853,14 @@
         </member>
         <member name="P:Seal.Model.SecurityUser.AgentConfigurations">
             <summary>
-            AI Agent configurations assigned to this user via the DefaultGroup AgentGUIDs.
+            AI Agent configurations of the web chat assigned to this user via the DefaultGroup AgentGUIDs (enabled agents having the channel Web or Web and MCP).
             Returns an empty list if no group is set or no enabled agents are found.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUser.McpAgentConfigurations">
+            <summary>
+            AI Agent configurations of the MCP server assigned to this user via the DefaultGroup AgentGUIDs (enabled agents having the channel MCP or Web and MCP).
+            Returns an empty list if no group is set, if no agent is found or if the MCP server is not enabled.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUser.AgentConfiguration">
@@ -17654,7 +17920,8 @@
         </member>
         <member name="M:Seal.Model.SecurityUser.LoginAuthentication(System.String,System.String)">
             <summary>
-            Authenticate a login with a password and set his groups
+            Authenticate a login with a password and set his groups.
+            For a user authenticated by the server itself from his name (<see cref="F:Seal.Model.SecurityUser.ForSchedule"/>: scheduled output, MCP access token), the password is not checked.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUser.AuthenticationSummary">

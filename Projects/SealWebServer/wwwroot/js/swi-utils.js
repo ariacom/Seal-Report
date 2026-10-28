@@ -374,6 +374,79 @@ var SWIUtil;
             _gateway.ExecuteReport(path, viewGUID, outputGUID);
     }
     SWIUtil.executeReport = executeReport;
+    /** Fills the MCP access tokens section of the profile dialog */
+    function renderMcpTokens(data) {
+        var $body = $("#mcp-tokens-table tbody");
+        $body.empty();
+        SWIUtil.ShowHideControl($("#mcp-tokens-table"), data.tokens.length > 0);
+        data.tokens.forEach(function (token) {
+            var $revoke = $("<button type='button' class='btn btn-sm btn-outline-danger py-0'><i class='fa fa-trash'></i></button>").attr("title", SWIUtil.tr2("Revoke"));
+            $revoke.on("click", function () {
+                if (!confirm(SWIUtil.tr2("Revoke this access token? The AI clients using it will no longer be connected.")))
+                    return;
+                _gateway.RevokeMcpToken(token.id, function (result) {
+                    $("#mcp-token-new").addClass("d-none");
+                    if (result)
+                        renderMcpTokens(result);
+                    else
+                        $body.empty();
+                }, showMcpError);
+            });
+            var $row = $("<tr>")
+                .append($("<td>").text(token.name).toggleClass("text-decoration-line-through text-muted", !token.valid))
+                .append($("<td>").text(token.creation))
+                .append($("<td>").text(token.expiration))
+                .append($("<td>").text(token.lastuse))
+                .append($("<td class='text-end'>").append($revoke));
+            $body.append($row);
+        });
+        var $days = $("#mcp-token-days");
+        $days.empty();
+        [30, 90, 365].filter(function (d) { return data.maxdays == 0 || d <= data.maxdays; }).forEach(function (d) {
+            $days.append($("<option>").val(d).text(d + " " + SWIUtil.tr2("days")));
+        });
+        if (data.maxdays > 0 && [30, 90, 365].indexOf(data.maxdays) < 0)
+            $days.append($("<option>").val(data.maxdays).text(data.maxdays + " " + SWIUtil.tr2("days")));
+        if (data.maxdays == 0)
+            $days.append($("<option>").val(0).text(SWIUtil.tr2("No expiration")));
+        $days.val($days.find("option[value='90']").length ? "90" : $days.find("option").first().val());
+        var $agents = $("#mcp-agents");
+        $agents.empty();
+        data.agents.forEach(function (agent) {
+            $agents.append($("<li>").append($("<span class='fw-semibold'>").text(agent.name + ": ")).append($("<span class='font-monospace user-select-all'>").text(agent.url)));
+        });
+    }
+    function showMcpError(data) {
+        $("#mcp-token-error").removeClass("d-none").text($("<div/>").html(data.error).text());
+        if (!data.authenticated)
+            location.reload();
+    }
+    function initMcpTokens(profile) {
+        SWIUtil.ShowHideControl($("#profile-mcp"), profile.hasmcp);
+        if (!profile.hasmcp)
+            return;
+        $("#mcp-token-new,#mcp-token-error").addClass("d-none");
+        $("#mcp-token-name").val("");
+        _gateway.GetMcpTokens(renderMcpTokens, showMcpError);
+        $("#mcp-token-create").unbind("click").on("click", function () {
+            $("#mcp-token-error").addClass("d-none");
+            _gateway.CreateMcpToken($("#mcp-token-name").val(), parseInt($("#mcp-token-days").val()), function (data) {
+                $("#mcp-token-name").val("");
+                $("#mcp-token-value").val(data.token);
+                $("#mcp-token-new").removeClass("d-none");
+                renderMcpTokens(data.list);
+            }, showMcpError);
+        });
+        $("#mcp-token-copy").unbind("click").on("click", function () {
+            var text = $("#mcp-token-value").val();
+            if (navigator.clipboard && navigator.clipboard.writeText)
+                navigator.clipboard.writeText(text);
+            else {
+                $("#mcp-token-value")[0].select();
+                document.execCommand("copy");
+            }
+        });
+    }
     function InitProfile(profile) {
         SWIUtil.ShowHideControl($("#profile-nav-item"), true);
         $("#profile-nav-item").unbind("click").on("click", function () {
@@ -425,6 +498,7 @@ var SWIUtil;
             });
             SWIUtil.ShowHideControl($(".edit-profile"), profile.editprofile);
             SWIUtil.ShowHideControl($("#profile-close"), !profile.editprofile);
+            initMcpTokens(profile);
             var $select = $("#onstartup-select");
             $select.selectpicker("destroy");
             $select.empty();

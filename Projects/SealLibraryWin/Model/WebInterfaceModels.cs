@@ -38,6 +38,7 @@ namespace Seal.Model
         public bool hasagent;
         public bool aipanelopen;
         public int aipanelwidth;
+        public bool hasmcp;
     }
 
 

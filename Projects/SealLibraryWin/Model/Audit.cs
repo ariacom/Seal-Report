@@ -207,6 +207,33 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Audit a request of the MCP server: a tool call (<see cref="AuditType.AIMcpCall"/>, <see cref="AuditType.AIMcpCallError"/>) or a refusal (<see cref="AuditType.AIMcpRefused"/>).
+        /// The detail is the tool name (or the request refused).
+        /// </summary>
+        public static void LogMcpAudit(AuditType type, SecurityUser user, string agentName, string detail, string error = null, int? durationSeconds = null)
+        {
+            try
+            {
+                if (!Repository.Instance.Configuration.AuditEnabled) return;
+                var audit = new Audit()
+                {
+                    Type = type,
+                    User = user,
+                    Detail = detail,
+                    Error = error,
+                    Duration = durationSeconds,
+                    AIAgentName = agentName,
+                    AIToolCalls = type == AuditType.AIMcpRefused ? 0 : 1
+                };
+                ExecuteAuditScript(audit);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Execute the audit script for a given event
         /// </summary>
         public static void LogAudit(AuditType type, SecurityUser user, string path = null, string detail = null, string error = null, Report report = null, ReportSchedule schedule = null)

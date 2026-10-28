@@ -61,6 +61,7 @@
 			<PrivateAssets>all</PrivateAssets>
 			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
 		</PackageReference>
+		<PackageReference Include="ModelContextProtocol.AspNetCore" Version="2.3.0" />
 		<PackageReference Include="System.Security.Permissions" Version="10.0.12" />
 	</ItemGroup>
 

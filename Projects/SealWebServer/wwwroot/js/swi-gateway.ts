@@ -77,6 +77,29 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    public GetMcpTokens(callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIGetMcpTokens")
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public CreateMcpToken(name: string, days: number, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWICreateMcpToken", {
+            name: name,
+            days: days
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public RevokeMcpToken(id: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIRevokeMcpToken", {
+            id: id
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public GetCultures(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIGetCultures")
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })

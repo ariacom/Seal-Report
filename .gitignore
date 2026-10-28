@@ -60,6 +60,8 @@ SpecialFolders/
 Projects/SealDocumentation/Help/
 *.pubxml
 Repository/SubReports/_*.srex
+#Personal access tokens of the MCP server (hashes of the user tokens)
+Repository/Security/McpTokens/
 *.srl
 
 # =========================

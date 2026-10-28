@@ -66,6 +66,8 @@ namespace Seal.AI
         // Tools currently callable, keyed by name: the agent's base tools, then the tools of the skills loaded
         readonly Dictionary<string, AIToolConfiguration> _activeTools = new Dictionary<string, AIToolConfiguration>();
         readonly HashSet<string> _loadedSkills = new HashSet<string>();
+        // Tools activated by ActivateAllTools without their skill loaded: tool name -> skill name
+        readonly Dictionary<string, string> _toolSkills = new Dictionary<string, string>();
 
         /// <summary>
         /// Creates the host of the tools of <paramref name="configuration"/>: the tools of the agent are active, no skill is loaded.
@@ -109,11 +111,35 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Activates the tools of all the skills without loading the skills, for a client that cannot receive a new tool list during a conversation (MCP server without session):
+        /// the description of a tool of a skill not loaded tells the AI to load the skill first (see <see cref="GetTools"/>).
+        /// </summary>
+        public void ActivateAllTools()
+        {
+            foreach (var skill in _skills)
+            {
+                if (_loadedSkills.Contains(skill.Name)) continue;
+                foreach (var t in skill.GetToolConfigurations())
+                {
+                    if (_activeTools.ContainsKey(t.Name)) continue;
+                    _activeTools[t.Name] = t;
+                    _toolSkills[t.Name] = skill.Name;
+                }
+            }
+        }
+
+        /// <summary>
         /// Returns the tools to send to the AI: the active tools plus the built-in <c>load_skill</c> tool when the agent has skills.
         /// </summary>
         public List<AITool> GetTools()
         {
-            var list = _activeTools.Values.Select(t => t.ToAITool()).ToList();
+            var list = _activeTools.Values.Select(t =>
+            {
+                var tool = t.ToAITool();
+                if (_toolSkills.TryGetValue(t.Name, out var skillName) && !_loadedSkills.Contains(skillName))
+                    tool.Description = $"Requires the skill '{skillName}': call '{LoadSkillToolName}' with skill_name '{skillName}' once before the first call of this tool, and follow its instructions.\n" + tool.Description;
+                return tool;
+            }).ToList();
             if (_skills.Count > 0) list.Add(BuildLoadSkillTool(_skills));
             return list;
         }

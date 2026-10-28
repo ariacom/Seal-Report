@@ -67,6 +67,14 @@ namespace Seal.AI
                 GetProperty("DefaultProviderGUID").SetIsBrowsable(true);
                 GetProperty("DefaultAgentGUID").SetIsBrowsable(true);
                 GetProperty("KnowledgeFolders").SetIsBrowsable(true);
+                GetProperty("McpServerEnabled").SetIsBrowsable(true);
+                GetProperty("McpTokenMaxDays").SetIsBrowsable(true);
+                GetProperty("McpTokenIdleDays").SetIsBrowsable(true);
+                GetProperty("McpMaxCallsPerMinute").SetIsBrowsable(true);
+
+                GetProperty("McpTokenMaxDays").SetIsReadOnly(!McpServerEnabled);
+                GetProperty("McpTokenIdleDays").SetIsReadOnly(!McpServerEnabled);
+                GetProperty("McpMaxCallsPerMinute").SetIsReadOnly(!McpServerEnabled);
 
                 TypeDescriptor.Refresh(this);
             }
@@ -211,6 +219,43 @@ namespace Seal.AI
             }
             return result;
         }
+
+        /// <summary>
+        /// Web Report Server: if true, the AI agents having the channel MCP are served to the external AI clients (Claude, Copilot, Cursor...) with the Model Context Protocol at the URL /mcp/{agent},
+        /// the users authenticate with a personal access token created in their profile.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP server enabled"), Description("Danger Zone: if true, the Web Report Server serves the AI agents having the channel 'MCP' or 'Web and MCP' to the external AI clients (Claude, Copilot, Cursor...) with the Model Context Protocol at the URL /mcp/{agent}. The users authenticate with a personal access token created in their profile and use the tools and skills of the agents assigned to their security group. The data returned by the tools are then sent to the AI model chosen by the user, not to the provider of the agent: set the channel of an agent to 'Web' if its data must not leave its provider. The Security Provider must authenticate a user from his name without password (scheduled outputs: user.ForSchedule)."), Category("MCP Server"), Id(1, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool McpServerEnabled { get; set; } = false;
+
+        /// <summary>
+        /// Web Report Server: maximum validity of a personal access token of the MCP server, in days (0 for no limit)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP token maximum validity"), Description("Maximum validity in days of a personal access token of the MCP server: the user chooses the validity when he creates a token, within this maximum. 0 for no limit (tokens without expiration are then allowed)."), Category("MCP Server"), Id(2, 2)]
+        [DefaultValue(365)]
+#endif
+        public int McpTokenMaxDays { get; set; } = 365;
+
+        /// <summary>
+        /// Web Report Server: a personal access token of the MCP server not used for this number of days is refused (0 for no limit)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP token maximum inactivity"), Description("A personal access token of the MCP server not used for this number of days is refused, even before its expiration. 0 for no limit."), Category("MCP Server"), Id(3, 2)]
+        [DefaultValue(0)]
+#endif
+        public int McpTokenIdleDays { get; set; } = 0;
+
+        /// <summary>
+        /// Web Report Server: maximum number of MCP tool calls per minute and per user (0 for no limit)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP maximum calls per minute"), Description("Maximum number of MCP tool calls per minute and per user, the next calls are refused until the minute is over. 0 for no limit."), Category("MCP Server"), Id(4, 2)]
+        [DefaultValue(60)]
+#endif
+        public int McpMaxCallsPerMinute { get; set; } = 60;
 
         List<AIAgentConfiguration> _AIAgents = new List<AIAgentConfiguration>();
         /// <summary>

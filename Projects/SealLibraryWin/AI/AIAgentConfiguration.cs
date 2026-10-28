@@ -36,6 +36,7 @@ namespace Seal.AI
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
+                GetProperty("Channel").SetIsBrowsable(true);
                 GetProperty("ProviderGUID").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
                 GetProperty("SkillGUIDs").SetIsBrowsable(true);
@@ -97,10 +98,32 @@ namespace Seal.AI
         public bool IsEnabled { get; set; } = true;
 
         /// <summary>
+        /// The channels the agent is served on: the web chat (with the provider of the agent) and/or the MCP server (with the AI model of the external client, if <see cref="AIServerConfiguration.McpServerEnabled"/> is true).
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\tChannel"), Description("The channels the agent is served on: 'Web' (chat of the Web Report Server, with the provider of the agent), 'MCP' (MCP server, with the AI model of the external client: the provider is not used) or 'Web and MCP'. The MCP server is active only if 'MCP server enabled' is set in the AI configuration. Set 'Web' if the data of the agent must not leave its provider."), Id(4, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(AIAgentChannel.WebAndMcp)]
+#endif
+        public AIAgentChannel Channel { get; set; } = AIAgentChannel.WebAndMcp;
+
+        /// <summary>
+        /// True if the agent is enabled and served on the web chat
+        /// </summary>
+        [XmlIgnore]
+        public bool IsWebAgent => IsEnabled && Channel != AIAgentChannel.Mcp;
+
+        /// <summary>
+        /// True if the agent is enabled and served on the MCP server (the server itself must be enabled, see <see cref="AIServerConfiguration.McpServerEnabled"/>)
+        /// </summary>
+        [XmlIgnore]
+        public bool IsMcpAgent => IsEnabled && Channel != AIAgentChannel.Web;
+
+        /// <summary>
         /// GUID of the <see cref="AIProviderConfiguration"/> to use.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("\t\tProvider"), Description("The AI provider to use for this agent."), Id(5, 1)]
+        [Category("Definition"), DisplayName("\t\tProvider"), Description("The AI provider to use for this agent (web chat). An agent served only on the MCP server does not need a provider: the AI model is the one of the external client."), Id(5, 1)]
         [TypeConverter(typeof(AIProviderConverter))]
 #endif
         public string ProviderGUID { get; set; }

@@ -25,6 +25,9 @@ namespace Seal.AI
 
         private readonly IAIProvider _provider;
 
+        // The provider used by the chat, an agent created without provider cannot chat
+        IAIProvider provider => _provider ?? throw new System.Exception($"AI agent '{Configuration.Name}' has been created without provider: it cannot chat.");
+
         /// <summary>
         /// Full conversation history, including the system prompt (if any),
         /// all user turns, and all agent replies.
@@ -126,6 +129,29 @@ namespace Seal.AI
 
             seedSystemPrompt();
         }
+
+        AIAgent(AIAgentConfiguration configuration, SecurityUser securityContext, string culture)
+        {
+            Configuration = configuration
+                ?? throw new System.ArgumentNullException(nameof(configuration));
+            SecurityContext = securityContext;
+            Culture = culture;
+            seedSystemPrompt();
+        }
+
+        /// <summary>
+        /// Creates an agent without AI provider for a security context: it renders the system prompt (<see cref="SystemPrompt"/>) and the sample prompts of the configuration,
+        /// but it cannot chat (e.g. the MCP server, where the AI model is the one of the external client).
+        /// </summary>
+        public static AIAgent CreateWithoutProvider(AIAgentConfiguration configuration, SecurityUser securityContext, string culture = null)
+        {
+            return new AIAgent(configuration, securityContext, culture);
+        }
+
+        /// <summary>
+        /// The system prompt of the agent for its <see cref="SecurityContext"/>: the prompt of the configuration followed by the text rendered by its system prompt script.
+        /// </summary>
+        public string SystemPrompt => effectiveSystemPrompt;
 
         /// <summary>
         /// Instruction appended to the system prompt when <see cref="ChatSuggestions"/> is set:
@@ -270,8 +296,8 @@ namespace Seal.AI
             LastChatUsage = new AIUsage();
             void addUsage()
             {
-                LastChatUsage.Add(_provider.LastUsage);
-                TotalUsage.Add(_provider.LastUsage);
+                LastChatUsage.Add(provider.LastUsage);
+                TotalUsage.Add(provider.LastUsage);
             }
             Messages.Add(new UserChatMessage(userMessage));
 
@@ -279,7 +305,7 @@ namespace Seal.AI
             {
                 SecurityContext = SecurityContext,
                 Culture = Culture,
-                AcceptsImages = _provider is AIProvider aiProvider && aiProvider.SupportsToolResultImages,
+                AcceptsImages = provider is AIProvider aiProvider && aiProvider.SupportsToolResultImages,
                 ExecutionLog = toolsLog
             };
 
@@ -293,7 +319,7 @@ namespace Seal.AI
             // No tools and no skills — plain chat, no tool loop.
             if (!host.HasTools)
             {
-                var plainReply = _provider.HandleChat(Messages);
+                var plainReply = provider.HandleChat(Messages);
                 addUsage();
                 return plainReply;
             }
@@ -315,7 +341,7 @@ namespace Seal.AI
             {
                 if (cancelOperation?.Cancel == true) break;
 
-                var reply = _provider.HandleChatWithTools(Messages, tools, out var toolCalls);
+                var reply = provider.HandleChatWithTools(Messages, tools, out var toolCalls);
                 addUsage();
                 if (toolCalls != null)
                 {
@@ -378,7 +404,7 @@ namespace Seal.AI
                 Messages.RemoveRange(messageCountBefore, Messages.Count - messageCountBefore);
                 return "";
             }
-            var finalReply = _provider.HandleChat(Messages);
+            var finalReply = provider.HandleChat(Messages);
             addUsage();
             return finalReply;
         }
@@ -441,9 +467,9 @@ namespace Seal.AI
         {
             Messages.Add(new UserChatMessage(userMessage));
             LastChatUsage = new AIUsage();
-            var reply = _provider.HandleChat(Messages);
-            LastChatUsage.Add(_provider.LastUsage);
-            TotalUsage.Add(_provider.LastUsage);
+            var reply = provider.HandleChat(Messages);
+            LastChatUsage.Add(provider.LastUsage);
+            TotalUsage.Add(provider.LastUsage);
             return reply;
         }
 
@@ -469,8 +495,8 @@ namespace Seal.AI
                         "Reply with the title only: plain text, no quotes, no trailing punctuation.")
                 };
 
-                var title = _provider.HandleChat(temp);
-                TotalUsage.Add(_provider.LastUsage);
+                var title = provider.HandleChat(temp);
+                TotalUsage.Add(provider.LastUsage);
                 if (string.IsNullOrWhiteSpace(title)) return null;
 
                 // Keep the first line only and strip surrounding quotes.

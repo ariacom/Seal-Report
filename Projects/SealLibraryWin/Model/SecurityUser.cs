@@ -353,7 +353,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the user is authenticated for a scheduled output (see SealSecurity.ProviderForScheduledOutputs): there is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
+        /// True if the user is authenticated by the server itself from his name: for a scheduled output (see SealSecurity.ProviderForScheduledOutputs) or for a personal access token of the MCP server.
+        /// There is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
         /// </summary>
         public bool ForSchedule = false;
 
@@ -648,20 +649,35 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// AI Agent configurations assigned to this user via the DefaultGroup AgentGUIDs.
+        /// AI Agent configurations of the web chat assigned to this user via the DefaultGroup AgentGUIDs (enabled agents having the channel Web or Web and MCP).
         /// Returns an empty list if no group is set or no enabled agents are found.
         /// </summary>
         public List<AIAgentConfiguration> AgentConfigurations
         {
+            get { return getAgentConfigurations(a => a.IsWebAgent); }
+        }
+
+        /// <summary>
+        /// AI Agent configurations of the MCP server assigned to this user via the DefaultGroup AgentGUIDs (enabled agents having the channel MCP or Web and MCP).
+        /// Returns an empty list if no group is set, if no agent is found or if the MCP server is not enabled.
+        /// </summary>
+        public List<AIAgentConfiguration> McpAgentConfigurations
+        {
             get
             {
-                var group = DefaultGroup;
-                if (group == null) return new List<AIAgentConfiguration>();
-                return group.AgentGUIDs
-                    .Select(guid => Repository.Instance.AIConfiguration.AIAgents.Find(a => a.GUID == guid && a.IsEnabled))
-                    .Where(a => a != null)
-                    .ToList();
+                if (!Repository.Instance.AIConfiguration.McpServerEnabled) return new List<AIAgentConfiguration>();
+                return getAgentConfigurations(a => a.IsMcpAgent);
             }
+        }
+
+        List<AIAgentConfiguration> getAgentConfigurations(Func<AIAgentConfiguration, bool> filter)
+        {
+            var group = DefaultGroup;
+            if (group == null) return new List<AIAgentConfiguration>();
+            return group.AgentGUIDs
+                .Select(guid => Repository.Instance.AIConfiguration.AIAgents.Find(a => a.GUID == guid && filter(a)))
+                .Where(a => a != null)
+                .ToList();
         }
 
         /// <summary>
@@ -886,7 +902,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Authenticate a login with a password and set his groups
+        /// Authenticate a login with a password and set his groups.
+        /// For a user authenticated by the server itself from his name (<see cref="ForSchedule"/>: scheduled output, MCP access token), the password is not checked.
         /// </summary>
         public bool LoginAuthentication(string id, string password)
         {
@@ -895,7 +912,7 @@ namespace Seal.Model
                 var login = Security.Logins.FirstOrDefault(i => i.Id.ToLower() == id.ToLower());
                 if (login != null)
                 {
-                    if (login.CheckPassword(password))
+                    if (ForSchedule || login.CheckPassword(password))
                     {
                         //Add the groups defined for the login
                         foreach (var groupId in login.GroupIds)

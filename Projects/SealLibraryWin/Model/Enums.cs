@@ -1366,6 +1366,18 @@ namespace Seal.Model
         /// Report write refused: content (SQL, script) above the report code level of the user or the AI Agent
         /// </summary>
         ReportCodeRefused,
+        /// <summary>
+        /// Tool call of an AI agent by an external client of the MCP server
+        /// </summary>
+        AIMcpCall,
+        /// <summary>
+        /// Tool call of the MCP server returning an error
+        /// </summary>
+        AIMcpCallError,
+        /// <summary>
+        /// Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls
+        /// </summary>
+        AIMcpRefused,
     }
 
     /// <summary>
@@ -1791,5 +1803,27 @@ namespace Seal.Model
         /// </summary>
         [Description("Metadata, SQL and scripts")]
         Scripts = 2,
+    }
+
+    /// <summary>
+    /// Channels an AI agent is served on: the chat of the Web Report Server (with the provider of the agent) and/or the MCP server (with the AI model of the external client)
+    /// </summary>
+    public enum AIAgentChannel
+    {
+        /// <summary>
+        /// Web chat only
+        /// </summary>
+        [Description("Web")]
+        Web = 0,
+        /// <summary>
+        /// MCP server only
+        /// </summary>
+        [Description("MCP")]
+        Mcp = 1,
+        /// <summary>
+        /// Web chat and MCP server
+        /// </summary>
+        [Description("Web and MCP")]
+        WebAndMcp = 2,
     }
 }

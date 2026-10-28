@@ -98,6 +98,7 @@ namespace SealWebServer
                     .AllowAnyMethod()
                     .AllowCredentials()
                 ));
+            ConfigureMcpServices(services);
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -117,6 +118,7 @@ namespace SealWebServer
             }
 
             app.UseHttpsRedirection();
+            UseMcpAuthentication(app);
             app.UseStaticFiles();
             app.UseSession();
             app.UseRouting();
@@ -137,6 +139,7 @@ namespace SealWebServer
                     pattern: "{action=Agent}",
                     new { controller = "Home", action = "Agent" }
                     );
+                MapMcp(endpoints);
             });
             applicationLifetime.ApplicationStopping.Register(OnShutdown);
 

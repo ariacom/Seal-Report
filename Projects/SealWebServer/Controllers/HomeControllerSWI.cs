@@ -156,7 +156,9 @@ namespace SealWebServer.Controllers
                 showresetpassword = Repository.Security.ResetPasswordActive,
                 hasagent = WebUser.AgentConfiguration != null,
                 aipanelopen = WebUser.Profile.AIPanelOpen,
-                aipanelwidth = WebUser.Profile.AIPanelWidth
+                aipanelwidth = WebUser.Profile.AIPanelWidth,
+                //The tokens authenticate the user from his login name
+                hasmcp = WebUser.McpAgentConfigurations.Count > 0 && !string.IsNullOrEmpty(WebUser.WebUserName)
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))
@@ -387,6 +389,100 @@ namespace SealWebServer.Controllers
 
 
                 return Json("");
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Returns the user name of the MCP access tokens of the current user (the name the Security Provider authenticates without password), checks that the MCP server is available for the user
+        /// </summary>
+        string checkMcpUser()
+        {
+            checkSWIAuthentication();
+            if (WebUser.McpAgentConfigurations.Count == 0) throw new Exception(Translate("The MCP server is not available for your user."));
+            if (string.IsNullOrEmpty(WebUser.WebUserName)) throw new Exception(Translate("The MCP access tokens are not available for your authentication."));
+            return WebUser.WebUserName;
+        }
+
+        object getMcpTokensResult(string userName)
+        {
+            var configuration = Repository.AIConfiguration;
+            var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{Startup.McpPath}/";
+            var now = DateTime.Now;
+            string format(DateTime? date) => date == null ? "" : date.Value.ToString("g", Repository.CultureInfo);
+            return new
+            {
+                maxdays = configuration.McpTokenMaxDays,
+                agents = WebUser.McpAgentConfigurations.Select(a => new { name = Repository.RepositoryTranslate("AIAgentName", "*", a.Name), url = baseUrl + McpGateway.GetAgentSlug(a) }).ToList(),
+                tokens = McpGateway.TokenStore.GetUserTokens(userName).Select(t =>
+                {
+                    var invalid = t.CheckValidity(now, configuration.McpTokenIdleDays);
+                    return new { id = t.Id, name = t.Name, creation = format(t.Creation), expiration = t.Expiration == null ? Translate("Never") : format(t.Expiration), lastuse = format(t.LastUse), valid = invalid == null };
+                }).ToList()
+            };
+        }
+
+        /// <summary>
+        /// Returns the MCP access tokens of the user and the URLs of his MCP agents
+        /// </summary>
+        public ActionResult SWIGetMcpTokens(string sessionId)
+        {
+            writeDebug("SWIGetMcpTokens");
+            try
+            {
+                SetSessionId(sessionId);
+                return Json(getMcpTokensResult(checkMcpUser()));
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Creates a MCP access token for the user: valid for the number of days given (0 for no expiration, only if the server has no maximum validity). The token is returned once.
+        /// </summary>
+        public ActionResult SWICreateMcpToken(string name, int days, string sessionId)
+        {
+            writeDebug("SWICreateMcpToken");
+            try
+            {
+                SetSessionId(sessionId);
+                var userName = checkMcpUser();
+                var maxDays = Repository.AIConfiguration.McpTokenMaxDays;
+                if (days < 0 || (maxDays > 0 && (days == 0 || days > maxDays))) throw new Exception(string.Format(Translate("The validity of the token must be between 1 and {0} days."), maxDays));
+                var token = McpGateway.TokenStore.Create(userName, name, days == 0 ? null : DateTime.Now.AddDays(days), out var clearToken);
+
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"MCP access token '{token.Name}' created for '{userName}'");
+                Audit.LogAudit(AuditType.EventServer, WebUser, null, $"MCP access token '{token.Name}' created");
+                return Json(new { token = clearToken, list = getMcpTokensResult(userName) });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Revokes a MCP access token of the user
+        /// </summary>
+        public ActionResult SWIRevokeMcpToken(string id, string sessionId)
+        {
+            writeDebug("SWIRevokeMcpToken");
+            try
+            {
+                SetSessionId(sessionId);
+                checkSWIAuthentication();
+                //A token can be revoked even if the MCP server is no longer available for the user
+                var userName = WebUser.WebUserName;
+                if (!McpGateway.TokenStore.Revoke(userName, id)) throw new Exception(Translate("The access token has not been found."));
+
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"MCP access token '{id}' revoked for '{userName}'");
+                Audit.LogAudit(AuditType.EventServer, WebUser, null, $"MCP access token '{id}' revoked");
+                return Json(WebUser.McpAgentConfigurations.Count > 0 && !string.IsNullOrEmpty(userName) ? getMcpTokensResult(userName) : null);
             }
             catch (Exception ex)
             {
