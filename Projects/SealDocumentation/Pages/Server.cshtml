@@ -345,6 +345,28 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
                                 The other scripts read it with <code>user.GetProperty("key")</code> (<eg>e.g. the Pre SQL of a data source through <code>Report.SecurityContext</code>, report or AI tool scripts</eg>). The dictionary is cleared at each login and at logout, and it is never sent to the browser.<br />
                                 A script may also add to <code>user.SecurityGroups</code> a <code>SecurityGroup</code> built in memory (folders and rights, personal folder, data sources): rights defined per customer or per user can then come from a database instead of the security file.
                             </p>
+                            <div id="lineSecurity_provider_name_only" class="bs-callout bs-callout-warning">
+                                <h4>Authentication from the user name only</h4>
+                                The server itself executes the <strong>Security Provider</strong> for a user who is not in front of the login page: <code>user.ForSchedule</code> is then true, <code>user.WebUserName</code> contains the user name and there is no password, no HTTP request (<code>user.Request</code> and <code>user.WebPrincipal</code> are null) and no Two-Factor Authentication.
+                                This is the case for:
+                                <ul>
+                                    <li>every request of the <b>MCP server</b> of the AI Agents, with a personal access token or an OAuth access token: the user is loaded again at each request, so a change of his groups, or a user removed from the directory, applies immediately,</li>
+                                    <li>the <b>Web Schedules</b> executed by the Seal Report Scheduler,</li>
+                                    <li>the scheduled outputs having a <code>User name</code> if <code>Execute the provider for scheduled outputs</code> is set.</li>
+                                </ul>
+                                The script must then load the user and his groups from his name, without checking a password: a script checking the password fails and these features are refused (<eg>e.g. MCP requests answered by 401 'not authenticated by the Security Provider', web schedule disabled</eg>).
+                                The default providers have a branch <code>if (user.ForSchedule)</code>:
+                                <ul>
+                                    <li><b>Basic Authentication</b>: <code>user.LoginAuthentication()</code> does not check the password if <code>user.ForSchedule</code> is true.</li>
+                                    <li><b>Basic Windows Authentication</b> and <b>Integrated Windows Authentication</b>: the user and his groups are read from the Active Directory (<code>Groups matching: Method used to get the Windows groups</code>, <i>Domain</i> if empty), the account of the server must be allowed to read the directory.</li>
+                                    <li><b>LDAP Authentication</b>: the user is searched with the <i>Service account</i> parameters (user name and password, or the account of the server if empty, search base and user filter).</li>
+                                    <li><b>Database Authentication</b>: the user is checked by the <code>Service user query</code> executed with the <code>Service connection string</code>.</li>
+                                    <li><b>JWT</b>, <b>OpenID</b> and <b>Claims Principal</b>: the token or the claims are not available, the user is loaded from the logins of the security (<code>user.LoginAuthentication()</code>); change the script to load him from another source (<eg>e.g. a database</eg>).</li>
+                                    <li><b>No Security</b>: the users have no name, the MCP access tokens and the web schedules are not available.</li>
+                                </ul>
+                                The providers are templates: the script of a security already configured is kept in the security file and must be adapted if needed.
+                                For a single sign-on, the script must also set <code>user.WebUserName</code> with a stable identifier (<eg>e.g. the claim 'preferred_username' or 'email'</eg>): the MCP authorizations, the access tokens and the web schedules are bound to this name.
+                            </div>
                             <div class="bs-callout bs-callout-warning">
                                 <h4>Test your security provider</h4>
                                 Once your <strong>Security Provider</strong> is configured, use the helper <code>Test a login</code> to fully test a login process with given name and password.

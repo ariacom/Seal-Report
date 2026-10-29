@@ -7,9 +7,14 @@
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_port", DisplayName = "LDAP Port", NumericValue = 389, Description = "The LDAP server port number" });
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_use_ssl", DisplayName = "Use secure socket layer", BoolValue = true, Description = "If true, the secure socket layer (SSL) are used" });
     provider.Parameters.Add(new SecurityParameter() { Name = "ldap_auth_type",DisplayName = "Authorization Type", Value = "Basic", Enums = new string[] { "Anonymous", "Basic", "Digest", "Dpa", "External", "Kerberos", "Msn", "Negotiate", "Ntlm", "Sicily" }, Description = "Specify the authentication method to use on a connection" });
+    provider.Parameters.Add(new SecurityParameter() { Name = "ldap_service_user", DisplayName = "Service account: User name", Description = "Authentication from the user name only (MCP server, web schedules): account used to search the user in the directory as there is no password. If empty, the account of the server is used with the Negotiate authentication." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "ldap_service_password", DisplayName = "Service account: Password", Description = "Password of the service account (stored in the security file)." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "ldap_search_base", DisplayName = "Service account: Search base", Description = "Distinguished name of the entry where the user is searched (e.g. 'DC=mycompany,DC=com')." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "ldap_user_filter", DisplayName = "Service account: User filter", Value = "(sAMAccountName={0})", Description = "LDAP filter to search the user, {0} is replaced by the user name (escaped)." });
 
     provider.Script = @"@using System.Net;
 @using System.DirectoryServices.Protocols;
+@using System.Text;
 @{
     SecurityUser user = Model;
 	//LDAP Authentication: use the user name and password to authenticate the user and set his name and security groups...
@@ -21,14 +26,42 @@
 	//user.PersonalFolderName -> may be set to defined the personal folder name
 	//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 
-    var credential = new NetworkCredential(user.WebUserName, user.WebPassword);
     var ldapConnection = new LdapConnection(new LdapDirectoryIdentifier(user.Security.GetValue(""ldap_server""), user.Security.GetNumericValue(""ldap_port""), false, false));
-
-    ldapConnection.Credential = credential;
-    ldapConnection.AuthType = (AuthType) Enum.Parse(typeof(AuthType), user.Security.GetValue(""ldap_auth_type""));
     ldapConnection.SessionOptions.SecureSocketLayer = user.Security.GetBoolValue(""ldap_use_ssl"");
     ldapConnection.SessionOptions.VerifyServerCertificate = new VerifyServerCertificateCallback((con, cer) => true);
-    ldapConnection.Bind();
+
+    if (user.ForSchedule)
+    {
+        //Authentication from the user name only (MCP server, web schedules, scheduled outputs): no password, the user is searched with the service account
+        var serviceUser = user.Security.GetValue(""ldap_service_user"");
+        if (string.IsNullOrEmpty(serviceUser))
+        {
+            ldapConnection.AuthType = AuthType.Negotiate;
+        }
+        else
+        {
+            ldapConnection.Credential = new NetworkCredential(serviceUser, user.Security.GetValue(""ldap_service_password""));
+            ldapConnection.AuthType = (AuthType) Enum.Parse(typeof(AuthType), user.Security.GetValue(""ldap_auth_type""));
+        }
+        ldapConnection.Bind();
+
+        var escapedName = new StringBuilder();
+        foreach (var c in user.WebUserName)
+        {
+            if (c == '\\' || c == '*' || c == '(' || c == ')' || c == '\0') escapedName.Append(""\\"" + ((int)c).ToString(""x2""));
+            else escapedName.Append(c);
+        }
+        var filter = string.Format(user.Security.GetValue(""ldap_user_filter""), escapedName.ToString());
+        var search = new SearchRequest(user.Security.GetValue(""ldap_search_base""), filter, System.DirectoryServices.Protocols.SearchScope.Subtree, ""cn"");
+        var result = (SearchResponse)ldapConnection.SendRequest(search);
+        if (result.Entries.Count != 1) throw new Exception(""The user is not found in the directory."");
+    }
+    else
+    {
+        ldapConnection.Credential = new NetworkCredential(user.WebUserName, user.WebPassword);
+        ldapConnection.AuthType = (AuthType) Enum.Parse(typeof(AuthType), user.Security.GetValue(""ldap_auth_type""));
+        ldapConnection.Bind();
+    }
 
     user.AddDefaultSecurityGroup();
 

@@ -7,7 +7,14 @@
 @{
     SecurityUser user = Model;
 
-    if (user.Request != null) {    
+    if (user.ForSchedule) {
+        //Authentication from the user name only (MCP server, web schedules, scheduled outputs): no request and no claims, the user must be loaded from his name (e.g. from the logins of the security or from a database)
+        user.Name = user.WebUserName;
+        if (!user.LoginAuthentication(user.WebUserName, null)) {
+            user.Error = ""Unknown user"";
+        }
+    }
+    else if (user.Request != null) {
         //Get ClaimsPrincipal from Http request (e.g. For Azure App Service)
         var principal = AzureHelper.ClaimsPrincipalParse(user.Request);
 

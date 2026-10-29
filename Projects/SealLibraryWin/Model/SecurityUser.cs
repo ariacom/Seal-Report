@@ -355,8 +355,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the user is authenticated by the server itself from his name: for a scheduled output (see SealSecurity.ProviderForScheduledOutputs) or for a personal access token of the MCP server.
-        /// There is no password and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
+        /// True if the user is authenticated by the server itself from his name: for a scheduled output (see SealSecurity.ProviderForScheduledOutputs), a web schedule, or a request of the MCP server (personal access token or OAuth access token).
+        /// There is no password, no HTTP request (Request and WebPrincipal are null) and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
         /// </summary>
         public bool ForSchedule = false;
 

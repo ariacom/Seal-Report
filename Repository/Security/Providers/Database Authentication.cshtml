@@ -4,6 +4,8 @@
 
     //Parameters for this provider
     provider.Parameters.Add(new SecurityParameter() { Name = "oledb_connection_string", Value = "Provider=SQLOLEDB.1;Persist Security Info=False;Initial Catalog=master;Data Source=(local)", DisplayName = "Database connection string", Description = "The OleDb database connection string used to authenticate the user" });
+    provider.Parameters.Add(new SecurityParameter() { Name = "service_connection_string", DisplayName = "Service connection string", Description = "Authentication from the user name only (MCP server, web schedules): OleDb connection string of a service account used to check the user as there is no password (e.g. with 'Integrated Security=SSPI' for the account of the server)." });
+    provider.Parameters.Add(new SecurityParameter() { Name = "service_user_query", Value = "select 1 from sys.server_principals where name={0} and is_disabled=0", DisplayName = "Service user query", Description = "Query executed with the service connection to check the user, {0} is replaced by the user name (quoted). The user is authenticated if a row is returned." });
 
     provider.Script = @"@using System.Data
 @using System.Data.Common
@@ -17,8 +19,25 @@
 	//user.PersonalFolderName -> may be set to defined the personal folder name
 	//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 
-	DbConnection connection = Helper.DbConnectionFromConnectionString(ConnectionType.OleDb, Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
-	connection.Open();
+	if (user.ForSchedule)
+	{
+		//Authentication from the user name only (MCP server, web schedules, scheduled outputs): no password, the user is checked with the service connection
+		var serviceConnectionString = user.Security.GetValue(""service_connection_string"");
+		if (string.IsNullOrEmpty(serviceConnectionString)) throw new Exception(""The service connection string is required to authenticate a user from his name only."");
+		using (var serviceConnection = Helper.DbConnectionFromConnectionString(ConnectionType.OleDb, serviceConnectionString))
+		{
+			serviceConnection.Open();
+			var serviceCommand = serviceConnection.CreateCommand();
+			serviceCommand.CommandText = string.Format(user.Security.GetValue(""service_user_query""), Helper.QuoteSingle(user.WebUserName));
+			var found = serviceCommand.ExecuteScalar();
+			if (found == null || found == DBNull.Value) throw new Exception(""User unknown from the database."");
+		}
+	}
+	else
+	{
+		DbConnection connection = Helper.DbConnectionFromConnectionString(ConnectionType.OleDb, Helper.GetOleDbConnectionString(user.Security.GetValue(""oledb_connection_string""), user.WebUserName, user.WebPassword));
+		connection.Open();
+	}
     //Add default group but the security groups can be got from the database as shown below
     user.AddDefaultSecurityGroup();
 

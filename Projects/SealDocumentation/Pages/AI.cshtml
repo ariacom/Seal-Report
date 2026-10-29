@@ -236,7 +236,9 @@
                                 <strong>Security and monitoring</strong>
                             </p>
                             <ul>
-                                <li>Each request is authenticated on its own: the user of the token is loaded again by the Security Provider, so a change of his groups or rights applies immediately.</li>
+                                <li>Each request is authenticated on its own: the user of the token is loaded again by the Security Provider, so a change of his groups or rights applies immediately.
+                                    The provider is then executed from the user name only, without password and without Two-Factor Authentication (<code>user.ForSchedule</code> is true): it must support this mode, check <a href="~/Server#lineSecurity_provider_name_only">Authentication from the user name only</a> (<eg>e.g. the service account of the LDAP and Database providers</eg>).</li>
+                                <li>The login on the OAuth authorization page is the login of the Web Report Server (Security Provider with password, Two-Factor Authentication or single sign-on). The user must have a name (<code>user.WebUserName</code>): an anonymous access cannot authorize a client.</li>
                                 <li>Only the SHA-256 hash of a token is stored (<i>/Security/McpTokens</i>, the OAuth clients and authorizations in its sub-folders). A token or an authorization is revoked from the profile; an expired or inactive token is refused.</li>
                                 <li>Every tool call, error and refusal is written in the audit (types <code>AIMcpCall</code>, <code>AIMcpCallError</code>, <code>AIMcpRefused</code>, and <code>AIMcpAuthorization</code> for the OAuth authorizations given, refused or revoked) with the IP address and the application of the client. The System report <i>270 Audit - MCP Activity</i> shows the activity per day, user and tool, the errors and the inventory of the tokens and OAuth authorizations of all the users.</li>
                             </ul>

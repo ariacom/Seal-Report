@@ -18,6 +18,28 @@
 	//IIS Authentication must be configured with Windows Authentication enabled, Anonymous Authentication disabled
 	//user.WebPrincipal -> may be used for integrated windows authentication
 
+	if (user.ForSchedule)
+	{
+		//Authentication from the user name only (MCP server, web schedules, scheduled outputs): no principal, the user (DOMAIN\name) and his groups are read from the Active Directory
+		var adContext = user.Security.GetValue(""windows_groups_ad_context"");
+		if (string.IsNullOrEmpty(adContext)) adContext = ""Domain"";
+		user.Name = user.WebUserName;
+		if (user.Security.GetBoolValue(""add_windows_groups""))
+		{
+			user.AddWindowsGroupToSecurityGroup(user.Security.GetBoolValue(""windows_groups_skip_domain""), adContext);
+		}
+		else
+		{
+			using (var context = new PrincipalContext((ContextType)Enum.Parse(typeof(ContextType), adContext)))
+			{
+				if (UserPrincipal.FindByIdentity(context, user.WebUserName) == null) throw new Exception(""The user is not found in the Active Directory."");
+			}
+			user.AddDefaultSecurityGroup();
+		}
+		if (user.SecurityGroups.Count == 0) user.Error = ""The user does not belong to any security group."";
+		return;
+	}
+
     if (user.WebPrincipal != null && user.WebPrincipal.Identity.IsAuthenticated) 
     {
         user.Name = user.WebPrincipal.Identity.Name;

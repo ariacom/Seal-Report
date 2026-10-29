@@ -20,6 +20,28 @@
 		throw new Exception(""The user name is empty."");
 	}
 
+	if (user.ForSchedule)
+	{
+		//Authentication from the user name only (MCP server, web schedules, scheduled outputs): no password, the user and his groups are read from the Active Directory
+		var adContext = user.Security.GetValue(""windows_groups_ad_context"");
+		if (string.IsNullOrEmpty(adContext)) adContext = ""Domain"";
+		user.Name = user.WebUserName;
+		if (user.Security.GetBoolValue(""add_windows_groups""))
+		{
+			user.AddWindowsGroupToSecurityGroup(user.Security.GetBoolValue(""windows_groups_skip_domain""), adContext);
+		}
+		else
+		{
+			using (var context = new System.DirectoryServices.AccountManagement.PrincipalContext((System.DirectoryServices.AccountManagement.ContextType)Enum.Parse(typeof(System.DirectoryServices.AccountManagement.ContextType), adContext)))
+			{
+				if (System.DirectoryServices.AccountManagement.UserPrincipal.FindByIdentity(context, user.WebUserName) == null) throw new Exception(""The user is not found in the Active Directory."");
+			}
+			user.AddDefaultSecurityGroup();
+		}
+		if (user.SecurityGroups.Count == 0) user.Error = ""The user does not belong to any security group."";
+		return;
+	}
+
 	user.Identity = Impersonator.CheckWindowsLogin(user.WebUserName, user.Security.GetValue(""default_domain_name""), user.WebPassword);
 	
     if (user.Identity != null) 
