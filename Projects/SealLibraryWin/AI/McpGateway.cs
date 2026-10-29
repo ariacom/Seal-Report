@@ -237,24 +237,55 @@ namespace Seal.AI
                 Culture = context.User.Profile?.Culture
             };
             host.ActivateAllTools();
+            //The clients truncate long server instructions: the complete system prompt is returned by load_skill('instructions')
+            host.AgentInstructions = () => GetSystemPrompt(context);
             return host;
         }
 
         /// <summary>
-        /// Returns the instructions of the MCP server for a request: the system prompt of the agent for the user, followed by <see cref="McpInstructions"/>.
+        /// Maximum length of the instructions of the MCP server: the clients truncate longer instructions (e.g. 2048 characters for Claude Code).
+        /// A longer system prompt is sent as an extract, its complete text is returned by the pseudo-skill <see cref="AIToolHost.InstructionsSkillName"/> of load_skill.
         /// </summary>
-        public static string GetInstructions(McpRequestContext context)
+        public static int McpInstructionsMaxLength = 1900;
+
+        /// <summary>
+        /// System prompt of the agent for the user of the request (null on error)
+        /// </summary>
+        static string GetSystemPrompt(McpRequestContext context)
         {
-            string prompt = null;
             try
             {
-                prompt = AIAgent.CreateWithoutProvider(context.Agent, context.User, context.User.Profile?.Culture).SystemPrompt;
+                return AIAgent.CreateWithoutProvider(context.Agent, context.User, context.User.Profile?.Culture).SystemPrompt;
             }
             catch (Exception ex)
             {
-                Helpers.Helper.WriteLogException("McpGateway.GetInstructions", ex);
+                Helpers.Helper.WriteLogException("McpGateway.GetSystemPrompt", ex);
+                return null;
             }
-            return string.IsNullOrWhiteSpace(prompt) ? McpInstructions : prompt.TrimEnd() + "\r\n\r\n" + McpInstructions;
+        }
+
+        /// <summary>
+        /// Returns the instructions of the MCP server for a request: the system prompt of the agent for the user, followed by <see cref="McpInstructions"/>.
+        /// A system prompt longer than <see cref="McpInstructionsMaxLength"/> is replaced by its beginning, after a first line asking to load its complete text with load_skill('instructions').
+        /// </summary>
+        public static string GetInstructions(McpRequestContext context)
+        {
+            var prompt = GetSystemPrompt(context);
+            if (string.IsNullOrWhiteSpace(prompt)) return McpInstructions;
+
+            prompt = prompt.TrimEnd();
+            var result = prompt + "\r\n\r\n" + McpInstructions;
+            if (result.Length <= McpInstructionsMaxLength) return result;
+
+            var header = $"IMPORTANT: these instructions are an extract. Before any other call, call '{AIToolHost.LoadSkillToolName}' with skill_name '{AIToolHost.InstructionsSkillName}' once: it returns the complete instructions and rules of this agent, follow them.\r\n\r\n";
+            const string cut = "\r\n\r\n[...] (complete instructions: load_skill 'instructions')";
+            var room = McpInstructionsMaxLength - header.Length - McpInstructions.Length - cut.Length - 4;
+            var extract = room > 0 ? prompt.Substring(0, Math.Min(room, prompt.Length)) : "";
+            //Cut at the end of a paragraph or of a line
+            var end = extract.LastIndexOf("\n\n");
+            if (end < room / 2) end = extract.LastIndexOf('\n');
+            if (end > 0) extract = extract.Substring(0, end);
+            return header + extract.TrimEnd() + cut + "\r\n\r\n" + McpInstructions;
         }
 
         /// <summary>

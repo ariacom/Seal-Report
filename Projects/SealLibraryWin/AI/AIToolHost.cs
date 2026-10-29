@@ -40,6 +40,17 @@ namespace Seal.AI
         public const string LoadSkillToolName = "load_skill";
 
         /// <summary>
+        /// Name of the pseudo-skill returning the complete instructions of the agent (see <see cref="AgentInstructions"/>)
+        /// </summary>
+        public const string InstructionsSkillName = "instructions";
+
+        /// <summary>
+        /// If set, the pseudo-skill <see cref="InstructionsSkillName"/> of <c>load_skill</c> returns these complete instructions of the agent:
+        /// used by the MCP server, whose clients truncate long server instructions.
+        /// </summary>
+        public Func<string> AgentInstructions = null;
+
+        /// <summary>
         /// Hard ceiling (in characters) for a single tool result appended to the conversation.
         /// A result larger than this (roughly 50k tokens) would risk exceeding the model's context
         /// window — and since the history is resent on every turn, it would brick the whole session.
@@ -140,7 +151,7 @@ namespace Seal.AI
                     tool.Description = $"Requires the skill '{skillName}': call '{LoadSkillToolName}' with skill_name '{skillName}' once before the first call of this tool, and follow its instructions.\n" + tool.Description;
                 return tool;
             }).ToList();
-            if (_skills.Count > 0) list.Add(BuildLoadSkillTool(_skills));
+            if (_skills.Count > 0 || AgentInstructions != null) list.Add(BuildLoadSkillTool(_skills, AgentInstructions != null));
             return list;
         }
 
@@ -152,6 +163,7 @@ namespace Seal.AI
             if (toolCall.Name == LoadSkillToolName)
             {
                 var skillName = ExtractSkillName(toolCall.Arguments);
+                if (skillName == InstructionsSkillName && AgentInstructions != null) return "Loading the instructions of the agent";
                 return _skills.FirstOrDefault(s => s.Name == skillName)?.GetProgressLabel(Culture) ?? $"Loading skill '{skillName}'";
             }
             var toolConfig = _activeTools.TryGetValue(toolCall.Name, out var tc) ? tc : null;
@@ -240,13 +252,16 @@ namespace Seal.AI
         /// agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
         /// the available skill names.
         /// </summary>
-        static AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs)
+        static AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs, bool withInstructions = false)
         {
             var catalog = string.Join("\n", skillConfigs.Select(s => $"- {s.Name}: {s.Description}"));
+            if (withInstructions) catalog = $"- {InstructionsSkillName}: the complete instructions and rules of this agent (the server instructions can be truncated by the client). Load it once at the start of the conversation, before any other call.\n" + catalog;
             var description =
                 "Load the detailed instructions for a skill before performing related work. " +
                 "Call this as soon as a user request matches one of the skills below; the full instructions " +
                 "(and any tools the skill needs) become available after loading. Available skills:\n" + catalog;
+            var names = skillConfigs.Select(s => s.Name).ToList();
+            if (withInstructions) names.Insert(0, InstructionsSkillName);
 
             var schema = JsonConvert.SerializeObject(new
             {
@@ -257,7 +272,7 @@ namespace Seal.AI
                     {
                         type = "string",
                         description = "Name of the skill to load.",
-                        @enum = skillConfigs.Select(s => s.Name).ToList()
+                        @enum = names
                     }
                 },
                 required = new[] { "skill_name" }
@@ -275,6 +290,18 @@ namespace Seal.AI
         {
             toolsChanged = false;
             var skillName = ExtractSkillName(toolCall.Arguments);
+            if (skillName == InstructionsSkillName && AgentInstructions != null)
+            {
+                try
+                {
+                    var instructions = AgentInstructions();
+                    return string.IsNullOrWhiteSpace(instructions) ? "The agent has no instructions configured." : instructions;
+                }
+                catch (Exception ex)
+                {
+                    return $"Unable to load the instructions of the agent: {ex.Message}";
+                }
+            }
             var skill = _skills.FirstOrDefault(s => s.Name == skillName);
             if (skill == null)
                 return $"Unknown skill '{skillName}'. Available skills: {string.Join(", ", _skills.Select(s => s.Name))}.";

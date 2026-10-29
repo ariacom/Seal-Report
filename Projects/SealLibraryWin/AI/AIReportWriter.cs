@@ -1134,6 +1134,8 @@ namespace Seal.AI
                 else if (!testReport.Cancel)
                 {
                     test.Append($"Test execution with the default criteria values ({watch.Elapsed.TotalSeconds:0.0} s):");
+                    var criteria = CriteriaApplied(testReport);
+                    if (criteria.Count > 0) test.Append("\r\nCriteria applied (check that each value is the one asked, e.g. the name of an identifier): " + string.Join("; ", criteria));
                     var noRow = false;
                     foreach (var m in testReport.ExecutionModels)
                     {
@@ -1201,6 +1203,21 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Texts of the restrictions having a value in the execution (label, operator and values, with the display values of the enumerated lists)
+        /// </summary>
+        public static List<string> CriteriaApplied(Report report)
+        {
+            try
+            {
+                return report.AllExecutionRestrictions.Where(i => i.HasValue).Select(i => i.DisplayText).Where(i => !string.IsNullOrWhiteSpace(i)).Distinct().ToList();
+            }
+            catch
+            {
+                return new List<string>();
+            }
+        }
+
+        /// <summary>
         /// Takes a picture of the HTML result with the headless browser and adds it to the result of the tool call when the provider of the agent accepts images.
         /// </summary>
         string takePicture(string htmlPath)
@@ -1233,6 +1250,293 @@ namespace Seal.AI
             {
                 return $"Picture not taken: {(ex.InnerException ?? ex).Message}";
             }
+        }
+
+        #endregion
+
+        #region Execution for the agent
+
+        /// <summary>
+        /// Maximum duration of an execution for the agent (tools report_execute_get_data and report_execute_from_xml)
+        /// </summary>
+        public const int ExecutionTimeoutSeconds = 120;
+
+        /// <summary>
+        /// Maximum number of rows of a model returned to the agent
+        /// </summary>
+        public const int MaxRowsForAgent = 100;
+
+        /// <summary>
+        /// Executes a saved report and returns its result for the agent (tool report_execute_get_data). The values of its prompted criteria can be set by a JSON array
+        /// of {name, operator, values}: the criteria not prompted stay as defined in the report.
+        /// </summary>
+        public string ExecuteSaved(string path, string modelName, string criteriaJson)
+        {
+            if (SecurityContext == null) return "Error: no security context available.";
+            var error = ResolveExistingReportPath(path, out string fullPath);
+            if (error != null) return error;
+            if (!SecurityContext.HasFolderRight(Path.GetDirectoryName(fullPath), (int)FolderRight.Execute)) return $"Error: access denied to '{path}'.";
+
+            Report report;
+            try { report = Report.LoadFromFile(fullPath, Repository); }
+            catch (Exception ex) { return $"Error loading report: {ex.Message}"; }
+            if (!string.IsNullOrEmpty(report.LoadErrors)) return $"Error loading report '{path}': {report.LoadErrors}";
+
+            if (!string.IsNullOrWhiteSpace(criteriaJson))
+            {
+                error = ApplyCriteria(report, criteriaJson);
+                if (error != null) return error;
+            }
+            return ExecuteForAgent(report, $"'{path}'", modelName);
+        }
+
+        /// <summary>
+        /// Validates and executes a report XML without saving it (tool report_execute_from_xml): same checks as report_create_from_xml (code level, references to the data sources),
+        /// all the models having elements are executed, and the result is returned for the agent. The same XML can then be saved with report_create_from_xml.
+        /// </summary>
+        public string ExecuteFromXml(string xml, string modelName)
+        {
+            if (SecurityContext == null) return "Error: no security context available.";
+            XDocument doc;
+            try { doc = XDocument.Parse(xml); }
+            catch (Exception ex) { return $"Error: {ex.Message}"; }
+            if (doc.Root == null || doc.Root.Name.LocalName != "Report") return "Error: the root element must be <Report>.";
+
+            string tempPath = null;
+            try
+            {
+                var generatedSql = new List<string>();
+                var error = ResolveEnumsFromColumns(doc, generatedSql);
+                if (error != null) return error;
+
+                if (_tool != null)
+                {
+                    error = _tool.CheckReportCode(ToXmlText(doc), null, "(report executed without save)", generatedSql);
+                    if (error != null) return error;
+                }
+
+                //No view is needed: a root view is added if missing, and every model having elements is executed
+                var views = doc.Root.Element("Views");
+                if (views == null) { views = new XElement("Views"); doc.Root.Add(views); }
+                var rootView = views.Elements("ReportView").FirstOrDefault(i => (string)i.Element("GUID") == (string)doc.Root.Element("ViewGUID")) ?? views.Elements("ReportView").FirstOrDefault();
+                if (rootView == null)
+                {
+                    rootView = new XElement("ReportView", new XElement("GUID", Guid.NewGuid().ToString()), new XElement("Name", "View"), new XElement("TemplateName", ReportViewTemplate.ReportName));
+                    views.Add(rootView);
+                }
+                doc.Root.Element("ViewGUID")?.Remove();
+                doc.Root.Add(new XElement("ViewGUID", (string)rootView.Element("GUID")));
+
+                var warnings = new List<string>();
+                error = Validate(doc, null, true, null, false, warnings, out int limitedModels);
+                if (error != null) return error;
+
+                var parameters = rootView.Element("Parameters");
+                if (parameters == null) { parameters = new XElement("Parameters"); rootView.Add(parameters); }
+                parameters.Elements("Parameter").Where(i => (string)i.Element("Name") == Parameter.ForceModelsLoad).Remove();
+                parameters.Add(new XElement("Parameter", new XElement("Name", Parameter.ForceModelsLoad), new XElement("Value", "True")));
+
+                var text = ToXmlText(doc);
+                error = CheckDeserialization(text);
+                if (error != null) return error;
+
+                tempPath = FileHelper.GetUniqueFileName(FileHelper.TempApplicationDirectory, "ai_query." + Repository.SealReportFileExtension, "", true);
+                File.WriteAllText(tempPath, text, Encoding.UTF8);
+                var report = Report.LoadFromFile(tempPath, Repository);
+                if (!string.IsNullOrEmpty(report.LoadErrors)) return $"Error: the report does not load: {report.LoadErrors}";
+
+                var result = new StringBuilder("Executed without saving (nothing written in the repository).");
+                if (limitedModels > 0) result.Append($"\r\nNote: the result is limited to {DefaultMaxNumberOfRecords} records (<MaxNumberOfRecords>).");
+                if (warnings.Count > 0) result.Append("\r\nWarning: " + string.Join("; ", warnings) + ".");
+                result.Append("\r\n" + ExecuteForAgent(report, "the report", modelName));
+                return result.ToString();
+            }
+            catch (Exception ex) { return $"Error: {ex.Message}"; }
+            finally
+            {
+                try { if (tempPath != null && File.Exists(tempPath)) File.Delete(tempPath); } catch { }
+            }
+        }
+
+        /// <summary>
+        /// Executes a loaded report and returns for the agent the criteria applied, then for each model its row count, aggregated metrics and first rows.
+        /// </summary>
+        string ExecuteForAgent(Report report, string label, string modelName)
+        {
+            try
+            {
+                //Data-fetch only: never launch the OS external result viewer (PDF, Excel, ...).
+                report.SkipExternalViewer = true;
+                var watch = System.Diagnostics.Stopwatch.StartNew();
+                var execution = new ReportExecution() { Report = report };
+                execution.Execute();
+                while (report.Status != ReportStatus.Executed && !report.HasErrors && !report.Cancel)
+                {
+                    if (_tool?.CurrentToolCall?.CancelOperation?.Cancel == true) { report.Cancel = true; break; }
+                    if (watch.Elapsed.TotalSeconds > ExecutionTimeoutSeconds)
+                    {
+                        report.Cancel = true;
+                        return $"Error: the execution of {label} was still running after {ExecutionTimeoutSeconds} s and was cancelled: restrict the criteria.";
+                    }
+                    Thread.Sleep(200);
+                }
+            }
+            catch (Exception ex) { return $"Error executing {label}: {ex.Message}"; }
+
+            if (report.HasErrors) return $"Error executing {label}:\r\n{report.ExecutionErrors}";
+
+            var models = report.Models.Where(m => string.IsNullOrEmpty(modelName) || m.Name == modelName).ToList();
+            if (models.Count == 0)
+            {
+                return string.IsNullOrEmpty(modelName) ? "No models found in report." : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m => m.Name))}.";
+            }
+
+            var sb = new StringBuilder();
+            var criteria = CriteriaApplied(report);
+            sb.AppendLine("=== CRITERIA APPLIED ===");
+            sb.AppendLine(criteria.Count == 0 ? "(none)" : string.Join("\r\n", criteria.Select(i => "- " + i)));
+            sb.AppendLine("Check that each value is the one asked (e.g. the name shown for an identifier) before giving the figures.");
+            sb.AppendLine();
+            foreach (var model in models)
+            {
+                sb.AppendLine($"=== Model: {model.Name} ===");
+                if (model.ResultTable == null)
+                {
+                    sb.AppendLine("Not executed: the model is displayed by no view.");
+                    sb.AppendLine();
+                    continue;
+                }
+                //Cap the rows sent to the AI: a full result table can exceed the model's context window.
+                var (tableJson, aggJson) = model.GetResultTableTranslatedJson(MaxRowsForAgent);
+                sb.AppendLine("PRE-AGGREGATED METRICS:");
+                sb.AppendLine(aggJson);
+                sb.AppendLine("DATA:");
+                sb.AppendLine(tableJson);
+                sb.AppendLine();
+            }
+            if (!string.IsNullOrWhiteSpace(report.ExecutionMessages))
+            {
+                sb.AppendLine("=== EXECUTION MESSAGES ===");
+                sb.AppendLine(report.ExecutionMessages);
+            }
+            return sb.ToString();
+        }
+
+        /// <summary>
+        /// Sets the values of the prompted criteria of a report from a JSON array of {name, operator, values} (or value). The name is the label of the criterion
+        /// (or its column name). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
+        /// Returns an error or null.
+        /// </summary>
+        public static string ApplyCriteria(Report report, string criteriaJson)
+        {
+            var prompted = report.AllRestrictions.Where(i => i.Prompt != PromptType.None || i.AllowAPI).Distinct().ToList();
+            string available() => prompted.Count == 0 ? "the report has no prompted criterion" : "prompted criteria: " + string.Join(", ", prompted.Select(i => $"'{i.DisplayNameEl}'").Distinct());
+
+            JsonElement root;
+            try
+            {
+                using var document = JsonDocument.Parse(criteriaJson);
+                root = document.RootElement.Clone();
+            }
+            catch (Exception ex) { return $"Error: invalid 'criteria': {ex.Message}"; }
+            if (root.ValueKind == JsonValueKind.Object) root = root.TryGetProperty("criteria", out var c) ? c : root;
+            if (root.ValueKind != JsonValueKind.Array) return "Error: 'criteria' must be an array of {name, operator, values}.";
+
+            foreach (var item in root.EnumerateArray())
+            {
+                if (item.ValueKind != JsonValueKind.Object) return "Error: each criterion must be an object {name, operator, values}.";
+                var name = item.TryGetProperty("name", out var n) && n.ValueKind == JsonValueKind.String ? n.GetString().Trim() : null;
+                if (string.IsNullOrEmpty(name)) return $"Error: a criterion has no 'name' ({available()}).";
+
+                var values = new List<string>();
+                void addValue(JsonElement v)
+                {
+                    if (v.ValueKind == JsonValueKind.Array) { foreach (var i in v.EnumerateArray()) addValue(i); }
+                    else if (v.ValueKind == JsonValueKind.String) values.Add(v.GetString());
+                    else if (v.ValueKind != JsonValueKind.Null) values.Add(v.GetRawText());
+                }
+                if (item.TryGetProperty("values", out var vs)) addValue(vs);
+                if (item.TryGetProperty("value", out var vv)) addValue(vv);
+
+                bool matches(ReportRestriction r) => string.Equals(r.DisplayNameEl, name, StringComparison.OrdinalIgnoreCase) || string.Equals(r.DisplayNameElTranslated, name, StringComparison.OrdinalIgnoreCase)
+                    || string.Equals(r.Name, name, StringComparison.OrdinalIgnoreCase) || string.Equals(r.MetaColumn?.DisplayName, name, StringComparison.OrdinalIgnoreCase);
+                var restrictions = prompted.Where(matches).ToList();
+                if (restrictions.Count == 0) return $"Error: unknown criterion '{name}' ({available()}). Only the prompted criteria can be set.";
+
+                Operator? newOperator = null;
+                var operatorName = item.TryGetProperty("operator", out var o) && o.ValueKind == JsonValueKind.String ? o.GetString().Trim() : null;
+                if (!string.IsNullOrEmpty(operatorName))
+                {
+                    if (!Enum.TryParse(operatorName, true, out Operator op) || op == Operator.ValueOnly) return $"Error: invalid operator '{operatorName}' for '{name}' (e.g. Equal, NotEqual, Contains, StartsWith, Between, Greater, SmallerEqual, IsNull, IsNotEmpty).";
+                    newOperator = op;
+                }
+
+                foreach (var restriction in restrictions)
+                {
+                    if (newOperator != null && newOperator != restriction.Operator)
+                    {
+                        if (restriction.OperatorStyle != RestrictionOperatorStyle.Visible && restriction.OperatorStyle != RestrictionOperatorStyle.VisibleWithNulls)
+                            return $"Error: the operator of '{name}' cannot be changed (it is fixed to '{restriction.Operator}' in the report): set only its values.";
+                        restriction.Operator = newOperator.Value;
+                    }
+
+                    if (restriction.IsEnumRE && restriction.EnumRE != null)
+                    {
+                        var ids = new List<string>();
+                        foreach (var value in values)
+                        {
+                            var error = resolveEnumValue(restriction, name, value, out string id);
+                            if (error != null) return error;
+                            if (!ids.Contains(id)) ids.Add(id);
+                        }
+                        restriction.EnumValues = ids;
+                    }
+                    else
+                    {
+                        if (values.Count > 4) return $"Error: too many values for '{name}' (4 at most).";
+                        ReportExecution.SetRestrictions(report, restriction, values.ElementAtOrDefault(0), values.ElementAtOrDefault(1), values.ElementAtOrDefault(2), values.ElementAtOrDefault(3), false);
+                        if (!string.IsNullOrEmpty(restriction.ValidationErrors)) return $"Error: invalid value for '{name}': {restriction.ValidationErrors.Trim()}";
+                    }
+                }
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
+        /// </summary>
+        static string resolveEnumValue(ReportRestriction restriction, string name, string value, out string id)
+        {
+            id = null;
+            var enumRE = restriction.EnumRE;
+            var candidates = new List<MetaEV>(restriction.MetaEnumValuesRE ?? new List<MetaEV>());
+            //List filtered by the database: search the value typed
+            if (enumRE.HasDynamicDisplay)
+            {
+                try { candidates.AddRange(enumRE.GetSubSetValues(value, null).Where(i => !candidates.Exists(j => j.Id == i.Id))); }
+                catch (Exception ex) { return $"Error: the values of '{name}' cannot be searched: {ex.Message}"; }
+            }
+
+            var found = candidates.FirstOrDefault(i => i.Id == value)
+                ?? candidates.FirstOrDefault(i => string.Equals(i.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(i.DisplayValue, value, StringComparison.OrdinalIgnoreCase));
+            if (found == null)
+            {
+                var partial = candidates.Where(i => (i.DisplayRestriction ?? "").Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+                //e.g. 'Versonnex' for 'Versonnex (01435)'
+                var starting = partial.Where(i => (i.DisplayRestriction ?? "").StartsWith(value + " ", StringComparison.OrdinalIgnoreCase)).ToList();
+                if (starting.Count > 0) partial = starting;
+                if (partial.Count == 1) found = partial[0];
+                else if (partial.Count > 1)
+                    return $"Error: the value '{value}' of '{name}' is ambiguous, it matches: {string.Join(", ", partial.Take(20).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}{(partial.Count > 20 ? ", ..." : "")}. Choose the one asked (e.g. by its department or postal code) and pass its id.";
+            }
+            if (found == null)
+            {
+                //List loaded on demand: an identifier not yet loaded is kept as is and loaded with the selected values
+                if (enumRE.IsLoadOnDemand) { id = value; return null; }
+                return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list.";
+            }
+            id = found.Id;
+            return null;
         }
 
         #endregion

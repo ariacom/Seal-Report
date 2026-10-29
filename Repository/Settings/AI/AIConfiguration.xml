@@ -176,10 +176,24 @@ Use when the user wants automated execution:
       <Description>Executes a report and returns its result tables as structured JSON data, followed by the execution messages.
 Use it to fetch the actual data produced by an existing report for analysis, answering data questions, generating a summary, or diagnosing execution issues.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex).
-Optionally pass model_name to restrict the output to a single model.</Description>
+Optionally pass model_name to restrict the output to a single model.
+Pass criteria to set the values of its prompted criteria for this execution only (nothing is saved): the answer to a question on a filter (a city, a type, a period) comes from the existing report with these criteria, without creating a new report.
+The result starts with the criteria applied, with the display values of the enumerated lists: check them before giving the figures.</Description>
       <ProgressLabel>Executing report {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex or Personal\\username\\monthly.srex)"},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."}},"required":["path"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex or Personal\\username\\monthly.srex)"},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."},"criteria":{"type":"array","description":"Optional values of prompted criteria of the report (see report_get_detail), for this execution only. Only the prompted criteria can be set.","items":{"type":"object","properties":{"name":{"type":"string","description":"Label of the criterion (or its column name)."},"operator":{"type":"string","description":"Optional operator (Equal, NotEqual, Contains, StartsWith, Between, Greater, GreaterEqual, Smaller, SmallerEqual, IsNull, IsNotNull...), only if the report allows to change it."},"values":{"type":"array","items":{"type":"string"},"description":"Values (dates as yyyy-MM-dd). For an enumerated list: identifiers or display values; a partial display value (e.g. a city name) is accepted when it matches one value only, otherwise the error lists the matching values with their identifiers."}},"required":["name"]}}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_execute_get_data.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>44f31f4e-ed50-4f4d-8c34-a9b1652c6ca3</GUID>
+      <Name>report_execute_from_xml</Name>
+      <Access>ReadOnly</Access>
+      <Description>Executes a metadata report XML WITHOUT saving it and returns its result (criteria applied, row count, aggregated metrics and first rows of each model).
+Use it to answer a data question (count, total, average, by dimension) when no existing report answers it: nothing is written in the repository.
+The XML is the same as for report_create_from_xml (same checks of the data source references and of the code level); views are optional, every model having elements is executed.
+To keep the report afterwards (the user asks to save it, to schedule it, or wants a chart or a map), call report_create_from_xml with the same XML.</Description>
+      <ProgressLabel>Executing the query</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"xml":{"type":"string","description":"Complete XML content of the report (.srex), as for report_create_from_xml: MetaSourceGUID and MetaColumnGUID from datasource_list / datasource_get_detail, internal GUIDs may be placeholders."},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."}},"required":["xml"]}</ParametersSchema>
+      <ExecutionScriptFile>report_execute_from_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
       <GUID>e7d2c9a4-1b6f-4e83-9a2c-5f0d8b3e7c61</GUID>
@@ -475,6 +489,7 @@ For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
         <GUID>84ddf1ed-6473-488a-90a4-2dee3205e7ea</GUID>
         <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
         <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
+        <GUID>44f31f4e-ed50-4f4d-8c34-a9b1652c6ca3</GUID>
         <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
         <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a1</GUID>
         <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a2</GUID>
@@ -519,6 +534,7 @@ Load this whenever the target source is NoSQL.</Description>
         <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
         <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
         <GUID>25cd0ba3-0d19-4cc8-a5ae-aba7b4e750f2</GUID>
+        <GUID>44f31f4e-ed50-4f4d-8c34-a9b1652c6ca3</GUID>
         <GUID>5329983b-9c8a-4825-b51d-9a7fb4949b53</GUID>
         <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a3</GUID>
         <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a6</GUID>

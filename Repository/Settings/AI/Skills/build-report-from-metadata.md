@@ -31,6 +31,9 @@ without them, or tell the user that an administrator must grant a higher level).
 4. **Write**: new report → `report_create_from_xml`; change to a saved report →
    `report_patch_xml` (XPath set/insert/remove; call `report_get_xml` first). A
    change of view parameters only can also use `style-report-view`.
+   To only answer a question with figures (nothing to keep), use
+   `report_execute_from_xml` instead: same XML, views optional, nothing saved.
+   Save it later with `report_create_from_xml` if the user asks.
 5. **Test and fix**: each save executes the report with its default criteria and
    renders its views. `TEST FAILED`, `VIEW RENDER FAILED` or a timeout → fix and save
    again before answering. `0 row(s)` → check the filter values, or tell the user

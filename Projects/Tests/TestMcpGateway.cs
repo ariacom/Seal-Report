@@ -143,6 +143,30 @@ namespace Test
                 var skillTools = agent.GetSkillConfigurations().SelectMany(s => s.GetToolConfigurations()).Where(t => !agent.ToolGUIDs.Contains(t.GUID)).ToList();
                 foreach (var t in skillTools) Assert.IsTrue(tools.Any(i => i.Name == t.Name && i.Description.StartsWith("Requires the skill")), $"tool '{t.Name}' missing");
                 if (agent.GetSkillConfigurations().Count > 0) Assert.IsTrue(tools.Any(t => t.Name == AIToolHost.LoadSkillToolName));
+
+                //Long system prompt: the instructions are an extract under the limit of the clients, the complete prompt is returned by load_skill('instructions')
+                var host = McpGateway.GetToolHost(context);
+                var fullPrompt = AIAgent.CreateWithoutProvider(context.Agent, context.User).SystemPrompt;
+                StringAssert.Contains(host.GetTools().First(t => t.Name == AIToolHost.LoadSkillToolName).ParametersSchema, AIToolHost.InstructionsSkillName);
+                var loaded = host.Execute(new AIToolCall() { Name = AIToolHost.LoadSkillToolName, Arguments = "{\"skill_name\":\"instructions\"}" });
+                Assert.IsTrue(loaded.IsSkillLoad);
+                Assert.AreEqual(fullPrompt, loaded.Text);
+                var maxLength = McpGateway.McpInstructionsMaxLength;
+                try
+                {
+                    McpGateway.McpInstructionsMaxLength = 1000;
+                    var instructions = McpGateway.GetInstructions(context);
+                    if (fullPrompt.Length > 1000)
+                    {
+                        Assert.IsTrue(instructions.Length <= 1000, $"instructions of {instructions.Length} characters");
+                        Assert.IsTrue(instructions.StartsWith("IMPORTANT"), instructions);
+                    }
+                    StringAssert.Contains(instructions, "Seal Report MCP server");
+                }
+                finally
+                {
+                    McpGateway.McpInstructionsMaxLength = maxLength;
+                }
             }
             finally
             {

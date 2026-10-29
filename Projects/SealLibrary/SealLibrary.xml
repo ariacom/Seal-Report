@@ -1343,6 +1343,17 @@
             Name of the built-in synthetic tool the AI calls to load a skill's instructions on demand.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIToolHost.InstructionsSkillName">
+            <summary>
+            Name of the pseudo-skill returning the complete instructions of the agent (see <see cref="F:Seal.AI.AIToolHost.AgentInstructions"/>)
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.AgentInstructions">
+            <summary>
+            If set, the pseudo-skill <see cref="F:Seal.AI.AIToolHost.InstructionsSkillName"/> of <c>load_skill</c> returns these complete instructions of the agent:
+            used by the MCP server, whose clients truncate long server instructions.
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIToolHost.MaxToolResultLength">
             <summary>
             Hard ceiling (in characters) for a single tool result appended to the conversation.
@@ -1419,7 +1430,7 @@
             Returns <c>null</c> when it cannot be parsed.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIToolHost.BuildLoadSkillTool(System.Collections.Generic.List{Seal.AI.AISkillConfiguration})">
+        <member name="M:Seal.AI.AIToolHost.BuildLoadSkillTool(System.Collections.Generic.List{Seal.AI.AISkillConfiguration},System.Boolean)">
             <summary>
             Builds the synthetic <c>load_skill</c> tool. Its description embeds the live catalog of the
             agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
@@ -1640,9 +1651,21 @@
             Returns the tool host of a request: all the tools of the agent and of its skills are active (the MCP client receives the tool list once), the result can contain images.
             </summary>
         </member>
+        <member name="F:Seal.AI.McpGateway.McpInstructionsMaxLength">
+            <summary>
+            Maximum length of the instructions of the MCP server: the clients truncate longer instructions (e.g. 2048 characters for Claude Code).
+            A longer system prompt is sent as an extract, its complete text is returned by the pseudo-skill <see cref="F:Seal.AI.AIToolHost.InstructionsSkillName"/> of load_skill.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetSystemPrompt(Seal.AI.McpRequestContext)">
+            <summary>
+            System prompt of the agent for the user of the request (null on error)
+            </summary>
+        </member>
         <member name="M:Seal.AI.McpGateway.GetInstructions(Seal.AI.McpRequestContext)">
             <summary>
             Returns the instructions of the MCP server for a request: the system prompt of the agent for the user, followed by <see cref="F:Seal.AI.McpGateway.McpInstructions"/>.
+            A system prompt longer than <see cref="F:Seal.AI.McpGateway.McpInstructionsMaxLength"/> is replaced by its beginning, after a first line asking to load its complete text with load_skill('instructions').
             </summary>
         </member>
         <member name="M:Seal.AI.McpGateway.ExecuteTool(Seal.AI.McpRequestContext,System.String,System.String,Seal.AI.ICancelOperation)">
@@ -2393,9 +2416,53 @@
             the errors of the execution and of the views (file and line), and optionally a picture of the result for the agent.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.CriteriaApplied(Seal.Model.Report)">
+            <summary>
+            Texts of the restrictions having a value in the execution (label, operator and values, with the display values of the enumerated lists)
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.takePicture(System.String)">
             <summary>
             Takes a picture of the HTML result with the headless browser and adds it to the result of the tool call when the provider of the agent accepts images.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIReportWriter.ExecutionTimeoutSeconds">
+            <summary>
+            Maximum duration of an execution for the agent (tools report_execute_get_data and report_execute_from_xml)
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIReportWriter.MaxRowsForAgent">
+            <summary>
+            Maximum number of rows of a model returned to the agent
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.ExecuteSaved(System.String,System.String,System.String)">
+            <summary>
+            Executes a saved report and returns its result for the agent (tool report_execute_get_data). The values of its prompted criteria can be set by a JSON array
+            of {name, operator, values}: the criteria not prompted stay as defined in the report.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.ExecuteFromXml(System.String,System.String)">
+            <summary>
+            Validates and executes a report XML without saving it (tool report_execute_from_xml): same checks as report_create_from_xml (code level, references to the data sources),
+            all the models having elements are executed, and the result is returned for the agent. The same XML can then be saved with report_create_from_xml.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.ExecuteForAgent(Seal.Model.Report,System.String,System.String)">
+            <summary>
+            Executes a loaded report and returns for the agent the criteria applied, then for each model its row count, aggregated metrics and first rows.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.ApplyCriteria(Seal.Model.Report,System.String)">
+            <summary>
+            Sets the values of the prompted criteria of a report from a JSON array of {name, operator, values} (or value). The name is the label of the criterion
+            (or its column name). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
+            Returns an error or null.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.resolveEnumValue(Seal.Model.ReportRestriction,System.String,System.String,System.String@)">
+            <summary>
+            Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
             </summary>
         </member>
         <member name="T:Seal.Helpers.ObjectShredder`1">

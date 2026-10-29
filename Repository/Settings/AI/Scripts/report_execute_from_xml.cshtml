@@ -1,0 +1,12 @@
+@using System.Text.Json
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+    var modelName = args.TryGetProperty("model_name", out var mnp) ? mnp.GetString() : null;
+    tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}'..");
+
+    // Same checks as report_create_from_xml (code level, data source references), execution of all the models, nothing saved
+    tool.ExecResult = new AIReportWriter(tool).ExecuteFromXml(args.GetProperty("xml").GetString(), modelName);
+    tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+}
