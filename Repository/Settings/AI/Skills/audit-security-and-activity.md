@@ -35,9 +35,25 @@ Run these with `report_execute_get_data`, using the exact path shown.
 | `System\510 Publication - Repository` | Repository publication details |
 | `System\600 System - Repository Size` | Disk usage by folder |
 
+## Security consistency
+
+Call `security_check` (no report needed) when the user asks **why an AI agent or a
+tool is refused**, **what he can do**, or to **review the security configuration**:
+- scope `mine` (default): effective security of the current user (groups, default
+  group, report code level, personal folder, AI agents, web schedules) and the
+  warnings of his groups;
+- scope `all`: warnings of all the groups (refused if the user cannot execute the
+  System reports).
+
+For each warning, explain its consequence in one sentence and the setting to change
+in the Server Manager (Configuration > Security), e.g. the repository folder
+`\Sources` in 'Read and write' for the Data Source Manager agent, a report folder
+with the right Edit, or the report code level 'Metadata and SQL'.
+
 ## Workflow
 
-1. Pick the system report that matches the question (use `report_list` if you are
+1. For a question on the rights or the refusals of the AI agents, start with
+   `security_check`. Otherwise pick the system report that matches the question (use `report_list` if you are
    unsure of the exact path).
 2. Run it with `report_execute_get_data`. For audit searches, mention which
    prompted filters the user can adjust at runtime.

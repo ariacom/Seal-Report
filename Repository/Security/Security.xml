@@ -16,21 +16,20 @@
 	{
         throw new Exception("This user has no group");
 	}
-	else if (user.WebUserName == "ben" &amp;&amp; user.WebPassword == "ben")
-	{
-        user.Name = "Benjaminto Seal";
-		user.AddDefaultSecurityGroup();
-        var imagePath = @"C:\temp\" + user.WebUserName + ".png";
-        if (System.IO.File.Exists(imagePath)) {
-            user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);
-        }
-	}
     else {
         //Authenticate and set the groups defined in the security login
         if (!user.LoginAuthentication(user.WebUserName, user.WebPassword)) {
             throw new Exception("Invalid user name or password");
         }
     }
+
+    //Sample to show a picture of the user in the Web Report Server
+    /*
+    var imagePath = @"C:\temp\" + user.WebUserName + ".png";
+    if (System.IO.File.Exists(imagePath)) {
+        user.Tag = Seal.Helpers.Helper.HtmlMakeImageSrcData(imagePath);
+    }
+    */
 }</Script>
   <TwoFAGenerationScript />
   <TwoFACheckScript />
@@ -58,18 +57,14 @@
         </SecurityRepositoryFolder>
         <SecurityRepositoryFolder>
           <Path>\Sources</Path>
-          <FolderRight>ReadOnly</FolderRight>
-        </SecurityRepositoryFolder>
-        <SecurityRepositoryFolder>
-          <Path>\SpecialFolders</Path>
-          <FolderRight>ReadOnly</FolderRight>
+          <FolderRight>ReadWrite</FolderRight>
         </SecurityRepositoryFolder>
       </RepositoryFolders>
       <PersFolderRight>Reports</PersFolderRight>
       <FoldersScript />
       <FolderDetailScript />
       <MenuScript />
-      <ReportCodeLevel>Sql</ReportCodeLevel>
+      <ReportCodeLevel>Scripts</ReportCodeLevel>
       <Weight>1</Weight>
       <ShowErrorDetail>true</ShowErrorDetail>
       <AgentGUIDs>
@@ -126,12 +121,6 @@
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
-      <GUID>c550f8a8487a44f5a4b4da7d24606d33</GUID>
-      <Name>Group (Demo)</Name>
-      <ReportCodeLevel>Sql</ReportCodeLevel>
-      <Weight>1</Weight>
-    </SecurityGroup>
-    <SecurityGroup>
       <GUID>ca96ea5fc1bc4caea2169f7e17f92143</GUID>
       <Name>Group (Scripts 1)</Name>
       <FoldersScript>@{
@@ -166,10 +155,10 @@
 
     if (user.FolderDetail.folder.path == @"\Samples") {
         //Filter reports
-        user.FolderDetail.files.RemoveAll(i =&gt; !i.name.Contains("Charts")); 
-        
-        //Sample to change a report 
-        SWIFile file = user.FolderDetail.files.FirstOrDefault(i =&gt; i.name == "04-Charts Gallery - Basics");
+        user.FolderDetail.files.RemoveAll(i =&gt; !i.name.Contains("Charts"));
+
+        //Sample to change a report
+        SWIFile file = user.FolderDetail.files.FirstOrDefault(i =&gt; i.name == "04-Charts gallery - Basics");
         if (file != null) {
             file.name = "04-Charts Gallery - Basics NEW";
             file.right = 1;
@@ -178,7 +167,7 @@
     
     if (user.FolderDetail.folder.path == @"\") {
         //Sample to add a report 
-        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from Root", last="", isreport=true, right=1}); 
+        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts gallery - Basics.srex", name="Charts from Root", last="", isreport=true, right=1}); 
     }
 }
 </FolderDetailScript>
@@ -202,11 +191,11 @@
     //user.ScriptNumber is a number incremented if several scripts are executed
 
     if (user.FolderDetail.folder.path == @"\System") {
-        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts Gallery - Basics.srex", name="Charts from System", last="", isreport=true, right=1}); 
+        user.FolderDetail.files.Add(new SWIFile() { path=@"\Samples\04-Charts gallery - Basics.srex", name="Charts from System", last="", isreport=true, right=1}); 
     }
 
     if (user.FolderDetail.folder.path == @"\") {
-        user.FolderDetail.files.RemoveAll(i =&gt; i.path != @"\Samples\04-Charts Gallery - Basics.srex"); 
+        user.FolderDetail.files.RemoveAll(i =&gt; i.path != @"\Samples\04-Charts gallery - Basics.srex"); 
     }
 }
 </FolderDetailScript>
@@ -230,7 +219,7 @@
     //Sample to define a menu
     var reports = user.WebMenu.reports;
     reports.Clear();
-    reports.Add(new SWIMenuItem() { path = @"\Samples\04-Charts Gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" });
+    reports.Add(new SWIMenuItem() { path = @"\Samples\04-Charts gallery - Basics.srex", viewGUID = null, outputGUID = null, name = "View Charts" });
     // subMenu
     var subMenu = new SWIMenuItem() { name = "A SubMenu" };
     subMenu.items.Add(new SWIMenuItem() { path = @"\Search - Orders.srex", viewGUID = null, outputGUID = null, name = "Search" });
@@ -241,8 +230,6 @@
 }
 </MenuScript>
       <Weight>1</Weight>
-      <OnStartup>ExecuteReport</OnStartup>
-      <StartupReport>\work\basic.srex</StartupReport>
     </SecurityGroup>
     <SecurityGroup>
       <GUID>65b247d5ca804ef688e311e50f6da59a</GUID>
@@ -352,6 +339,15 @@
   </Groups>
   <Logins>
     <SecurityLogin>
+      <GUID>0d3e5c2a9b7f4e18a6c1d2e3f4a5b6c7</GUID>
+      <Id>dev</Id>
+      <Password>+0+XYCrlOt6ADfhexhj2rg28OPBIXZcUzDkLURnYQ/c=</Password>
+      <Name>Developer</Name>
+      <GroupIds>
+        <string>13d763a0d8514f9fbb18e4459694fedc</string>
+      </GroupIds>
+    </SecurityLogin>
+    <SecurityLogin>
       <GUID>a24f9727f9d944e6b1947cc59079cd49</GUID>
       <Id>ex</Id>
       <Password>sYKvHw8IOWBXSlFU6qkFnpH6A6vR02MX96jl9QFhMFA=</Password>
@@ -380,18 +376,10 @@
     </SecurityLogin>
     <SecurityLogin>
       <GUID>613353d2ea90436cbf42420b59915732</GUID>
-      <Id>designer</Id>
+      <Id>ed</Id>
       <Password>/Pajxs1BJ/hvxQF9puF3dLSfYf6TdZgPnxRq+ErM9Dk=</Password>
       <GroupIds>
         <string>3a18fd3194404b53a7cfa61c44168fcb</string>
-      </GroupIds>
-    </SecurityLogin>
-    <SecurityLogin>
-      <GUID>f2c158abc3224f3cb4ad91551357c9ee</GUID>
-      <Id>exed</Id>
-      <Password>dM18ybJITFztO3OM7N3KmnQNYDupfJ7fVM4XnD5scFQ=</Password>
-      <GroupIds>
-        <string>c550f8a8487a44f5a4b4da7d24606d33</string>
       </GroupIds>
     </SecurityLogin>
     <SecurityLogin>
@@ -416,14 +404,6 @@
       <Password>eybbMk9+pnU9fvpyOqid7xS5TIFJCWQh4xoyYSjFNvc=</Password>
       <GroupIds>
         <string>8f1ec42389ee42758af45364ebbaa4e5</string>
-      </GroupIds>
-    </SecurityLogin>
-    <SecurityLogin>
-      <GUID>d61360411daa40169f34c5b0e10174b9</GUID>
-      <Id>demo</Id>
-      <Password>UyyPOA2CivOUeK1Qqc/t3hx49g09LN2j/Wlt0w8Kr0g=</Password>
-      <GroupIds>
-        <string>c550f8a8487a44f5a4b4da7d24606d33</string>
       </GroupIds>
     </SecurityLogin>
     <SecurityLogin>

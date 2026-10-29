@@ -132,7 +132,7 @@
         //Ground truth: distinctive security group names that ARE defined in Security.xml.
         //The agent must run a System security/audit report (e.g. '100 Configuration - Security Summary')
         //to enumerate the groups - it cannot know these test group names without reading the configuration.
-        var distinctiveGroups = new[] { "Group System Tests", "Group Data Analyst Tests", "Group (Demo)" };
+        var distinctiveGroups = new[] { "Group System Tests", "Group Data Analyst Tests", "Group (Startup one Folder)" };
         var present = distinctiveGroups.Where(g =&gt; repository.Security.Groups.Any(sg =&gt; sg.Name == g)).ToArray();
         if (present.Length &lt; 2) throw new Exception("Test pre-condition failed: fewer than 2 distinctive groups exist in Security.xml.");
 

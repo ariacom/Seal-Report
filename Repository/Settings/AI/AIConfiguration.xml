@@ -248,6 +248,17 @@ Returns up to max_lines lines (default 200).</Description>
       <ExecutionScriptFile>log_read.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
+      <GUID>5ec0c4ec-1111-4aaa-bbbb-5ec000000001</GUID>
+      <Name>security_check</Name>
+      <Access>ReadOnly</Access>
+      <Description>Checks the security configuration and returns the effective security of the current user (groups, default group, report code level, personal folder, AI agents, web schedules) and the consistency warnings of the security groups: AI agents whose tools will be refused (data source edition without write access to '\Sources', report writing without a folder with the right Edit, SQL report skill with the 'Metadata' report code level), unknown agents, data sources or output devices, sensitive repository folders published.
+scope 'mine' (default) checks the groups of the current user; scope 'all' checks all the groups (requires the right to execute the System reports).
+Use it to explain why an AI agent or a tool is refused for a user, or to review the security. Read-only: the security is changed by an administrator with the Server Manager.</Description>
+      <ProgressLabel>Checking the security</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"scope":{"type":"string","enum":["mine","all"],"description":"'mine' (default): the groups of the current user; 'all': all the security groups."}}}</ParametersSchema>
+      <ExecutionScriptFile>security_check.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
+    <AIToolConfiguration>
       <GUID>1f2e3d4c-5b6a-4798-8c0d-1e2f3a4b5c6e</GUID>
       <Name>view_get_parameters</Name>
       <Access>ReadOnly</Access>
@@ -583,6 +594,7 @@ Load this for "who can access what", "recent login failures", "user activity", a
       <ToolGUIDs>
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
+        <GUID>5ec0c4ec-1111-4aaa-bbbb-5ec000000001</GUID>
       </ToolGUIDs>
     </AISkillConfiguration>
     <AISkillConfiguration>

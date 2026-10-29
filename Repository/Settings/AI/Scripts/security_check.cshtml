@@ -1,0 +1,45 @@
+@using System.IO
+@using System.Linq
+@using System.Text
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    AIToolConfiguration tool = Model;
+    var repo            = Repository.Instance;
+    var securityContext = tool.CurrentToolCall.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+
+    var args  = JsonDocument.Parse(tool.CurrentToolCall.Arguments ?? "{}").RootElement;
+    var scope = args.TryGetProperty("scope", out var sp) ? sp.GetString() : "mine";
+
+    // The groups of the other users are checked only for a user who can execute the System reports (e.g. '100 Configuration - Security Summary' which lists them)
+    var allGroups = scope == "all";
+    if (allGroups && !securityContext.HasFolderRight(Path.Combine(repo.ReportsFolder, "System"), (int)FolderRight.Execute))
+    { tool.ExecResult = "Error: checking all the security groups requires the right to execute the System reports. Use scope 'mine' to check the groups of the current user."; return; }
+
+    var security = repo.Security;
+    var sb = new StringBuilder();
+
+    // ── Current user ──────────────────────────────────────────────────────────
+    sb.AppendLine($"Current user: {securityContext.Name} (login '{securityContext.WebUserName}')");
+    sb.AppendLine($"Groups: {string.Join(", ", securityContext.SecurityGroups.Select(i => i.Name))}");
+    sb.AppendLine($"Default group (highest weight, gives the AI agents): {securityContext.DefaultGroup?.Name}");
+    sb.AppendLine($"Report code level: {securityContext.ReportCodeLevel}");
+    sb.AppendLine($"Personal folder: {securityContext.PersonalFolderRight}");
+    sb.AppendLine($"AI agents (web): {string.Join(", ", securityContext.AgentConfigurations.Select(i => i.Name))}");
+    sb.AppendLine($"Web schedules available: {securityContext.CanUseWebSchedules}");
+    sb.AppendLine();
+
+    // ── Consistency warnings ──────────────────────────────────────────────────
+    var warnings = allGroups
+        ? security.CheckConsistency()
+        : securityContext.SecurityGroups.SelectMany(i => security.CheckGroupConsistency(i)).ToList();
+    sb.AppendLine(allGroups ? $"Consistency of the security ({security.Groups.Count} groups):" : "Consistency of the groups of the current user:");
+    if (warnings.Count == 0) sb.AppendLine("  No warning.");
+    foreach (var warning in warnings) sb.AppendLine($"  - {warning}");
+    sb.AppendLine();
+    sb.AppendLine("The checks are done per group: a right given by another group of the user is not considered. The security is changed by an administrator with the Server Manager (Configuration > Security).");
+
+    tool.ExecResult = sb.ToString();
+}

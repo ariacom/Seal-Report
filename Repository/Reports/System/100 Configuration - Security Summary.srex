@@ -705,6 +705,64 @@
               </MetaColumn>
             </Columns>
           </MetaTable>
+          <MetaTable>
+            <GUID>c395a2ef-6173-4d72-ab6d-3f2991b28dfe</GUID>
+            <Name>Consistency</Name>
+            <DefinitionScript>
+@using System.Data
+@{
+    MetaTable metaTable = Model;
+    ReportExecutionLog log = metaTable;
+
+    DataTable table = new DataTable();
+    table.Columns.Add(new DataColumn("group_name", typeof(string)));
+    table.Columns.Add(new DataColumn("warning", typeof(string)));
+    metaTable.NoSQLTable = table;
+    log.LogMessage("{0} column(s) defined", table.Columns.Count);
+}
+</DefinitionScript>
+            <LoadScript>@using System.Data
+@using System.Linq
+@{
+    MetaTable metaTable = Model;
+    DataTable table = metaTable.NoSQLTable;
+    ReportExecutionLog log = metaTable;
+
+    log.LogMessage("Processing " + metaTable.Name);
+    var security = Repository.Instance.Security;
+    //Warnings of the security (provider), then of each group (see SealSecurity.CheckConsistency)
+    foreach (var warning in security.CheckConsistency().Where(i =&gt; !i.StartsWith("Group '"))) {
+        table.Rows.Add("", warning);
+    }
+    foreach (var group in security.Groups) {
+        var prefix = "Group '" + group.Name + "': ";
+        foreach (var warning in security.CheckGroupConsistency(group)) {
+            table.Rows.Add(group.Name, warning.StartsWith(prefix) ? warning.Substring(prefix.Length) : warning);
+        }
+    }
+    log.LogMessage("{0} record(s) loaded", table.Rows.Count);
+}
+</LoadScript>
+            <Alias />
+            <DynamicColumns>true</DynamicColumns>
+            <Columns>
+              <MetaColumn>
+                <GUID>52a8755b-c544-4e49-bdd8-832eaad9480e</GUID>
+                <Name>group_name</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Group name</DisplayName>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>7a351b90-eea1-41f9-aa42-a2c2b8f5907f</GUID>
+                <Name>warning</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <DisplayName>Warning</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
         </Tables>
       </MetaData>
     </ReportSource>
@@ -1119,6 +1177,36 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>c58758ea-4aa9-45dc-9791-d0fcdf60436d</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+    </ReportModel>
+    <ReportModel>
+      <GUID>59a331b6-eedd-45e0-a98a-c6df5ab458d7</GUID>
+      <Name>Consistency</Name>
+      <SourceGUID>a1d47a64-9502-4da7-ba52-0916dc9d76b3</SourceGUID>
+      <LINQSubTables>
+        <MetaTable>
+          <GUID>c395a2ef-6173-4d72-ab6d-3f2991b28dfe</GUID>
+          <Name>Master</Name>
+          <Alias />
+        </MetaTable>
+      </LINQSubTables>
+      <Elements>
+        <ReportElement>
+          <GUID>6703a281-88f3-44c8-8a54-433acd3fb5f8</GUID>
+          <Name>group_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>52a8755b-c544-4e49-bdd8-832eaad9480e</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ac55eafa-e8b7-48c5-ae6c-efb03e392740</GUID>
+          <Name>warning</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>7a351b90-eea1-41f9-aa42-a2c2b8f5907f</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>
@@ -1564,6 +1652,49 @@
                 </Parameter>
               </Parameters>
               <SortOrder>6</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>be42bc6d-53cb-4088-86b1-eed224a2dba6</GUID>
+              <Name>Consistency</Name>
+              <Views>
+                <ReportView>
+                  <GUID>a339a86e-3071-4c39-ac50-6f68da4c6da0</GUID>
+                  <Name>Consistency</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>b7043d63-9fdd-44e2-b27e-c0e4567c9d97</GUID>
+                      <Name>Model Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>83fd6c82-6c88-451d-9f4a-01927c57f071</GUID>
+                          <Name>Page Table</Name>
+                          <TemplateName>Page Table</TemplateName>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                        <ReportView>
+                          <GUID>d2e6f0a4-7b1c-4c3d-9e58-1a2b3c4d5e6f</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <SortOrder>2</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>59a331b6-eedd-45e0-a98a-c6df5ab458d7</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>7</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>

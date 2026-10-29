@@ -86,6 +86,12 @@ Designer and Tools Security
 
         private void okToolStripButton_Click(object sender, EventArgs e)
         {
+            var warnings = _security.CheckConsistency();
+            if (warnings.Count > 0)
+            {
+                var message = "The security has the following warnings:\r\n\r\n- " + string.Join("\r\n- ", warnings) + "\r\n\r\nDo you want to save the security anyway ?";
+                if (MessageBox.Show(message, "Security Consistency", MessageBoxButtons.YesNo, MessageBoxIcon.Warning) != DialogResult.Yes) return;
+            }
             DialogResult = DialogResult.OK;
             Close();
         }

@@ -674,6 +674,115 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// AI tools refusing to edit a data source without the right Edit on its folder (published with the Repository folders of the group)
+        /// </summary>
+        public static readonly string[] SourceEditTools = { "datasource_find_usage", "datasource_suggest_joins", "datasource_add_table", "datasource_add_column", "datasource_set_column", "datasource_manage_enum", "datasource_set_column_sql", "datasource_apply_join", "datasource_remove", "datasource_refresh_schema" };
+
+        /// <summary>
+        /// AI tools writing reports: they require the right Edit on a report folder or a personal folder for reports
+        /// </summary>
+        public static readonly string[] ReportWriteTools = { "report_create_from_sql", "report_create_from_xml", "report_patch_xml", "report_configure_output", "report_configure_schedule", "report_configure_view", "file_manage" };
+
+        /// <summary>
+        /// Repository folders that should never be published with the Repository folders of a group (configuration, passwords, personal folders of all the users)
+        /// </summary>
+        public static readonly string[] SensitiveRepositoryFolders = { "Security", "Settings", "SpecialFolders" };
+
+        /// <summary>
+        /// Checks the consistency of the security with the AI Agents, the data sources and the output devices: returns the list of warnings (empty if the security is consistent).
+        /// The checks are done per group: a right given by another group of the user is not considered.
+        /// </summary>
+        public List<string> CheckConsistency()
+        {
+            var result = new List<string>();
+            var repository = Repository ?? Repository.Instance;
+            if (ProviderName == "No Security" && !UseCustomScript)
+            {
+                //No user name: SecurityUser.CanUseWebSchedules and the MCP access tokens require the login name of the user
+                var features = new List<string>();
+                if (repository.AIConfiguration.McpServerEnabled) features.Add("the MCP access tokens");
+                if (repository.UseSealScheduler) features.Add("the web schedules");
+                if (features.Count > 0) result.Add($"The provider 'No Security' authenticates the users without user name: {string.Join(" and ", features)} are not available.");
+            }
+            foreach (var group in Groups) result.AddRange(CheckGroupConsistency(group));
+            return result;
+        }
+
+        /// <summary>
+        /// Checks the consistency of a security group: AI Agents assigned whose tools will be refused, unknown agents, data sources or output devices, sensitive repository folders published.
+        /// Each warning starts with the group name.
+        /// </summary>
+        public List<string> CheckGroupConsistency(SecurityGroup group)
+        {
+            var result = new List<string>();
+            var repository = Repository ?? Repository.Instance;
+            var prefix = $"Group '{group.Name}': ";
+            var sep = Path.DirectorySeparatorChar.ToString();
+
+            //Repository folders (Danger Zone)
+            foreach (var folder in group.RepositoryFolders.Where(i => i.FolderRight != RepositoryFolderRight.None))
+            {
+                var path = SecurityRepositoryFolder.Normalize(folder.Path);
+                if (SecurityRepositoryFolder.IsUnderReports(path))
+                {
+                    result.Add(prefix + $"the repository folder '{path}' is in the Reports folder and is ignored, use the Report folders instead.");
+                }
+                else if (path == sep || SensitiveRepositoryFolders.Any(i => path.Equals(sep + i, StringComparison.OrdinalIgnoreCase) || path.StartsWith(sep + i + sep, StringComparison.OrdinalIgnoreCase)))
+                {
+                    result.Add(prefix + $"the repository folder '{path}' is sensitive (configuration, passwords or personal folders of all the users) and should not be published.");
+                }
+            }
+
+            foreach (var guid in group.DataSourceGUIDs.Where(i => repository.FindSource(i) == null))
+            {
+                result.Add(prefix + $"the AI tools data source '{guid}' does not exist.");
+            }
+            foreach (var guid in group.OutputDeviceGUIDs.Where(i => !repository.Devices.Exists(j => j.GUID == i)))
+            {
+                result.Add(prefix + $"the AI tools output device '{guid}' does not exist.");
+            }
+
+            //AI Agents
+            var canWriteReports = group.PersFolderRight == PersonalFolderRight.Reports || group.Folders.Exists(i => i.FolderRight == FolderRight.Edit);
+            var sources = FindRepositorySecurityFolder(new List<SecurityGroup>() { group }, sep + "Sources");
+            var canEditSources = sources != null && sources.FolderRight == RepositoryFolderRight.ReadWrite;
+            foreach (var guid in group.AgentGUIDs)
+            {
+                var agent = repository.AIConfiguration.AIAgents.FirstOrDefault(i => i.GUID == guid);
+                if (agent == null)
+                {
+                    result.Add(prefix + $"the AI agent '{guid}' does not exist.");
+                    continue;
+                }
+                if (!agent.IsEnabled) continue;
+
+                //Only the agents dedicated to a task are checked: the tools are assigned to the agent or are in all its skills.
+                //An optional skill (e.g. 'manage-data-source' for the Report Designer) is simply refused without the right.
+                var agentTools = agent.GetToolConfigurations().Select(i => i.Name).ToList();
+                var skillTools = agent.GetSkillConfigurations().Select(i => i.GetToolConfigurations().Select(j => j.Name).ToList()).ToList();
+                Func<string[], bool> isDedicated = (names) => agentTools.Exists(i => names.Contains(i)) || (skillTools.Count > 0 && skillTools.All(i => i.Exists(j => names.Contains(j))));
+                if (!canEditSources && isDedicated(SourceEditTools))
+                {
+                    result.Add(prefix + $"the AI agent '{agent.Name}' edits the data sources but the group has no right 'Read and write' on the repository folder '\\Sources'.");
+                }
+                if (!canWriteReports && isDedicated(ReportWriteTools))
+                {
+                    result.Add(prefix + $"the AI agent '{agent.Name}' writes reports but the group has no report folder with the right Edit and no personal folder for reports.");
+                }
+                var level = group.ReportCodeLevel < agent.MaxReportCodeLevel ? group.ReportCodeLevel : agent.MaxReportCodeLevel;
+                if (level < ReportCodeLevel.Sql && isDedicated(SourceEditTools))
+                {
+                    result.Add(prefix + $"the AI agent '{agent.Name}' edits the data sources but the report code level is '{level}' (at least 'Sql' is required).");
+                }
+                foreach (var skill in agent.GetSkillConfigurations().Where(i => i.GetToolConfigurations().Exists(j => j.Name == "report_create_from_sql")))
+                {
+                    if (level < ReportCodeLevel.Sql) result.Add(prefix + $"the skill '{skill.Name}' of the AI agent '{agent.Name}' creates reports from SQL but the report code level is '{level}' (at least 'Sql' is required): the agent will only create metadata reports.");
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
         /// Last modification date time
         /// </summary>
         [XmlIgnore]

@@ -389,6 +389,20 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
 
                                 A <strong>Security Group</strong> has a collection of repository <code>Folders</code>, each folder has a given relative path and right (from <b>No Right</b> to <b>Edit Reports</b>).
                             </p>
+                            <h5>Consistency check</h5>
+                            <p>
+                                When the security is saved, the <b>Server Manager</b> checks each group and shows the warnings before saving (<code>SealSecurity.CheckConsistency()</code>):
+                            </p>
+                            <ul>
+                                <li>an <b>AI Agent</b> assigned whose tools will be refused: an agent editing the Data Sources (<eg>e.g. Data Source Manager</eg>) without the right <b>Read and write</b> on the repository folder <code>\Sources</code> or without the <b>Metadata and SQL</b> level, an agent writing reports (<eg>e.g. Schedule &amp; Output</eg>) without a report folder having the right <b>Edit</b> or a personal folder for reports, a skill creating reports from SQL with the <b>Metadata only</b> level. Only the agents dedicated to the task are checked: an optional skill of an agent (<eg>e.g. 'manage-data-source' for the Report Designer</eg>) is simply refused without the right;</li>
+                                <li>an agent, a data source or an output device that does not exist;</li>
+                                <li>a sensitive repository folder published (<code>\Security</code>, <code>\Settings</code>, <code>\SpecialFolders</code> which contains the personal folders of all the users, or the root), or a repository folder in the Reports folder (ignored);</li>
+                                <li>the provider <b>No Security</b> with the MCP server or the Seal Report Scheduler: the users have no user name, so the MCP access tokens and the web schedules are not available.</li>
+                            </ul>
+                            <p>
+                                The checks are done per group: a right given by another group of the user is not considered.
+                                The AI tool <code>security_check</code> (skill <code>audit-security-and-activity</code>, agent <b>System Admin</b>) returns the same warnings with the effective security of the current user, to explain why an agent or a tool is refused. It checks the groups of the user, or all the groups if the user can execute the System reports.
+                            </p>
                             <h5>Download and Upload rights</h5>
                             <p>
                                 In addition to its right, each folder has two flags, both disabled by default:

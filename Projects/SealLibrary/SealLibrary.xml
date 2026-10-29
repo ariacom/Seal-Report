@@ -17508,6 +17508,33 @@
             Init security defaults and integrities
             </summary>
         </member>
+        <member name="F:Seal.Model.SealSecurity.SourceEditTools">
+            <summary>
+            AI tools refusing to edit a data source without the right Edit on its folder (published with the Repository folders of the group)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.ReportWriteTools">
+            <summary>
+            AI tools writing reports: they require the right Edit on a report folder or a personal folder for reports
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.SensitiveRepositoryFolders">
+            <summary>
+            Repository folders that should never be published with the Repository folders of a group (configuration, passwords, personal folders of all the users)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.CheckConsistency">
+            <summary>
+            Checks the consistency of the security with the AI Agents, the data sources and the output devices: returns the list of warnings (empty if the security is consistent).
+            The checks are done per group: a right given by another group of the user is not considered.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.CheckGroupConsistency(Seal.Model.SecurityGroup)">
+            <summary>
+            Checks the consistency of a security group: AI Agents assigned whose tools will be refused, unknown agents, data sources or output devices, sensitive repository folders published.
+            Each warning starts with the group name.
+            </summary>
+        </member>
         <member name="F:Seal.Model.SealSecurity.LastModification">
             <summary>
             Last modification date time
