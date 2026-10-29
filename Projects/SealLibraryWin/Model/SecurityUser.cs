@@ -1182,6 +1182,34 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the user can execute a report reached from a navigation link (sub-report or report execution):
+        /// a sub-report of the 'SubReports' folder (see <see cref="SealSecurity.CanExecuteSubReport"/>), a report of a report folder having a right, or a report of the personal folder of the user.
+        /// Any other location is refused.
+        /// </summary>
+        public bool CanExecuteNavigationReport(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return false;
+            var repo = Security.Repository;
+            var sep = Path.DirectorySeparatorChar;
+            var dir = Path.GetDirectoryName(Path.GetFullPath(filePath));
+            //Returns the path of dir relative to the folder (single separator for the folder itself), null if dir is not in the folder
+            Func<string, string> relativePath = (folder) =>
+            {
+                folder = Path.GetFullPath(folder).TrimEnd(sep);
+                if (dir.Equals(folder, StringComparison.OrdinalIgnoreCase)) return sep.ToString();
+                if (dir.StartsWith(folder + sep, StringComparison.OrdinalIgnoreCase)) return dir.Substring(folder.Length);
+                return null;
+            };
+
+            var path = relativePath(repo.SubReportsFolder);
+            if (path != null) return Security.CanExecuteSubReport(SecurityGroups, path);
+            path = relativePath(repo.ReportsFolder);
+            if (path != null) return GetFolder(path).right > 0;
+            if (PersonalFolderRight != PersonalFolderRight.None && relativePath(repo.GetPersonalFolder(this)) != null) return true;
+            return false;
+        }
+
+        /// <summary>
         /// Returns true when the given physical directory is accessible to this user
         /// with at least <paramref name="minRight"/>.
         /// Mirrors SWIMoveFile: resolves physDir to a SWIFolder path, looks it up in

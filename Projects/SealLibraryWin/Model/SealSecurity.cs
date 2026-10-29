@@ -636,6 +636,34 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Returns the sub-report folder declared by a group for a folder relative to the 'SubReports' folder (normalized): the most specific path wins, null if the group does not declare it.
+        /// </summary>
+        public static SecuritySubReportFolder FindSubReportFolder(SecurityGroup group, string folder)
+        {
+            string folderRoot = folder;
+            SecuritySubReportFolder current = null;
+            while (current == null && !string.IsNullOrEmpty(folderRoot))
+            {
+                current = group.SubReportFolders.FirstOrDefault(i => SecurityRepositoryFolder.Normalize(i.Path) == folderRoot);
+                folderRoot = Path.GetDirectoryName(folderRoot);
+            }
+            //Cannot use this parent
+            if (current != null && SecurityRepositoryFolder.Normalize(current.Path) != folder && !current.UseSubFolders) current = null;
+            return current;
+        }
+
+        /// <summary>
+        /// True if the given groups can execute the sub-reports of a folder relative to the 'SubReports' folder.
+        /// A folder is protected once a group of the security declares it: one of the given groups must then have the right Execute on it. A folder declared by no group can be executed.
+        /// </summary>
+        public bool CanExecuteSubReport(List<SecurityGroup> groups, string folder)
+        {
+            folder = SecurityRepositoryFolder.Normalize(folder);
+            if (!Groups.Exists(i => FindSubReportFolder(i, folder) != null)) return true;
+            return groups.Exists(i => FindSubReportFolder(i, folder)?.Execute == true);
+        }
+
+        /// <summary>
         /// Init security defaults and integrities
         /// </summary>
         public void InitSecurity()
@@ -730,6 +758,20 @@ namespace Seal.Model
                 else if (path == sep || SensitiveRepositoryFolders.Any(i => path.Equals(sep + i, StringComparison.OrdinalIgnoreCase) || path.StartsWith(sep + i + sep, StringComparison.OrdinalIgnoreCase)))
                 {
                     result.Add(prefix + $"the repository folder '{path}' is sensitive (configuration, passwords or personal folders of all the users) and should not be published.");
+                }
+            }
+
+            //Sub-report folders
+            foreach (var folder in group.SubReportFolders)
+            {
+                var path = SecurityRepositoryFolder.Normalize(folder.Path);
+                if (!Directory.Exists(repository.SubReportsFolder + (path == sep ? "" : path)))
+                {
+                    result.Add(prefix + $"the sub-report folder '{path}' does not exist in the SubReports folder.");
+                }
+                else if (path == sep)
+                {
+                    result.Add(prefix + $"the sub-report folder '{path}' is declared: all the sub-reports are protected and can only be executed by the groups having the right Execute on their folder.");
                 }
             }
 

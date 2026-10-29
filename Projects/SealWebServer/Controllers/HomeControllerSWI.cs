@@ -944,7 +944,9 @@ namespace SealWebServer.Controllers
 
                 var file = getFileDetail(source);
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
-                if (file.isshortcut) throw new Exception(Translate("Error: a shortcut cannot reference another shortcut."));
+                //the shortcut is named after the source, a shortcut of a shortcut references the target of the source shortcut
+                string shortcutName = Path.GetFileNameWithoutExtension(source);
+                if (file.isshortcut) source = resolveShortcut(source, out _);
 
                 //the destination folder must be editable
                 SWIFolder folderDest = getParentFolder(destination);
@@ -954,9 +956,9 @@ namespace SealWebServer.Controllers
                 if (!System.IO.File.Exists(sourceFullPath)) throw new Exception("Error: source path is incorrect");
                 if (folderDest.files && FileHelper.IsReportFile(sourceFullPath)) throw new Exception(Translate("Warning: only files (and not reports) can be copied to this folder."));
 
-                //build a unique .srln file named after the source
+                //build a unique .srln file
                 string destDir = Path.GetDirectoryName(getFullPath(destination));
-                string shortcutFileName = Path.GetFileNameWithoutExtension(sourceFullPath) + "." + Repository.SealReportShortcutFileExtension;
+                string shortcutFileName = shortcutName + "." + Repository.SealReportShortcutFileExtension;
                 if (FileHelper.HasInvalidFileNameChars(shortcutFileName)) throw new Exception(Translate("Error: the destination file name contains invalid characters."));
                 string finalFullPath = FileHelper.GetUniqueFileName(destDir, shortcutFileName, "." + Repository.SealReportShortcutFileExtension);
 

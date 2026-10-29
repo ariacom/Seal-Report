@@ -13,6 +13,10 @@
             <summary>
             Main Controller of the Web Report Server
             </summary>
+            <summary>
+            Web schedules: a user schedules a report he can execute. The schedule is stored in his personal folder (the report file is not modified)
+            and executed by the Seal Report Scheduler with his security context (see SealSchedule.IsWebSchedule).
+            </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.Translate(System.String)">
             <summary>
@@ -242,7 +246,7 @@
             Execute a report into a report result and returns the result. Check API of Seal Web Interface for more information.
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.SWExecuteReport(System.String,System.String,System.String,System.Nullable{System.Boolean},System.String)">
+        <member name="M:SealWebServer.Controllers.HomeController.SWExecuteReport(System.String,System.String,System.String,System.Nullable{System.Boolean},System.String,System.String,System.Boolean)">
             <summary>
             Execute a report and returns the report html display result content (e.g. html with prompted restrictions). Check API of Seal Web Interface for more information.
             </summary>
@@ -421,6 +425,87 @@
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetVersions">
             <summary>
             Returns the version of the Seal Web Interface and the version of the Seal Library.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetWebSchedules(System.String)">
+            <summary>
+            Returns the web schedules of the logged user
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetWebSchedule(System.String,System.String,System.String)">
+            <summary>
+            Returns a web schedule to edit (a new one if guid is empty) with the output devices, folders and formats available
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWISaveWebSchedule(System.String,System.String,System.String)">
+            <summary>
+            Creates or updates a web schedule of the logged user
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIResetWebScheduleRestrictions(System.String,System.String)">
+            <summary>
+            Removes the restriction values of a web schedule of the logged user: the default values of the report are used
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIDeleteWebSchedule(System.String,System.String)">
+            <summary>
+            Deletes a web schedule of the logged user
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.ActionSaveWebScheduleRestrictions(System.String,System.String)">
+            <summary>
+            Saves the values of the prompted restrictions of a report executed to edit the restrictions of a web schedule (see SWExecuteReport scheduleRestrictions)
+            </summary>
+        </member>
+        <member name="F:SealWebServer.Controllers.HomeController.ReportExecutionsSubReport">
+            <summary>
+            Name of the sub-report displaying the executions of a report for the logged user (Repository\SubReports)
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWExecuteReportExecutions(System.String,System.String)">
+            <summary>
+            Executes the sub-report 'Report Executions' listing the executions of a report by the logged user (read from the audit database).
+            The user must have the right to execute the report. The report path and the user are applied by the sub-report itself (WhereSQL of its table), the path is passed in Report.Tag.
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.showWebSchedules">
+            <summary>
+            True if the 'My schedules' list is shown: the user has a folder where he can schedule reports, or he has already web schedules
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.getUserWebSchedules">
+            <summary>
+            Web schedules of the logged user, read from his personal folder
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.getWebScheduleReport(System.String,System.String@)">
+            <summary>
+            Returns the report to schedule after checking the right 'Edit schedules' of the user on the report (the target of a shortcut is scheduled)
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.toOutputFolderPath(System.String)">
+            <summary>
+            Folder path of a Folder device output: from the Web Report Server path to the path with the repository keywords
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.fromOutputFolderPath(System.String)">
+            <summary>
+            Folder path of a Folder device output: from the path with the repository keywords to the Web Report Server path
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.toDisplayDuration(System.Int32)">
+            <summary>
+            Duration in seconds displayed as '45 s', '2 min 05 s' or '1 h 02 min', empty if unknown
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.getRecurrence(Seal.Model.SealSchedule)">
+            <summary>
+            Short description of the recurrence of a schedule
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.setWebSchedule(Seal.Model.SealSchedule,Seal.Model.SWIWebSchedule,Seal.Model.Report,System.String)">
+            <summary>
+            Checks and sets the definition of a web schedule from the Web Report Server
             </summary>
         </member>
         <member name="T:SealWebServer.Controllers.McpAuthorizeModel">

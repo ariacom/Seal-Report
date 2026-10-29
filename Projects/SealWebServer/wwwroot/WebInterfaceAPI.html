@@ -787,7 +787,7 @@ $.post("https://sealreport.org/demo/SWIMoveFile", {
             <h2>SWICreateShortcut</h2>
             <table class="table table-striped">
                 <tbody>
-                    <tr><th>Description</th><td>Create a shortcut (.srln file) in a folder referencing a source report or file. The shortcut is named after the source file and the destination folder must have the Edit right. A shortcut cannot reference another shortcut.</td></tr>
+                    <tr><th>Description</th><td>Create a shortcut (.srln file) in a folder referencing a source report or file. The shortcut is named after the source file and the destination folder must have the Edit right. If the source is a shortcut, the new shortcut references the target of the source shortcut (a shortcut cannot reference another shortcut).</td></tr>
                     <tr>
                         <th>Call</th>
                         <td>

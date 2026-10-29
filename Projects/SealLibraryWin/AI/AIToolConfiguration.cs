@@ -269,7 +269,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Resolves the data source to use when executing this tool call, restricted to the sources
-        /// the current security context is allowed to access (see <see cref="GetAvailableSources"/>).
+        /// the current security context is allowed to access (see <see cref="GetAvailableSources()"/>).
         /// If <paramref name="datasourceGuid"/> is provided, returns the allowed source with that GUID;
         /// otherwise returns the default allowed source (or the first allowed source).
         /// Returns <c>null</c> when no matching allowed source is found.

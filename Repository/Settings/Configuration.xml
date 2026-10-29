@@ -318,6 +318,7 @@
   <ScriptFiles />
   <WebScriptFiles />
   <AlternateTempDirectory />
+  <SchedulerMode>WebServer</SchedulerMode>
   <TaskFolderName>Seal Report</TaskFolderName>
   <AuditEnabled>true</AuditEnabled>
   <AuditScript />

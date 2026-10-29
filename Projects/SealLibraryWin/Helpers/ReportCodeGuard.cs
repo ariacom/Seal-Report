@@ -390,7 +390,7 @@ namespace Seal.Helpers
             return items;
         }
 
-        /// <param name="inheritedLevel">Level required by every text of the element (e.g. the parameters of a table template)</param>
+        // inheritedLevel: level required by every text of the element (e.g. the parameters of a table template)
         static void Visit(XElement element, Type type, List<CodeItem> items, ReportCodeLevel inheritedLevel, SecurityUser user)
         {
             var label = GetLabel(element, type);

@@ -312,10 +312,10 @@ namespace SealWebServer.Controllers
                     else if (nav.StartsWith(NavigationLink.ReportExecutionPrefix)) //Report execution
                     {
                         Report report = execution.Report;
-                        //Guard against path traversal: the report path comes from the navigation POST and must stay within the Reports folder
-                        string navPath = nav.Substring(3);
-                        if (navPath.Contains("..\\") || navPath.Contains("../")) throw new Exception("Error: invalid path");
-                        string path = report.Repository.ReportsFolder + navPath;
+                        //The navigation comes from the POST: it must have been issued in the result of the report, the report path must stay within the Reports folder
+                        if (!report.IsNavigationAllowed(nav)) throw new Exception("Error: invalid navigation");
+                        string path = NavigationContext.GetReportExecutionPath(nav.Substring(3), report.Repository);
+                        if (!WebUser.CanExecuteNavigationReport(path)) throw new Exception("Error: no right to execute this report");
                         var newReport = Report.LoadFromFile(path, report.Repository);
                         newReport.WebUrl = report.WebUrl;
                         execution = new ReportExecution() { Report = newReport };
@@ -350,12 +350,10 @@ namespace SealWebServer.Controllers
                             report.IsNavigating = false;
                         }
 
-                        //Check rights if not in subreports or personal folders
-                        if (!string.IsNullOrEmpty(Path.GetDirectoryName(report.FilePath)) && !report.FilePath.StartsWith(report.Repository.SubReportsFolder) && !report.FilePath.StartsWith(Repository.PersonalFolder))
+                        //Check rights: sub-report folders, report folders or personal folder of the user
+                        if (!string.IsNullOrEmpty(Path.GetDirectoryName(report.FilePath)) && !WebUser.CanExecuteNavigationReport(report.FilePath))
                         {
-                            var path = report.FilePath.Replace(report.Repository.ReportsFolder, "");
-                            SWIFolder folder = getParentFolder(path);
-                            if (folder.right == 0) throw new Exception(string.Format("Error: no right to execute a report on the folder '{0}'", folder.path));
+                            throw new Exception(string.Format("Error: no right to execute the report '{0}'", Path.GetFileNameWithoutExtension(report.FilePath)));
                         }
 
                         setSessionValue(report.ExecutionGUID, execution);

@@ -28,6 +28,9 @@ namespace Seal.Model
         /// </summary>
         public ReportExecution Navigate(string navigation, ReportExecution execution, bool newWindow)
         {
+            //The navigation comes from the POST: it must have been issued in the result of the current report
+            if (!execution.Report.IsNavigationAllowed(navigation)) throw new Exception("Error: invalid navigation");
+
             var rootReport = execution.RootReport;
             var parameters = HttpUtility.ParseQueryString(navigation);
             string reportPath = parameters.Get("rpa"); //For subreports
@@ -61,10 +64,8 @@ namespace Seal.Model
                 //Sub-Report
                 if (newReport == null)
                 {
-                    //Guard against path traversal: the sub-report path comes from the navigation POST and must stay within the repository
-                    if (reportPath.Contains("..\\") || reportPath.Contains("../")) throw new Exception("Error: invalid path");
-                    string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, rootReport.Repository.RepositoryPath));
-                    if (!File.Exists(path)) path = rootReport.Repository.ReportsFolder + path;
+                    string path = GetSubReportPath(reportPath, rootReport.Repository);
+                    if (execution.Report.SecurityContext != null && !execution.Report.SecurityContext.CanExecuteNavigationReport(path)) throw new Exception("Error: no right to execute this sub-report");
                     newReport = Report.LoadFromFile(path, rootReport.Repository);
                     newReport.CurrentViewGUID = newReport.ViewGUID;
 
@@ -140,6 +141,47 @@ namespace Seal.Model
                 }
             }
             return new ReportExecution() { NavigationParameter = navigation, Report = newReport, RootReport = rootReport };
+        }
+
+        /// <summary>
+        /// Returns the full path of the report of a sub-report link ('rpa' parameter: path with the repository keyword, or relative to the 'Reports' folder).
+        /// The path must be located in the repository, otherwise an exception is thrown.
+        /// </summary>
+        public static string GetSubReportPath(string reportPath, Repository repository)
+        {
+            if (string.IsNullOrEmpty(reportPath)) return null;
+            string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, repository.RepositoryPath));
+            //A path not fully qualified is relative to the Reports folder
+            if (!Path.IsPathFullyQualified(path)) path = getReportsFolderPath(path, repository);
+            if (!isInRepository(path, repository)) throw new Exception("Error: invalid path");
+            return Path.GetFullPath(path);
+        }
+
+        /// <summary>
+        /// Returns the full path of the report of a report execution link (path relative to the 'Reports' folder).
+        /// The path must be located in the 'Reports' folder, otherwise an exception is thrown.
+        /// </summary>
+        public static string GetReportExecutionPath(string reportPath, Repository repository)
+        {
+            if (string.IsNullOrEmpty(reportPath)) return null;
+            reportPath = FileHelper.ConvertOSFilePath(reportPath);
+            if (Path.IsPathFullyQualified(reportPath)) throw new Exception("Error: invalid path");
+            string path = getReportsFolderPath(reportPath, repository);
+            var reportsFolder = Path.GetFullPath(repository.ReportsFolder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            if (!Path.GetFullPath(path).StartsWith(reportsFolder, StringComparison.OrdinalIgnoreCase)) throw new Exception("Error: invalid path");
+            return Path.GetFullPath(path);
+        }
+
+        static string getReportsFolderPath(string path, Repository repository)
+        {
+            return repository.ReportsFolder + (path.StartsWith(Path.DirectorySeparatorChar.ToString()) ? "" : Path.DirectorySeparatorChar.ToString()) + path;
+        }
+
+        static bool isInRepository(string path, Repository repository)
+        {
+            if (!Path.IsPathFullyQualified(path)) return false;
+            var root = Path.GetFullPath(repository.RepositoryPath).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
+            return Path.GetFullPath(path).StartsWith(root, StringComparison.OrdinalIgnoreCase);
         }
 
         /// <summary>

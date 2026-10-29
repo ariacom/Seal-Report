@@ -47,7 +47,8 @@ namespace Seal.Forms
                 }
             }
             choices.Add(prefix + Path.DirectorySeparatorChar);
-            FileHelper.AddFolderChoices(Repository.Instance.ReportsFolder, prefix, choices);
+            //Folders of the sub-reports for the security
+            FileHelper.AddFolderChoices(context.Instance is SecuritySubReportFolder ? Repository.Instance.SubReportsFolder : Repository.Instance.ReportsFolder, prefix, choices);
 
             return new StandardValuesCollection(choices);
         }   

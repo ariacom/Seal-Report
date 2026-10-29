@@ -695,7 +695,8 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Return the list of navigation links in the View context
+        /// Return the list of navigation links in the View context.
+        /// The sub-report and report execution links that the security context cannot execute are removed, the navigations returned are registered as allowed for the report.
         /// </summary>
         public List<NavigationLink> GetNavigationLinks(ReportView view)
         {
@@ -704,6 +705,7 @@ namespace Seal.Model
             {
                 if (link.Type == NavigationType.Drill && !view.IsDrillEnabled) continue;
                 if (link.Type == NavigationType.SubReport && !view.IsSubReportsEnabled) continue;
+                if (!view.Report.CanExecuteNavigationLink(link)) continue;
 
                 var newLink = new NavigationLink() { Cell = link.Cell, Href = link.Href, Parameters = link.Parameters, Report = link.Report, Tag = link.Tag, Text = link.Text, Type = link.Type };
                 Helper.CopyProperties(link, newLink);
@@ -714,6 +716,7 @@ namespace Seal.Model
                     var navigationView = modelView.GetValue(Parameter.NavigationView);
                     if (!string.IsNullOrEmpty(navigationView)) newLink.Href += string.Format("&view={0}", modelView.GetValue(Parameter.NavigationView));
                 }
+                if (newLink.Type == NavigationType.Drill || newLink.Type == NavigationType.SubReport || newLink.Type == NavigationType.ReportExecution) view.Report.RegisterNavigation(newLink.FullHref);
                 result.Add(newLink);
             }
             return result;

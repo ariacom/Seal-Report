@@ -93,7 +93,7 @@
             True if the provider sends the images of a tool result (image parts of a <see cref="T:OpenAI.Chat.ToolChatMessage"/>) to the model.
             </summary>
         </member>
-        <member name="M:Seal.AI.AIProvider.SetLastUsage(System.Int32,System.Int32)">
+        <member name="M:Seal.AI.AIProvider.SetLastUsage(System.Int32,System.Int32,System.Int32)">
             <summary>
             Records the token usage of the API call that just completed.
             </summary>
@@ -371,7 +371,13 @@
         <member name="P:Seal.AI.AIProviderConfiguration.InputTokenCost">
             <summary>
             Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking.
-            Cached input tokens are counted at the full input rate.
+            Input tokens read from the prompt cache use <see cref="P:Seal.AI.AIProviderConfiguration.CachedInputTokenCost"/> when it is set.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProviderConfiguration.CachedInputTokenCost">
+            <summary>
+            Cost per 1 million input tokens read from the prompt cache of the provider (e.g. 10 % of the input cost for the OpenAI GPT-5 models).
+            0 means cached input tokens are counted at the full input rate.
             </summary>
         </member>
         <member name="P:Seal.AI.AIProviderConfiguration.OutputTokenCost">
@@ -843,6 +849,11 @@
         <member name="P:Seal.AI.AIAgentConfiguration.IsMcpAgent">
             <summary>
             True if the agent is enabled and served on the MCP server (the server itself must be enabled, see <see cref="P:Seal.AI.AIServerConfiguration.McpServerEnabled"/>)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.UsageDisplay">
+            <summary>
+            Usage shown under each answer of the web chat: tokens and/or cost of the exchange, or nothing. The cost is the one of the AI provider, unless the Security Provider sets <see cref="F:Seal.Model.SecurityUser.FormatAICost"/> (e.g. the amount billed to the user).
             </summary>
         </member>
         <member name="P:Seal.AI.AIAgentConfiguration.ProviderGUID">
@@ -2084,6 +2095,11 @@
         <member name="P:Seal.AI.AIUsage.InputTokens">
             <summary>
             Input (prompt) tokens consumed, including cached tokens when the API reports them separately.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIUsage.CachedInputTokens">
+            <summary>
+            Part of <see cref="P:Seal.AI.AIUsage.InputTokens"/> read from the prompt cache of the provider (billed at a reduced rate, see <see cref="P:Seal.AI.AIProviderConfiguration.CachedInputTokenCost"/>).
             </summary>
         </member>
         <member name="P:Seal.AI.AIUsage.OutputTokens">
@@ -4300,9 +4316,6 @@
             Canonical text of an element (formatting ignored) used to compare a class marked by <see cref="T:Seal.Model.SealCodeAttribute"/>.
             </summary>
         </member>
-        <member name="M:Seal.Helpers.ReportCodeGuard.Visit(System.Xml.Linq.XElement,System.Type,System.Collections.Generic.List{Seal.Helpers.ReportCodeGuard.CodeItem},Seal.Model.ReportCodeLevel,Seal.Model.SecurityUser)">
-            <param name="inheritedLevel">Level required by every text of the element (e.g. the parameters of a table template)</param>
-        </member>
         <member name="M:Seal.Helpers.ReportCodeGuard.VisitViewParameters(System.Xml.Linq.XElement,System.String,System.Collections.Generic.List{Seal.Helpers.ReportCodeGuard.CodeItem},System.String,System.String,Seal.Model.SecurityUser)">
             <summary>
             Parameters of a view (or the view parameters of an output) rendered without encoding by the view template: a value must be a value of the template list or a plain value, otherwise it is code (Scripts level).
@@ -6392,6 +6405,31 @@
         <member name="F:Seal.Model.AIAgentChannel.WebAndMcp">
             <summary>
             Web chat and MCP server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.AIUsageDisplay">
+            <summary>
+            Usage shown under each answer of the web chat of an AI agent
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIUsageDisplay.TokensAndCost">
+            <summary>
+            Number of tokens and cost
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIUsageDisplay.Tokens">
+            <summary>
+            Number of tokens only
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIUsageDisplay.Cost">
+            <summary>
+            Cost only
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AIUsageDisplay.None">
+            <summary>
+            Nothing
             </summary>
         </member>
         <member name="T:Seal.Model.AIToolAccess">
@@ -8684,6 +8722,18 @@
             Process a navigation (sub-report or drill) and returns the new report execution
             </summary>
         </member>
+        <member name="M:Seal.Model.NavigationContext.GetSubReportPath(System.String,Seal.Model.Repository)">
+            <summary>
+            Returns the full path of the report of a sub-report link ('rpa' parameter: path with the repository keyword, or relative to the 'Reports' folder).
+            The path must be located in the repository, otherwise an exception is thrown.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.NavigationContext.GetReportExecutionPath(System.String,Seal.Model.Repository)">
+            <summary>
+            Returns the full path of the report of a report execution link (path relative to the 'Reports' folder).
+            The path must be located in the 'Reports' folder, otherwise an exception is thrown.
+            </summary>
+        </member>
         <member name="M:Seal.Model.NavigationContext.NavigateScript(System.String,Seal.Model.Report,System.Collections.Specialized.NameValueCollection,Microsoft.AspNetCore.Http.HttpRequest)">
             <summary>
             Execute the navigation script of a link (cell or report navigation script) and returns the script result
@@ -10788,6 +10838,27 @@
             List of links used for Script navigation
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.AllowedNavigations">
+            <summary>
+            Navigations (sub-report, drill or report execution links) issued in the result of the report: only these navigations can be executed from the report
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.RegisterNavigation(System.String)">
+            <summary>
+            Register a navigation built by a script (e.g. 'rpa=...' for a sub-report or 'RE:...' for a report execution) so it can be executed from the result of the report, and returns it.
+            The navigations of the cell links are registered automatically when the links are rendered.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.IsNavigationAllowed(System.String)">
+            <summary>
+            True if the navigation has been issued in the result of the report
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.CanExecuteNavigationLink(Seal.Model.NavigationLink)">
+            <summary>
+            True if the security context can execute the report of a sub-report or report execution link (always true without security context). The result is cached per report path.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.UpdateViewParameter(System.String,System.String,System.String,System.Boolean)">
             <summary>
             Helper to update a view parameter
@@ -11712,7 +11783,7 @@
             Execute a report schedule
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.saveWebScheduleExecution(Seal.Model.SealSchedule,System.String)">
+        <member name="M:Seal.Model.ReportExecution.saveWebScheduleExecution(Seal.Model.SealSchedule,System.String,System.Int32)">
             <summary>
             Save the result of the last execution in the web schedule file. The next execution is also calculated as the file may be saved by an outer process.
             </summary>
@@ -16211,7 +16282,8 @@
         </member>
         <member name="M:Seal.Model.ResultCell.GetNavigationLinks(Seal.Model.ReportView)">
             <summary>
-            Return the list of navigation links in the View context
+            Return the list of navigation links in the View context.
+            The sub-report and report execution links that the security context cannot execute are removed, the navigations returned are registered as allowed for the report.
             </summary>
         </member>
         <member name="M:Seal.Model.ResultCell.AddNavigationFileDownload(System.String,System.String)">
@@ -17081,6 +17153,11 @@
             Web schedule: error of the last execution, empty if the execution was successful
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSchedule.LastDuration">
+            <summary>
+            Web schedule: duration in seconds of the last execution (the last retry if the execution was retried), -1 if unknown
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSchedule.InjectWebSchedule(Seal.Model.Report)">
             <summary>
             Web schedule: add the output and the schedule in the report loaded for the execution (the report is not saved)
@@ -17530,6 +17607,17 @@
             Returns the SecurityRepositoryFolder applying to a given repository-relative path (normalized, leading separator,
             no Repository prefix), merging the rights of all matching groups. Folders pointing at or inside the 'Reports' tree
             are ignored (conflict with the Report Folders configuration). Returns null when no group grants a right.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.FindSubReportFolder(Seal.Model.SecurityGroup,System.String)">
+            <summary>
+            Returns the sub-report folder declared by a group for a folder relative to the 'SubReports' folder (normalized): the most specific path wins, null if the group does not declare it.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.CanExecuteSubReport(System.Collections.Generic.List{Seal.Model.SecurityGroup},System.String)">
+            <summary>
+            True if the given groups can execute the sub-reports of a folder relative to the 'SubReports' folder.
+            A folder is protected once a group of the security declares it: one of the given groups must then have the right Execute on it. A folder declared by no group can be executed.
             </summary>
         </member>
         <member name="M:Seal.Model.SealSecurity.InitSecurity">
@@ -18231,6 +18319,28 @@
             Such folders are managed by the 'Report Folders' configuration and must be ignored here.
             </summary>
         </member>
+        <member name="T:Seal.Model.SecuritySubReportFolder">
+            <summary>
+            A SecuritySubReportFolder defines the right to execute the sub-reports of a folder of the repository 'SubReports' folder.
+            A folder is protected once a group of the security declares it: only the users of a group having the right Execute on it can then execute its sub-reports.
+            A folder declared by no group can be executed by all the users (from the navigation links of the reports they execute).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecuritySubReportFolder.Path">
+            <summary>
+            The folder path containing the sub-reports. The path is relative to the repository 'SubReports' folder and should be unique in the security group.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecuritySubReportFolder.UseSubFolders">
+            <summary>
+            If true, sub-folders have the same definition
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecuritySubReportFolder.Execute">
+            <summary>
+            If true, the users of the group can execute the sub-reports of the folder. If false, the folder is protected without giving the right (e.g. to exclude a sub-folder of a folder having the right).
+            </summary>
+        </member>
         <member name="T:Seal.Model.SecurityGroup">
             <summary>
             A SecurityGroup defines all the security applied to a user belonging to the group
@@ -18254,6 +18364,16 @@
         <member name="M:Seal.Model.SecurityGroup.ShouldSerializeFolders">
             <summary>
             Serialize Folders only if not empty
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityGroup.SubReportFolders">
+            <summary>
+            The sub-report folder configurations for this group (relative to the repository 'SubReports' folder). A sub-report folder is protected once a group declares it: only the users of a group having the right Execute on it can then execute its sub-reports. By default, the sub-reports can be executed by all the users from the navigation links of their reports.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityGroup.ShouldSerializeSubReportFolders">
+            <summary>
+            Serialize SubReportFolders only if not empty
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityGroup.RepositoryFolders">
@@ -18699,6 +18819,11 @@
             Optional consumption of the AI agents, set by the Security Provider script: called after each exchange with an AI agent (chat message or generation of a title) with the usage and its cost (null if the AI provider has no cost configured).
             </summary>
         </member>
+        <member name="F:Seal.Model.SecurityUser.FormatAICost">
+            <summary>
+            Optional display of the cost of an AI exchange, set by the Security Provider script: called with the cost of the exchange (in the currency of the costs of the AI provider) when the web chat shows the usage, returns the text shown instead of the cost (e.g. the amount billed to the user), or null or empty to show no cost.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SecurityUser.GetMcpCallRefusal(System.String)">
             <summary>
             Executes <see cref="F:Seal.Model.SecurityUser.CheckMcpCall"/>: null if the call can be executed, otherwise the refusal message (an exception of the script refuses the call).
@@ -18722,6 +18847,11 @@
         <member name="M:Seal.Model.SecurityUser.NotifyAIUsage(Seal.AI.AIUsage,System.Nullable{System.Double})">
             <summary>
             Executes <see cref="F:Seal.Model.SecurityUser.OnAIUsage"/> (an exception of the script is logged)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetAICostText(System.Nullable{System.Double})">
+            <summary>
+            Text of the cost of an AI exchange shown in the web chat: the result of <see cref="F:Seal.Model.SecurityUser.FormatAICost"/> if set (an exception of the script shows no cost), otherwise the cost of the AI provider; null if there is no cost to show.
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.ForSchedule">
@@ -18989,6 +19119,13 @@
         <member name="P:Seal.Model.SecurityUser.ProfileDirectory">
             <summary>
             Profile directory
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.CanExecuteNavigationReport(System.String)">
+            <summary>
+            True if the user can execute a report reached from a navigation link (sub-report or report execution):
+            a sub-report of the 'SubReports' folder (see <see cref="M:Seal.Model.SealSecurity.CanExecuteSubReport(System.Collections.Generic.List{Seal.Model.SecurityGroup},System.String)"/>), a report of a report folder having a right, or a report of the personal folder of the user.
+            Any other location is refused.
             </summary>
         </member>
         <member name="M:Seal.Model.SecurityUser.HasFolderRight(System.String,System.Int32)">

@@ -178,6 +178,18 @@
     log.LogMessage("Processing " + metaTable.Name);
     foreach (var group in Repository.Instance.Security.Groups) {
         addRecord(table, group, Repository.Instance.ReportsFolder + Path.DirectorySeparatorChar);
+        //Sub-report folders declared by the group
+        foreach (var subReportFolder in group.SubReportFolders) {
+            table.Rows.Add(
+                group.Name,
+                "[SubReports]" + SecurityRepositoryFolder.Normalize(subReportFolder.Path),
+                subReportFolder.UseSubFolders ? "Yes" : "No",
+                "No",
+                subReportFolder.Execute ? "Execute sub-reports" : "No right (protected)",
+                "No",
+                "No"
+                );
+        }
     }
     log.LogMessage("{0} record(s) loaded", table.Rows.Count);
 }

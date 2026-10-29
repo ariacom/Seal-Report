@@ -397,12 +397,37 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
                                 <li>an <b>AI Agent</b> assigned whose tools will be refused: an agent editing the Data Sources (<eg>e.g. Data Source Manager</eg>) without the right <b>Read and write</b> on the repository folder <code>\Sources</code> or without the <b>Metadata and SQL</b> level, an agent writing reports (<eg>e.g. Schedule &amp; Output</eg>) without a report folder having the right <b>Edit</b> or a personal folder for reports, a skill creating reports from SQL with the <b>Metadata only</b> level. Only the agents dedicated to the task are checked: an optional skill of an agent (<eg>e.g. 'manage-data-source' for the Report Designer</eg>) is simply refused without the right;</li>
                                 <li>an agent, a data source or an output device that does not exist;</li>
                                 <li>a sensitive repository folder published (<code>\Security</code>, <code>\Settings</code>, <code>\SpecialFolders</code> which contains the personal folders of all the users, or the root), or a repository folder in the Reports folder (ignored);</li>
-                                <li>the provider <b>No Security</b> with the MCP server or the Seal Report Scheduler: the users have no user name, so the MCP access tokens and the web schedules are not available.</li>
+                                <li>the provider <b>No Security</b> with the MCP server or the Seal Report Scheduler: the users have no user name, so the MCP access tokens and the web schedules are not available;</li>
+                                <li>a sub-report folder that does not exist in the <code>\SubReports</code> folder, or the root of the sub-reports declared (all the sub-reports are then protected).</li>
                             </ul>
                             <p>
                                 The checks are done per group: a right given by another group of the user is not considered.
                                 The AI tool <code>security_check</code> (skill <code>audit-security-and-activity</code>, agent <b>System Admin</b>) returns the same warnings with the effective security of the current user, to explain why an agent or a tool is refused. It checks the groups of the user, or all the groups if the user can execute the System reports.
                             </p>
+                            <h5 id="lineSecurity_subreports">Sub-report folders</h5>
+                            <p>
+                                The sub-reports of the repository folder <code>\SubReports</code> are not published in the folders: they are executed from the navigation links of the reports (<eg>e.g. Customer->Customer Detail</eg>).
+                                The server only accepts a navigation (sub-report, drill or report execution) that has been issued in the result of the report: the sub-report and the values of its restrictions come from a cell displayed to the user, a navigation built or changed in the browser is refused.
+                                The sub-report must be located in the repository, a report reached by a navigation in the <code>\Reports</code> folder requires a right on its folder, and a report of a personal folder must be in the personal folder of the user.
+                            </p>
+                            <p>
+                                By default, a sub-report can be executed by all the users from the reports they can execute. The <code>Sub-report folders</code> of a <strong>Security Group</strong> restrict the sub-reports of a folder (path relative to <code>\SubReports</code>) to some groups:
+                            </p>
+                            <ul>
+                                <li>a folder is <b>protected once a group declares it</b>: only the users of a group having the right <code>Execute</code> on the folder can then execute its sub-reports, the folders declared by no group stay free;</li>
+                                <li><code>Include sub-folders</code> applies the definition to the sub-folders, the most specific folder declared by a group wins;</li>
+                                <li><code>Execute</code> set to false protects a folder without giving the right (<eg>e.g. to exclude <code>\HR\Salary</code> from the group having the right on <code>\HR</code></eg>);</li>
+                                <li>the rights of the groups of the user are added.</li>
+                            </ul>
+                            <p>
+                                The navigation links to a sub-report that the user cannot execute are not displayed in the report result.
+                                <eg>Example:</eg> move the sub-report <i>Salary Detail.srex</i> to <code>\SubReports\HR</code> and add the sub-report folder <code>\HR</code> to the group <b>HR</b>: the other users do not see the link and cannot execute it.
+                                The System report <i>100 Configuration - Security Summary</i> lists the sub-report folders of the groups (prefix <code>[SubReports]</code>) in the tab Folders.
+                            </p>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Rights on the data</h4>
+                                The rights on the sub-reports control who can open them, not the rows they return: when the data must be filtered per user, the filter must be done in the Data Source (<eg>e.g. a restriction or a Pre SQL using <code>Report.SecurityContext</code></eg>), not only in the report having the navigation link.
+                            </div>
                             <h5>Download and Upload rights</h5>
                             <p>
                                 In addition to its right, each folder has two flags, both disabled by default:

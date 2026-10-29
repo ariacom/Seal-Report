@@ -2804,6 +2804,67 @@ namespace Seal.Model
         [XmlIgnore]
         public Dictionary<string, NavigationLink> NavigationLinks = new Dictionary<string, NavigationLink>();
 
+        /// <summary>
+        /// Navigations (sub-report, drill or report execution links) issued in the result of the report: only these navigations can be executed from the report
+        /// </summary>
+        [XmlIgnore]
+        public HashSet<string> AllowedNavigations = new HashSet<string>();
+
+        /// <summary>
+        /// Register a navigation built by a script (e.g. 'rpa=...' for a sub-report or 'RE:...' for a report execution) so it can be executed from the result of the report, and returns it.
+        /// The navigations of the cell links are registered automatically when the links are rendered.
+        /// </summary>
+        public string RegisterNavigation(string navigation)
+        {
+            lock (AllowedNavigations)
+            {
+                AllowedNavigations.Add(navigation);
+            }
+            return navigation;
+        }
+
+        /// <summary>
+        /// True if the navigation has been issued in the result of the report
+        /// </summary>
+        public bool IsNavigationAllowed(string navigation)
+        {
+            lock (AllowedNavigations)
+            {
+                return AllowedNavigations.Contains(navigation);
+            }
+        }
+
+        Dictionary<string, bool> _navigationReportRights = new Dictionary<string, bool>();
+        /// <summary>
+        /// True if the security context can execute the report of a sub-report or report execution link (always true without security context). The result is cached per report path.
+        /// </summary>
+        public bool CanExecuteNavigationLink(NavigationLink link)
+        {
+            if (SecurityContext == null) return true;
+            string path;
+            if (link.Type == NavigationType.SubReport) path = NavigationContext.GetSubReportPath(HttpUtility.ParseQueryString(link.Href).Get("rpa"), Repository);
+            else if (link.Type == NavigationType.ReportExecution) path = NavigationContext.GetReportExecutionPath(link.Href, Repository);
+            else return true;
+            if (string.IsNullOrEmpty(path)) return true; //No path (e.g. navigation to a previous execution)
+
+            lock (_navigationReportRights)
+            {
+                if (!_navigationReportRights.TryGetValue(path, out bool result))
+                {
+                    try
+                    {
+                        result = SecurityContext.CanExecuteNavigationReport(path);
+                    }
+                    catch
+                    {
+                        result = false;
+                    }
+                    _navigationReportRights[path] = result;
+                }
+                return result;
+            }
+        }
+
 
         /// <summary>
         /// Helper to update a view parameter

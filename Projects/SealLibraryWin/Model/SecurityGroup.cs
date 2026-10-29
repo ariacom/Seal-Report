@@ -33,6 +33,7 @@ namespace Seal.Model
                 GetProperty("Name").SetIsBrowsable(true);
                 GetProperty("Folders").SetIsBrowsable(true);
                 GetProperty("RepositoryFolders").SetIsBrowsable(true);
+                GetProperty("SubReportFolders").SetIsBrowsable(true);
                 GetProperty("FoldersScript").SetIsBrowsable(true);
                 GetProperty("FolderDetailScript").SetIsBrowsable(true);
                 GetProperty("MenuScript").SetIsBrowsable(true);
@@ -96,6 +97,20 @@ namespace Seal.Model
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeFolders() { return Folders.Count > 0; }
+
+        /// <summary>
+        /// The sub-report folder configurations for this group (relative to the repository 'SubReports' folder). A sub-report folder is protected once a group declares it: only the users of a group having the right Execute on it can then execute its sub-reports. By default, the sub-reports can be executed by all the users from the navigation links of their reports.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\t\tSub-report folders"), Description("The sub-report folder configurations for this group (relative to the repository 'SubReports' folder). A sub-report folder is protected once a group declares it: only the users of a group having the right Execute on it can then execute its sub-reports. By default, the sub-reports can be executed by all the users from the navigation links of their reports."), Id(3, 1)]
+        [Editor(typeof(EntityCollectionEditor), typeof(UITypeEditor))]
+#endif
+        public List<SecuritySubReportFolder> SubReportFolders { get; set; } = new List<SecuritySubReportFolder>();
+        /// <summary>
+        /// Serialize SubReportFolders only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeSubReportFolders() { return SubReportFolders.Count > 0; }
 
         /// <summary>
         /// DANGER ZONE: The repository folder configurations for this group. Unlike Report Folders, these can publish ANY folder located under the

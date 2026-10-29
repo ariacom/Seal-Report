@@ -255,7 +255,8 @@
                                 One to several drill children can defined using the <code>Drill Children</code> property.<br />
                                 One to several sub-reports can defined using the <code>Sub-Reports</code> property.<br />
 
-                                A sub-report file is often located in the <i>/SubReports</i> Repository sub-folder and must have a restriction defined for the column.
+                                A sub-report file is often located in the <i>/SubReports</i> Repository sub-folder and must have a restriction defined for the column.<br />
+                                In the Web Report Server, the sub-reports of a folder of <i>/SubReports</i> can be restricted to some groups with the <code>Sub-report folders</code> of the <a href="Server#lineSecurity_subreports">Security Groups</a>.
                             </p>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Drill Element Samples</h4>
@@ -267,6 +268,11 @@
                                 <h4>Sub-Report Elements Samples</h4>
                                 In the <b>Northwind</b> Data Source, select the <strong>Orders.Order ID</strong> column and check that the <code>Sub Reports</code> property is pointing to the <b>SubReports\Order Detail.srex</b> report.<br><br />
                                 A sub-report is also defined for the columns <strong>Customers.Customer</strong>, <strong>Employees.Employee Name</strong>, <strong>Products.Product Name</strong>.
+                            </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Navigations built by a script</h4>
+                                The server only executes the navigations issued in the result of the report: the links of the cells (drill, sub-reports, <code>cell.AddNavigationReportNavigation()</code>, <code>cell.AddNavigationReportExecution()</code>) are registered automatically.
+                                A custom view or script setting itself a sub-report, drill or report execution navigation in the field <code>navigation_id</code> (<eg>e.g. 'rpa=...'</eg>) must register it with <code>report.RegisterNavigation(navigation)</code>, which returns the navigation: <code>$("#navigation_id").val('@@report.RegisterNavigation("rpa=...")');</code>
                             </div>
                         </div>
                         <!-- end col -->

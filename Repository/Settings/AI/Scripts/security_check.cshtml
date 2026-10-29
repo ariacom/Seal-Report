@@ -29,6 +29,12 @@
     sb.AppendLine($"Personal folder: {securityContext.PersonalFolderRight}");
     sb.AppendLine($"AI agents (web): {string.Join(", ", securityContext.AgentConfigurations.Select(i => i.Name))}");
     sb.AppendLine($"Web schedules available: {securityContext.CanUseWebSchedules}");
+    // Sub-report folders protected by a group of the security (the folders not declared can be executed by all the users from the navigation links)
+    var subReportFolders = security.Groups.SelectMany(i => i.SubReportFolders.Select(j => SecurityRepositoryFolder.Normalize(j.Path))).Distinct().OrderBy(i => i).ToList();
+    if (subReportFolders.Count > 0)
+    {
+        sb.AppendLine("Protected sub-report folders (SubReports): " + string.Join(", ", subReportFolders.Select(i => $"{i} ({(security.CanExecuteSubReport(securityContext.SecurityGroups, i) ? "can execute" : "no right")})")));
+    }
     sb.AppendLine();
 
     // ── Consistency warnings ──────────────────────────────────────────────────
