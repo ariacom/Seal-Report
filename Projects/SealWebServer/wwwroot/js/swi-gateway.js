@@ -127,6 +127,10 @@ class SWIGateway {
     ExecuteWebSchedule(path, guid) {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, scheduleGUID: guid });
     }
+    /** Opens the executions of a report by the logged user (audit) in a new window */
+    ExecuteReportExecutions(path) {
+        postForm(_server + "SWExecuteReportExecutions", "_blank", { path: path });
+    }
     /** Opens the report in the window 'target' to edit the restriction values of a web schedule */
     EditWebScheduleRestrictions(path, guid, target) {
         postForm(_server + "SWExecuteReport", target, { path: path, scheduleGUID: guid, scheduleRestrictions: true });

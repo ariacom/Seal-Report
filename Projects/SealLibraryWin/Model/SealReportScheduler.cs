@@ -287,6 +287,7 @@ namespace Seal.Model
                 schedule.Enabled = false;
                 schedule.LastError = error;
                 schedule.LastExecution = DateTime.Now;
+                schedule.LastDuration = -1;
                 schedule.SaveToFile();
             }
             catch (Exception ex)

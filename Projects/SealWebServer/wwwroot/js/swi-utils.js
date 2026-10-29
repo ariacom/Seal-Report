@@ -202,20 +202,20 @@ var SWIUtil;
         const actions = $("<span class='menu-fav-actions'>");
         const starBtn = $("<button type='button' class='menu-fav-btn menu-fav-star'>")
             .attr('path', value.path)
-            .attr('title', isFavorite ? SWIUtil.tr("Remove from favorites") : SWIUtil.tr("Mark as favorite"))
+            .attr('title', isFavorite ? SWIUtil.tr2("Remove from favorites") : SWIUtil.tr2("Mark as favorite"))
             .html(isFavorite ? "<i class='fas fa-star'></i>" : "<i class='far fa-star'></i>");
         actions.append(starBtn);
         if (isFavorite) {
             const renameBtn = $("<button type='button' class='menu-fav-btn menu-fav-rename'>")
                 .attr('path', value.path)
-                .attr('title', SWIUtil.tr("Rename"))
+                .attr('title', SWIUtil.tr2("Rename"))
                 .html("<i class='fa fa-pencil'></i>");
             actions.append(renameBtn);
         }
         if (!isFavorite) {
             const removeBtn = $("<button type='button' class='menu-fav-btn menu-fav-remove'>")
                 .attr('path', value.path)
-                .attr('title', SWIUtil.tr("Remove from recents"))
+                .attr('title', SWIUtil.tr2("Remove from recents"))
                 .html("<i class='fa fa-trash'></i>");
             actions.append(removeBtn);
         }

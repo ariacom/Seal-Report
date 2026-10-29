@@ -89,6 +89,12 @@ namespace Seal.Model
         public string nextexecution;
         public string lastexecution;
         public string lasterror;
+        //Duration of the last execution, e.g. '1 min 05 s'
+        public string lastduration;
+        //Status: disabled, never, error or ok
+        public string status;
+        //True if the executions of the report can be displayed (audit enabled)
+        public bool hasexecutions;
     }
 
     /// <summary>

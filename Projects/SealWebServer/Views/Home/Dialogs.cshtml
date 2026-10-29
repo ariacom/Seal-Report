@@ -413,6 +413,8 @@
                             <th>@repository.TranslateWeb("Recurrence")</th>
                             <th>@repository.TranslateWeb("Next execution")</th>
                             <th>@repository.TranslateWeb("Last execution")</th>
+                            <th>@repository.TranslateWeb("Duration")</th>
+                            <th>@repository.TranslateWeb("Status")</th>
                             <th></th>
                         </tr>
                     </thead>
@@ -578,11 +580,20 @@
                     <div class="row g-2 mt-1">
                         <div class="col-sm-6">
                             <label class="form-label small mb-0" for="webschedule-repeatinterval">@repository.TranslateWeb("Repeat every")</label>
-                            <select id="webschedule-repeatinterval" class="form-select form-select-sm"></select>
+                            <!-- Editable combo: a proposed value or free text, e.g. '45 minutes', '3 hours', '2 days' or a number of minutes -->
+                            <div class="input-group input-group-sm">
+                                <input id="webschedule-repeatinterval" class="form-control form-control-sm" />
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false"></button>
+                                <ul id="webschedule-repeatinterval-dropdown" class="dropdown-menu dropdown-menu-end"></ul>
+                            </div>
                         </div>
                         <div class="col-sm-6">
                             <label class="form-label small mb-0" for="webschedule-repeatduration">@repository.TranslateWeb("For a duration of")</label>
-                            <select id="webschedule-repeatduration" class="form-select form-select-sm"></select>
+                            <div class="input-group input-group-sm">
+                                <input id="webschedule-repeatduration" class="form-control form-control-sm" />
+                                <button class="btn btn-outline-secondary dropdown-toggle" type="button" data-bs-toggle="dropdown" data-bs-popper-config='{"strategy":"fixed"}' aria-expanded="false"></button>
+                                <ul id="webschedule-repeatduration-dropdown" class="dropdown-menu dropdown-menu-end"></ul>
+                            </div>
                         </div>
                     </div>
                 </div>

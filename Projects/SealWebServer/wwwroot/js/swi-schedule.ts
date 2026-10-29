@@ -10,16 +10,51 @@ namespace SWISchedule {
     const RepeatIntervals = [0, 5, 10, 15, 30, 60, 120, 240, 480, 720];
     const RepeatDurations = [0, 60, 120, 240, 480, 720, 1440];
 
+    //Status of a schedule in the 'My schedules' list (see SWIWebSchedule.status)
+    const StatusTexts: { [status: string]: string } = { disabled: "Disabled", never: "Never executed", error: "Error", ok: "Success" };
+    const StatusBadges: { [status: string]: string } = { disabled: "text-bg-secondary", never: "text-bg-light border", error: "text-bg-danger", ok: "text-bg-success" };
+
     /** Refreshes the reports of the current folder: the schedule icon of the report may have changed */
     function refreshReports() {
         if (_main._currentView == "folders" && _main._folder) _main.ReloadReportsTable();
     }
 
     function minutesText(minutes: number, zeroText: string): string {
-        if (minutes == 0) return SWIUtil.tr(zeroText);
-        if (minutes % 1440 == 0) return (minutes / 1440) + " " + SWIUtil.tr(minutes == 1440 ? "day" : "days");
-        if (minutes % 60 == 0) return (minutes / 60) + " " + SWIUtil.tr(minutes == 60 ? "hour" : "hours");
-        return minutes + " " + SWIUtil.tr("minutes");
+        if (minutes == 0) return SWIUtil.tr2(zeroText);
+        if (minutes % 1440 == 0) return (minutes / 1440) + " " + SWIUtil.tr2(minutes == 1440 ? "day" : "days");
+        if (minutes % 60 == 0) return (minutes / 60) + " " + SWIUtil.tr2(minutes == 60 ? "hour" : "hours");
+        return minutes + " " + SWIUtil.tr2("minutes");
+    }
+
+    /** Editable combo of a repetition: the input shows the value, the dropdown proposes the choices */
+    function initRepeatCombo(id: string, choices: number[], value: number, zeroText: string) {
+        $("#" + id).val(minutesText(value, zeroText));
+        var $dropdown = $("#" + id + "-dropdown");
+        $dropdown.empty();
+        choices.forEach(function (m) {
+            $dropdown.append($("<li>").append($("<a class='dropdown-item' href='#'>").text(minutesText(m, zeroText))));
+        });
+        $dropdown.find("a").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            $("#" + id).val($(this).text()).trigger("focus");
+        });
+    }
+
+    /** Minutes of a repetition entered as free text: '45 minutes', '3 hours', '2 days' (translated or English units, abbreviations accepted) or a number of minutes. Returns NaN if invalid */
+    function parseMinutes(text: string, zeroText: string): number {
+        text = (text || "").trim().toLowerCase();
+        if (text == "" || text == SWIUtil.tr2(zeroText).toLowerCase() || text == zeroText.toLowerCase()) return 0;
+        var match = /^(\d+)\s*(.*)$/.exec(text);
+        if (!match) return NaN;
+        var value = parseInt(match[1]);
+        var unit = match[2].trim().replace(/\.$/, "");
+        if (unit == "") return value;
+        var units: [string, number][] = [["minute", 1], ["minutes", 1], ["hour", 60], ["hours", 60], ["day", 1440], ["days", 1440]];
+        for (var i = 0; i < units.length; i++) {
+            var names = [SWIUtil.tr2(units[i][0]).toLowerCase(), units[i][0]];
+            if (names.some(function (name) { return name.indexOf(unit) == 0; })) return value * units[i][1];
+        }
+        return NaN;
     }
 
     function fillSelect($select: JQuery, items: any[], value: any) {
@@ -75,7 +110,7 @@ namespace SWISchedule {
         SWIUtil.ShowHideControl($(".webschedule-interval"), type == 2 || type == 3);
         SWIUtil.ShowHideControl($(".webschedule-weekly"), type == 3);
         SWIUtil.ShowHideControl($(".webschedule-monthly"), type == 4);
-        $("#webschedule-interval-label").text(SWIUtil.tr(type == 3 ? "Recur every (weeks)" : "Recur every (days)"));
+        $("#webschedule-interval-label").text(SWIUtil.tr2(type == 3 ? "Recur every (weeks)" : "Recur every (days)"));
     }
 
     function showError(data: any) {
@@ -122,13 +157,10 @@ namespace SWISchedule {
             fillChecks($("#webschedule-months"), "webschedule-month-", data.months, s.months);
             var days: any[] = [];
             for (var i = 1; i <= 31; i++) days.push({ id: String(i), val: String(i) });
-            days.push({ id: "32", val: SWIUtil.tr("Last") });
+            days.push({ id: "32", val: SWIUtil.tr2("Last") });
             fillChecks($("#webschedule-days"), "webschedule-day-", days, s.days);
-            fillSelect($("#webschedule-repeatinterval"), RepeatIntervals.map(function (m) { return { id: String(m), val: minutesText(m, "None") }; }), s.repeatinterval || 0);
-            fillSelect($("#webschedule-repeatduration"), RepeatDurations.map(function (m) { return { id: String(m), val: minutesText(m, "Indefinitely") }; }), s.repeatduration || 0);
-            //custom values set in another tool
-            if ($("#webschedule-repeatinterval").val() === null) $("#webschedule-repeatinterval").append($("<option>").val(s.repeatinterval).text(minutesText(s.repeatinterval, "None"))).val(String(s.repeatinterval));
-            if ($("#webschedule-repeatduration").val() === null) $("#webschedule-repeatduration").append($("<option>").val(s.repeatduration).text(minutesText(s.repeatduration, "Indefinitely"))).val(String(s.repeatduration));
+            initRepeatCombo("webschedule-repeatinterval", RepeatIntervals, s.repeatinterval || 0, "None");
+            initRepeatCombo("webschedule-repeatduration", RepeatDurations, s.repeatduration || 0, "Indefinitely");
             if (s.repeatinterval > 0) $("#webschedule-advanced").addClass("show");
             else $("#webschedule-advanced").removeClass("show");
 
@@ -165,10 +197,12 @@ namespace SWISchedule {
             SWIUtil.ShowHideControl($("#webschedule-restrictions-block"), s.hasrestrictions);
             $("#webschedule-restrictions-edit").unbind("click").on("click", function () {
                 $("#webschedule-error").addClass("d-none");
+                var schedule = readSchedule();
+                if (!checkSchedule(schedule)) return;
                 //window opened during the click (not blocked as a popup), the report is loaded once the schedule is saved
                 var target = "webschedule_restrictions_" + Date.now();
                 var win = window.open("about:blank", target);
-                _gateway.SaveWebSchedule(s.path, readSchedule(), function (result) {
+                _gateway.SaveWebSchedule(s.path, schedule, function (result) {
                     SWIUtil.HideModal($("#webschedule-dialog"));
                     _gateway.EditWebScheduleRestrictions(result.path, result.guid, target);
                     SWIUtil.ShowMessage("alert-info", SWIUtil.tr("Edit the restrictions in the report window, then click on 'Save for the schedule'"), 10000);
@@ -212,14 +246,25 @@ namespace SWISchedule {
                     weekdays: getChecks($("#webschedule-weekdays")),
                     months: getChecks($("#webschedule-months")),
                     days: getChecks($("#webschedule-days")),
-                    repeatinterval: parseInt($("#webschedule-repeatinterval").val() as string) || 0,
-                    repeatduration: parseInt($("#webschedule-repeatduration").val() as string) || 0
+                    repeatinterval: parseMinutes($("#webschedule-repeatinterval").val() as string, "None"),
+                    repeatduration: parseMinutes($("#webschedule-repeatduration").val() as string, "Indefinitely")
                 };
+            };
+
+            /** Checks the values that are converted in the browser, displays the error if any */
+            var checkSchedule = function (schedule: any): boolean {
+                var invalid = isNaN(schedule.repeatinterval) ? $("#webschedule-repeatinterval").val() : isNaN(schedule.repeatduration) ? $("#webschedule-repeatduration").val() : null;
+                if (invalid === null) return true;
+                $("#webschedule-advanced").addClass("show");
+                showError({ error: SWIUtil.tr2("Invalid value for the repetition") + ": '" + invalid + "'", authenticated: true });
+                return false;
             };
 
             $("#webschedule-save").unbind("click").on("click", function () {
                 $("#webschedule-error").addClass("d-none");
-                _gateway.SaveWebSchedule(s.path, readSchedule(), function (result) {
+                var schedule = readSchedule();
+                if (!checkSchedule(schedule)) return;
+                _gateway.SaveWebSchedule(s.path, schedule, function (result) {
                     SWIUtil.HideModal($("#webschedule-dialog"));
                     var message = SWIUtil.tr("The schedule has been saved");
                     if (result.nextexecution) message += ". " + SWIUtil.tr("Next execution") + ": " + result.nextexecution;
@@ -266,17 +311,24 @@ namespace SWISchedule {
             SWIUtil.ShowHideControl($("#webschedules-table"), schedules.length > 0);
             SWIUtil.ShowHideControl($("#webschedules-none"), schedules.length == 0);
             schedules.forEach(function (s: any) {
-                var $last = $("<td>").text(s.lastexecution);
-                if (s.lasterror) $last.append($("<i class='fa-solid fa-triangle-exclamation text-danger ms-1'>").attr("title", s.lasterror));
-                var $next = $("<td>").text(s.enabled ? s.nextexecution : SWIUtil.tr2("Disabled"));
-                if (!s.enabled) $next.addClass("text-muted");
+                var $next = $("<td>").text(s.enabled ? s.nextexecution : "");
+                var $status = $("<td>").append($("<span class='badge'>").addClass(StatusBadges[s.status]).text(SWIUtil.tr2(StatusTexts[s.status])));
+                if (s.status == "error") $status.find(".badge").attr("title", s.lasterror);
 
+                var $actions = $("<td class='text-end text-nowrap'>");
                 var $edit = actionButton("fa-solid fa-pen", "Edit", "btn-outline-secondary");
                 $edit.on("click", function () { Edit(s.path, s.guid, loadList); });
                 var $execute = actionButton("fa-solid fa-play", "Execute now", "btn-outline-success");
                 $execute.on("click", function () { _gateway.ExecuteWebSchedule(s.path, s.guid); });
                 var $delete = actionButton("fa-solid fa-trash", "Delete", "btn-outline-danger");
                 $delete.on("click", function () { confirmDelete(s, loadList); });
+                $actions.append($edit).append(" ").append($execute).append(" ");
+                if (s.hasexecutions) {
+                    var $executions = actionButton("fa-solid fa-list-check", "Executions of the report", "btn-outline-secondary");
+                    $executions.on("click", function () { _gateway.ExecuteReportExecutions(s.path); });
+                    $actions.append($executions).append(" ");
+                }
+                $actions.append($delete);
 
                 $body.append($("<tr>")
                     .append($("<td>").text(s.name))
@@ -284,8 +336,10 @@ namespace SWISchedule {
                     .append($("<td>").text(s.devicename + " (" + s.formatname + ")"))
                     .append($("<td>").text(s.recurrence))
                     .append($next)
-                    .append($last)
-                    .append($("<td class='text-end text-nowrap'>").append($edit).append(" ").append($execute).append(" ").append($delete)));
+                    .append($("<td>").text(s.lastexecution))
+                    .append($("<td class='text-nowrap'>").text(s.lastduration))
+                    .append($status)
+                    .append($actions));
             });
         });
     }

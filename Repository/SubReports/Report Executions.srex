@@ -1,0 +1,212 @@
+<?xml version="1.0"?>
+<Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+  <GUID>16d50a74-b77f-49e5-8fb6-996039461f04</GUID>
+  <DisplayName>@{
+    //Title set by the Web Report Server (SWIExecuteReportExecutions): 'Executions - report name'
+    Report report = Model;
+    string result = report.Tag2 as string;
+    if (string.IsNullOrEmpty(result)) result = report.Translate("Report Executions");
+}
+@Raw(result)</DisplayName>
+  <ViewGUID>8faccb5e-fb09-4b72-ac55-f5e1353ff2c2</ViewGUID>
+  <Sources>
+    <ReportSource>
+      <GUID>f3077b0b-305a-4eaf-9a13-d8103ff345bf</GUID>
+      <Name>Audit</Name>
+      <ConnectionGUID>1</ConnectionGUID>
+      <MetaData>
+        <Tables>
+          <MetaTable>
+            <GUID>f7c38212-f7ca-4799-bdbd-fcb5b7444b65</GUID>
+            <Sql>select * from sr_audit</Sql>
+            <Alias>sr_executions</Alias>
+            <WhereSQL>@{
+    //Executions of the logged user only, for the report set by the Web Report Server (SWIExecuteReportExecutions): nothing is returned otherwise
+    MetaTable table = Model;
+    string result = "1=0";
+    Report report = table.Source.Report;
+    if (report != null &amp;&amp; report.SecurityContext != null &amp;&amp; !string.IsNullOrEmpty(report.SecurityContext.Name) &amp;&amp; report.Tag is string reportPath &amp;&amp; !string.IsNullOrEmpty(reportPath))
+    {
+        result = string.Format("event_type in ('ReportExecution','ReportExecutionError') AND user_name={0} AND event_path={1}", Helper.QuoteSingle(report.SecurityContext.Name), Helper.QuoteSingle(reportPath));
+    }
+}
+@Raw(result)</WhereSQL>
+            <Columns>
+              <MetaColumn>
+                <GUID>b3571a97-f95f-43a2-a13b-046abd7f2fd6</GUID>
+                <Name>sr_executions.event_date</Name>
+                <Type>DateTime</Type>
+                <DisplayName>Date time</DisplayName>
+                <DateTimeStandardFormat>LongDateTime</DateTimeStandardFormat>
+                <Format>G</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>ca654301-3e6f-418b-8336-6659bf41bafb</GUID>
+                <Name>sr_executions.event_type</Name>
+                <Type>Text</Type>
+                <DisplayName>Type</DisplayName>
+                <DisplayOrder>2</DisplayOrder>
+                <EnumGUID>fd494dfc-ce45-48a9-a97e-5856600c36fe</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>f3d76a33-2e26-43ec-b3bf-08f505890c21</GUID>
+                <Name>sr_executions.execution_context</Name>
+                <Type>Text</Type>
+                <DisplayName>Execution context</DisplayName>
+                <DisplayOrder>3</DisplayOrder>
+                <EnumGUID>04d44ec1-79d3-47d9-a07b-f1ba90cfef46</EnumGUID>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>c58043c1-ed54-4510-a898-0e61b61d0a69</GUID>
+                <Name>sr_executions.schedule_name</Name>
+                <Type>Text</Type>
+                <DisplayName>Schedule name</DisplayName>
+                <DisplayOrder>4</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>b4b5750f-4c51-49b4-b1f8-1243423e79af</GUID>
+                <Name>sr_executions.output_name</Name>
+                <Type>Text</Type>
+                <DisplayName>Output name</DisplayName>
+                <DisplayOrder>5</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>87a2b98f-c40b-4f38-a3e0-ebb4848b448b</GUID>
+                <Name>sr_executions.execution_duration</Name>
+                <Type>Numeric</Type>
+                <DisplayName>Execution duration</DisplayName>
+                <DisplayOrder>6</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>cfe67081-252c-4f57-aa52-93074392dabc</GUID>
+                <Name>sr_executions.event_error</Name>
+                <Type>Text</Type>
+                <DisplayName>Error</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+            </Columns>
+          </MetaTable>
+        </Tables>
+      </MetaData>
+      <MetaSourceGUID>3d80412e-03a4-4a96-818a-a2aecef4c813</MetaSourceGUID>
+    </ReportSource>
+  </Sources>
+  <Models>
+    <ReportModel>
+      <GUID>648b7599-cfa0-41c9-b7fb-7d94c37d75df</GUID>
+      <Name>Executions</Name>
+      <SourceGUID>f3077b0b-305a-4eaf-9a13-d8103ff345bf</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>d249d9ec-6c29-4a80-a43a-430d1c36bad0</GUID>
+          <Name>sr_executions.event_date</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <SortOrder>Automatic Descendant</SortOrder>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>b3571a97-f95f-43a2-a13b-046abd7f2fd6</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>08afa66b-9fef-4198-bf30-9f00920bcecd</GUID>
+          <Name>sr_executions.event_type</Name>
+          <DisplayName>Status</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>ca654301-3e6f-418b-8336-6659bf41bafb</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>738f4589-ea89-46ba-9dd1-0eb623aa1dc1</GUID>
+          <Name>sr_executions.execution_context</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>f3d76a33-2e26-43ec-b3bf-08f505890c21</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>ed32de90-b8ac-4335-bb50-790716062d61</GUID>
+          <Name>sr_executions.schedule_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>c58043c1-ed54-4510-a898-0e61b61d0a69</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>25276a8b-6a85-47f3-8746-4b622ace9988</GUID>
+          <Name>sr_executions.output_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>b4b5750f-4c51-49b4-b1f8-1243423e79af</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>522c01c6-3f5e-4720-b403-15cc090fccbb</GUID>
+          <Name>sr_executions.execution_duration</Name>
+          <DisplayName>Duration (s)</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>87a2b98f-c40b-4f38-a3e0-ebb4848b448b</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>8e23964a-e2d9-4372-b8a9-b18d83364439</GUID>
+          <Name>sr_executions.event_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>cfe67081-252c-4f57-aa52-93074392dabc</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[302104e9-4a1c-4095-a994-246d0af75ffc]</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>302104e9-4a1c-4095-a994-246d0af75ffc</GUID>
+          <Name>sr_executions.event_date</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <MetaColumnGUID>b3571a97-f95f-43a2-a13b-046abd7f2fd6</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Greater</Operator>
+          <Date1Keyword>Today-30D</Date1Keyword>
+          <FormatRe>G</FormatRe>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+  </Models>
+  <Views>
+    <ReportView>
+      <GUID>8faccb5e-fb09-4b72-ac55-f5e1353ff2c2</GUID>
+      <Name>View</Name>
+      <Views>
+        <ReportView>
+          <GUID>3a182bde-853e-4d6b-870f-ad3e5899f1c5</GUID>
+          <Name>Executions</Name>
+          <Views>
+            <ReportView>
+              <GUID>03c3966e-aae3-4a3a-b8c2-9c9319a74a9d</GUID>
+              <Name>Data Table</Name>
+              <TemplateName>Data Table</TemplateName>
+              <SortOrder>1</SortOrder>
+            </ReportView>
+          </Views>
+          <TemplateName>Model</TemplateName>
+          <ModelGUID>648b7599-cfa0-41c9-b7fb-7d94c37d75df</ModelGUID>
+          <SortOrder>1</SortOrder>
+        </ReportView>
+      </Views>
+      <TemplateName>Report</TemplateName>
+      <Parameters>
+        <Parameter>
+          <Name>force_execution</Name>
+          <Value>True</Value>
+        </Parameter>
+      </Parameters>
+      <SortOrder>1</SortOrder>
+    </ReportView>
+  </Views>
+  <Cancel>false</Cancel>
+</Report>

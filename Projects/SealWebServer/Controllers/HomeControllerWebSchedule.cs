@@ -248,6 +248,48 @@ namespace SealWebServer.Controllers
             }
         }
 
+        /// <summary>
+        /// Name of the sub-report displaying the executions of a report for the logged user (Repository\SubReports)
+        /// </summary>
+        const string ReportExecutionsSubReport = "Report Executions.srex";
+
+        /// <summary>
+        /// Executes the sub-report 'Report Executions' listing the executions of a report by the logged user (read from the audit database).
+        /// The user must have the right to execute the report. The report path and the user are applied by the sub-report itself (WhereSQL of its table), the path is passed in Report.Tag.
+        /// </summary>
+        public ActionResult SWExecuteReportExecutions(string path, string sessionId)
+        {
+            writeDebug("SWExecuteReportExecutions");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (!Repository.Configuration.AuditEnabled) throw new ValidationException(Translate("The audit is not enabled"));
+
+                SWIFolder folder = getParentFolder(path);
+                if (folder.right == 0) throw new Exception("Error: no right on this folder");
+                var file = getFileDetail(path);
+                if (file.right == 0) throw new Exception("Error: no right on this report or file");
+                string execPath = file.isshortcut ? resolveShortcut(path, out _) : path;
+                string filePath = getFullPath(execPath);
+                if (!FileHelper.IsReportFile(filePath) || !System.IO.File.Exists(filePath)) throw new ValidationException(Translate("The report does not exist"));
+
+                var subReportPath = Path.Combine(Repository.SubReportsFolder, ReportExecutionsSubReport);
+                if (!System.IO.File.Exists(subReportPath)) throw new Exception($"Error: the report '{subReportPath}' does not exist");
+                var repository = Repository.CreateFast();
+                var report = Report.LoadFromFile(subReportPath, repository);
+                report.Tag = filePath;
+                report.Tag2 = Translate("Executions") + " - " + Repository.TranslateFileName(filePath);
+
+                var execution = initReportExecution(report, null, null, false);
+                execution.RenderHTMLDisplayForViewer();
+                return getFileResult(report.HTMLDisplayFilePath, report);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         void checkWebScheduleUser()
         {
             checkSWIAuthentication();
@@ -369,6 +411,18 @@ namespace SealWebServer.Controllers
             return date == DateTime.MinValue || date == DateTime.MaxValue ? "" : date.ToString("g", Repository.CultureInfo);
         }
 
+        /// <summary>
+        /// Duration in seconds displayed as '45 s', '2 min 05 s' or '1 h 02 min', empty if unknown
+        /// </summary>
+        static string toDisplayDuration(int seconds)
+        {
+            if (seconds < 0) return "";
+            var duration = TimeSpan.FromSeconds(seconds);
+            if (duration.TotalHours >= 1) return $"{(int)duration.TotalHours} h {duration.Minutes:00} min";
+            if (duration.TotalMinutes >= 1) return $"{duration.Minutes} min {duration.Seconds:00} s";
+            return $"{duration.Seconds} s";
+        }
+
         SWIWebSchedule toSWIWebSchedule(SealSchedule schedule, bool forEdit)
         {
             var output = schedule.Output;
@@ -388,7 +442,10 @@ namespace SealWebServer.Controllers
                 recurrence = getRecurrence(schedule),
                 nextexecution = schedule.Enabled ? toDisplayDate(schedule.NextExecution) : "",
                 lastexecution = toDisplayDate(schedule.LastExecution),
-                lasterror = schedule.LastError
+                lasterror = schedule.LastError,
+                lastduration = schedule.LastExecution == DateTime.MinValue ? "" : toDisplayDuration(schedule.LastDuration),
+                status = !schedule.Enabled ? "disabled" : schedule.LastExecution == DateTime.MinValue ? "never" : !string.IsNullOrEmpty(schedule.LastError) ? "error" : "ok",
+                hasexecutions = Repository.Configuration.AuditEnabled
             };
             if (!forEdit) return result;
 

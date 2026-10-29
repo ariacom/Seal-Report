@@ -2301,6 +2301,7 @@ namespace Seal.Model
                     }
                 }
                 string lastError = "";
+                int lastDuration = -1;
 
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName));
                 int retries = schedule.ErrorNumberOfRetries + 1;
@@ -2356,6 +2357,7 @@ namespace Seal.Model
 
                     //Audit
                     Audit.LogReportAudit(report, schedule);
+                    lastDuration = Convert.ToInt32(report.ExecutionFullDuration.TotalSeconds);
 
                     if (report.HasErrors)
                     {
@@ -2415,7 +2417,7 @@ namespace Seal.Model
                     }
                 }
 
-                if (webSchedule != null) saveWebScheduleExecution(webSchedule, lastError);
+                if (webSchedule != null) saveWebScheduleExecution(webSchedule, lastError, lastDuration);
 
                 FileHelper.PurgeTempApplicationDirectory();
             }
@@ -2428,12 +2430,13 @@ namespace Seal.Model
         /// <summary>
         /// Save the result of the last execution in the web schedule file. The next execution is also calculated as the file may be saved by an outer process.
         /// </summary>
-        static void saveWebScheduleExecution(SealSchedule webSchedule, string lastError)
+        static void saveWebScheduleExecution(SealSchedule webSchedule, string lastError, int lastDuration = -1)
         {
             try
             {
                 webSchedule.LastExecution = DateTime.Now;
                 webSchedule.LastError = lastError;
+                webSchedule.LastDuration = lastDuration;
                 webSchedule.CalculateNextExecution();
                 webSchedule.SaveToFile();
             }

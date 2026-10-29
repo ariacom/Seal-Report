@@ -193,6 +193,12 @@ namespace Seal.Model
         public string LastError { get; set; }
 
         /// <summary>
+        /// Web schedule: duration in seconds of the last execution (the last retry if the execution was retried), -1 if unknown
+        /// </summary>
+        [DefaultValue(-1)]
+        public int LastDuration { get; set; } = -1;
+
+        /// <summary>
         /// Web schedule: add the output and the schedule in the report loaded for the execution (the report is not saved)
         /// </summary>
         public ReportSchedule InjectWebSchedule(Report report)
