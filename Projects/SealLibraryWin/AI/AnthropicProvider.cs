@@ -185,7 +185,8 @@ namespace Seal.AI
                     var usage = result?.Usage;
                     SetLastUsage(
                         (usage?.InputTokens ?? 0) + (usage?.CacheCreationInputTokens ?? 0) + (usage?.CacheReadInputTokens ?? 0),
-                        usage?.OutputTokens ?? 0);
+                        usage?.OutputTokens ?? 0,
+                        usage?.CacheReadInputTokens ?? 0);
                     return result;
                 }
 

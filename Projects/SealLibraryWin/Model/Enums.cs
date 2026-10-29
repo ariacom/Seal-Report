@@ -1836,6 +1836,33 @@ namespace Seal.Model
     }
 
     /// <summary>
+    /// Usage shown under each answer of the web chat of an AI agent
+    /// </summary>
+    public enum AIUsageDisplay
+    {
+        /// <summary>
+        /// Number of tokens and cost
+        /// </summary>
+        [Description("Tokens and cost")]
+        TokensAndCost = 0,
+        /// <summary>
+        /// Number of tokens only
+        /// </summary>
+        [Description("Tokens")]
+        Tokens = 1,
+        /// <summary>
+        /// Cost only
+        /// </summary>
+        [Description("Cost")]
+        Cost = 2,
+        /// <summary>
+        /// Nothing
+        /// </summary>
+        [Description("None")]
+        None = 3,
+    }
+
+    /// <summary>
     /// Effect of an AI tool on the repository or the databases, published to the MCP clients as tool annotations (readOnlyHint, destructiveHint)
     /// </summary>
     public enum AIToolAccess

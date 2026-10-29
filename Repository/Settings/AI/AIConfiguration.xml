@@ -217,9 +217,10 @@ Always call file_list first to discover and confirm the exact source path before
       <Description>Lists reports accessible to the current web user.
 Only folders with access rights are browsed — hidden folders (right=0) and files-only folders are excluded — and Personal folders are included when the user has personal folder rights.
 Display paths use "Reports\..." or "Personal\username\..." format compatible with other report tools.
-Pass an optional list of sub-folder names to restrict the scan; omit or pass [] to scan all accessible folders.</Description>
+Pass an optional list of sub-folder names to restrict the scan; omit or pass [] to scan all accessible folders.
+By default one line per report (path, display name, description, number of outputs and schedules); pass detail=true only when you need the columns of the models, the outputs and the schedules of every report — for one report use report_get_detail instead.</Description>
       <ProgressLabel>Listing reports</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to scan. Omit or pass [] to scan everything accessible."}}}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to scan. Omit or pass [] to scan everything accessible."},"detail":{"type":"boolean","description":"true to add the columns of each model, the outputs and the schedules of every report (large result). Default false: one line per report."}}}</ParametersSchema>
       <ExecutionScriptFile>report_list.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>

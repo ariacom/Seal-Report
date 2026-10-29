@@ -55,7 +55,7 @@ namespace Seal.AI
 
             var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(
                 response.Content.ReadAsStringAsync().Result);
-            SetLastUsage(responseObject?.Usage?.PromptTokens ?? 0, responseObject?.Usage?.CompletionTokens ?? 0);
+            SetLastUsage(responseObject?.Usage?.PromptTokens ?? 0, responseObject?.Usage?.CompletionTokens ?? 0, responseObject?.Usage?.PromptTokensDetails?.CachedTokens ?? 0);
 
             var result = responseObject?.Choices?[0]?.Message?.Content
                 ?? throw new Exception("Failed to get response from OpenAI");
@@ -97,7 +97,7 @@ namespace Seal.AI
 
             var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(
                 response.Content.ReadAsStringAsync().Result);
-            SetLastUsage(responseObject?.Usage?.PromptTokens ?? 0, responseObject?.Usage?.CompletionTokens ?? 0);
+            SetLastUsage(responseObject?.Usage?.PromptTokens ?? 0, responseObject?.Usage?.CompletionTokens ?? 0, responseObject?.Usage?.PromptTokensDetails?.CachedTokens ?? 0);
 
             var choice = responseObject?.Choices?[0]
                 ?? throw new Exception("Failed to get response from OpenAI");
@@ -197,6 +197,15 @@ namespace Seal.AI
             {
                 [JsonPropertyName("prompt_tokens")]
                 public int PromptTokens { get; set; }
+
+                [JsonPropertyName("prompt_tokens_details")]
+                public PromptTokensDetailsInfo PromptTokensDetails { get; set; }
+
+                public class PromptTokensDetailsInfo
+                {
+                    [JsonPropertyName("cached_tokens")]
+                    public int CachedTokens { get; set; }
+                }
 
                 [JsonPropertyName("completion_tokens")]
                 public int CompletionTokens { get; set; }

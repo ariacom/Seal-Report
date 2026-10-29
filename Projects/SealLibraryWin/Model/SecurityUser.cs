@@ -380,6 +380,11 @@ namespace Seal.Model
         public Action<AIUsage, double?> OnAIUsage = null;
 
         /// <summary>
+        /// Optional display of the cost of an AI exchange, set by the Security Provider script: called with the cost of the exchange (in the currency of the costs of the AI provider) when the web chat shows the usage, returns the text shown instead of the cost (e.g. the amount billed to the user), or null or empty to show no cost.
+        /// </summary>
+        public Func<double, string> FormatAICost = null;
+
+        /// <summary>
         /// Executes <see cref="CheckMcpCall"/>: null if the call can be executed, otherwise the refusal message (an exception of the script refuses the call).
         /// </summary>
         public string GetMcpCallRefusal(string toolName)
@@ -462,8 +467,28 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Text of the cost of an AI exchange shown in the web chat: the result of <see cref="FormatAICost"/> if set (an exception of the script shows no cost), otherwise the cost of the AI provider; null if there is no cost to show.
+        /// </summary>
+        public string GetAICostText(double? cost)
+        {
+            if (cost == null) return null;
+            if (FormatAICost == null) return cost.Value.ToString(cost < 0.1 ? "0.0000" : "0.00", Repository.Instance.CultureInfo);
+            try
+            {
+                var text = FormatAICost(cost.Value);
+                return string.IsNullOrEmpty(text) ? null : text;
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.FormatAICost", ex);
+                return null;
+            }
+        }
+
         void clearUsageHooks()
         {
+            FormatAICost = null;
             CheckMcpCall = null;
             OnMcpCall = null;
             CheckAIChat = null;

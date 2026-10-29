@@ -58,6 +58,7 @@ namespace Seal.AI
                 GetProperty("EndPoint").SetIsBrowsable(true);
                 GetProperty("ClearProviderKey").SetIsBrowsable(true);
                 GetProperty("InputTokenCost").SetIsBrowsable(true);
+                GetProperty("CachedInputTokenCost").SetIsBrowsable(true);
                 GetProperty("OutputTokenCost").SetIsBrowsable(true);
                 TypeDescriptor.Refresh(this);
             }
@@ -120,19 +121,29 @@ namespace Seal.AI
 
         /// <summary>
         /// Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking.
-        /// Cached input tokens are counted at the full input rate.
+        /// Input tokens read from the prompt cache use <see cref="CachedInputTokenCost"/> when it is set.
         /// </summary>
 #if WINDOWS
-        [Category("Costs"), DisplayName("\tCost per 1M input tokens"), Description("Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking. Note that cached input tokens are counted at the full input rate."), Id(1, 2)]
+        [Category("Costs"), DisplayName("\tCost per 1M input tokens"), Description("Cost per 1 million input (prompt) tokens, in the currency you pay the provider in. 0 means no cost tracking. Input tokens read from the prompt cache use the cost per 1M cached input tokens when it is set."), Id(1, 2)]
         [DefaultValue(0d)]
 #endif
         public double InputTokenCost { get; set; } = 0;
 
         /// <summary>
+        /// Cost per 1 million input tokens read from the prompt cache of the provider (e.g. 10 % of the input cost for the OpenAI GPT-5 models).
+        /// 0 means cached input tokens are counted at the full input rate.
+        /// </summary>
+#if WINDOWS
+        [Category("Costs"), DisplayName("Cost per 1M cached input tokens"), Description("Cost per 1 million input tokens read from the prompt cache of the provider (e.g. 10 % of the input cost for the OpenAI GPT-5 models, 10 % for Anthropic cache reads). 0 means cached input tokens are counted at the full input rate."), Id(2, 2)]
+        [DefaultValue(0d)]
+#endif
+        public double CachedInputTokenCost { get; set; } = 0;
+
+        /// <summary>
         /// Cost per 1 million output (completion) tokens, in the currency you pay the provider in. 0 means no cost tracking.
         /// </summary>
 #if WINDOWS
-        [Category("Costs"), DisplayName("Cost per 1M output tokens"), Description("Cost per 1 million output (completion) tokens, in the currency you pay the provider in. 0 means no cost tracking."), Id(2, 2)]
+        [Category("Costs"), DisplayName("Cost per 1M output tokens"), Description("Cost per 1 million output (completion) tokens, in the currency you pay the provider in. 0 means no cost tracking."), Id(3, 2)]
         [DefaultValue(0d)]
 #endif
         public double OutputTokenCost { get; set; } = 0;
@@ -143,7 +154,8 @@ namespace Seal.AI
         public double? GetCost(AIUsage usage)
         {
             if (usage == null || (InputTokenCost == 0 && OutputTokenCost == 0)) return null;
-            return (usage.InputTokens * InputTokenCost + usage.OutputTokens * OutputTokenCost) / 1000000d;
+            int cached = CachedInputTokenCost > 0 ? Math.Min(usage.CachedInputTokens, usage.InputTokens) : 0;
+            return ((usage.InputTokens - cached) * InputTokenCost + cached * CachedInputTokenCost + usage.OutputTokens * OutputTokenCost) / 1000000d;
         }
 
         /// <summary>

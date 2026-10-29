@@ -713,14 +713,14 @@
                 });
                 $messages.append($actions);
             }
-            // Muted usage line under the answer: tokens and cost (cost only when configured on the provider)
-            if (data.tokens) {
-                let usageText = Number(data.tokens).toLocaleString() + ' ' + SWIUtil.tr2('tokens');
-                if (data.cost !== null && data.cost !== undefined) {
-                    usageText += ' · ' + SWIUtil.tr2('cost') + ' ' + Number(data.cost).toFixed(data.cost < 0.1 ? 4 : 2);
-                }
-                $messages.append($('<div>').addClass('ai-panel-usage').text(usageText));
-            }
+            // Muted usage line under the answer: tokens and/or cost text as set on the agent (cost formatted by the server)
+            const usageParts = [];
+            if (data.tokens)
+                usageParts.push(Number(data.tokens).toLocaleString() + ' ' + SWIUtil.tr2('tokens'));
+            if (data.cost)
+                usageParts.push(SWIUtil.tr2('cost') + ' ' + data.cost);
+            if (usageParts.length > 0)
+                $messages.append($('<div>').addClass('ai-panel-usage').text(usageParts.join(' · ')));
             $messages[0].scrollTop = $messages[0].scrollHeight;
             _requesting = false;
             setSendMode();

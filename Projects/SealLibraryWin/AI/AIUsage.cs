@@ -14,6 +14,11 @@ namespace Seal.AI
         public int InputTokens { get; set; }
 
         /// <summary>
+        /// Part of <see cref="InputTokens"/> read from the prompt cache of the provider (billed at a reduced rate, see <see cref="AIProviderConfiguration.CachedInputTokenCost"/>).
+        /// </summary>
+        public int CachedInputTokens { get; set; }
+
+        /// <summary>
         /// Output (completion) tokens generated.
         /// </summary>
         public int OutputTokens { get; set; }
@@ -40,6 +45,7 @@ namespace Seal.AI
         {
             if (other == null) return;
             InputTokens += other.InputTokens;
+            CachedInputTokens += other.CachedInputTokens;
             OutputTokens += other.OutputTokens;
             Calls += other.Calls;
             ToolCalls += other.ToolCalls;

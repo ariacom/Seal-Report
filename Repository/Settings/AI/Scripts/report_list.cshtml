@@ -22,6 +22,8 @@
         else if (fp.ValueKind == JsonValueKind.String && !string.IsNullOrWhiteSpace(fp.GetString()))
             filterFolders.Add(fp.GetString());
     }
+    // Compact list by default (one line per report); "detail": true adds the columns of the models, the outputs and the schedules
+    bool detail = args.TryGetProperty("detail", out var dp) && dp.ValueKind == JsonValueKind.True;
 
     if (securityContext == null)
     {
@@ -88,6 +90,12 @@
                 sb.Append($"## {relPath}");
                 if (displayName != Path.GetFileNameWithoutExtension(file)) sb.Append($" ({displayName})");
                 if (!string.IsNullOrEmpty(description)) sb.Append($" — {description}");
+                if (!detail)
+                {
+                    if (report.Outputs.Count > 0) sb.Append($" [outputs: {report.Outputs.Count}, schedules: {report.Schedules.Count}]");
+                    sb.AppendLine();
+                    continue;
+                }
                 sb.AppendLine();
 
                 foreach (var model in report.Models)

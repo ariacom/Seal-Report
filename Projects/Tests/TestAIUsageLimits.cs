@@ -74,6 +74,41 @@ namespace Test
         }
 
         [TestMethod]
+        public void CachedInputTokensCost()
+        {
+            var configuration = new AIProviderConfiguration() { InputTokenCost = 2.5, OutputTokenCost = 15 };
+            var usage = new AIUsage() { InputTokens = 1000000, CachedInputTokens = 800000, OutputTokens = 100000 };
+            //No cached cost: every input token at the full rate
+            Assert.AreEqual(4.0, configuration.GetCost(usage).Value, 1e-9);
+            configuration.CachedInputTokenCost = 0.25;
+            Assert.AreEqual(0.2 * 2.5 + 0.8 * 0.25 + 1.5, configuration.GetCost(usage).Value, 1e-9);
+            //Cached tokens never exceed the input tokens
+            usage.CachedInputTokens = 2000000;
+            Assert.AreEqual(0.25 + 1.5, configuration.GetCost(usage).Value, 1e-9);
+            //Accumulated per exchange
+            var total = new AIUsage();
+            total.Add(new AIUsage() { InputTokens = 10, CachedInputTokens = 4 });
+            total.Add(new AIUsage() { InputTokens = 20, CachedInputTokens = 15 });
+            Assert.AreEqual(19, total.CachedInputTokens);
+        }
+
+        [TestMethod]
+        public void CostText()
+        {
+            var user = new SecurityUser(_repository.Security);
+            Assert.IsNull(user.GetAICostText(null));
+            Assert.AreEqual(0.0123.ToString("0.0000", _repository.CultureInfo), user.GetAICostText(0.0123));
+            //Text of the Security Provider instead of the cost of the AI provider
+            user.FormatAICost = cost => (cost * 1.2).ToString("0.00") + " EUR";
+            Assert.AreEqual((1.2).ToString("0.00") + " EUR", user.GetAICostText(1));
+            user.FormatAICost = cost => null;
+            Assert.IsNull(user.GetAICostText(1));
+            //An exception of the script shows no cost
+            user.FormatAICost = cost => throw new Exception("failure");
+            Assert.IsNull(user.GetAICostText(1));
+        }
+
+        [TestMethod]
         public void CostLimitStopsTheToolLoop()
         {
             withCosts(1, () =>

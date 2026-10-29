@@ -2062,14 +2062,18 @@ namespace SealWebServer.Controllers
                         return string.Empty;
                     });
 
-                // Usage of the exchange for the chat panel display (cost is null when no cost is configured)
+                // Usage of the exchange for the chat panel display, as set on the agent (cost text null when no cost is configured,
+                // the Security Provider may replace the cost of the AI provider by its own text, e.g. the amount billed)
                 var usage = agent.LastChatUsage;
+                var usageDisplay = agent.Configuration?.UsageDisplay ?? AIUsageDisplay.TokensAndCost;
+                bool showTokens = usageDisplay == AIUsageDisplay.TokensAndCost || usageDisplay == AIUsageDisplay.Tokens;
+                bool showCost = usageDisplay == AIUsageDisplay.TokensAndCost || usageDisplay == AIUsageDisplay.Cost;
                 return Json(new
                 {
                     response = cleanedReply.Trim(),
                     reportActions = reportActions.Count > 0 ? reportActions : null,
-                    tokens = usage?.TotalTokens,
-                    cost = agent.Configuration?.GetProviderConfiguration()?.GetCost(usage)
+                    tokens = showTokens ? usage?.TotalTokens : null,
+                    cost = showCost && usage != null ? WebUser.GetAICostText(agent.Configuration?.GetProviderConfiguration()?.GetCost(usage)) : null
                 });
             }
             catch (Exception ex)

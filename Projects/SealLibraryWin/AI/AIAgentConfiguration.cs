@@ -37,6 +37,7 @@ namespace Seal.AI
                 GetProperty("Description").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(true);
                 GetProperty("Channel").SetIsBrowsable(true);
+                GetProperty("UsageDisplay").SetIsBrowsable(true);
                 GetProperty("ProviderGUID").SetIsBrowsable(true);
                 GetProperty("ToolGUIDs").SetIsBrowsable(true);
                 GetProperty("SkillGUIDs").SetIsBrowsable(true);
@@ -118,6 +119,16 @@ namespace Seal.AI
         /// </summary>
         [XmlIgnore]
         public bool IsMcpAgent => IsEnabled && Channel != AIAgentChannel.Web;
+
+        /// <summary>
+        /// Usage shown under each answer of the web chat: tokens and/or cost of the exchange, or nothing. The cost is the one of the AI provider, unless the Security Provider sets <see cref="SecurityUser.FormatAICost"/> (e.g. the amount billed to the user).
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\tUsage display"), Description("The usage shown under each answer of the web chat: the tokens and/or the cost of the exchange, or nothing. The cost is the one of the AI provider (costs of the provider configuration), unless the Security Provider script sets 'user.FormatAICost' to show another text (e.g. the amount billed to the user)."), Id(4, 1)]
+        [TypeConverter(typeof(NamedEnumConverter))]
+        [DefaultValue(AIUsageDisplay.TokensAndCost)]
+#endif
+        public AIUsageDisplay UsageDisplay { get; set; } = AIUsageDisplay.TokensAndCost;
 
         /// <summary>
         /// GUID of the <see cref="AIProviderConfiguration"/> to use.

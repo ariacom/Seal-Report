@@ -54,7 +54,7 @@ namespace Seal.AI
         public override string HandleChat(List<ChatMessage> messages)
         {
             ChatCompletion completion = _chatClient.CompleteChat(messages, Options);
-            SetLastUsage(completion.Usage?.InputTokenCount ?? 0, completion.Usage?.OutputTokenCount ?? 0);
+            SetLastUsage(completion.Usage?.InputTokenCount ?? 0, completion.Usage?.OutputTokenCount ?? 0, completion.Usage?.InputTokenDetails?.CachedTokenCount ?? 0);
 
             if (completion.FinishReason == ChatFinishReason.Stop)
             {
@@ -80,7 +80,7 @@ namespace Seal.AI
             }
 
             ChatCompletion completion = _chatClient.CompleteChat(messages, options);
-            SetLastUsage(completion.Usage?.InputTokenCount ?? 0, completion.Usage?.OutputTokenCount ?? 0);
+            SetLastUsage(completion.Usage?.InputTokenCount ?? 0, completion.Usage?.OutputTokenCount ?? 0, completion.Usage?.InputTokenDetails?.CachedTokenCount ?? 0);
 
             if (completion.FinishReason == ChatFinishReason.ToolCalls)
             {

@@ -81,9 +81,9 @@ namespace Seal.AI
         /// <summary>
         /// Records the token usage of the API call that just completed.
         /// </summary>
-        protected void SetLastUsage(int inputTokens, int outputTokens)
+        protected void SetLastUsage(int inputTokens, int outputTokens, int cachedInputTokens = 0)
         {
-            LastUsage = new AIUsage { InputTokens = inputTokens, OutputTokens = outputTokens, Calls = 1 };
+            LastUsage = new AIUsage { InputTokens = inputTokens, OutputTokens = outputTokens, CachedInputTokens = Math.Min(cachedInputTokens, inputTokens), Calls = 1 };
         }
 
         /// <summary>

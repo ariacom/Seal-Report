@@ -181,6 +181,7 @@
                                 <li><code>user.CheckAIChat</code>: called before each message of the chat panel, returns null to send it or the message displayed to refuse it.</li>
                                 <li><code>user.GetAICostLimit</code>: returns the cost the user can still spend (in the currency of the costs of the AI provider) or null for no limit. The answer stops when the cost of the exchange reaches it (the last AI call can exceed it). A message is refused if the AI provider of the agent has no cost configured.</li>
                                 <li><code>user.OnAIUsage</code>: called after each exchange with the usage (tokens, calls) and its cost.</li>
+                                <li><code>user.FormatAICost</code>: called with the cost of the exchange when the chat panel shows the usage, returns the text shown instead of the cost of the AI provider (<eg>e.g. the amount billed to the user</eg>), or null to show no cost. The property <b>Usage display</b> of the agent sets what is shown under each answer: tokens and cost (default), tokens, cost or nothing. Cached input tokens are billed with the <b>Cost per 1M cached input tokens</b> of the provider configuration when it is set.</li>
                                 <li><code>user.CheckMcpCall</code>: called with the tool name before each tool call of the MCP server, returns null to execute it or the message sent to the client to refuse it. <code>user.OnMcpCall</code> is called after each call executed.</li>
                                 <li>A refusal is audited (types <code>AIChatRefused</code> and <code>AIMcpRefused</code>). If a check function fails, the message or the call is refused.</li>
                             </ul>
@@ -188,7 +189,8 @@
 user.CheckMcpCall = (tool) => CountMcpCallsToday(user.WebUserName) &gt;= 500 ? "The limit of 500 calls per day is reached." : null;
 user.OnMcpCall = (tool, isError) => AddMcpCall(user.WebUserName);
 user.GetAICostLimit = () => 20 - GetAICostOfMonth(user.WebUserName);
-user.OnAIUsage = (usage, cost) => AddAICost(user.WebUserName, cost ?? 0);</code></pre>
+user.OnAIUsage = (usage, cost) => AddAICost(user.WebUserName, cost ?? 0);
+user.FormatAICost = (cost) => (cost * 1.2).ToString("N2") + " €";</code></pre>
                             <div class="bs-callout bs-callout-warning">
                                 <ck>Check <a href="~/Server#lineSecurity_group">Security Groups</a> for the rights configuration</ck>.
                             </div>
