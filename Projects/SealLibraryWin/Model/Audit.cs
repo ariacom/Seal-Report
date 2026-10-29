@@ -182,6 +182,7 @@ namespace Seal.Model
         /// <summary>
         /// Audit an AI Chat exchange (one user message and its final reply).
         /// Token usage is taken from the agent's last exchange, the detail is the chat title.
+        /// A message refused by the limits of the user is audited as <see cref="AuditType.AIChatRefused"/> with the refusal as error.
         /// </summary>
         public static void LogAIChatAudit(SecurityUser user, Seal.AI.AIAgent agent, string error = null, int? durationSeconds = null)
         {
@@ -191,9 +192,16 @@ namespace Seal.Model
 
                 var providerConfiguration = agent.Configuration?.GetProviderConfiguration();
                 var usage = agent.LastChatUsage;
+                var type = string.IsNullOrEmpty(error) ? AuditType.AIChat : AuditType.AIChatError;
+                if (string.IsNullOrEmpty(error) && agent.LastChatRefusal != null)
+                {
+                    type = AuditType.AIChatRefused;
+                    error = agent.LastChatRefusal;
+                }
+                else if (string.IsNullOrEmpty(error) && agent.LastChatCostLimitReached) error = "AI budget reached";
                 var audit = new Audit()
                 {
-                    Type = string.IsNullOrEmpty(error) ? AuditType.AIChat : AuditType.AIChatError,
+                    Type = type,
                     User = user,
                     Detail = agent.EffectiveTitle,
                     Error = error,

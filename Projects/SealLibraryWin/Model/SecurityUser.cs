@@ -355,6 +355,123 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Optional limit of the MCP tool calls, set by the Security Provider script: called with the tool name before each tool call of the MCP server, returns null to execute the call or the message sent to the MCP client to refuse it.
+        /// </summary>
+        public Func<string, string> CheckMcpCall = null;
+
+        /// <summary>
+        /// Optional consumption of the MCP server, set by the Security Provider script: called after each tool call executed by the MCP server with the tool name and true if the call has failed.
+        /// </summary>
+        public Action<string, bool> OnMcpCall = null;
+
+        /// <summary>
+        /// Optional limit of the AI chats, set by the Security Provider script: called before each message sent to an AI agent, returns null to send the message or the message displayed to refuse it.
+        /// </summary>
+        public Func<string> CheckAIChat = null;
+
+        /// <summary>
+        /// Optional AI budget, set by the Security Provider script: called before each message sent to an AI agent, returns the cost the user can still spend (in the currency of the costs of the AI provider) or null for no limit. The chat stops when the cost of the exchange reaches it (the last AI call can exceed it) and a message is refused if the AI provider has no cost configured.
+        /// </summary>
+        public Func<double?> GetAICostLimit = null;
+
+        /// <summary>
+        /// Optional consumption of the AI agents, set by the Security Provider script: called after each exchange with an AI agent (chat message or generation of a title) with the usage and its cost (null if the AI provider has no cost configured).
+        /// </summary>
+        public Action<AIUsage, double?> OnAIUsage = null;
+
+        /// <summary>
+        /// Executes <see cref="CheckMcpCall"/>: null if the call can be executed, otherwise the refusal message (an exception of the script refuses the call).
+        /// </summary>
+        public string GetMcpCallRefusal(string toolName)
+        {
+            if (CheckMcpCall == null) return null;
+            try
+            {
+                return CheckMcpCall(toolName);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.CheckMcpCall", ex);
+                return "The limits of the user cannot be checked, this call was not executed.";
+            }
+        }
+
+        /// <summary>
+        /// Executes <see cref="CheckAIChat"/>: null if the message can be sent, otherwise the refusal message (an exception of the script refuses the message).
+        /// </summary>
+        public string GetAIChatRefusal()
+        {
+            if (CheckAIChat == null) return null;
+            try
+            {
+                return CheckAIChat();
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.CheckAIChat", ex);
+                return "The limits of the user cannot be checked, the message was not sent.";
+            }
+        }
+
+        /// <summary>
+        /// Executes <see cref="GetAICostLimit"/>: the cost the user can still spend or null for no limit (an exception of the script gives 0).
+        /// </summary>
+        public double? GetAIRemainingCost()
+        {
+            if (GetAICostLimit == null) return null;
+            try
+            {
+                return GetAICostLimit();
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.GetAICostLimit", ex);
+                return 0;
+            }
+        }
+
+        /// <summary>
+        /// Executes <see cref="OnMcpCall"/> (an exception of the script is logged)
+        /// </summary>
+        public void NotifyMcpCall(string toolName, bool isError)
+        {
+            if (OnMcpCall == null) return;
+            try
+            {
+                OnMcpCall(toolName, isError);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.OnMcpCall", ex);
+            }
+        }
+
+        /// <summary>
+        /// Executes <see cref="OnAIUsage"/> (an exception of the script is logged)
+        /// </summary>
+        public void NotifyAIUsage(AIUsage usage, double? cost)
+        {
+            if (OnAIUsage == null || usage == null) return;
+            try
+            {
+                OnAIUsage(usage, cost);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.OnAIUsage", ex);
+            }
+        }
+
+        void clearUsageHooks()
+        {
+            CheckMcpCall = null;
+            OnMcpCall = null;
+            CheckAIChat = null;
+            GetAICostLimit = null;
+            OnAIUsage = null;
+        }
+
+        /// <summary>
         /// True if the user is authenticated by the server itself from his name: for a scheduled output (see SealSecurity.ProviderForScheduledOutputs), a web schedule, or a request of the MCP server (personal access token or OAuth access token).
         /// There is no password, no HTTP request (Request and WebPrincipal are null) and the script must only load the user from his name (WebUserName). The Two-Factor Authentication is not executed.
         /// </summary>
@@ -597,6 +714,7 @@ namespace Seal.Model
             Error = "";
             Warning = "";
             Properties.Clear();
+            clearUsageHooks();
             string script = (Security.UseCustomScript && !string.IsNullOrEmpty(Security.Script) ? Security.Script : Security.ProviderScript);
             if (string.IsNullOrEmpty(script)) throw new Exception("No Security Script to execute. Check the rights to access the repository Security.xml file...");
             try
@@ -653,6 +771,7 @@ namespace Seal.Model
         {
             SecurityGroups.Clear();
             Properties.Clear();
+            clearUsageHooks();
             SealSecurity.RemoveLoggedUsed(this);
         }
 

@@ -1992,6 +1992,7 @@ namespace SealWebServer.Controllers
                 // agent is session-cached and the user can change language mid-conversation),
                 // so the progress ("thinking") labels are translated in the current locale.
                 agent.Culture = Repository?.CultureInfo?.TwoLetterISOLanguageName;
+                agent.CostLimitReply = Translate("The AI budget is reached: the answer was interrupted.");
                 string reply;
                 try
                 {
@@ -2002,6 +2003,8 @@ namespace SealWebServer.Controllers
                     _aiCancelTokens.TryRemove(SessionKey, out _);
                     _aiProgress.TryRemove(SessionKey, out _);
                 }
+                // Message refused by the limits of the user set by the Security Provider
+                if (agent.LastChatRefusal != null) reply = Translate(agent.LastChatRefusal);
 
                 // Audit the exchange (tokens, calls, duration); cancelled chats are included as tokens were spent
                 Audit.LogAIChatAudit(WebUser, agent, null, (int)chatDuration.Elapsed.TotalSeconds);

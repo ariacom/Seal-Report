@@ -222,6 +222,46 @@ namespace Test
         }
 
         [TestMethod]
+        public void UserLimits()
+        {
+            var agent = _repository.AIConfiguration.AIAgents.First(a => _group.AgentGUIDs.Contains(a.GUID) && a.IsEnabled);
+            var channel = agent.Channel;
+            var serverEnabled = _repository.AIConfiguration.McpServerEnabled;
+            var token = McpGateway.TokenStore.Create(_login.Id, "test", DateTime.Now.AddDays(1), out var clear);
+            try
+            {
+                _repository.AIConfiguration.McpServerEnabled = true;
+                agent.Channel = AIAgentChannel.WebAndMcp;
+                var context = McpGateway.Authenticate("Bearer " + clear, McpGateway.GetAgentSlug(agent), null, out var error, out _);
+                Assert.IsNotNull(context?.Agent, error);
+
+                //Limit set by the Security Provider: the tool is not executed and not counted
+                var calls = new System.Collections.Generic.List<string>();
+                context.User.CheckMcpCall = tool => tool == "refused_tool" ? "The limit of 500 calls per day is reached." : null;
+                context.User.OnMcpCall = (tool, isError) => calls.Add(tool + ":" + isError);
+                var result = McpGateway.ExecuteTool(context, "refused_tool", "{}");
+                Assert.IsTrue(McpGateway.IsError(result));
+                StringAssert.Contains(result.Text, "The limit of 500 calls per day is reached.");
+                Assert.AreEqual(0, calls.Count);
+
+                //Executed call notified, here with an error (unknown tool)
+                McpGateway.ExecuteTool(context, "no_such_tool", "{}");
+                CollectionAssert.AreEqual(new[] { "no_such_tool:True" }, calls);
+
+                //Error of the check script: refused
+                context.User.CheckMcpCall = tool => throw new Exception("database down");
+                Assert.IsTrue(McpGateway.IsError(McpGateway.ExecuteTool(context, "no_such_tool", "{}")));
+                Assert.AreEqual(1, calls.Count);
+            }
+            finally
+            {
+                agent.Channel = channel;
+                _repository.AIConfiguration.McpServerEnabled = serverEnabled;
+                McpGateway.TokenStore.Revoke(_login.Id, token.Id);
+            }
+        }
+
+        [TestMethod]
         public void CallRate()
         {
             var max = _repository.AIConfiguration.McpMaxCallsPerMinute;

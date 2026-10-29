@@ -271,11 +271,20 @@ namespace Seal.AI
                 return refused;
             }
 
+            //Limits of the user set by the Security Provider
+            var refusal = context.User.GetMcpCallRefusal(toolName);
+            if (refusal != null)
+            {
+                Audit.LogMcpAudit(AuditType.AIMcpRefused, context.User, context.Agent?.Name, toolName, Truncate(refusal, 250), null, context.ClientAddress, context.ClientApplication);
+                return new AIToolHostResult() { Text = "Error: " + refusal };
+            }
+
             var host = GetToolHost(context);
             var toolCall = new AIToolCall() { Id = Guid.NewGuid().ToString("N"), Name = toolName, Arguments = string.IsNullOrWhiteSpace(arguments) ? "{}" : arguments };
             var result = host.Execute(toolCall, cancelOperation);
             var isError = IsError(result);
             Audit.LogMcpAudit(isError ? AuditType.AIMcpCallError : AuditType.AIMcpCall, context.User, context.Agent.Name, toolName, isError ? Truncate(result.Text, 250) : null, (int)Math.Round((DateTime.Now - now).TotalSeconds), context.ClientAddress, context.ClientApplication);
+            context.User.NotifyMcpCall(toolName, isError);
             return result;
         }
 

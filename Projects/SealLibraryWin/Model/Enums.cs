@@ -1375,13 +1375,17 @@ namespace Seal.Model
         /// </summary>
         AIMcpCallError,
         /// <summary>
-        /// Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls
+        /// Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls, limit of the user (SecurityUser.CheckMcpCall)
         /// </summary>
         AIMcpRefused,
         /// <summary>
         /// OAuth authorization of an AI client by a user for an agent of the MCP server: consent given or refused, authorization revoked
         /// </summary>
         AIMcpAuthorization,
+        /// <summary>
+        /// AI chat message refused by the limits of the user (SecurityUser.CheckAIChat, SecurityUser.GetAICostLimit)
+        /// </summary>
+        AIChatRefused,
     }
 
     /// <summary>

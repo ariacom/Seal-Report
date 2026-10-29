@@ -171,6 +171,24 @@
                                 <li>Action tools are gated behind <b>skills</b> that the agent must explicitly load: reads are cheap, writes are deliberate.</li>
                                 <li><b>Destructive operations</b> require an explicit user confirmation, and every metadata write is backed up automatically.</li>
                             </ul>
+                            <p>
+                                <strong>Limits per user</strong>
+                            </p>
+                            <p>
+                                The Security Provider script can limit the use of the agents by setting functions on the user during the login. Seal calls them and the script decides where the consumption is counted (<eg>e.g. a table of its database, per user or per customer</eg>), the periods and the values of the limits:
+                            </p>
+                            <ul>
+                                <li><code>user.CheckAIChat</code>: called before each message of the chat panel, returns null to send it or the message displayed to refuse it.</li>
+                                <li><code>user.GetAICostLimit</code>: returns the cost the user can still spend (in the currency of the costs of the AI provider) or null for no limit. The answer stops when the cost of the exchange reaches it (the last AI call can exceed it). A message is refused if the AI provider of the agent has no cost configured.</li>
+                                <li><code>user.OnAIUsage</code>: called after each exchange with the usage (tokens, calls) and its cost.</li>
+                                <li><code>user.CheckMcpCall</code>: called with the tool name before each tool call of the MCP server, returns null to execute it or the message sent to the client to refuse it. <code>user.OnMcpCall</code> is called after each call executed.</li>
+                                <li>A refusal is audited (types <code>AIChatRefused</code> and <code>AIMcpRefused</code>). If a check function fails, the message or the call is refused.</li>
+                            </ul>
+                            <pre><code>//In the Security Provider script, after the groups of the user are set
+user.CheckMcpCall = (tool) => CountMcpCallsToday(user.WebUserName) &gt;= 500 ? "The limit of 500 calls per day is reached." : null;
+user.OnMcpCall = (tool, isError) => AddMcpCall(user.WebUserName);
+user.GetAICostLimit = () => 20 - GetAICostOfMonth(user.WebUserName);
+user.OnAIUsage = (usage, cost) => AddAICost(user.WebUserName, cost ?? 0);</code></pre>
                             <div class="bs-callout bs-callout-warning">
                                 <ck>Check <a href="~/Server#lineSecurity_group">Security Groups</a> for the rights configuration</ck>.
                             </div>

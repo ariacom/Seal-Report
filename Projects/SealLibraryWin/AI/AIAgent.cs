@@ -48,6 +48,24 @@ namespace Seal.AI
         public AIUsage TotalUsage { get; private set; } = new AIUsage();
 
         /// <summary>
+        /// Message of the refusal of the last <see cref="Chat"/> by the limits of the user (<see cref="SecurityUser.CheckAIChat"/>, <see cref="SecurityUser.GetAICostLimit"/>), null if the message was sent to the AI.
+        /// </summary>
+        public string LastChatRefusal { get; private set; }
+
+        /// <summary>
+        /// True if the last <see cref="Chat"/> was stopped because its cost reached the AI budget of the user (<see cref="SecurityUser.GetAICostLimit"/>).
+        /// </summary>
+        public bool LastChatCostLimitReached { get; private set; }
+
+        /// <summary>
+        /// Reply of a <see cref="Chat"/> stopped by the AI budget of the user (e.g. translated by the caller)
+        /// </summary>
+        public string CostLimitReply = "The AI budget is reached: the answer was interrupted.";
+
+        /// <summary>Refusal when the user has an AI budget and the AI provider has no cost configured</summary>
+        public const string NoCostConfiguredRefusal = "The costs of the AI provider are not configured: the AI budget of the user cannot be checked.";
+
+        /// <summary>
         /// Title of the conversation (the saved chat session name).
         /// Null until the chat is saved or loaded; see <see cref="EffectiveTitle"/>.
         /// </summary>
@@ -127,6 +145,17 @@ namespace Seal.AI
                 ?? throw new System.Exception(
                     $"AI agent '{Configuration.Name}' has no valid provider configuration.");
 
+            seedSystemPrompt();
+        }
+
+        /// <summary>
+        /// Creates an <see cref="AIAgent"/> from a configuration with its own provider instead of the provider of the configuration (e.g. a test provider). The costs are still the ones of the provider configuration of the agent.
+        /// </summary>
+        public AIAgent(AIAgentConfiguration configuration, IAIProvider provider)
+        {
+            Configuration = configuration
+                ?? throw new System.ArgumentNullException(nameof(configuration));
+            _provider = provider ?? throw new System.ArgumentNullException(nameof(provider));
             seedSystemPrompt();
         }
 
@@ -292,13 +321,39 @@ namespace Seal.AI
             // was started with, and prompt file changes are silently ignored.
             if (!_customSystemPrompt) setSystemMessage(effectiveSystemPrompt);
 
-            var messageCountBefore = Messages.Count;
             LastChatUsage = new AIUsage();
+            LastChatCostLimitReached = false;
+            //Limits of the user set by the Security Provider: the message is not added to the conversation if refused
+            var providerConfiguration = Configuration.GetProviderConfiguration();
+            double? costLimit = null;
+            LastChatRefusal = SecurityContext?.GetAIChatRefusal();
+            if (LastChatRefusal == null && SecurityContext != null)
+            {
+                costLimit = SecurityContext.GetAIRemainingCost();
+                if (costLimit != null && providerConfiguration?.GetCost(new AIUsage()) == null) LastChatRefusal = NoCostConfiguredRefusal;
+                else if (costLimit != null && costLimit <= 0) LastChatRefusal = CostLimitReply;
+            }
+            if (LastChatRefusal != null) return LastChatRefusal;
+
+            try
+            {
+                return chat(userMessage, providerConfiguration, costLimit, cancelOperation, log, toolsLog, maxIterations, progress);
+            }
+            finally
+            {
+                SecurityContext?.NotifyAIUsage(LastChatUsage, providerConfiguration?.GetCost(LastChatUsage));
+            }
+        }
+
+        string chat(string userMessage, AIProviderConfiguration providerConfiguration, double? costLimit, ICancelOperation cancelOperation, ReportExecutionLog log, ReportExecutionLog toolsLog, int maxIterations, Action<string> progress)
+        {
+            var messageCountBefore = Messages.Count;
             void addUsage()
             {
                 LastChatUsage.Add(provider.LastUsage);
                 TotalUsage.Add(provider.LastUsage);
             }
+            bool costLimitReached() => costLimit != null && providerConfiguration.GetCost(LastChatUsage) >= costLimit;
             Messages.Add(new UserChatMessage(userMessage));
 
             var host = new AIToolHost(Configuration)
@@ -354,6 +409,14 @@ namespace Seal.AI
                 if (toolCalls == null || toolCalls.Count == 0)
                     return reply;
 
+                // AI budget of the user reached: the calls are not executed and the turn ends without calling the AI again
+                if (costLimitReached())
+                {
+                    foreach (var toolCall in toolCalls)
+                        Messages.Add(new ToolChatMessage(toolCall.Id, "Error: the AI budget of the user is reached, this call was not executed."));
+                    return stopByCostLimit();
+                }
+
                 bool toolsChanged = false;
 
                 // Execute every requested tool and append the results to the conversation
@@ -404,9 +467,17 @@ namespace Seal.AI
                 Messages.RemoveRange(messageCountBefore, Messages.Count - messageCountBefore);
                 return "";
             }
+            if (costLimitReached()) return stopByCostLimit();
             var finalReply = provider.HandleChat(Messages);
             addUsage();
             return finalReply;
+        }
+
+        string stopByCostLimit()
+        {
+            LastChatCostLimitReached = true;
+            Messages.Add(new AssistantChatMessage(CostLimitReply));
+            return CostLimitReply;
         }
 
         /// <summary>
@@ -470,6 +541,7 @@ namespace Seal.AI
             var reply = provider.HandleChat(Messages);
             LastChatUsage.Add(provider.LastUsage);
             TotalUsage.Add(provider.LastUsage);
+            SecurityContext?.NotifyAIUsage(LastChatUsage, Configuration.GetProviderConfiguration()?.GetCost(LastChatUsage));
             return reply;
         }
 
@@ -487,6 +559,8 @@ namespace Seal.AI
             {
                 // Need at least one real exchange to summarise.
                 if (!Messages.OfType<UserChatMessage>().Any()) return null;
+                // No AI call when the limits of the user refuse it
+                if (SecurityContext != null && (SecurityContext.GetAIChatRefusal() != null || SecurityContext.GetAIRemainingCost() <= 0)) return null;
 
                 var temp = new List<ChatMessage>(Messages)
                 {
@@ -497,6 +571,7 @@ namespace Seal.AI
 
                 var title = provider.HandleChat(temp);
                 TotalUsage.Add(provider.LastUsage);
+                SecurityContext?.NotifyAIUsage(provider.LastUsage, Configuration.GetProviderConfiguration()?.GetCost(provider.LastUsage));
                 if (string.IsNullOrWhiteSpace(title)) return null;
 
                 // Keep the first line only and strip surrounding quotes.

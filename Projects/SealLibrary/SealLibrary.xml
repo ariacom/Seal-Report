@@ -1078,6 +1078,24 @@
             including title generation. Reset by <see cref="M:Seal.AI.AIAgent.Clear"/>.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIAgent.LastChatRefusal">
+            <summary>
+            Message of the refusal of the last <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> by the limits of the user (<see cref="F:Seal.Model.SecurityUser.CheckAIChat"/>, <see cref="F:Seal.Model.SecurityUser.GetAICostLimit"/>), null if the message was sent to the AI.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgent.LastChatCostLimitReached">
+            <summary>
+            True if the last <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> was stopped because its cost reached the AI budget of the user (<see cref="F:Seal.Model.SecurityUser.GetAICostLimit"/>).
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.CostLimitReply">
+            <summary>
+            Reply of a <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> stopped by the AI budget of the user (e.g. translated by the caller)
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.NoCostConfiguredRefusal">
+            <summary>Refusal when the user has an AI budget and the AI provider has no cost configured</summary>
+        </member>
         <member name="F:Seal.AI.AIAgent.Title">
             <summary>
             Title of the conversation (the saved chat session name).
@@ -1106,6 +1124,11 @@
             <summary>
             Creates an <see cref="T:Seal.AI.AIAgent"/> directly from an existing
             <see cref="T:Seal.AI.AIAgentConfiguration"/> instance.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.#ctor(Seal.AI.AIAgentConfiguration,Seal.AI.IAIProvider)">
+            <summary>
+            Creates an <see cref="T:Seal.AI.AIAgent"/> from a configuration with its own provider instead of the provider of the configuration (e.g. a test provider). The costs are still the ones of the provider configuration of the agent.
             </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.CreateWithoutProvider(Seal.AI.AIAgentConfiguration,Seal.Model.SecurityUser,System.String)">
@@ -4440,6 +4463,7 @@
             <summary>
             Audit an AI Chat exchange (one user message and its final reply).
             Token usage is taken from the agent's last exchange, the detail is the chat title.
+            A message refused by the limits of the user is audited as <see cref="F:Seal.Model.AuditType.AIChatRefused"/> with the refusal as error.
             </summary>
         </member>
         <member name="M:Seal.Model.Audit.LogMcpAudit(Seal.Model.AuditType,Seal.Model.SecurityUser,System.String,System.String,System.String,System.Nullable{System.Int32},System.String,System.String)">
@@ -5932,12 +5956,17 @@
         </member>
         <member name="F:Seal.Model.AuditType.AIMcpRefused">
             <summary>
-            Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls
+            Request of the MCP server refused: invalid, expired or revoked access token, user not authenticated, agent not available, too many calls, limit of the user (SecurityUser.CheckMcpCall)
             </summary>
         </member>
         <member name="F:Seal.Model.AuditType.AIMcpAuthorization">
             <summary>
             OAuth authorization of an AI client by a user for an agent of the MCP server: consent given or refused, authorization revoked
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AuditType.AIChatRefused">
+            <summary>
+            AI chat message refused by the limits of the user (SecurityUser.CheckAIChat, SecurityUser.GetAICostLimit)
             </summary>
         </member>
         <member name="T:Seal.Model.TriggerType">
@@ -18643,6 +18672,56 @@
         <member name="M:Seal.Model.SecurityUser.GetProperty(System.String,System.String)">
             <summary>
             Returns the value of a property set by the Security Provider, or the default value if the property is not defined
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.CheckMcpCall">
+            <summary>
+            Optional limit of the MCP tool calls, set by the Security Provider script: called with the tool name before each tool call of the MCP server, returns null to execute the call or the message sent to the MCP client to refuse it.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.OnMcpCall">
+            <summary>
+            Optional consumption of the MCP server, set by the Security Provider script: called after each tool call executed by the MCP server with the tool name and true if the call has failed.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.CheckAIChat">
+            <summary>
+            Optional limit of the AI chats, set by the Security Provider script: called before each message sent to an AI agent, returns null to send the message or the message displayed to refuse it.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.GetAICostLimit">
+            <summary>
+            Optional AI budget, set by the Security Provider script: called before each message sent to an AI agent, returns the cost the user can still spend (in the currency of the costs of the AI provider) or null for no limit. The chat stops when the cost of the exchange reaches it (the last AI call can exceed it) and a message is refused if the AI provider has no cost configured.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.OnAIUsage">
+            <summary>
+            Optional consumption of the AI agents, set by the Security Provider script: called after each exchange with an AI agent (chat message or generation of a title) with the usage and its cost (null if the AI provider has no cost configured).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetMcpCallRefusal(System.String)">
+            <summary>
+            Executes <see cref="F:Seal.Model.SecurityUser.CheckMcpCall"/>: null if the call can be executed, otherwise the refusal message (an exception of the script refuses the call).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetAIChatRefusal">
+            <summary>
+            Executes <see cref="F:Seal.Model.SecurityUser.CheckAIChat"/>: null if the message can be sent, otherwise the refusal message (an exception of the script refuses the message).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.GetAIRemainingCost">
+            <summary>
+            Executes <see cref="F:Seal.Model.SecurityUser.GetAICostLimit"/>: the cost the user can still spend or null for no limit (an exception of the script gives 0).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.NotifyMcpCall(System.String,System.Boolean)">
+            <summary>
+            Executes <see cref="F:Seal.Model.SecurityUser.OnMcpCall"/> (an exception of the script is logged)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUser.NotifyAIUsage(Seal.AI.AIUsage,System.Nullable{System.Double})">
+            <summary>
+            Executes <see cref="F:Seal.Model.SecurityUser.OnAIUsage"/> (an exception of the script is logged)
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.ForSchedule">
