@@ -40,8 +40,10 @@ without them, or tell the user that an administrator must grant a higher level).
 5. **Test and fix**: each save executes the report with its default criteria and
    renders its views. `TEST FAILED`, `VIEW RENDER FAILED` or a timeout → fix and save
    again before answering. `0 row(s)` → check the filter values, or tell the user
-   nothing matches. Use `render_picture: true` once to check a layout (tabs,
-   containers, charts) when the result is not obvious.
+   nothing matches. A report that compares items must return all of them: `1 row(s)`
+   on a comparison means a filter removed what is compared, fix it before answering
+   (highlight the item, do not filter on it). Use `render_picture: true` once to check
+   a layout (tabs, containers, charts) when the result is not obvious.
 6. **Answer**: the report exists only after a successful save in this turn. Give the
    row count; explain any difference with a figure already given in the conversation
    (a report applies exactly the filters the user validated, never an extra one).
@@ -99,9 +101,11 @@ Minimal list with one prompted restriction:
 
 - **Names**: friendly display names ("Sales of 1997 per Category"); file names in
   lowercase with underscores. `<Name>` of an element = name of its column
-  (`Table.Column`).
+  (`Table.Column`). A `<DisplayName>` on each measure avoids generated labels such as
+  "Maximum of …" and a second save.
 - **Elements**: `PivotPosition` Row (dimension), Column (cross-tab axis), Data
-  (measure, with `AggregateFunction`), Page only if asked. A cross-tab (Row + Column)
+  (measure, with `AggregateFunction`: `Sum`, `Min`, `Max`, `Avg`, `Count` or
+  `CountDistinct`), Page only if asked. A cross-tab (Row + Column)
   sets `<ShowFirstLine>false</ShowFirstLine>` on the model.
 - **Totals**: every Data element has `<ShowTotal>`: `Column` for a flat table,
   `RowColumn` for a cross-tab. Sorting on the total column:

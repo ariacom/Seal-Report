@@ -16,8 +16,9 @@
     tool.CurrentToolCall.LogMessage($"Starting tool '{tool.CurrentToolCall.Name}' (name: {name}{(filters.Count > 0 ? ", tables: " + string.Join(", ", filters) : "")})..");
     var source = tool.GetAvailableSources().FirstOrDefault(i => i.Name == name);
     if (source == null) { tool.ExecResult = $"Error: data source '{name}' not found or not allowed."; return; }
-    bool Selected(MetaTable t) => filters.Count == 0 || filters.Any(f => (t.Name ?? "").StartsWith(f, StringComparison.OrdinalIgnoreCase) || (t.AliasName ?? "").StartsWith(f, StringComparison.OrdinalIgnoreCase));
-    var tables = source.MetaData.Tables.Where(Selected).ToList();
+    bool Matches(MetaTable t, string f) => (t.Name ?? "").StartsWith(f, StringComparison.OrdinalIgnoreCase) || (t.AliasName ?? "").StartsWith(f, StringComparison.OrdinalIgnoreCase);
+    var tables = source.MetaData.Tables.Where(t => filters.Count == 0 || filters.Any(f => Matches(t, f))).ToList();
+    var notFound = filters.Where(f => !source.MetaData.Tables.Any(t => Matches(t, f))).ToList();
     if (tables.Count == 0) { tool.ExecResult = $"Error: no table of '{name}' matches {string.Join(", ", filters)}. Tables: {string.Join(", ", source.MetaData.Tables.Select(t => t.AliasName))}."; return; }
 
     var sb = new StringBuilder();
@@ -34,6 +35,7 @@
 
     // --- Tables and columns ---
     sb.AppendLine("## Tables");
+    if (notFound.Count > 0) sb.AppendLine($"Not found (these tables do not exist, do not use them): {string.Join(", ", notFound)}.\r\n");
     var others = source.MetaData.Tables.Where(t => !tables.Contains(t)).ToList();
     if (others.Count > 0) sb.AppendLine($"Detail limited to {tables.Count} table(s). Other tables (call again with their name in 'tables' for their columns): {string.Join(", ", others.Select(t => t.AliasName))}.\r\n");
     foreach (var table in tables)

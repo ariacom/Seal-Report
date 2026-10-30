@@ -8,6 +8,10 @@
     var repo            = tool.GetRepository(); // includes the Data Sources built for the user
     var securityContext = tool.CurrentToolCall.SecurityContext;
     if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+    // A web schedule holds its own output: the output of the report is not needed to schedule it
+    var scheduleHint = securityContext.CanUseWebSchedules
+        ? "This output is stored in the report and is not needed for a schedule: to schedule the report, call report_configure_schedule directly with the destination (folder_path, file_name, output_format or email_to)."
+        : "You can now call report_configure_schedule to add a schedule.";
 
     var args       = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
     var path       = Seal.Helpers.FileHelper.ConvertOSFilePath(args.GetProperty("path").GetString());
@@ -138,7 +142,7 @@
             if (param != null) { param.Value = format; param.CustomValue = true; }
 
             if (!SaveChecked()) return;
-            tool.ExecResult = $"Email output configured on '{path}': to='{output.EmailTo}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            tool.ExecResult = $"Email output configured on '{path}': to='{output.EmailTo}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. {scheduleHint}";
             return;
         }
 
@@ -167,7 +171,7 @@
             if (paramFtp != null) { paramFtp.Value = format; paramFtp.CustomValue = true; }
 
             if (!SaveChecked()) return;
-            tool.ExecResult = $"FTP output configured on '{path}': device='{output.Device?.Name}', remoteFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            tool.ExecResult = $"FTP output configured on '{path}': device='{output.Device?.Name}', remoteFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. {scheduleHint}";
             return;
         }
 
@@ -196,7 +200,7 @@
             if (paramSp != null) { paramSp.Value = format; paramSp.CustomValue = true; }
 
             if (!SaveChecked()) return;
-            tool.ExecResult = $"SharePoint output configured on '{path}': device='{output.Device?.Name}', libraryFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+            tool.ExecResult = $"SharePoint output configured on '{path}': device='{output.Device?.Name}', libraryFolder='{output.FolderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. {scheduleHint}";
             return;
         }
 
@@ -266,7 +270,7 @@
         if (param2 != null) { param2.Value = format; param2.CustomValue = true; }
 
         if (!SaveChecked()) return;
-        tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. You can now call report_configure_schedule to add a schedule.";
+        tool.ExecResult = $"Output configured on '{path}': folder='{folderPath}', file='{output.FileName}', format='{format}', name='{output.Name}', outputGUID='{output.GUID}'. {scheduleHint}";
     }
     catch (Exception ex) { tool.ExecResult = $"Error: {ex.Message}"; }
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");

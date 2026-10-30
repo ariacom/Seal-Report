@@ -73,11 +73,14 @@
             return;
         }
 
+        // Enumerated column: a code alone cannot be chosen, give its label
+        var labels = (mcol?.Enum?.Values ?? new List<MetaEV>()).GroupBy(i => i.Id).ToDictionary(i => i.Key, i => i.First().DisplayValue);
         var values = new List<string>();
         int cnt = 0;
         foreach (System.Data.DataRow row in table.Rows) {
             if (++cnt > 50) break;
-            values.Add(row[0]?.ToString() ?? "");
+            var value = row[0]?.ToString() ?? "";
+            values.Add(labels.TryGetValue(value, out var label) && !string.IsNullOrEmpty(label) && label != value ? $"{value} = {label}" : value);
         }
         var result = string.Join(", ", values);
         if (table.Rows.Count > 50)

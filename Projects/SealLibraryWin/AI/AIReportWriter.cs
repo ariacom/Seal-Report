@@ -653,7 +653,16 @@ namespace Seal.AI
                         {
                             log($"Restriction '{restName}': mapped enum label '{v}' -> id '{byLabel.Id}'");
                             vEl.Value = byLabel.Id;
+                            continue;
                         }
+                        //Partial label, as for the criteria of an execution
+                        var partial = menum.Values.Where(ev => (ev.DisplayValue ?? "").Contains(v, StringComparison.OrdinalIgnoreCase)).ToList();
+                        if (partial.Count == 1)
+                        {
+                            log($"Restriction '{restName}': mapped partial enum label '{v}' -> id '{partial[0].Id}'");
+                            vEl.Value = partial[0].Id;
+                        }
+                        else if (partial.Count > 1) warnings.Add($"'{restName}': value '{v}' is ambiguous in the enumerated list '{menum.Name}', it matches: {string.Join(", ", partial.Take(20).Select(ev => $"'{ev.DisplayValue}' (id {ev.Id})"))}{(partial.Count > 20 ? ", ..." : "")}. Choose one and fix the report");
                         else warnings.Add($"'{restName}': value '{v}' is not in the enumerated list '{menum.Name}' (the filter may match nothing). Verify the values with database_get_sample_values and fix the report if they are wrong");
                     }
                 }
@@ -1424,7 +1433,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Sets the values of the prompted criteria of a report from a JSON array of {name, operator, values} (or value). The name is the label of the criterion
-        /// (or its column name). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
+        /// (or its column name, or a part of the label designating one criterion only). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
         /// Returns an error or null.
         /// </summary>
         public static string ApplyCriteria(Report report, string criteriaJson)
@@ -1461,6 +1470,12 @@ namespace Seal.AI
                 bool matches(ReportRestriction r) => string.Equals(r.DisplayNameEl, name, StringComparison.OrdinalIgnoreCase) || string.Equals(r.DisplayNameElTranslated, name, StringComparison.OrdinalIgnoreCase)
                     || string.Equals(r.Name, name, StringComparison.OrdinalIgnoreCase) || string.Equals(r.MetaColumn?.DisplayName, name, StringComparison.OrdinalIgnoreCase);
                 var restrictions = prompted.Where(matches).ToList();
+                if (restrictions.Count == 0)
+                {
+                    //Partial label designating one criterion only, e.g. 'Département' for 'Département de la mutation'
+                    var partial = prompted.Where(i => (i.DisplayNameEl ?? "").Contains(name, StringComparison.OrdinalIgnoreCase)).ToList();
+                    if (partial.Select(i => i.DisplayNameEl).Distinct().Count() == 1) restrictions = partial;
+                }
                 if (restrictions.Count == 0) return $"Error: unknown criterion '{name}' ({available()}). Only the prompted criteria can be set.";
 
                 Operator? newOperator = null;

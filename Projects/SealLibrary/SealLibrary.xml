@@ -1370,6 +1370,12 @@
             used by the MCP server, whose clients truncate long server instructions.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIToolHost.LoadSkillNote">
+            <summary>
+            If set, this text is added at the end of each result of <c>load_skill</c>:
+            used by the MCP server for the rules that take precedence over the instructions loaded.
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIToolHost.MaxToolResultLength">
             <summary>
             Hard ceiling (in characters) for a single tool result appended to the conversation.
@@ -1634,6 +1640,12 @@
         </member>
         <member name="P:Seal.AI.McpGateway.TokenStore">
             <summary>Store of the access tokens</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.McpRenderingInstructions">
+            <summary>
+            Rule on the tags of the web chat panel: the prompts and the skills are shared with the web chat, an MCP client shows these tags as raw text.
+            Also added to each result of load_skill (see <see cref="F:Seal.AI.AIToolHost.LoadSkillNote"/>), as these results can ask for the tags.
+            </summary>
         </member>
         <member name="F:Seal.AI.McpGateway.McpInstructions">
             <summary>
@@ -2487,7 +2499,7 @@
         <member name="M:Seal.AI.AIReportWriter.ApplyCriteria(Seal.Model.Report,System.String)">
             <summary>
             Sets the values of the prompted criteria of a report from a JSON array of {name, operator, values} (or value). The name is the label of the criterion
-            (or its column name). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
+            (or its column name, or a part of the label designating one criterion only). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
             Returns an error or null.
             </summary>
         </member>
@@ -12594,6 +12606,11 @@
         <member name="P:Seal.Model.ReportModel.ResultTableTranslatedJson">
             <summary>
             Json string for the result table with an additional Json containing aggregation
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.GetMedian(System.Collections.Generic.List{System.Decimal})">
+            <summary>
+            Median of a list of values having at least one value: middle value, or average of the 2 middle values for an even count
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.GetResultTableTranslatedJson(System.Int32)">

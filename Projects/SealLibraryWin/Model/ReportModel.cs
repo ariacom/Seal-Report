@@ -1178,6 +1178,16 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
+        /// Median of a list of values having at least one value: middle value, or average of the 2 middle values for an even count
+        /// </summary>
+        public static decimal GetMedian(List<decimal> values)
+        {
+            var sorted = values.OrderBy(i => i).ToList();
+            var middle = sorted.Count / 2;
+            return sorted.Count % 2 == 1 ? sorted[middle] : (sorted[middle - 1] + sorted[middle]) / 2;
+        }
+
+        /// <summary>
         /// Json string for the result table with an additional Json containing aggregation.
         /// When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
         /// serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
@@ -1213,6 +1223,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             type = "number",
                             sum = Math.Round(vals.Sum(), 4),
                             avg = Math.Round(vals.Average(), 4),
+                            median = Math.Round(GetMedian(vals), 4),
                             min = Math.Round(vals.Min(), 4),
                             max = Math.Round(vals.Max(), 4),
                             count = vals.Count

@@ -50,6 +50,47 @@ namespace Test
         }
 
         [TestMethod]
+        public void MedianOfTheResultValues()
+        {
+            Assert.AreEqual(3m, ReportModel.GetMedian(new List<decimal> { 5, 1, 3 }));
+            Assert.AreEqual(2.5m, ReportModel.GetMedian(new List<decimal> { 4, 1, 3, 2 }));
+            Assert.AreEqual(7m, ReportModel.GetMedian(new List<decimal> { 7 }));
+        }
+
+        [TestMethod]
+        public void PartialEnumLabelIsMapped()
+        {
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var doc = XDocument.Parse(ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Operator>Equal</Operator><EnumValues><string>Germ</string></EnumValues>"));
+            var warnings = new List<string>();
+            Assert.IsNull(new AIReportWriter(null).Validate(doc, null, true, null, false, warnings, out _));
+            Assert.AreEqual("Germany", doc.Descendants("EnumValues").Single().Elements("string").Single().Value);
+            Assert.AreEqual(0, warnings.Count);
+
+            //Several labels: no choice, the warning lists them
+            doc = XDocument.Parse(ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Operator>Equal</Operator><EnumValues><string>an</string></EnumValues>"));
+            Assert.IsNull(new AIReportWriter(null).Validate(doc, null, true, null, false, warnings, out _));
+            Assert.AreEqual("an", doc.Descendants("EnumValues").Single().Elements("string").Single().Value);
+            Assert.IsTrue(warnings.Single().Contains("ambiguous"), warnings.Single());
+        }
+
+        [TestMethod]
+        public void PartialCriterionNameIsAccepted()
+        {
+            var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Name>Orders.ShipName</Name><MetaColumnGUID>", "<Name>Orders.ShipName</Name><DisplayName>Name of the ship</DisplayName><MetaColumnGUID>").Replace("<Operator>Contains</Operator>", "<Prompt>Prompt</Prompt><Operator>Contains</Operator>");
+            var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".srex");
+            System.IO.File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository, false);
+                Assert.IsNull(AIReportWriter.ApplyCriteria(report, @"[{""name"":""the ship"",""values"":[""Hanari""]}]"));
+                Assert.AreEqual("Hanari", report.AllRestrictions.Single().Value1);
+                Assert.IsTrue(AIReportWriter.ApplyCriteria(report, @"[{""name"":""Unknown"",""values"":[""x""]}]").StartsWith("Error: unknown criterion"));
+            }
+            finally { System.IO.File.Delete(path); }
+        }
+
+        [TestMethod]
         public void ValidReportGetsNewGuidsAndLimit()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));
