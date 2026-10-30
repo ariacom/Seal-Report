@@ -308,10 +308,21 @@ var SWISchedule;
             SWIUtil.ShowHideControl($("#webschedules-table"), schedules.length > 0);
             SWIUtil.ShowHideControl($("#webschedules-none"), schedules.length == 0);
             schedules.forEach(function (s) {
-                var $next = $("<td>").text(s.enabled ? s.nextexecution : "");
-                var $status = $("<td>").append($("<span class='badge'>").addClass(StatusBadges[s.status]).text(SWIUtil.tr2(StatusTexts[s.status])));
+                //Report under the name, the file names of the reports are long and without spaces
+                var $name = $("<td style='overflow-wrap:anywhere;min-width:12rem'>").attr("title", s.path).append($("<div class='fw-semibold'>").text(s.name));
+                if (s.reportname != s.name)
+                    $name.append($("<div class='small text-muted'>").text(s.reportname));
+                var $next = $("<td class='text-nowrap'>").text(s.enabled ? s.nextexecution : "");
+                //Last execution: date, then status and duration
+                var $badge = $("<span class='badge'>").addClass(StatusBadges[s.status]).text(SWIUtil.tr2(StatusTexts[s.status]));
                 if (s.status == "error")
-                    $status.find(".badge").attr("title", s.lasterror);
+                    $badge.attr("title", s.lasterror);
+                var $last = $("<td class='text-nowrap'>");
+                if (s.lastexecution)
+                    $last.append($("<div>").text(s.lastexecution));
+                $last.append($badge);
+                if (s.lastduration)
+                    $last.append($("<span class='small text-muted ms-2'>").text(s.lastduration));
                 var $actions = $("<td class='text-end text-nowrap'>");
                 var $edit = actionButton("fa-solid fa-pen", "Edit", "btn-outline-secondary");
                 $edit.on("click", function () { Edit(s.path, s.guid, loadList); });
@@ -327,14 +338,11 @@ var SWISchedule;
                 }
                 $actions.append($delete);
                 $body.append($("<tr>")
-                    .append($("<td>").text(s.name))
-                    .append($("<td>").text(s.reportname).attr("title", s.path))
+                    .append($name)
                     .append($("<td>").text(s.devicename + " (" + s.formatname + ")"))
                     .append($("<td>").text(s.recurrence))
                     .append($next)
-                    .append($("<td>").text(s.lastexecution))
-                    .append($("<td class='text-nowrap'>").text(s.lastduration))
-                    .append($status)
+                    .append($last)
                     .append($actions));
             });
         });
