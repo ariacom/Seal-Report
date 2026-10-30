@@ -23,6 +23,9 @@
         return;
     }
 
+    var sqlError = tool.CheckSql(sql);
+    if (sqlError != null) { tool.ExecResult = sqlError; return; }
+
     var dsGuid   = args.TryGetProperty("datasource_guid", out var dsp) ? dsp.GetString() : null;
     var connGuid = args.TryGetProperty("connection_guid", out var cnp) ? cnp.GetString() : null;
     var source   = tool.GetExecSource(dsGuid);
@@ -38,7 +41,9 @@
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 
     var connection = conn.GetOpenConnection();
-    var helper     = new TaskDatabaseHelper();
+    // Rows loaded in memory are limited: only the first ones are shown
+    const int maxRows = 1000;
+    var helper     = new TaskDatabaseHelper() { SelectTimeout = conn.CommandTimeout, SelectMaxRows = conn.MaxRows > 0 ? Math.Min(conn.MaxRows, maxRows) : maxRows };
     try {
         var table = helper.LoadDataTable(conn.ConnectionType,
                                          conn.FullConnectionString,
@@ -63,6 +68,7 @@
             sb.AppendLine(string.Join("\t", vals));
         }
         if (table.Rows.Count == 0) sb.AppendLine("(no rows returned)");
+        else if (table.Rows.Count >= helper.SelectMaxRows) sb.AppendLine($"Warning: the query was stopped after {helper.SelectMaxRows} rows, the result is not complete. Add an aggregation or a filter.");
         tool.ExecResult = sb.ToString();
     }
     catch (Exception ex) { tool.ExecResult = $"Query error: {ex.Message}"; }

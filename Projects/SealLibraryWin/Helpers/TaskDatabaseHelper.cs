@@ -164,6 +164,10 @@ namespace Seal.Helpers
         /// </summary>
         public int SelectTimeout = 0;
         /// <summary>
+        /// Maximum number of rows loaded in a DataTable by a SELECT statement, the other rows are not read (0 means no limit)
+        /// </summary>
+        public int SelectMaxRows = 0;
+        /// <summary>
         /// Command timeout in seconds used to execute statements (0 means no timeout)
         /// </summary>
         public int ExecuteTimeout = 0;
@@ -262,6 +266,24 @@ namespace Seal.Helpers
         }
 
         /// <summary>
+        /// Fills a DataTable with the first rows of a query and stops the query: without it, the end of Fill would read all the remaining rows
+        /// </summary>
+        public static void FillMaxRows(DbDataAdapter adapter, DataTable table, int maxRows)
+        {
+            DataRowChangeEventHandler handler = (sender, e) => { if (table.Rows.Count >= maxRows) adapter.SelectCommand.Cancel(); };
+            table.RowChanged += handler;
+            try
+            {
+                adapter.Fill(0, maxRows, table);
+            }
+            catch when (table.Rows.Count >= maxRows) { /* the cancelled query reports its cancellation */ }
+            finally
+            {
+                table.RowChanged -= handler;
+            }
+        }
+
+        /// <summary>
         /// Load a DataTable from a connection using a SQL SELECT statement (an open connection may be provided)
         /// </summary>
         public DataTable LoadDataTable(ConnectionType connectionType, string connectionString, string sql, DbConnection openConnection = null)
@@ -289,7 +311,8 @@ namespace Seal.Helpers
                         else if (connection is SQLiteConnection) adapter = new SQLiteDataAdapter(sql, (SQLiteConnection)connection);
                         else adapter = new OleDbDataAdapter(sql, (OleDbConnection)connection);
                         adapter.SelectCommand.CommandTimeout = SelectTimeout;
-                        adapter.Fill(table);
+                        if (SelectMaxRows > 0) FillMaxRows(adapter, table, SelectMaxRows);
+                        else adapter.Fill(table);
                     }
                     else
                     {
@@ -334,9 +357,19 @@ namespace Seal.Helpers
                                 dataRow[i] = dr[i];
                             }
                             table.Rows.Add(dataRow);
+                            if (SelectMaxRows > 0 && table.Rows.Count >= SelectMaxRows)
+                            {
+                                //Stops the query: closing the reader would otherwise read the remaining rows
+                                cmd.Cancel();
+                                break;
+                            }
                         }
 
-                        dr.Close();
+                        try
+                        {
+                            dr.Close();
+                        }
+                        catch when (SelectMaxRows > 0 && table.Rows.Count >= SelectMaxRows) { /* the cancelled query reports its cancellation */ }
                     }
                 }
                 finally
@@ -681,7 +714,19 @@ namespace Seal.Helpers
         /// </summary>
         public DataTable LoadDataTable(MetaConnection connection, string sql)
         {
-            return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
+            var selectTimeout = SelectTimeout;
+            var selectMaxRows = SelectMaxRows;
+            try
+            {
+                if (SelectTimeout == 0) SelectTimeout = connection.CommandTimeout;
+                if (SelectMaxRows == 0) SelectMaxRows = connection.MaxRows;
+                return LoadDataTable(connection.ConnectionType, connection.FullConnectionString, sql, connection.GetOpenConnection());
+            }
+            finally
+            {
+                SelectTimeout = selectTimeout;
+                SelectMaxRows = selectMaxRows;
+            }
         }
         /// <summary>
         /// Load a list of strings from a MetaConnection using a SQL SELECT statement (first column of the result)

@@ -213,6 +213,19 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Checks a SQL statement executed by the tool with <see cref="SecurityUser.CheckSql"/>.
+        /// Returns null if the SQL is accepted, otherwise the error to return to the agent. A refusal is written in the audit.
+        /// </summary>
+        public string CheckSql(string sql)
+        {
+            var user = CurrentToolCall?.SecurityContext;
+            var refusal = user?.GetSqlRefusal(sql, true);
+            if (refusal == null) return null;
+            ReportCodeGuard.LogRefusal(user, null, GetReportCodeLevel(), new[] { refusal }, $"AI tool '{Name}'" + (CurrentToolCall?.AgentConfiguration != null ? $" of agent '{CurrentToolCall.AgentConfiguration.Name}'" : ""));
+            return $"Error: this SQL is refused: {refusal}. Change the query, do not retry the same text.";
+        }
+
+        /// <summary>
         /// Checks the code (SQL, Razor scripts) of a report XML written by the tool, see <see cref="CheckReportCode(string, string, string, IEnumerable{string})"/>.
         /// </summary>
         public string CheckReportCode(string newXml, string existingXml = null, string path = null)

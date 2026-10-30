@@ -27,6 +27,9 @@ namespace Seal.Helpers
             public string Key;
             public ReportCodeLevel Level;
             public string Message;
+            //SQL text checked by SecurityUser.CheckSql
+            public string Sql;
+            public bool IsSqlStatement;
         }
 
         /// <summary>
@@ -86,9 +89,15 @@ namespace Seal.Helpers
 
             foreach (var item in GetItems(newDoc.Root, user))
             {
-                if (item.Level <= level || existingKeys.Contains(item.Key)) continue;
+                if (existingKeys.Contains(item.Key)) continue;
                 if (trusted.Contains(item.Key.Substring(item.Key.IndexOf('\n') + 1))) continue;
-                if (!result.Contains(item.Message)) result.Add(item.Message);
+                var message = item.Level > level ? item.Message : null;
+                if (message == null && item.Sql != null && user != null)
+                {
+                    var refusal = user.GetSqlRefusal(item.Sql, item.IsSqlStatement);
+                    if (refusal != null) message = $"{item.Message.Replace("requires the Sql level", "is refused")}: {refusal}";
+                }
+                if (message != null && !result.Contains(message)) result.Add(message);
             }
             return result;
         }
@@ -527,7 +536,8 @@ namespace Seal.Helpers
             }
 
             if (level == ReportCodeLevel.Metadata) return;
-            items.Add(new CodeItem() { Key = className + "|" + propertyName + "\n" + text, Level = level, Message = message });
+            var isStatement = propertyName == "Sql" && (type == typeof(MetaTable) || type == typeof(MetaEnum));
+            items.Add(new CodeItem() { Key = className + "|" + propertyName + "\n" + text, Level = level, Message = message, Sql = level == ReportCodeLevel.Sql ? text : null, IsSqlStatement = isStatement });
         }
     }
 }

@@ -585,6 +585,7 @@ namespace Seal.Model
         [DefaultValue(-1)]
         [Category("SQL"), DisplayName("Command Timeout"), Description("Default Timeout in seconds for the SQL Statements executed to load the model. -1 means the use of the Timeout defined in the connection. 0 means no Timeout."), Id(12, 3)]
 #endif
+        [SealCode(ReportCodeLevel.Scripts)]
         public int CommandTimeout { get; set; } = -1;
         /// <summary>
         /// Xml serialization helper: serialize CommandTimeout only if not the default value
@@ -3049,7 +3050,12 @@ model.ResultTable = query2.CopyToDataTable2();
                         else if (connection is SQLiteConnection) adapter = new SQLiteDataAdapter((SQLiteCommand)_command);
                         else adapter = new OleDbDataAdapter((OleDbCommand)_command);
                         ResultTable = new DataTable();
-                        adapter.Fill(ResultTable);
+                        if (Connection.MaxRows > 0)
+                        {
+                            TaskDatabaseHelper.FillMaxRows(adapter, ResultTable, Connection.MaxRows);
+                            if (ResultTable.Rows.Count >= Connection.MaxRows) Report.LogMessage("Model '{0}': Maximum number of rows of the connection reached ({1}), the other rows are not loaded.", Name, Connection.MaxRows);
+                        }
+                        else adapter.Fill(ResultTable);
                         handleDateOnlyColumns();
                         if (connection is SQLiteConnection && Elements.Exists(i => i.TypeEl == ColumnType.DateTime)) handleSQLLiteDateTime();
 

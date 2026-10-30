@@ -385,6 +385,28 @@ namespace Seal.Model
         public Func<double, string> FormatAICost = null;
 
         /// <summary>
+        /// Optional control of the SQL written by the user or by an AI agent, set by the Security Provider script: called with the SQL text and true if it is a complete statement (false for a part of a statement) before a SQL query of an AI tool and for the SQL of a report written below the Scripts level, returns null to accept it or the reason of the refusal (see <see cref="Seal.Helpers.SqlGuard"/>).
+        /// </summary>
+        public Func<string, bool, string> CheckSql = null;
+
+        /// <summary>
+        /// Executes <see cref="CheckSql"/>: null if the SQL is accepted, otherwise the reason of the refusal (an exception of the script refuses the SQL).
+        /// </summary>
+        public string GetSqlRefusal(string sql, bool isStatement)
+        {
+            if (CheckSql == null) return null;
+            try
+            {
+                return CheckSql(sql, isStatement);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException("SecurityUser.CheckSql", ex);
+                return "the SQL cannot be checked";
+            }
+        }
+
+        /// <summary>
         /// Executes <see cref="CheckMcpCall"/>: null if the call can be executed, otherwise the refusal message (an exception of the script refuses the call).
         /// </summary>
         public string GetMcpCallRefusal(string toolName)
@@ -494,6 +516,7 @@ namespace Seal.Model
             CheckAIChat = null;
             GetAICostLimit = null;
             OnAIUsage = null;
+            CheckSql = null;
         }
 
         /// <summary>

@@ -56,6 +56,7 @@ namespace Seal.Model
                 GetProperty("DatabaseType").SetIsBrowsable(true);
                 GetProperty("DateTimeFormat").SetIsBrowsable(true);
                 GetProperty("CommandTimeout").SetIsBrowsable(true);
+                GetProperty("MaxRows").SetIsBrowsable(true);
 
                 GetProperty("ConnectionType").SetIsBrowsable(true);
                 GetProperty("ConnectionString").SetIsBrowsable(true);
@@ -77,6 +78,7 @@ namespace Seal.Model
                 GetProperty("SQLiteConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("MongoDBConnectionString").SetIsReadOnly(!IsEditable);
                 GetProperty("CommandTimeout").SetIsReadOnly(!IsEditable);
+                GetProperty("MaxRows").SetIsReadOnly(!IsEditable);
 
                 GetProperty("UserName").SetIsBrowsable(true);
                 if (IsEditable) GetProperty("ClearPassword").SetIsBrowsable(true);
@@ -387,6 +389,20 @@ namespace Seal.Model
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeCommandTimeout() { return CommandTimeout != 0; }
+
+        /// <summary>
+        /// Maximum number of rows loaded in memory by a SELECT statement of a model or of a SQL tool, the other rows are not read. 0 means no limit.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(0)]
+        [DisplayName("Maximum rows loaded"), Description("Maximum number of rows loaded in memory by a SELECT statement of a model or of a SQL tool, the other rows are not read. 0 means no limit."), Category("Definition"), Id(13, 1)]
+#endif
+        public int MaxRows { get; set; } = 0;
+        /// <summary>
+        /// Xml serialization helper: serialize MaxRows only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeMaxRows() { return MaxRows != 0; }
 
         /// <summary>
         /// Full Connection String (Oledb, Odbc, MSSQLServer, MongoDB, Oracle, MySQL) with user name and password

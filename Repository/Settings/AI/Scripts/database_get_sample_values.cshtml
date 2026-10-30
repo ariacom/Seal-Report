@@ -50,7 +50,7 @@
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 
     var connection = conn.GetOpenConnection();
-    var helper     = new TaskDatabaseHelper();
+    var helper     = new TaskDatabaseHelper() { SelectTimeout = conn.CommandTimeout, SelectMaxRows = conn.MaxRows };
     try {
         // Resolve against the source metadata when possible: MetaTable.FullSQLName handles
         // aliases and custom SQL tables, and the MetaColumn name is the exact SQL the engine
@@ -63,6 +63,8 @@
         else { tableSQL = source.GetTableName(tableName); columnSQL = source.GetColumnName(columnName); }
         var sql = $"SELECT DISTINCT {columnSQL} FROM {tableSQL} " +
                   $"WHERE {columnSQL} IS NOT NULL ORDER BY {columnSQL}";
+        var sqlError = tool.CheckSql(sql);
+        if (sqlError != null) { tool.ExecResult = sqlError; return; }
         var table = helper.LoadDataTable(conn.ConnectionType,
                                          conn.FullConnectionString,
                                          sql, connection);
