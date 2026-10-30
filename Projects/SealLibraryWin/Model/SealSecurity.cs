@@ -62,6 +62,7 @@ namespace Seal.Model
                 GetProperty("ChangePasswordScript").SetIsBrowsable(true);
                 GetProperty("HideLoginPassword").SetIsBrowsable(true);
                 GetProperty("ProviderForScheduledOutputs").SetIsBrowsable(true);
+                GetProperty("ScheduleCheckScript").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -231,6 +232,36 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool ProviderForScheduledOutputs { get; set; } = false;
+
+        /// <summary>
+        /// Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Schedule Check Script"), Description("Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled."), Id(14, 2)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        [SealCode(ReportCodeLevel.Scripts)]
+        public string ScheduleCheckScript { get; set; }
+
+        /// <summary>
+        /// Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).
+        /// </summary>
+        public string CheckSchedule(Report report, SealSchedule schedule, ScheduleCheckMoment moment, SecurityUser user = null, bool isNew = false)
+        {
+            if (string.IsNullOrEmpty(ScheduleCheckScript)) return null;
+            var check = new ScheduleCheck() { Security = this, Report = report, Schedule = schedule, Moment = moment, User = user, IsNew = isNew };
+            try
+            {
+                RazorHelper.CompileExecute(ScheduleCheckScript, check);
+                return string.IsNullOrEmpty(check.Refusal) ? null : check.Refusal;
+            }
+            catch (Exception ex)
+            {
+                var message = $"Error in the Schedule Check Script for the report '{report?.FilePath}': {ex.Message}";
+                Helper.WriteLogEntryScheduler(System.Diagnostics.EventLogEntryType.Error, message);
+                return message;
+            }
+        }
 
         /// <summary>
         /// True if the Two-Factor Authentication is enabled

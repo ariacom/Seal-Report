@@ -368,6 +368,12 @@ namespace Seal.Forms
         const string razorResetPasswordScriptTemplate = SealSecurity.DefaultResetPasswordScript;
 
         const string razorResetPasswordScript2Template = SealSecurity.DefaultResetPasswordScript2;
+        const string razorScheduleCheckScriptTemplate = @"@{
+    ScheduleCheck check = Model;
+    //check.Report, check.Schedule (null when the AI tool checks a new schedule), check.Moment, check.User (null for a schedule of a report), check.IsNew
+    //Set check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled
+}
+";
         const string razorChangePasswordScriptTemplate = @"@{
     SecurityUser user = Model;
     var repository = user.Security.Repository;
@@ -1929,6 +1935,13 @@ $('<div>', {{
                         template = razorChangePasswordScriptTemplate;
                         frm.ObjectForCheckSyntax = new SecurityUser(null);
                         frm.Text = "Edit the Change Password script";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ScheduleCheckScript")
+                    {
+                        template = razorScheduleCheckScriptTemplate;
+                        frm.ObjectForCheckSyntax = new ScheduleCheck();
+                        frm.Text = "Edit the script that checks the schedules";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

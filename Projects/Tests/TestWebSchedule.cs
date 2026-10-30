@@ -92,6 +92,40 @@ namespace Test
         }
 
         [TestMethod]
+        public void ScheduleCheckScript()
+        {
+            var security = _repository.Security;
+            var report = Report.LoadFromFile(_repository.ReportsFolder + ReportWebPath, _repository, false);
+            Assert.IsNull(security.CheckSchedule(report, null, ScheduleCheckMoment.Save), "no script: every schedule is accepted");
+            try
+            {
+                //The script receives the moment, the user and the new flag
+                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Save && check.IsNew && check.User != null) { check.Refusal = \"refused \" + check.Report.GUID; } }";
+                Assert.AreEqual("refused " + report.GUID, security.CheckSchedule(report, null, ScheduleCheckMoment.Save, getOwner(), true));
+                Assert.IsNull(security.CheckSchedule(report, null, ScheduleCheckMoment.Save, getOwner(), false), "update of a schedule");
+                Assert.IsNull(security.CheckSchedule(report, null, ScheduleCheckMoment.Execution), "execution");
+
+                //A script in error refuses the schedule
+                security.ScheduleCheckScript = "@{ throw new Exception(\"script error\"); }";
+                StringAssert.Contains(security.CheckSchedule(report, null, ScheduleCheckMoment.Execution), "script error");
+
+                //Refused execution: no result, the error is stored and the schedule stays enabled
+                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Execution) { check.Refusal = \"no more space\"; } }";
+                var schedule = createWebSchedule("refused schedule result");
+                ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
+                var saved = SealReportScheduler.LoadSealSchedule(schedule.GUID);
+                Assert.AreEqual("no more space", saved.LastError);
+                Assert.IsTrue(saved.Enabled, "the schedule stays enabled");
+                Assert.IsFalse(File.Exists(Path.Combine(_personalFolder, "refused schedule result.csv")), "no output");
+                Assert.IsTrue(saved.NextExecution > DateTime.Now, "next execution still planned");
+            }
+            finally
+            {
+                security.ScheduleCheckScript = null;
+            }
+        }
+
+        [TestMethod]
         public void ExecuteWebSchedule()
         {
             var schedule = createWebSchedule("web schedule result");

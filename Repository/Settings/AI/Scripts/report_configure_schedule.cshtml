@@ -135,6 +135,10 @@
                 return;
         }
 
+        // Limits of the schedules (Schedule Check Script of the security)
+        var refusal = repo.Security.CheckSchedule(report, null, ScheduleCheckMoment.Save, securityContext, string.IsNullOrEmpty(scheduleGuid));
+        if (refusal != null) { tool.ExecResult = $"Error: {refusal}"; return; }
+
         // Update an existing schedule when schedule_guid is provided, otherwise create
         // a new one linked to the output.
         ReportSchedule schedule;

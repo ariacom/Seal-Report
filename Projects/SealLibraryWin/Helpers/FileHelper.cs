@@ -115,6 +115,14 @@ namespace Seal.Helpers
         }
 
         /// <summary>
+        /// Free space in bytes of the drive of a path, available in Razor scripts (System.IO.DriveInfo is not referenced by the scripts)
+        /// </summary>
+        public static long GetAvailableFreeSpace(string path)
+        {
+            return new DriveInfo(Path.GetPathRoot(Path.GetFullPath(path))).AvailableFreeSpace;
+        }
+
+        /// <summary>
         /// Replace invalid file name and path characters in a file path by a given string
         /// </summary>
         public static string CleanFilePath(string filePath, string replace = "")

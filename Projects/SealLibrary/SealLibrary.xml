@@ -2822,6 +2822,11 @@
             Delete the files older than 8 hours in a directory
             </summary>
         </member>
+        <member name="M:Seal.Helpers.FileHelper.GetAvailableFreeSpace(System.String)">
+            <summary>
+            Free space in bytes of the drive of a path, available in Razor scripts (System.IO.DriveInfo is not referenced by the scripts)
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.FileHelper.CleanFilePath(System.String,System.String)">
             <summary>
             Replace invalid file name and path characters in a file path by a given string
@@ -4421,6 +4426,66 @@
         <member name="M:Seal.Helpers.SqlGuard.GetCode(System.String,System.String@)">
             <summary>
             Returns the SQL text without its comments, with its strings and quoted identifiers emptied.
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ScheduleCheckMoment">
+            <summary>
+            When the 'Schedule Check Script' of the security is executed
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheckMoment.Save">
+            <summary>
+            The schedule is created or modified (web schedule or AI tool)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheckMoment.Execution">
+            <summary>
+            The scheduler is about to execute the schedule
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheckMoment.ExecuteNow">
+            <summary>
+            The owner executes his web schedule from the Web Report Server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ScheduleCheck">
+            <summary>
+            Model of the 'Schedule Check Script' of the security: the script sets Refusal to refuse the schedule
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.Security">
+            <summary>
+            Current security, gives access to the repository
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.Report">
+            <summary>
+            Report scheduled
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.Schedule">
+            <summary>
+            The schedule, null when the AI tool checks a schedule before creating it
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.Moment">
+            <summary>
+            When the check is done
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.User">
+            <summary>
+            User saving or owning the schedule, null for a schedule of a report executed by the scheduler (the location of the report tells who owns it)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.IsNew">
+            <summary>
+            True if the schedule is created (Moment is Save)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.Refusal">
+            <summary>
+            Set by the script to refuse the schedule: message shown to the user, or stored as the last error of a web schedule
             </summary>
         </member>
         <member name="T:Seal.Model.ValidationException">
@@ -17612,6 +17677,16 @@
         <member name="P:Seal.Model.SealSecurity.ProviderForScheduledOutputs">
             <summary>
             If true, the Security Provider script is executed for the scheduled outputs having a 'User name': the user is authenticated without password (user.ForSchedule is true) to get his groups, properties and data sources. If the authentication fails, the output is generated with the 'User name' and 'User groups' of the output.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ScheduleCheckScript">
+            <summary>
+            Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.CheckSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.ScheduleCheckMoment,Seal.Model.SecurityUser,System.Boolean)">
+            <summary>
+            Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.TwoFAActive">

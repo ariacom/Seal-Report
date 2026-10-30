@@ -1077,6 +1077,8 @@ namespace SealWebServer.Controllers
                     }
                     else
                     {
+                        var refusal = WebUser.Security.CheckSchedule(report, webSchedule, ScheduleCheckMoment.ExecuteNow, WebUser);
+                        if (refusal != null) throw new ValidationException(refusal);
                         webSchedule.InjectWebSchedule(report);
                         outputGUID = webSchedule.GUID;
                     }

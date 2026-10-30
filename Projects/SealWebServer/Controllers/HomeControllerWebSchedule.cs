@@ -137,6 +137,8 @@ namespace SealWebServer.Controllers
                 var oldFilePath = sealSchedule.FilePath;
 
                 setWebSchedule(sealSchedule, swiSchedule, report, execPath);
+                var refusal = WebUser.Security.CheckSchedule(report, sealSchedule, ScheduleCheckMoment.Save, WebUser, isNew);
+                if (refusal != null) throw new ValidationException(refusal);
 
                 var folder = Repository.GetWebSchedulesFolder(WebUser);
                 if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);

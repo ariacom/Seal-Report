@@ -2300,6 +2300,16 @@ namespace Seal.Model
                         return;
                     }
                 }
+
+                //Limits of the schedules: this execution is skipped, the schedule stays enabled for its next date
+                var refusal = report.Repository.Security.CheckSchedule(report, useSealScheduler ? schedule.SealSchedule : null, ScheduleCheckMoment.Execution, webScheduleOwner);
+                if (refusal != null)
+                {
+                    Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Execution of schedule '{0}' skipped:\r\n{1}", schedule.Name, refusal));
+                    if (webSchedule != null) saveWebScheduleExecution(webSchedule, refusal);
+                    return;
+                }
+
                 string lastError = "";
                 int lastDuration = -1;
 
