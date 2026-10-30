@@ -279,6 +279,16 @@
             Web Report Server: if true, a user can authorize an OAuth client only if he has logged in with the Two-Factor Authentication or with the OpenID Connect single sign-on
             </summary>
         </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpLogToolCalls">
+            <summary>
+            Web Report Server: if true, the arguments and the result of each MCP tool call are written in the daily event log file
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpLogResultMaxLength">
+            <summary>
+            Web Report Server: maximum number of characters of a tool result in the log of the MCP tool calls (0 for the complete result)
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIServerConfiguration.AIAgents">
             <summary>
             AI Agents combining a provider, an optional set of tools, and a default system prompt.
@@ -1677,6 +1687,21 @@
         <member name="M:Seal.AI.McpGateway.ExecuteTool(Seal.AI.McpRequestContext,System.String,System.String,Seal.AI.ICancelOperation)">
             <summary>
             Executes a tool call of a request (limit of the calls, tool host, audit) and returns its result.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.McpLogConversationGapMinutes">
+            <summary>
+            Minutes without tool call of a user and a client after which the next call starts a new conversation in the log of the tool calls
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetLogConversationId(System.String,System.String,System.DateTime)">
+            <summary>
+            Returns the identifier of a conversation in the log of the tool calls. The server is stateless and has no session: a conversation is a sequence of calls of a user and a client without a gap of <see cref="F:Seal.AI.McpGateway.McpLogConversationGapMinutes"/> minutes.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetToolCallLog(System.String,System.String,Seal.AI.AIToolHostResult,System.Int32,System.String,System.String,System.String,System.String,System.Int32)">
+            <summary>
+            Returns the text of a tool call in the log of the tool calls: complete arguments, result limited to <paramref name="maxLength"/> characters (0 for no limit).
             </summary>
         </member>
         <member name="M:Seal.AI.McpGateway.GetProgressLabel(Seal.AI.McpRequestContext,System.String,System.String)">

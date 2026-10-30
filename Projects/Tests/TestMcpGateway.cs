@@ -286,6 +286,67 @@ namespace Test
         }
 
         [TestMethod]
+        public void ToolCallLog()
+        {
+            var result = new AIToolHostResult() { Text = "0123456789" };
+            var log = McpGateway.GetToolCallLog("report_list", "{\"a\":1}", result, 4, "someone", "Agent", "client/1", "abc123", 2);
+            StringAssert.StartsWith(log, "****** MCP Tool Call report_list\r\n");
+            StringAssert.Contains(log, "User: 'someone'; Agent: 'Agent'; Client: 'client/1'; Conversation: 'abc123'; Duration: 2 s; Result: 10 chars");
+            StringAssert.Contains(log, "{\"a\":1}");
+            StringAssert.Contains(log, "Reply (first 4 chars):\r\n0123");
+            Assert.IsFalse(log.Contains("01234"), "result truncated");
+
+            log = McpGateway.GetToolCallLog("report_list", "{}", result, 0, "someone", "Agent", "client/1", "abc123", 2);
+            StringAssert.EndsWith(log, "Reply:\r\n0123456789");
+            log = McpGateway.GetToolCallLog("report_list", "{}", result, 10, "someone", "Agent", "client/1", "abc123", 2);
+            StringAssert.EndsWith(log, "Reply:\r\n0123456789");
+            log = McpGateway.GetToolCallLog("report_list", "{}", new AIToolHostResult(), 4, "someone", "Agent", null, "abc123", 2);
+            StringAssert.EndsWith(log, "Reply:\r\n");
+        }
+
+        [TestMethod]
+        public void LogConversation()
+        {
+            var now = DateTime.Now;
+            var user = "log_" + Guid.NewGuid().ToString("N");
+            var first = McpGateway.GetLogConversationId(user, "client", now);
+            var gap = McpGateway.McpLogConversationGapMinutes;
+            Assert.AreEqual(first, McpGateway.GetLogConversationId(user, "client", now.AddMinutes(gap - 1)));
+            Assert.AreEqual(first, McpGateway.GetLogConversationId(user, "client", now.AddMinutes(2 * gap - 2)), "the gap is counted from the last call");
+            Assert.AreNotEqual(first, McpGateway.GetLogConversationId(user, "other client", now), "one conversation per client");
+            Assert.AreNotEqual(first, McpGateway.GetLogConversationId("other_" + user, "client", now), "one conversation per user");
+            Assert.AreNotEqual(first, McpGateway.GetLogConversationId(user, "client", now.AddMinutes(3 * gap - 2)), "a new conversation after the gap");
+        }
+
+        [TestMethod]
+        public void ToolCallLogFile()
+        {
+            var agent = _repository.AIConfiguration.AIAgents.First(a => a.IsEnabled && a.ToolGUIDs.Count > 0);
+            var context = new McpRequestContext() { User = new SecurityUser(_repository.Security) { WebUserName = "log_" + Guid.NewGuid().ToString("N") }, Agent = agent, ClientApplication = "test" };
+            var logFile = Path.Combine(_repository.LogsFolder, $"events_{DateTime.Now:yyyy_MM_dd}.txt");
+            var logDays = _repository.Configuration.LogDays;
+            var enabled = _repository.AIConfiguration.McpLogToolCalls;
+            try
+            {
+                _repository.Configuration.LogDays = 1;
+                _repository.AIConfiguration.McpLogToolCalls = false;
+                McpGateway.ExecuteTool(context, "no_such_tool", "{\"marker\":1}");
+                Assert.IsFalse(File.Exists(logFile) && File.ReadAllText(logFile).Contains(context.User.WebUserName), "nothing written by default");
+
+                _repository.AIConfiguration.McpLogToolCalls = true;
+                McpGateway.ExecuteTool(context, "no_such_tool", "{\"marker\":2}");
+                var text = File.ReadAllText(logFile);
+                StringAssert.Contains(text, $"User: '{context.User.WebUserName}'");
+                StringAssert.Contains(text, "{\"marker\":2}");
+            }
+            finally
+            {
+                _repository.AIConfiguration.McpLogToolCalls = enabled;
+                _repository.Configuration.LogDays = logDays;
+            }
+        }
+
+        [TestMethod]
         public void CallRate()
         {
             var max = _repository.AIConfiguration.McpMaxCallsPerMinute;

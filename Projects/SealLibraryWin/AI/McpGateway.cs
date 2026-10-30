@@ -316,7 +316,69 @@ namespace Seal.AI
             var isError = IsError(result);
             Audit.LogMcpAudit(isError ? AuditType.AIMcpCallError : AuditType.AIMcpCall, context.User, context.Agent.Name, toolName, isError ? Truncate(result.Text, 250) : null, (int)Math.Round((DateTime.Now - now).TotalSeconds), context.ClientAddress, context.ClientApplication);
             context.User.NotifyMcpCall(toolName, isError);
+            if (Repository.Instance.AIConfiguration.McpLogToolCalls) WriteToolCallLog(context, toolName, toolCall.Arguments, result, now);
             return result;
+        }
+
+        /// <summary>
+        /// Minutes without tool call of a user and a client after which the next call starts a new conversation in the log of the tool calls
+        /// </summary>
+        public const int McpLogConversationGapMinutes = 15;
+
+        class McpLogConversation
+        {
+            public string Id;
+            public DateTime LastCall;
+        }
+
+        static readonly ConcurrentDictionary<string, McpLogConversation> _logConversations = new ConcurrentDictionary<string, McpLogConversation>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Returns the identifier of a conversation in the log of the tool calls. The server is stateless and has no session: a conversation is a sequence of calls of a user and a client without a gap of <see cref="McpLogConversationGapMinutes"/> minutes.
+        /// </summary>
+        public static string GetLogConversationId(string userName, string clientApplication, DateTime now)
+        {
+            var conversation = _logConversations.GetOrAdd((userName ?? "") + "\n" + (clientApplication ?? ""), _ => new McpLogConversation());
+            lock (conversation)
+            {
+                if (conversation.Id == null || now - conversation.LastCall >= TimeSpan.FromMinutes(McpLogConversationGapMinutes)) conversation.Id = Guid.NewGuid().ToString("N").Substring(0, 6);
+                conversation.LastCall = now;
+                return conversation.Id;
+            }
+        }
+
+        /// <summary>
+        /// Returns the text of a tool call in the log of the tool calls: complete arguments, result limited to <paramref name="maxLength"/> characters (0 for no limit).
+        /// </summary>
+        public static string GetToolCallLog(string toolName, string arguments, AIToolHostResult result, int maxLength, string userName, string agentName, string clientApplication, string conversationId, int durationSeconds)
+        {
+            var text = result.Text ?? "";
+            var truncated = maxLength > 0 && text.Length > maxLength;
+            var sb = new StringBuilder();
+            sb.Append($"****** MCP Tool Call {toolName}\r\n");
+            sb.Append($"User: '{userName}'; Agent: '{agentName}'; Client: '{clientApplication}'; Conversation: '{conversationId}'; Duration: {durationSeconds} s; Result: {text.Length} chars");
+            if (result.Images.Count > 0) sb.Append($", {result.Images.Count} image(s)");
+            sb.Append($"\r\nArguments:\r\n{arguments}\r\n");
+            sb.Append(truncated ? $"Reply (first {maxLength} chars):\r\n{text.Substring(0, maxLength)}" : $"Reply:\r\n{text}");
+            return sb.ToString();
+        }
+
+        static void WriteToolCallLog(McpRequestContext context, string toolName, string arguments, AIToolHostResult result, DateTime start)
+        {
+            try
+            {
+                var now = DateTime.Now;
+                var userName = context.User.WebUserName;
+                var conversationId = GetLogConversationId(userName, context.ClientApplication, now);
+                var message = GetToolCallLog(toolName, arguments, result, Repository.Instance.AIConfiguration.McpLogResultMaxLength, userName, context.Agent.Name, context.ClientApplication, conversationId, (int)Math.Round((now - start).TotalSeconds));
+                //The daily log file only: too long and too frequent for the event log of the system
+                Helpers.Helper.WriteDailyLog(Helpers.Helper.DailyLogEvents, Repository.Instance.LogsFolder, Repository.Instance.Configuration.LogDays, $"**********\r\n{now} Information\r\n{message}\r\n\r\n");
+            }
+            catch (Exception ex)
+            {
+                //The log of a call must not fail the call
+                Helpers.Helper.WriteLogException("McpGateway.WriteToolCallLog", ex);
+            }
         }
 
         /// <summary>

@@ -92,6 +92,23 @@ namespace Test
             Assert.AreEqual(19, total.CachedInputTokens);
         }
 
+        class TestLog : ReportExecutionLog
+        {
+            public List<string> Messages = new List<string>();
+            public void LogMessage(string message, params object[] args) { Messages.Add(message); }
+        }
+
+        [TestMethod]
+        public void ChatLogHasUserAndMessage()
+        {
+            var log = new TestLog();
+            var provider = new TestProvider() { ToolCallReplies = 0 };
+            var agent = new AIAgent(_agent, provider) { SecurityContext = new SecurityUser(_repository.Security) { WebUserName = "someone" } };
+            agent.Chat("the question", null, log);
+            StringAssert.StartsWith(log.Messages[0], "[AIAgent] User: someone, Provider: ");
+            Assert.AreEqual("****** User Message:\r\nthe question", log.Messages[1]);
+        }
+
         [TestMethod]
         public void CostText()
         {

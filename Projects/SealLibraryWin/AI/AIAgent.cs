@@ -368,7 +368,8 @@ namespace Seal.AI
             {
                 var pc = Configuration.GetProviderConfiguration();
                 var systemPrompt = Messages.OfType<SystemChatMessage>().FirstOrDefault()?.Content[0].Text;
-                log.LogMessage($"[AIAgent] Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, Skills: {host.Skills.Count}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
+                log.LogMessage($"[AIAgent] User: {SecurityContext?.WebUserName}, Provider: {pc?.Name}, Model: {pc?.Model}, ToolGUIDs: {Configuration.ToolGUIDs?.Count ?? 0}, Skills: {host.Skills.Count}, SystemPrompt length: {systemPrompt?.Length ?? 0}");
+                log.LogMessage($"****** User Message:\r\n{userMessage}");
             }
 
             // No tools and no skills — plain chat, no tool loop.

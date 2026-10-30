@@ -78,11 +78,15 @@ namespace Seal.AI
                 GetProperty("McpOAuthAccessTokenMinutes").SetIsBrowsable(true);
                 GetProperty("McpOAuthGrantMaxDays").SetIsBrowsable(true);
                 GetProperty("McpOAuthRequireStrongLogin").SetIsBrowsable(true);
+                GetProperty("McpLogToolCalls").SetIsBrowsable(true);
+                GetProperty("McpLogResultMaxLength").SetIsBrowsable(true);
 
                 GetProperty("McpTokenMaxDays").SetIsReadOnly(!McpServerEnabled);
                 GetProperty("McpTokenIdleDays").SetIsReadOnly(!McpServerEnabled);
                 GetProperty("McpMaxCallsPerMinute").SetIsReadOnly(!McpServerEnabled);
                 GetProperty("McpOAuthEnabled").SetIsReadOnly(!McpServerEnabled);
+                GetProperty("McpLogToolCalls").SetIsReadOnly(!McpServerEnabled);
+                GetProperty("McpLogResultMaxLength").SetIsReadOnly(!McpServerEnabled || !McpLogToolCalls);
                 foreach (var name in new[] { "McpPublicUrl", "McpOAuthRedirectUris", "McpOAuthDynamicRegistration", "McpOAuthAccessTokenMinutes", "McpOAuthGrantMaxDays", "McpOAuthRequireStrongLogin" }) GetProperty(name).SetIsReadOnly(!McpServerEnabled || !McpOAuthEnabled);
 
                 TypeDescriptor.Refresh(this);
@@ -334,6 +338,24 @@ namespace Seal.AI
         [DefaultValue(false)]
 #endif
         public bool McpOAuthRequireStrongLogin { get; set; } = false;
+
+        /// <summary>
+        /// Web Report Server: if true, the arguments and the result of each MCP tool call are written in the daily event log file
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP log of the tool calls"), Description("Danger Zone: if true, the arguments and the result of each MCP tool call are written in the daily event log file of the 'Logs' Repository sub-folder, to analyze the conversations of the external AI clients. The log contains the searches and the SQL of the users and is kept for the 'Log days to keep' of the server. The question of the user, the final answer and the model stay in the AI client: they are never logged."), Category("MCP Server"), Id(12, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool McpLogToolCalls { get; set; } = false;
+
+        /// <summary>
+        /// Web Report Server: maximum number of characters of a tool result in the log of the MCP tool calls (0 for the complete result)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP log maximum result length"), Description("Maximum number of characters of a tool result written in the log of the MCP tool calls, the arguments are always complete. 0 for the complete result."), Category("MCP Server"), Id(13, 2)]
+        [DefaultValue(4000)]
+#endif
+        public int McpLogResultMaxLength { get; set; } = 4000;
 
         List<AIAgentConfiguration> _AIAgents = new List<AIAgentConfiguration>();
         /// <summary>
