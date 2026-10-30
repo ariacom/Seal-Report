@@ -92,13 +92,22 @@ namespace Seal.AI
         static IMcpTokenStore _tokenStore = null;
 
         /// <summary>
+        /// Rule on the tags of the web chat panel: the prompts and the skills are shared with the web chat, an MCP client shows these tags as raw text.
+        /// Also added to each result of load_skill (see <see cref="AIToolHost.LoadSkillNote"/>), as these results can ask for the tags.
+        /// </summary>
+        public const string McpRenderingInstructions =
+            "This MCP client does not render the tags of the Seal web chat: never write `[[label]]`, `[[label|message]]` or `[EXECUTE_REPORT:...]`, even if the instructions or a skill ask for them. " +
+            "Give the follow-up suggestions and the choices as a short plain list of questions the user can ask, and name a report in plain text.";
+
+        /// <summary>
         /// Instructions added to the system prompt of an agent served by the MCP server
         /// </summary>
         public const string McpInstructions =
             "## Seal Report MCP server\r\n" +
             "You are connected to the Seal Report server with the tools of this agent, executed with the rights of the user. " +
             "A tool whose description starts with 'Requires the skill' belongs to a skill: call 'load_skill' with that skill once before its first call and follow the instructions returned. " +
-            "A tool result starting with 'Error:' tells what to fix before calling the tool again.";
+            "A tool result starting with 'Error:' tells what to fix before calling the tool again. " +
+            McpRenderingInstructions;
 
         /// <summary>
         /// Returns the identifier of an agent in the URL of the MCP server (/mcp/{slug}): its name in lower case, the characters other than letters and digits replaced by '-'.
@@ -234,7 +243,8 @@ namespace Seal.AI
             {
                 SecurityContext = context.User,
                 AcceptsImages = true,
-                Culture = context.User.Profile?.Culture
+                Culture = context.User.Profile?.Culture,
+                LoadSkillNote = McpRenderingInstructions
             };
             host.ActivateAllTools();
             //The clients truncate long server instructions: the complete system prompt is returned by load_skill('instructions')

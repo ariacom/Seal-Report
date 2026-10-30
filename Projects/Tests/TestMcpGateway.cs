@@ -150,7 +150,14 @@ namespace Test
                 StringAssert.Contains(host.GetTools().First(t => t.Name == AIToolHost.LoadSkillToolName).ParametersSchema, AIToolHost.InstructionsSkillName);
                 var loaded = host.Execute(new AIToolCall() { Name = AIToolHost.LoadSkillToolName, Arguments = "{\"skill_name\":\"instructions\"}" });
                 Assert.IsTrue(loaded.IsSkillLoad);
-                Assert.AreEqual(fullPrompt, loaded.Text);
+                Assert.AreEqual(fullPrompt + "\r\n\r\n" + McpGateway.McpRenderingInstructions, loaded.Text);
+                //The tags of the web chat are refused by the server instructions and after each skill loaded
+                StringAssert.Contains(McpGateway.GetInstructions(context), McpGateway.McpRenderingInstructions);
+                if (agent.GetSkillConfigurations().Count > 0)
+                {
+                    var skillLoaded = host.Execute(new AIToolCall() { Name = AIToolHost.LoadSkillToolName, Arguments = "{\"skill_name\":\"" + agent.GetSkillConfigurations()[0].Name + "\"}" });
+                    Assert.IsTrue(skillLoaded.Text.EndsWith(McpGateway.McpRenderingInstructions), skillLoaded.Text);
+                }
                 var maxLength = McpGateway.McpInstructionsMaxLength;
                 try
                 {

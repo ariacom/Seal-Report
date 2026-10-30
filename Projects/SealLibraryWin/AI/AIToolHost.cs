@@ -51,6 +51,12 @@ namespace Seal.AI
         public Func<string> AgentInstructions = null;
 
         /// <summary>
+        /// If set, this text is added at the end of each result of <c>load_skill</c>:
+        /// used by the MCP server for the rules that take precedence over the instructions loaded.
+        /// </summary>
+        public string LoadSkillNote = null;
+
+        /// <summary>
         /// Hard ceiling (in characters) for a single tool result appended to the conversation.
         /// A result larger than this (roughly 50k tokens) would risk exceeding the model's context
         /// window — and since the history is resent on every turn, it would brick the whole session.
@@ -183,6 +189,7 @@ namespace Seal.AI
             {
                 result.IsSkillLoad = true;
                 result.Text = loadSkill(toolCall, out result.ToolsChanged);
+                if (!string.IsNullOrEmpty(LoadSkillNote)) result.Text += "\r\n\r\n" + LoadSkillNote;
                 return result;
             }
 
