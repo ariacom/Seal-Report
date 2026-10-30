@@ -19,15 +19,18 @@ without them, or tell the user that an administrator must grant a higher level).
 0. Call `report_check_model_type` with the request and follow its recommendation.
 1. **Data**: `datasource_list` (MetaSourceGUID), `datasource_get_detail` (column
    GUIDs, enumerated lists, joins). `database_get_sample_values` for filter values.
-2. **Find an example**: `seal_search` in `Reports\Samples` (e.g. `Tab Page`,
-   `Card`, `KPI`, `Container`, `ShowTotal`), then `seal_read` the sample around the
-   line. `view_template_list` lists the views; `view_template_get_parameters` gives
+2. **Find an example** for a layout this guide does not show (tabs, cards, KPIs):
+   `seal_search` in `Reports\Samples` (e.g. `Tab Page`, `Card`, `KPI`, `Container`,
+   `ShowTotal`), then `seal_read` the sample around the line. An access denied or a
+   missing folder means this repository has no samples: do not retry, use the
+   views below. `view_template_list` lists the views; `view_template_get_parameters` gives
    the parameters of a template; `seal_read` on `Views\<Template>.cshtml` shows how
    it renders them.
 3. **Check the classes**: `seal_describe_class` (`ReportElement`,
    `ReportRestriction`, `ReportModel`, `ReportView`…) gives the valid XML elements,
    their enumeration values and defaults. An omitted element keeps its default:
-   write only what differs.
+   write only what differs. Skip this step for what the example and the rules below
+   already show: a class description is long and is paid again at each next step.
 4. **Write**: new report → `report_create_from_xml`; change to a saved report →
    `report_patch_xml` (XPath set/insert/remove; call `report_get_xml` first). A
    change of view parameters only can also use `style-report-view`.
@@ -108,7 +111,8 @@ Minimal list with one prompted restriction:
   Table view. A sort for the chart only uses `SerieSortType`/`SerieSortOrder`.
 - **Restrictions**: every requested filter is prompted (`Prompt`, `PromptTwoValues`
   for a date range) and pre-filled with the requested value; `None` only for a
-  fixed filter the user asked for. `Required` stays false unless the value is
+  fixed filter the user asked for. `<Prompt>` holds one of these types, never a
+  label: the label goes in `<DisplayName>`. `Required` stays false unless the value is
   mandatory. Text → `Contains`; enumerated column (marked `enumerated list` by
   `datasource_get_detail`, never judged by its name) → `Equal`/`NotEqual` with
   `<EnumValues><string>id</string></EnumValues>`; empty/null → `IsEmpty`,

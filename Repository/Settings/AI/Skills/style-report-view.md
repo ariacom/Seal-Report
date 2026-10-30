@@ -24,7 +24,8 @@ Gauge, KPI, Card, Container, Widget…), not only Chart JS.
    left at their default are not stored.
 
 To see how a template uses a parameter, `seal_read` its source (`Views\<Template>.cshtml`)
-or `seal_search` the parameter name in `Reports\Samples`. Adding or removing a view
+or `seal_search` the parameter name in `Reports\Samples` (a repository may have no
+samples: on an access denied, do not retry). Adding or removing a view
 (a map, a tab, a chart) is not a parameter change: use `build-report-from-metadata`.
 
 `report_configure_view` edits the view **in place** without rewriting the report,
