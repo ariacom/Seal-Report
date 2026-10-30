@@ -158,6 +158,40 @@ namespace Test
         }
 
         [TestMethod]
+        public void ColumnsOfTheModelTableAreAccepted()
+        {
+            //SQL model: the columns are defined in the table of the model, not in the source
+            var guid = Guid.NewGuid().ToString();
+            var xml = ReportXml(guid).Replace("<Name>Orders.ShipName</Name>", "<Name>totalsales</Name>")
+                .Replace("<Elements>", $"<Table><GUID>t</GUID><Sql>select 1 as TotalSales</Sql><Columns><MetaColumn><GUID>{guid}</GUID><Name>totalsales</Name></MetaColumn></Columns></Table><Elements>");
+            var doc = XDocument.Parse(xml);
+            Assert.IsNull(Validate(doc));
+
+            //The references follow the regenerated GUID of the column
+            var column = (string)doc.Descendants("MetaColumn").Single().Element("GUID");
+            Assert.AreNotEqual(guid, column);
+            Assert.IsTrue(doc.Descendants("MetaColumnGUID").All(i => i.Value == column));
+        }
+
+        [TestMethod]
+        public void EmptyColumnsAreReported()
+        {
+            var report = Report.Create(_repository);
+            var model = report.Models.First();
+            model.ResultTable = new System.Data.DataTable();
+            model.ResultTable.Columns.Add("Commune", typeof(string));
+            model.ResultTable.Columns.Add("Nombre", typeof(int));
+            model.ResultTable.Rows.Add(DBNull.Value, 5);
+            model.ResultTable.Rows.Add("", 7);
+            if (!report.ExecutionModels.Contains(model)) report.ExecutionModels.Add(model);
+
+            var result = AIReportWriter.EmptyColumns(report);
+            Assert.AreEqual(1, result.Count);
+            StringAssert.Contains(result[0], "'Commune'");
+            Assert.IsFalse(result[0].Contains("'Nombre'"));
+        }
+
+        [TestMethod]
         public void PatchOperations()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));

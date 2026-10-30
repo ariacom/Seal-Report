@@ -2459,6 +2459,11 @@
             the errors of the execution and of the views (file and line), and optionally a picture of the result for the agent.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.EmptyColumns(Seal.Model.Report)">
+            <summary>
+            Columns of an executed report having no value on any row: a join finding no match gives such columns without any error.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.CriteriaApplied(Seal.Model.Report)">
             <summary>
             Texts of the restrictions having a value in the execution (label, operator and values, with the display values of the enumerated lists)

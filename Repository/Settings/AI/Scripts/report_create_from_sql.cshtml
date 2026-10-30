@@ -66,7 +66,14 @@
         {
             reportSource = report.Sources.FirstOrDefault(s => s.MetaSourceGUID == sourceGuid);
             if (reportSource == null)
-                { tool.ExecResult = $"Error: no source with GUID '{sourceGuid}' found. Available GUIDs: {string.Join(", ", report.Sources.Select(s => s.MetaSourceGUID))}"; return; }
+            {
+                // Sources not added by Report.Create (e.g. Private Data Sources granted to the user)
+                var available = tool.GetAvailableSources().FirstOrDefault(s => s.GUID == sourceGuid);
+                if (available == null)
+                    { tool.ExecResult = $"Error: no source with GUID '{sourceGuid}' found. Available sources: {string.Join(", ", tool.GetAvailableSources().Select(s => $"'{s.Name}' ({s.GUID})"))}"; return; }
+                reportSource = report.AddSource(available);
+                reportSource.LoadRepositoryMetaSources(repo);
+            }
         }
         else
         {

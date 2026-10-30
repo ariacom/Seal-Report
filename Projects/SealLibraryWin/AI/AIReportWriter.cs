@@ -8,6 +8,7 @@ using Seal.Model;
 using Seal.Renderer;
 using System;
 using System.Collections.Generic;
+using System.Data;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -470,6 +471,8 @@ namespace Seal.AI
                 var metaSource = columns.Source;
                 var val = mc.Value == null ? "" : mc.Value.Trim();
                 var refName = mc.Parent == null ? null : (string)mc.Parent.Element("Name");
+                //Column of the own table of the model (SQL model): defined in the report, not in the source
+                if (mc.Ancestors("ReportModel").Elements("Table").Elements("Columns").Elements("MetaColumn").Any(c => string.Equals(text(c, "GUID"), val, StringComparison.OrdinalIgnoreCase))) continue;
                 if (!columns.ValidGuids.Contains(val))
                 {
                     if (refName != null && columns.GuidByName.TryGetValue(norm(refName), out string realGuid))
@@ -1163,6 +1166,7 @@ namespace Seal.AI
                     }
                     if (noRow)
                         test.Append("\r\nTEST WARNING: no row with the default criteria values. Check the filter values (spelling, case, enumerated ids) with database_get_sample_values or database_execute_query; if no row is really the expected answer, tell the user.");
+                    foreach (var empty in EmptyColumns(testReport)) test.Append("\r\nTEST WARNING: " + empty);
                     var executionWarnings = (testReport.ExecutionMessages ?? "").Split('\n').Select(l => l.Trim()).Where(l => l.Contains("Warning", StringComparison.OrdinalIgnoreCase)).Distinct().ToList();
                     if (executionWarnings.Count > 0) test.Append("\r\nTEST WARNING: " + string.Join(" ", executionWarnings));
 
@@ -1210,6 +1214,23 @@ namespace Seal.AI
                 try { if (htmlPath != null && File.Exists(htmlPath)) File.Delete(htmlPath); } catch { }
             }
             return test.ToString();
+        }
+
+        /// <summary>
+        /// Columns of an executed report having no value on any row: a join finding no match gives such columns without any error.
+        /// </summary>
+        public static List<string> EmptyColumns(Report report)
+        {
+            var result = new List<string>();
+            foreach (var model in report.ExecutionModels)
+            {
+                var table = model.ResultTableTranslated;
+                if (table == null || table.Rows.Count == 0) continue;
+                var empty = table.Columns.Cast<DataColumn>().Where(c => table.AsEnumerable().All(r => string.IsNullOrWhiteSpace(Convert.ToString(r[c])))).Select(c => "'" + c.ColumnName + "'").ToList();
+                if (empty.Count > 0)
+                    result.Add($"model '{model.Name}': no value on any of the {table.Rows.Count} row(s) for {string.Join(", ", empty)}. A column of a joined table empty on every row means that the join finds no match (compare the key values on both sides with database_get_sample_values), and a map without coordinates shows no point. Fix it, or tell the user; never present these columns or this map as working.");
+            }
+            return result;
         }
 
         /// <summary>
@@ -1359,6 +1380,12 @@ namespace Seal.AI
                 if (limitedModels > 0) result.Append($"\r\nNote: the result is limited to {DefaultMaxNumberOfRecords} records (<MaxNumberOfRecords>).");
                 if (warnings.Count > 0) result.Append("\r\nWarning: " + string.Join("; ", warnings) + ".");
                 result.Append("\r\n" + ExecuteForAgent(report, "the report", modelName));
+                if (!report.HasErrors)
+                {
+                    if (report.ExecutionModels.Any(m => m.ResultTable != null && m.ResultTable.Rows.Count == 0))
+                        result.Append("\r\nWARNING: no row. Do not conclude that the data does not exist: read the real values of the filtered columns with database_get_sample_values (a code can be written differently in the data, e.g. '1' for '01') or run again without the filter, then fix the filter or tell the user what was checked.");
+                    foreach (var empty in EmptyColumns(report)) result.Append("\r\nWARNING: " + empty);
+                }
                 return result.ToString();
             }
             catch (Exception ex) { return $"Error: {ex.Message}"; }
