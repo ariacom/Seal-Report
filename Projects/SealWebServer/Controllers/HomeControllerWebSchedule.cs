@@ -134,17 +134,12 @@ namespace SealWebServer.Controllers
 
                 bool isNew = sealSchedule == null;
                 if (isNew) sealSchedule = new SealSchedule() { GUID = Guid.NewGuid().ToString(), Output = new WebScheduleOutput() };
-                var oldFilePath = sealSchedule.FilePath;
 
                 setWebSchedule(sealSchedule, swiSchedule, report, execPath);
                 var refusal = WebUser.Security.CheckSchedule(report, sealSchedule, ScheduleCheckMoment.Save, WebUser, isNew);
                 if (refusal != null) throw new ValidationException(refusal);
 
-                var folder = Repository.GetWebSchedulesFolder(WebUser);
-                if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
-                sealSchedule.FilePath = Path.Combine(folder, FileHelper.CleanFilePath(sealSchedule.Name, "_") + " " + sealSchedule.GUID + ".xml");
-                sealSchedule.SaveToFile();
-                if (!string.IsNullOrEmpty(oldFilePath) && oldFilePath != sealSchedule.FilePath && System.IO.File.Exists(oldFilePath)) System.IO.File.Delete(oldFilePath);
+                sealSchedule.SaveWebSchedule(WebUser);
 
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Web schedule '{sealSchedule.Name}' {(isNew ? "created" : "updated")} for '{WebUser.WebUserName}', report '{execPath}'");
                 Audit.LogAudit(AuditType.EventServer, WebUser, execPath, $"Web schedule '{sealSchedule.Name}' {(isNew ? "created" : "updated")}");
@@ -317,22 +312,7 @@ namespace SealWebServer.Controllers
         /// </summary>
         List<SealSchedule> getUserWebSchedules()
         {
-            var result = new List<SealSchedule>();
-            var folder = Repository.GetWebSchedulesFolder(WebUser);
-            if (!Directory.Exists(folder)) return result;
-            foreach (var file in Directory.GetFiles(folder, "*.xml"))
-            {
-                try
-                {
-                    var schedule = SealSchedule.LoadFromFile(file);
-                    if (schedule.IsWebSchedule && schedule.UserName == WebUser.WebUserName) result.Add(schedule);
-                }
-                catch (Exception ex)
-                {
-                    WebHelper.WriteLogEntryWeb(EventLogEntryType.Error, ex.Message);
-                }
-            }
-            return result;
+            return SealSchedule.LoadWebSchedules(WebUser);
         }
 
         SealSchedule getUserWebSchedule(string guid)
@@ -596,12 +576,7 @@ namespace SealWebServer.Controllers
             schedule.CalculateNextExecution();
 
             //Owner and report
-            schedule.UserName = WebUser.WebUserName;
-            schedule.WebHostName = WebUser.WebHostName;
-            schedule.WebPath = execPath;
-            schedule.ReportGUID = report.GUID;
-            schedule.ReportPath = report.FilePath.Replace(Repository.ReportsFolder, "");
-            schedule.LastError = null;
+            schedule.SetWebOwner(WebUser, report, execPath);
         }
     }
 }

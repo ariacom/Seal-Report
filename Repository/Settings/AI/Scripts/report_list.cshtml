@@ -36,6 +36,9 @@
         ? repo.GetPersonalFolder(securityContext)
         : null;
 
+    // Schedules of the user (My schedules): they are not defined in the reports
+    var webSchedules = securityContext.CanUseWebSchedules ? SealSchedule.LoadWebSchedules(securityContext) : new System.Collections.Generic.List<SealSchedule>();
+
     // Folder tree built by SWIGetRootFolders – iterate every accessible folder.
     // Skip folders with no right (hidden) and files-only folders (no reports shown).
     foreach (var folder in securityContext.AllFolders)
@@ -90,9 +93,10 @@
                 sb.Append($"## {relPath}");
                 if (displayName != Path.GetFileNameWithoutExtension(file)) sb.Append($" ({displayName})");
                 if (!string.IsNullOrEmpty(description)) sb.Append($" — {description}");
+                var reportWebSchedules = webSchedules.Where(s => s.ReportGUID == report.GUID).ToList();
                 if (!detail)
                 {
-                    if (report.Outputs.Count > 0) sb.Append($" [outputs: {report.Outputs.Count}, schedules: {report.Schedules.Count}]");
+                    if (report.Outputs.Count > 0 || reportWebSchedules.Count > 0) sb.Append($" [outputs: {report.Outputs.Count}, schedules: {report.Schedules.Count + reportWebSchedules.Count}]");
                     sb.AppendLine();
                     continue;
                 }
@@ -132,6 +136,11 @@
                             schedInfo = $"Windows Task Scheduler (task: {schedule.TaskName})";
                         sb.AppendLine($"    Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}'): {schedInfo}");
                     }
+                }
+                if (reportWebSchedules.Count > 0)
+                {
+                    sb.AppendLine("  My schedules:");
+                    foreach (var schedule in reportWebSchedules) sb.AppendLine("    " + AIReportWriter.DescribeWebSchedule(schedule));
                 }
                 sb.AppendLine();
             }

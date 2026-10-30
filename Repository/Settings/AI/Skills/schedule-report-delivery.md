@@ -5,6 +5,21 @@ delivered and when it runs — save to a folder, email it, upload it to FTP/SFTP
 or SharePoint, or run it on a recurring or one-time schedule. This skill only configures outputs
 and schedules; it never creates or edits report content.
 
+## Schedules of the user (Seal Scheduler)
+
+When the repository uses the **Seal Scheduler**, `report_configure_schedule`
+creates a schedule **of the user**: it appears in his **My schedules** list,
+where he can edit, execute or delete it. It holds its own output and only needs
+the right to schedule the report, so it also works on a report he cannot edit.
+**Do not call `report_configure_output` to schedule a report**: pass the
+destination directly to `report_configure_schedule` (`folder_path`, `file_name`,
+`output_format`, or `email_to`...). The folder and the file have defaults; the
+output parameters of step 2 below keep the same meaning. The result gives the
+next execution: tell the user, and that the schedule is in **My schedules**.
+Windows-only notes below (Administrator rights) do not apply. Find an existing
+schedule with `report_get_detail`, under *My schedules*. The report file is not
+modified, so `report_configure_output` stays for an output defined in the report.
+
 ## Trigger phrases
 | User says | Action |
 |---|---|

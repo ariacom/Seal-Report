@@ -235,6 +235,55 @@ namespace Seal.Model
             return user;
         }
 
+        /// <summary>
+        /// Web schedules of a user, read from his personal folder
+        /// </summary>
+        public static List<SealSchedule> LoadWebSchedules(SecurityUser user)
+        {
+            var result = new List<SealSchedule>();
+            var folder = user.Security.Repository.GetWebSchedulesFolder(user);
+            if (!Directory.Exists(folder)) return result;
+            foreach (var file in Directory.GetFiles(folder, "*.xml"))
+            {
+                try
+                {
+                    var schedule = LoadFromFile(file);
+                    if (schedule.IsWebSchedule && schedule.UserName == user.WebUserName) result.Add(schedule);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("SealSchedule.LoadWebSchedules", ex);
+                }
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Set the owner and the report of a web schedule
+        /// </summary>
+        public void SetWebOwner(SecurityUser user, Report report, string webPath)
+        {
+            UserName = user.WebUserName;
+            WebHostName = user.WebHostName;
+            WebPath = webPath;
+            ReportGUID = report.GUID;
+            ReportPath = report.FilePath.Replace(report.Repository.ReportsFolder, "");
+            LastError = null;
+        }
+
+        /// <summary>
+        /// Save a web schedule in the personal folder of its owner, the file is named from the schedule name
+        /// </summary>
+        public void SaveWebSchedule(SecurityUser user)
+        {
+            var folder = user.Security.Repository.GetWebSchedulesFolder(user);
+            if (!Directory.Exists(folder)) Directory.CreateDirectory(folder);
+            var oldFilePath = FilePath;
+            FilePath = Path.Combine(folder, FileHelper.CleanFilePath(Name, "_") + " " + GUID + ".xml");
+            SaveToFile();
+            if (!string.IsNullOrEmpty(oldFilePath) && oldFilePath != FilePath && File.Exists(oldFilePath)) File.Delete(oldFilePath);
+        }
+
         #endregion
 
         /// <summary>

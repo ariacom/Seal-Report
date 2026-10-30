@@ -267,6 +267,63 @@ namespace Test
             CollectionAssert.AreEqual(initialValues, orderRestrictions.Select(i => i.Value1).ToList());
         }
 
+        static string configureWebSchedule(Report report, string arguments)
+        {
+            var tool = new Seal.AI.AIToolConfiguration() { CurrentToolCall = new Seal.AI.AIToolCall() { Name = "report_configure_schedule", Arguments = arguments, SecurityContext = getUserWithFolders() } };
+            return Seal.AI.AIReportWriter.ConfigureWebSchedule(tool, report, ReportWebPath);
+        }
+
+        static SecurityUser getUserWithFolders()
+        {
+            var user = getOwner();
+            user.SetFolders();
+            return user;
+        }
+
+        [TestMethod]
+        public void AIAgentCreatesWebSchedule()
+        {
+            var report = Report.LoadFromFile(_repository.ReportsFolder + ReportWebPath, _repository, false);
+            var fileContent = File.ReadAllText(report.FilePath);
+            Directory.CreateDirectory(_personalFolder);
+
+            //The user has the right 'Edit schedules' only: the result goes to his personal folder
+            var result = configureWebSchedule(report, "{\"type\":\"weekly\",\"start_datetime\":\"2030-01-07T07:00:00\",\"weekdays\":[1],\"schedule_name\":\"AI schedule\",\"file_name\":\"ai result\",\"output_format\":\"csv\"}");
+            StringAssert.Contains(result, "My schedules");
+            var schedule = SealSchedule.LoadWebSchedules(getOwner()).Single(i => i.Name == "AI schedule");
+            Assert.AreEqual(ReportWebPath, schedule.WebPath);
+            Assert.AreEqual(LoginId, schedule.UserName);
+            Assert.AreEqual(TriggerType.Weekly, schedule.Type);
+            Assert.AreEqual(ReportFormat.csv, schedule.Output.Format);
+            StringAssert.StartsWith(schedule.Output.FolderPath, Repository.SealPersonalRepositoryKeyword);
+            Assert.AreEqual(new DateTime(2030, 1, 7, 7, 0, 0), schedule.NextExecution);
+            Assert.AreEqual(fileContent, File.ReadAllText(report.FilePath), "the report file is not modified");
+
+            //Executed by the scheduler as the schedules created from the web
+            ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
+            var executed = SealSchedule.LoadFromFile(schedule.FilePath);
+            Assert.IsTrue(string.IsNullOrEmpty(executed.LastError), executed.LastError);
+            Assert.AreEqual(1, Directory.GetFiles(_personalFolder, "ai result*.csv").Length);
+
+            //Update: only the arguments given are changed
+            result = configureWebSchedule(report, $"{{\"schedule_guid\":\"{schedule.GUID}\",\"output_format\":\"html\"}}");
+            Assert.IsFalse(result.StartsWith("Error"), result);
+            var updated = SealSchedule.LoadWebSchedules(getOwner()).Single(i => i.GUID == schedule.GUID);
+            Assert.AreEqual(ReportFormat.html, updated.Output.Format);
+            Assert.AreEqual(TriggerType.Weekly, updated.Type);
+            Assert.AreEqual("ai result", updated.Output.FileName);
+
+            //A folder without the right to write is refused
+            result = configureWebSchedule(report, "{\"type\":\"daily\",\"start_datetime\":\"2030-01-07T07:00:00\",\"folder_path\":\"Reports\\\\Samples\"}");
+            StringAssert.StartsWith(result, "Error");
+            result = configureWebSchedule(report, "{\"type\":\"daily\",\"start_datetime\":\"2030-01-07T07:00:00\",\"folder_path\":\"C:\\\\temp\"}");
+            StringAssert.StartsWith(result, "Error");
+
+            result = configureWebSchedule(report, $"{{\"action\":\"delete\",\"schedule_guid\":\"{schedule.GUID}\"}}");
+            Assert.IsFalse(result.StartsWith("Error"), result);
+            Assert.IsFalse(File.Exists(updated.FilePath));
+        }
+
         [TestMethod]
         public void SystemFoldersAreHidden()
         {

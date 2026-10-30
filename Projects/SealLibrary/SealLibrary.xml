@@ -2496,6 +2496,32 @@
             Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.ConfigureWebSchedule(Seal.AI.AIToolConfiguration,Seal.Model.Report,System.String)">
+            <summary>
+            Tool report_configure_schedule for a user having web schedules: adds, updates or deletes a schedule of the user, stored in his personal folder as those created
+            from the Web Report Server (see <see cref="P:Seal.Model.SealSchedule.IsWebSchedule"/>): the schedule holds its output, the report file is not modified. Returns the tool result.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.DescribeWebSchedule(Seal.Model.SealSchedule)">
+            <summary>
+            Description of a web schedule for an AI agent
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.setWebScheduleRecurrence(Seal.Model.SealSchedule,System.Text.Json.JsonElement,System.Boolean)">
+            <summary>
+            Set the recurrence of a web schedule from the arguments of the tool, the current recurrence is kept for an update without type. Returns an error or null.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.setWebScheduleOutput(Seal.AI.AIToolConfiguration,Seal.Model.Report,Seal.Model.WebScheduleOutput,System.Text.Json.JsonElement,System.Boolean)">
+            <summary>
+            Set the output of a web schedule from the arguments of the tool, the current output is kept for an update without output argument. Returns an error or null.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.getWebScheduleFolder(Seal.Model.Repository,Seal.Model.SecurityUser,System.String)">
+            <summary>
+            Folder of a Folder device output with the repository keywords, from a display path (Personal, Personal\sub, Reports\sub) or a physical path. Null if the folder is outside the reports and the personal folder of the user.
+            </summary>
+        </member>
         <member name="T:Seal.Helpers.ObjectShredder`1">
             <summary>
             Utility class to convert a sequence of objects of type T into a DataTable (one column per public field or property)
@@ -17369,6 +17395,21 @@
             <summary>
             Web schedule: authenticate the owner with the Security Provider (without password) and check that he can still schedule the report.
             The schedule file must be located in the personal folder of the owner. Throws an exception if the owner cannot execute the schedule.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.LoadWebSchedules(Seal.Model.SecurityUser)">
+            <summary>
+            Web schedules of a user, read from his personal folder
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.SetWebOwner(Seal.Model.SecurityUser,Seal.Model.Report,System.String)">
+            <summary>
+            Set the owner and the report of a web schedule
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.SaveWebSchedule(Seal.Model.SecurityUser)">
+            <summary>
+            Save a web schedule in the personal folder of its owner, the file is named from the schedule name
             </summary>
         </member>
         <member name="M:Seal.Model.SealSchedule.LoadFromFile(System.String)">

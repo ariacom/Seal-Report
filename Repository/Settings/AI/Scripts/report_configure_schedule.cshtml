@@ -56,11 +56,22 @@
         var fullPath = Resolve(path);
         if (fullPath == null) { tool.ExecResult = $"Error: report '{path}' not found."; return; }
 
+        var report = Report.LoadFromFile(fullPath, repo, false);
+
+        // Seal Scheduler and web user: the schedule belongs to the user (My schedules), the report file is not modified.
+        // A schedule defined in the report stays managed below.
+        var isReportSchedule = report.Schedules.Any(s => string.Equals(s.GUID, scheduleGuid, StringComparison.OrdinalIgnoreCase)
+            || (string.IsNullOrEmpty(scheduleGuid) && string.Equals(action, "delete", StringComparison.OrdinalIgnoreCase) && string.Equals(s.Name, scheduleName, StringComparison.OrdinalIgnoreCase)));
+        if (securityContext.CanUseWebSchedules && !isReportSchedule)
+        {
+            tool.ExecResult = AIReportWriter.ConfigureWebSchedule(tool, report, path);
+            tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
+            return;
+        }
+
         var dir = Path.GetDirectoryName(fullPath);
         if (!securityContext.HasFolderRight(dir, (int)FolderRight.Edit))
             { tool.ExecResult = $"Error: write access denied to '{path}'."; return; }
-
-        var report = Report.LoadFromFile(fullPath, repo, false);
 
         // Collect folder device GUIDs
         var folderDeviceGuids = new System.Collections.Generic.HashSet<string>(repo.Devices.OfType<OutputFolderDevice>().Select(d => d.GUID));

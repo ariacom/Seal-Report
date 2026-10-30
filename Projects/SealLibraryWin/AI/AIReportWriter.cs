@@ -1540,5 +1540,258 @@ namespace Seal.AI
         }
 
         #endregion
+
+        #region Web schedules
+
+        /// <summary>
+        /// Tool report_configure_schedule for a user having web schedules: adds, updates or deletes a schedule of the user, stored in his personal folder as those created
+        /// from the Web Report Server (see <see cref="SealSchedule.IsWebSchedule"/>): the schedule holds its output, the report file is not modified. Returns the tool result.
+        /// </summary>
+        public static string ConfigureWebSchedule(AIToolConfiguration tool, Report report, string path)
+        {
+            var user = tool.CurrentToolCall.SecurityContext;
+            var args = JsonDocument.Parse(tool.CurrentToolCall.Arguments).RootElement;
+            var scheduleGuid = getText(args, "schedule_guid");
+            var scheduleName = getText(args, "schedule_name");
+            var schedules = SealSchedule.LoadWebSchedules(user);
+
+            SealSchedule schedule = null;
+            if (!string.IsNullOrEmpty(scheduleGuid))
+            {
+                schedule = schedules.FirstOrDefault(i => string.Equals(i.GUID, scheduleGuid, StringComparison.OrdinalIgnoreCase));
+                if (schedule == null) return $"Error: no schedule with GUID '{scheduleGuid}' found.";
+            }
+
+            if (string.Equals(getText(args, "action"), "delete", StringComparison.OrdinalIgnoreCase))
+            {
+                if (schedule == null && !string.IsNullOrEmpty(scheduleName)) schedule = schedules.FirstOrDefault(i => i.ReportGUID == report.GUID && string.Equals(i.Name, scheduleName, StringComparison.OrdinalIgnoreCase));
+                if (schedule == null) return string.IsNullOrEmpty(scheduleName) ? "Error: provide schedule_guid (preferred) or schedule_name to delete a schedule." : $"No schedule named '{scheduleName}' found on '{path}'.";
+                FileHelper.DeleteFile(schedule.FilePath);
+                Audit.LogAudit(AuditType.EventServer, user, schedule.WebPath, $"Web schedule '{schedule.Name}' deleted by an AI agent");
+                return $"Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}') removed from the schedules of the user.";
+            }
+
+            if (!user.HasFolderRight(Path.GetDirectoryName(report.FilePath), (int)FolderRight.Schedule)) return $"Error: no right to schedule '{path}'.";
+            if (schedule != null && schedule.ReportGUID != report.GUID) return $"Error: the schedule '{schedule.Name}' does not belong to '{path}'.";
+
+            bool isNew = schedule == null;
+            if (isNew) schedule = new SealSchedule() { GUID = Guid.NewGuid().ToString(), Enabled = true, Output = new WebScheduleOutput() };
+            if (!string.IsNullOrEmpty(scheduleName)) schedule.Name = scheduleName;
+            else if (isNew) schedule.Name = report.ExecutionName;
+
+            var error = setWebScheduleRecurrence(schedule, args, isNew) ?? setWebScheduleOutput(tool, report, schedule.Output, args, isNew);
+            if (error != null) return error;
+
+            var repository = report.Repository;
+            var personalFolder = repository.GetPersonalFolder(user);
+            var webPath = report.FilePath.StartsWith(personalFolder, StringComparison.OrdinalIgnoreCase) ? SWIFolder.GetPersonalRoot() + report.FilePath.Substring(personalFolder.Length) : report.FilePath.Substring(repository.ReportsFolder.Length);
+            schedule.SetWebOwner(user, report, webPath);
+
+            var refusal = repository.Security.CheckSchedule(report, schedule, ScheduleCheckMoment.Save, user, isNew);
+            if (refusal != null) return $"Error: {refusal}";
+
+            schedule.SaveWebSchedule(user);
+            Audit.LogAudit(AuditType.EventServer, user, webPath, $"Web schedule '{schedule.Name}' {(isNew ? "created" : "updated")} by an AI agent");
+            return $"Schedule {(isNew ? "added to" : "updated in")} the schedules of the user (visible in 'My schedules'), the report file is not modified. {DescribeWebSchedule(schedule)}";
+        }
+
+        /// <summary>
+        /// Description of a web schedule for an AI agent
+        /// </summary>
+        public static string DescribeWebSchedule(SealSchedule schedule)
+        {
+            var output = schedule.Output;
+            var destination = !string.IsNullOrEmpty(output.EmailTo) ? $"email to='{output.EmailTo}'" : $"folder='{output.FolderPath}', file='{output.FileName}'";
+            return $"Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}'): type={schedule.Type}, start={schedule.Start:yyyy-MM-dd HH:mm}, next execution={schedule.NextExecution:yyyy-MM-dd HH:mm}, enabled={schedule.Enabled}, format={output.Format}, {destination}";
+        }
+
+        static string getText(JsonElement args, string name)
+        {
+            return args.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() : null;
+        }
+
+        static int[] getNumbers(JsonElement args, string name, int min, int max)
+        {
+            if (!args.TryGetProperty(name, out var value) || value.ValueKind != JsonValueKind.Array) return new int[0];
+            return value.EnumerateArray().Where(i => i.ValueKind == JsonValueKind.Number).Select(i => i.GetInt32()).Where(i => i >= min && i <= max).Distinct().ToArray();
+        }
+
+        /// <summary>
+        /// Set the recurrence of a web schedule from the arguments of the tool, the current recurrence is kept for an update without type. Returns an error or null.
+        /// </summary>
+        static string setWebScheduleRecurrence(SealSchedule schedule, JsonElement args, bool isNew)
+        {
+            var type = getText(args, "type");
+            var startText = getText(args, "start_datetime");
+            if (isNew && string.IsNullOrEmpty(type)) return "Error: 'type' is required for action=configure.";
+            if (isNew && string.IsNullOrEmpty(startText)) return "Error: 'start_datetime' is required for action=configure.";
+            if (!string.IsNullOrEmpty(startText))
+            {
+                if (!DateTime.TryParse(startText, out DateTime start)) return $"Error: cannot parse start_datetime '{startText}'. Use ISO 8601 (e.g. 2025-06-01T07:00:00).";
+                schedule.Start = start;
+            }
+            if (!string.IsNullOrEmpty(type))
+            {
+                switch (type.ToLowerInvariant())
+                {
+                    case "daily": schedule.Type = TriggerType.Daily; break;
+                    case "weekly": schedule.Type = TriggerType.Weekly; break;
+                    case "monthly": schedule.Type = TriggerType.Monthly; break;
+                    case "once": schedule.Type = TriggerType.Time; break;
+                    default: return $"Error: unknown type '{type}'. Use daily, weekly, monthly or once.";
+                }
+            }
+
+            var weekdays = getNumbers(args, "weekdays", 0, 6);
+            var months = getNumbers(args, "months", 1, 12);
+            var days = getNumbers(args, "days", 1, 32);
+            if (weekdays.Length > 0) schedule.Weekdays = weekdays;
+            else if (isNew) schedule.Weekdays = new int[] { (int)schedule.Start.DayOfWeek };
+            if (months.Length > 0) schedule.Months = months;
+            if (days.Length > 0) schedule.Days = days;
+            else if (isNew) schedule.Days = new int[] { schedule.Start.Day };
+            if (schedule.Type == TriggerType.Daily && args.TryGetProperty("days_interval", out var interval) && interval.ValueKind == JsonValueKind.Number)
+            {
+                if (interval.GetInt32() < 1) return "Error: days_interval must be greater than 0.";
+                schedule.DaysInterval = interval.GetInt32();
+            }
+            schedule.CalculateNextExecution();
+            return null;
+        }
+
+        /// <summary>
+        /// Set the output of a web schedule from the arguments of the tool, the current output is kept for an update without output argument. Returns an error or null.
+        /// </summary>
+        static string setWebScheduleOutput(AIToolConfiguration tool, Report report, WebScheduleOutput output, JsonElement args, bool isNew)
+        {
+            var user = tool.CurrentToolCall.SecurityContext;
+            var repository = report.Repository;
+            var devices = tool.GetAvailableDevices().ToList();
+            var outputGuid = getText(args, "output_guid");
+
+            //Output of the report given: it is copied in the schedule
+            if (!string.IsNullOrEmpty(outputGuid))
+            {
+                var reportOutput = report.Outputs.FirstOrDefault(i => string.Equals(i.GUID, outputGuid, StringComparison.OrdinalIgnoreCase));
+                if (reportOutput == null) return $"Error: no output with GUID '{outputGuid}' found on the report.";
+                var outputDevice = devices.FirstOrDefault(i => i.GUID == reportOutput.OutputDeviceGUID);
+                if (outputDevice == null) return "Error: the device of this output is not allowed by your security.";
+                output.DeviceGUID = outputDevice.GUID;
+                output.Format = reportOutput.Format;
+                output.FolderPath = reportOutput.FolderPath;
+                output.FileName = reportOutput.FileName;
+                output.EmailTo = reportOutput.EmailTo;
+                output.EmailCC = reportOutput.EmailCC;
+                output.EmailBCC = reportOutput.EmailBCC;
+                output.EmailSubject = reportOutput.EmailSubject;
+                output.EmailBody = reportOutput.EmailBody;
+                output.EmailHtmlBody = reportOutput.EmailHtmlBody;
+                output.ZipResult = reportOutput.ZipResult;
+                output.ZipPassword = reportOutput.ZipPassword;
+                output.CancelIfNoRecords = reportOutput.CancelIfNoRecords;
+                if (outputDevice is OutputFolderDevice && !user.HasFolderRight(repository.ReplaceRepositoryKeyword(output.FolderPath).TrimEnd(Path.DirectorySeparatorChar), (int)FolderRight.Edit)) return $"Error: no write access to folder '{output.FolderPath}'.";
+                return null;
+            }
+
+            var outputArguments = new string[] { "device_name", "folder_path", "file_name", "output_format", "email_to", "email_cc", "email_bcc", "email_subject", "email_body", "email_html_body" };
+            if (!isNew && !outputArguments.Any(i => args.TryGetProperty(i, out _))) return null;
+
+            var deviceName = getText(args, "device_name");
+            var emailTo = getText(args, "email_to");
+            OutputDevice device;
+            if (!string.IsNullOrEmpty(deviceName)) device = devices.FirstOrDefault(i => string.Equals(i.Name, deviceName, StringComparison.OrdinalIgnoreCase));
+            else if (!isNew && string.IsNullOrEmpty(emailTo)) device = devices.FirstOrDefault(i => i.GUID == output.DeviceGUID);
+            else if (!string.IsNullOrEmpty(emailTo)) device = devices.OfType<OutputEmailDevice>().FirstOrDefault();
+            else device = devices.OfType<OutputFolderDevice>().FirstOrDefault() ?? devices.FirstOrDefault();
+            if (device == null) return string.IsNullOrEmpty(deviceName) ? "Error: no output device available (none configured in the repository or allowed by your security)." : $"Error: no device named '{deviceName}' available (not found or not allowed by your security).";
+            output.DeviceGUID = device.GUID;
+
+            var format = getText(args, "output_format");
+            if (!string.IsNullOrEmpty(format))
+            {
+                if (!Enum.TryParse(format, true, out ReportFormat reportFormat) || !repository.ResultAllowedFormats.Contains(reportFormat)) return $"Error: the format '{format}' is not allowed. Allowed formats: {string.Join(", ", repository.ResultAllowedFormats)}.";
+                output.Format = reportFormat;
+            }
+            else if (isNew) output.Format = repository.ResultAllowedFormats.Contains(report.Format) ? report.Format : repository.ResultAllowedFormats.FirstOrDefault();
+
+            if (device is OutputEmailDevice)
+            {
+                output.EmailTo = emailTo ?? output.EmailTo;
+                if (string.IsNullOrWhiteSpace(output.EmailTo)) return "Error: email_to is required for an email device.";
+                output.EmailCC = getText(args, "email_cc") ?? output.EmailCC;
+                output.EmailBCC = getText(args, "email_bcc") ?? output.EmailBCC;
+                output.EmailSubject = getText(args, "email_subject") ?? output.EmailSubject;
+                output.EmailBody = getText(args, "email_body") ?? output.EmailBody;
+                if (args.TryGetProperty("email_html_body", out var htmlBody) && htmlBody.ValueKind != JsonValueKind.String) output.EmailHtmlBody = htmlBody.ValueKind == JsonValueKind.True;
+                output.FolderPath = null;
+                output.FileName = null;
+                return null;
+            }
+
+            output.EmailTo = output.EmailCC = output.EmailBCC = output.EmailSubject = output.EmailBody = null;
+            output.EmailHtmlBody = false;
+            var fileName = getText(args, "file_name");
+            if (!string.IsNullOrEmpty(fileName)) output.FileName = fileName.Trim();
+            else if (string.IsNullOrEmpty(output.FileName)) output.FileName = Repository.SealReportDisplayNameKeyword;
+            if (output.FileName.IndexOfAny(new char[] { '\\', '/' }) >= 0 || output.FileName.Contains("..")) return $"Error: the file name '{output.FileName}' is invalid.";
+            try
+            {
+                string.Format(output.FileName, DateTime.Now);
+            }
+            catch
+            {
+                return $"Error: the format of the execution date in the file name '{output.FileName}' is invalid.";
+            }
+
+            var folderPath = getText(args, "folder_path");
+            if (device is OutputFolderDevice)
+            {
+                if (!string.IsNullOrEmpty(folderPath)) output.FolderPath = getWebScheduleFolder(repository, user, folderPath);
+                else if (isNew || string.IsNullOrEmpty(output.FolderPath))
+                {
+                    //Same folder as the report if the user can write there, otherwise his personal folder
+                    var reportFolder = Path.GetDirectoryName(report.FilePath);
+                    output.FolderPath = getWebScheduleFolder(repository, user, user.HasFolderRight(reportFolder, (int)FolderRight.Edit) ? reportFolder : repository.GetPersonalFolder(user));
+                }
+                if (output.FolderPath == null || !user.HasFolderRight(repository.ReplaceRepositoryKeyword(output.FolderPath).TrimEnd(Path.DirectorySeparatorChar), (int)FolderRight.Edit)) return $"Error: no write access to folder '{folderPath}'.";
+            }
+            else
+            {
+                var directories = (device is OutputFileServerDevice fileServer && !string.IsNullOrEmpty(fileServer.Directories)) ? fileServer.DirectoriesArray
+                    : (device is OutputSharePointDevice sharePoint && !string.IsNullOrEmpty(sharePoint.Directories)) ? sharePoint.DirectoriesArray : null;
+                if (!string.IsNullOrEmpty(folderPath)) output.FolderPath = folderPath;
+                else if (string.IsNullOrEmpty(output.FolderPath)) output.FolderPath = directories != null ? directories.FirstOrDefault() : "/";
+                if (directories != null && !directories.Contains(output.FolderPath)) return $"Error: the directory '{output.FolderPath}' is not allowed for this device. Allowed directories: {string.Join(", ", directories)}.";
+            }
+            return null;
+        }
+
+        /// <summary>
+        /// Folder of a Folder device output with the repository keywords, from a display path (Personal, Personal\sub, Reports\sub) or a physical path. Null if the folder is outside the reports and the personal folder of the user.
+        /// </summary>
+        static string getWebScheduleFolder(Repository repository, SecurityUser user, string folderPath)
+        {
+            var personalFolder = repository.GetPersonalFolder(user);
+            var path = FileHelper.ConvertOSFilePath(repository.ReplaceRepositoryKeyword(folderPath)).TrimEnd(Path.DirectorySeparatorChar);
+            if (string.Equals(path, "Personal", StringComparison.OrdinalIgnoreCase) || path.StartsWith("Personal" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            {
+                var sub = path.Substring("Personal".Length).TrimStart(Path.DirectorySeparatorChar);
+                var userName = Path.GetFileName(personalFolder.TrimEnd(Path.DirectorySeparatorChar));
+                if (string.Equals(sub, userName, StringComparison.OrdinalIgnoreCase)) sub = "";
+                else if (sub.StartsWith(userName + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) sub = sub.Substring(userName.Length + 1);
+                path = sub == "" ? personalFolder : Path.Combine(personalFolder, sub);
+            }
+            else if (string.Equals(path, "Reports", StringComparison.OrdinalIgnoreCase) || path.StartsWith("Reports" + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+            {
+                path = repository.ReportsFolder + path.Substring("Reports".Length);
+            }
+            if (!Path.IsPathRooted(path)) return null;
+            path = Path.GetFullPath(path);
+            if (path.StartsWith(repository.PersonalFolder, StringComparison.OrdinalIgnoreCase)) return Repository.SealPersonalRepositoryKeyword + path.Substring(repository.PersonalFolder.Length);
+            if (path.StartsWith(repository.ReportsFolder, StringComparison.OrdinalIgnoreCase)) return Repository.SealReportsRepositoryKeyword + path.Substring(repository.ReportsFolder.Length);
+            return null;
+        }
+
+        #endregion
     }
 }

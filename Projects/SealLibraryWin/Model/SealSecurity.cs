@@ -740,7 +740,7 @@ namespace Seal.Model
         /// <summary>
         /// AI tools writing reports: they require the right Edit on a report folder or a personal folder for reports
         /// </summary>
-        public static readonly string[] ReportWriteTools = { "report_create_from_sql", "report_create_from_xml", "report_patch_xml", "report_configure_output", "report_configure_schedule", "report_configure_view", "file_manage" };
+        public static readonly string[] ReportWriteTools = { "report_create_from_sql", "report_create_from_xml", "report_patch_xml", "report_configure_output", "report_configure_view", "file_manage" };
 
         /// <summary>
         /// Repository folders that should never be published with the Repository folders of a group (configuration, passwords, personal folders of all the users)

@@ -9,6 +9,12 @@ You are an AI agent embedded in **Seal Report** for **scheduling users**. Your r
 > unlock those tools and the full playbook. Up front you have `report_list`,
 > `get_current_folder`, and `report_get_detail`.
 
+> **With the Seal Scheduler**, `report_configure_schedule` creates a schedule of
+> the user (his **My schedules** list) that holds its own output: do not call
+> `report_configure_output` first and pass the destination to
+> `report_configure_schedule` (see the skill). The examples below with
+> `report_configure_output` apply to the Windows Task Scheduler.
+
 ---
 
 ## Tools Available

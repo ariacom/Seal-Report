@@ -137,6 +137,15 @@
         sb.AppendLine();
     }
 
+    // Schedules of the user (My schedules): they are not defined in the report
+    var webSchedules = securityContext.CanUseWebSchedules ? SealSchedule.LoadWebSchedules(securityContext).Where(s => s.ReportGUID == report.GUID).ToList() : new System.Collections.Generic.List<SealSchedule>();
+    if (webSchedules.Count > 0)
+    {
+        sb.AppendLine("## My schedules");
+        foreach (var schedule in webSchedules) sb.AppendLine("  " + AIReportWriter.DescribeWebSchedule(schedule));
+        sb.AppendLine();
+    }
+
     tool.ExecResult = sb.ToString();
     tool.CurrentToolCall.LogMessage($"Tool '{tool.CurrentToolCall.Name}' finished.");
 }
