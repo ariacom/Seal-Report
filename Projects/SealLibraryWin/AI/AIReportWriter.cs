@@ -656,7 +656,7 @@ namespace Seal.AI
                             continue;
                         }
                         //Partial label, as for the criteria of an execution
-                        var partial = menum.Values.Where(ev => (ev.DisplayValue ?? "").Contains(v, StringComparison.OrdinalIgnoreCase)).ToList();
+                        var partial = PreferWholeWord(menum.Values.Where(ev => (ev.DisplayValue ?? "").Contains(v, StringComparison.OrdinalIgnoreCase)).ToList(), ev => ev.DisplayValue, v);
                         if (partial.Count == 1)
                         {
                             log($"Restriction '{restName}': mapped partial enum label '{v}' -> id '{partial[0].Id}'");
@@ -1521,6 +1521,16 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Keeps the labels having the value as a whole word when there are some, e.g. 'Ain' for '01 - Ain' and not for 'Ille-et-Vilaine'
+        /// </summary>
+        public static List<MetaEV> PreferWholeWord(List<MetaEV> values, Func<MetaEV, string> label, string value)
+        {
+            var regex = new Regex($@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(value)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase);
+            var wholeWords = values.Where(i => regex.IsMatch(label(i) ?? "")).ToList();
+            return wholeWords.Count > 0 ? wholeWords : values;
+        }
+
+        /// <summary>
         /// Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
         /// </summary>
         static string resolveEnumValue(ReportRestriction restriction, string name, string value, out string id)
@@ -1539,7 +1549,7 @@ namespace Seal.AI
                 ?? candidates.FirstOrDefault(i => string.Equals(i.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(i.DisplayValue, value, StringComparison.OrdinalIgnoreCase));
             if (found == null)
             {
-                var partial = candidates.Where(i => (i.DisplayRestriction ?? "").Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+                var partial = PreferWholeWord(candidates.Where(i => (i.DisplayRestriction ?? "").Contains(value, StringComparison.OrdinalIgnoreCase)).ToList(), i => i.DisplayRestriction, value);
                 //e.g. 'Versonnex' for 'Versonnex (01435)'
                 var starting = partial.Where(i => (i.DisplayRestriction ?? "").StartsWith(value + " ", StringComparison.OrdinalIgnoreCase)).ToList();
                 if (starting.Count > 0) partial = starting;

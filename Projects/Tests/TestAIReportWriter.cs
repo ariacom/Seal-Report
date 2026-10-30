@@ -85,6 +85,16 @@ namespace Test
         }
 
         [TestMethod]
+        public void PartialEnumLabelPrefersTheWholeWord()
+        {
+            var values = new List<MetaEV> { new MetaEV() { Id = "01" }, new MetaEV() { Id = "35" }, new MetaEV() { Id = "49" } };
+            var labels = new Dictionary<string, string> { { "01", "01 - Ain" }, { "35", "35 - Ille-et-Vilaine" }, { "49", "49 - Maine-et-Loire" } };
+            Assert.AreEqual("01", AIReportWriter.PreferWholeWord(values, i => labels[i.Id], "ain").Single().Id);
+            //No whole word: all the values stay, the caller tells the ambiguity
+            Assert.AreEqual(3, AIReportWriter.PreferWholeWord(values, i => labels[i.Id], "e").Count);
+        }
+
+        [TestMethod]
         public void PartialCriterionNameIsAccepted()
         {
             var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Name>Orders.ShipName</Name><MetaColumnGUID>", "<Name>Orders.ShipName</Name><DisplayName>Name of the ship</DisplayName><MetaColumnGUID>").Replace("<Operator>Contains</Operator>", "<Prompt>Prompt</Prompt><Operator>Contains</Operator>");

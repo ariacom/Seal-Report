@@ -2503,6 +2503,11 @@
             Returns an error or null.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.PreferWholeWord(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
+            <summary>
+            Keeps the labels having the value as a whole word when there are some, e.g. 'Ain' for '01 - Ain' and not for 'Ille-et-Vilaine'
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.resolveEnumValue(Seal.Model.ReportRestriction,System.String,System.String,System.String@)">
             <summary>
             Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
