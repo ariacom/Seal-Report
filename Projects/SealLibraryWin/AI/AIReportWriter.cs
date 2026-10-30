@@ -1120,6 +1120,7 @@ namespace Seal.AI
                 }
 
                 testReport.SkipExternalViewer = true;
+                testReport.SecurityContext = SecurityContext;
                 testReport.ExecutionContext = ReportExecutionContext.TaskScheduler;
                 testReport.CurrentViewGUID = testReport.ViewGUID;
                 var notDisplayed = testReport.Models.Where(m => m.Elements.Count > 0 && !testReport.ExecutionModels.Contains(m)).Select(m => m.Name).ToList();
@@ -1376,6 +1377,8 @@ namespace Seal.AI
             {
                 //Data-fetch only: never launch the OS external result viewer (PDF, Excel, ...).
                 report.SkipExternalViewer = true;
+                //The user of the tool call: Pre SQL and scripts of the sources depend on it
+                report.SecurityContext = SecurityContext;
                 var watch = System.Diagnostics.Stopwatch.StartNew();
                 var execution = new ReportExecution() { Report = report };
                 execution.Execute();

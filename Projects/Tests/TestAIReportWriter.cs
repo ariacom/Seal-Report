@@ -50,6 +50,16 @@ namespace Test
         }
 
         [TestMethod]
+        public void ExecutionHasTheUserOfTheToolCall()
+        {
+            var user = new SecurityUser(_repository.Security) { Name = "ai_user" };
+            user.AddSecurityGroup(_repository.Security.Groups.First().Name);
+            var tool = new AIToolConfiguration() { CurrentToolCall = new AIToolCall() { Name = "report_execute_from_xml", Arguments = "{}", SecurityContext = user } };
+            var result = new AIReportWriter(tool).ExecuteFromXml(ReportXml(ColumnGuid("Orders.ShipName")), null);
+            StringAssert.Contains(result, "User:'ai_user'");
+        }
+
+        [TestMethod]
         public void MedianOfTheResultValues()
         {
             Assert.AreEqual(3m, ReportModel.GetMedian(new List<decimal> { 5, 1, 3 }));
