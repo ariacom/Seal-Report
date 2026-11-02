@@ -97,10 +97,7 @@
                 values.Add(cell.HTMLValue);
                 if (report.GenerateHTMLDisplay)
                 {
-                    foreach (var link in cell.GetNavigationLinks(view))
-                    {
-                        navigation += string.Format("<li><a href='#' class='map_nav' nav='{0}'>{1}</a></li>", link.FullHref, link.Text);
-                    }
+                    navigation += reportModel.GetNavigation(view, cell, true);
                 }
             }
         }
@@ -291,10 +288,14 @@ $(document).ready(function () {
         bounds.push([p[0], p[1]]);
     });
 
-    //Navigation links of the popup
-    $(container).on('click', 'a.map_nav', function (e) {
+    //Navigation links of the popup: same behavior as the cells of a table, the second link (icon) opens the other way
+    $(container).on('click', '.map_popup_nav li, .map_popup_nav span', function (e) {
         e.preventDefault();
-        executeReportNavigation($(this).attr('nav'), '');
+        e.stopPropagation();
+        var item = $(this).closest('li');
+        var newWindow = item.attr('nw') == 'True';
+        if ($(this).is('span')) newWindow = !newWindow;
+        executeReportNavigation(item.attr('nav'), newWindow ? '_blank' : '');
     });
 
     //Legend

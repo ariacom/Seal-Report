@@ -483,6 +483,11 @@ table.dataTable thead .dt-column-order {
     font-size: 0.85em;
     opacity: 0.65;
 }
+.map_popup_nav .dropdown-item {
+    display: flex;
+    align-items: center;
+    padding: 2px 4px;
+}
 .external-navigation:hover {
     opacity: 1;
 }
