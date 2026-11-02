@@ -52,7 +52,7 @@
     var popupCols = new List<int>();
     for (int col = 0; col < table.ColumnCount; col++)
     {
-        if (col == latCol || col == lonCol || table.IsColumnHidden(col)) { continue; }
+        if (col == latCol || col == lonCol || table.IsColumnHidden(col) || view.IsColumnHidden(col)) { continue; }
         popupCols.Add(col);
     }
     int labelCol = view.HasValue("map_label") ? findColumn(view.GetValue("map_label"), "") : (popupCols.Count > 0 ? popupCols[0] : -1);
