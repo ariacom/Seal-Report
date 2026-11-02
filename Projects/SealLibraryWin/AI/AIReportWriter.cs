@@ -1522,6 +1522,10 @@ namespace Seal.AI
                     {
                         if (restriction.OperatorStyle != RestrictionOperatorStyle.Visible && restriction.OperatorStyle != RestrictionOperatorStyle.VisibleWithNulls)
                             return $"Error: the operator of '{name}' cannot be changed (it is fixed to '{restriction.Operator}' in the report): set only its values.";
+                        //The values of an enumerated list are compared as a whole: another operator would give an empty SQL restriction
+                        var allowedOperators = restriction.IsEnumRE ? new List<Operator> { Operator.Equal, Operator.NotEqual, Operator.IsNull, Operator.IsNotNull } : restriction.AllowedOperators.Where(i => i != Operator.ValueOnly).ToList();
+                        if (!allowedOperators.Contains(newOperator.Value))
+                            return $"Error: the operator '{newOperator}' is not allowed for '{name}' (allowed: {string.Join(", ", allowedOperators)}).{(restriction.IsEnumRE ? " It has an enumerated list: pass one or several values of the list with Equal." : "")}";
                         restriction.Operator = newOperator.Value;
                     }
 

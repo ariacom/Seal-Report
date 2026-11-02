@@ -111,6 +111,27 @@ namespace Test
         }
 
         [TestMethod]
+        public void CriterionOperatorMustBeAllowed()
+        {
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var xml = ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Operator>Equal</Operator>");
+            var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".srex");
+            System.IO.File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository, false);
+                var restriction = report.AllRestrictions.Single();
+                var error = AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""operator"":""StartsWith"",""values"":[""Germany""]}}]");
+                Assert.IsTrue(error.StartsWith("Error: the operator 'StartsWith' is not allowed"), error);
+                Assert.AreEqual(Operator.Equal, restriction.Operator);
+
+                Assert.IsNull(AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""operator"":""NotEqual"",""values"":[""Germany""]}}]"));
+                Assert.AreEqual(Operator.NotEqual, restriction.Operator);
+            }
+            finally { System.IO.File.Delete(path); }
+        }
+
+        [TestMethod]
         public void ValidReportGetsNewGuidsAndLimit()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));
