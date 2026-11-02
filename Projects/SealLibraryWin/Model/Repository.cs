@@ -1720,6 +1720,20 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Path of a report as written in the audit, without the location of the repository: relative to the Reports folder (same as the Web Report Server path),
+        /// else relative to the repository, else the file name for a file outside of the repository
+        /// </summary>
+        public string GetAuditPath(string filePath)
+        {
+            if (string.IsNullOrEmpty(filePath)) return filePath;
+            var reportsFolder = ReportsFolder.TrimEnd(Path.DirectorySeparatorChar);
+            if (filePath.StartsWith(reportsFolder + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return filePath.Substring(reportsFolder.Length);
+            var repositoryFolder = RepositoryPath.TrimEnd(Path.DirectorySeparatorChar);
+            if (filePath.StartsWith(repositoryFolder + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)) return filePath.Substring(repositoryFolder.Length);
+            return Path.GetFileName(filePath);
+        }
+
+        /// <summary>
         /// All report formats available
         /// </summary>
         public List<ReportFormat> ResultAllFormats

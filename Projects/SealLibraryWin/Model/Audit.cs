@@ -83,7 +83,7 @@ namespace Seal.Model
         /// </summary>
         public AuditType Type;
         /// <summary>
-        /// Path involved in the event (e.g. report file path)
+        /// Path involved in the event (e.g. for a report execution, the report path without the location of the repository, see <see cref="Repository.GetAuditPath"/>)
         /// </summary>
         public string Path;
         /// <summary>
@@ -168,7 +168,7 @@ namespace Seal.Model
         /// </summary>
         public static void LogReportAudit(Report report, ReportSchedule schedule)
         {
-            Audit.LogAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report.FilePath, null, report.ExecutionErrors, report, schedule);
+            Audit.LogAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report.Repository.GetAuditPath(report.FilePath), null, report.ExecutionErrors, report, schedule);
         }
 
         /// <summary>

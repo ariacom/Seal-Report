@@ -27,7 +27,8 @@
     Report report = table.Source.Report;
     if (report != null &amp;&amp; report.SecurityContext != null &amp;&amp; !string.IsNullOrEmpty(report.SecurityContext.Name) &amp;&amp; report.Tag is string reportPath &amp;&amp; !string.IsNullOrEmpty(reportPath))
     {
-        result = string.Format("event_type in ('ReportExecution','ReportExecutionError') AND user_name={0} AND event_path={1}", Helper.QuoteSingle(report.SecurityContext.Name), Helper.QuoteSingle(reportPath));
+        //The full path is for the executions audited before the path without the location of the repository
+        result = string.Format("event_type in ('ReportExecution','ReportExecutionError') AND user_name={0} AND event_path in ({1},{2})", Helper.QuoteSingle(report.SecurityContext.Name), Helper.QuoteSingle(report.Repository.GetAuditPath(reportPath)), Helper.QuoteSingle(reportPath));
     }
 }
 @Raw(result)</WhereSQL>

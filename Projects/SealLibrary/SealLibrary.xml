@@ -4613,7 +4613,7 @@
         </member>
         <member name="F:Seal.Model.Audit.Path">
             <summary>
-            Path involved in the event (e.g. report file path)
+            Path involved in the event (e.g. for a report execution, the report path without the location of the repository, see <see cref="M:Seal.Model.Repository.GetAuditPath(System.String)"/>)
             </summary>
         </member>
         <member name="F:Seal.Model.Audit.Detail">
@@ -16003,6 +16003,12 @@
         <member name="M:Seal.Model.Repository.ReplaceRepositoryKeyword(System.String)">
             <summary>
             Replace the repository keywords in a string
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.GetAuditPath(System.String)">
+            <summary>
+            Path of a report as written in the audit, without the location of the repository: relative to the Reports folder (same as the Web Report Server path),
+            else relative to the repository, else the file name for a file outside of the repository
             </summary>
         </member>
         <member name="P:Seal.Model.Repository.ResultAllFormats">
