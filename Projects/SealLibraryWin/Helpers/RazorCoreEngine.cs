@@ -328,7 +328,9 @@ namespace Seal.Helpers
         {
             try
             {
+                //errors first: the message of the exception is the first diagnostic, a warning would hide the error
                 var errors = (ex.Errors ?? new List<Diagnostic>())
+                    .OrderBy(d => d.Severity == DiagnosticSeverity.Error ? 0 : 1)
                     .Select(d => ToCompilerError(d, headerLines))
                     .ToList();
                 if (errors.Count == 0)
