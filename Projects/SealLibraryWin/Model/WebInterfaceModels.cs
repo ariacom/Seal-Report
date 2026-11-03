@@ -41,6 +41,7 @@ namespace Seal.Model
         public bool hasmcp;
         public bool webschedules;
         public List<SWIAccountLink> accountlinks;
+        public bool guest;
     }
 
     /// <summary>

@@ -5,7 +5,12 @@
     provider.Script = @"@{
     SecurityUser user = Model;
 	//No security: use the default security group
+	//With 'Allow access without account', every user is a guest (user.IsGuest): group Guest
     user.Name = """";
-	user.AddDefaultSecurityGroup();
+	if (user.IsGuest) {
+		user.Name = ""Guest"";
+		user.AddSecurityGroup(""Guest"");
+	}
+	else user.AddDefaultSecurityGroup();
 }";    
 }

@@ -1,4 +1,4 @@
-﻿//
+//
 // Copyright (c) Seal Report (sealreport@gmail.com), http://www.sealreport.org.
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
@@ -62,6 +62,7 @@ namespace Seal.Model
                 GetProperty("EnableChangePassword").SetIsBrowsable(true);
                 GetProperty("ChangePasswordScript").SetIsBrowsable(true);
                 GetProperty("HideLoginPassword").SetIsBrowsable(true);
+                GetProperty("AllowGuest").SetIsBrowsable(true);
                 GetProperty("ProviderForScheduledOutputs").SetIsBrowsable(true);
                 GetProperty("ScheduleCheckScript").SetIsBrowsable(true);
                 GetProperty("AccountLinks").SetIsBrowsable(true);
@@ -226,6 +227,15 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool HideLoginPassword { get; set; } = false;
+
+        /// <summary>
+        /// If true, a login without user name is a guest (user.IsGuest is true before the Security Provider script, which may change it or refuse the login): no profile, no schedules, a 'Login' button instead of 'Disconnect', and the login page of the Web Report Server shows a 'Continue without an account' link. The Web Report Server already tries a login without user name when a session starts.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Allow access without account"), Description("If true, a login without user name is a guest (user.IsGuest is true before the Security Provider script, which may change it or refuse the login): no profile, no schedules, a 'Login' button instead of 'Disconnect', and the login page of the Web Report Server shows a 'Continue without an account' link. The Web Report Server already tries a login without user name when a session starts."), Id(15, 2)]
+        [DefaultValue(false)]
+#endif
+        public bool AllowGuest { get; set; } = false;
 
         /// <summary>
         /// If true, the Security Provider script is executed for the scheduled outputs having a 'User name': the user is authenticated without password (user.ForSchedule is true) to get his groups, properties and data sources. If the authentication fails, the output is generated with the 'User name' and 'User groups' of the output.

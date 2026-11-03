@@ -85,7 +85,7 @@ namespace Test
 
             //The default group (first group, see SecurityUser.AddDefaultSecurityGroup) has no warning: all its agents can use their tools
             var defaultGroup = security.Groups.First();
-            Assert.AreEqual("Default Group", defaultGroup.Name);
+            Assert.AreEqual(fileName == "Security.xml" ? "Developers" : "Default Group", defaultGroup.Name);
             var defaultWarnings = security.CheckGroupConsistency(defaultGroup);
             Assert.IsEmpty(defaultWarnings, $"{fileName}:\r\n{string.Join("\r\n", defaultWarnings)}");
         }
@@ -145,9 +145,9 @@ namespace Test
         [TestMethod]
         public void SecurityCheckTool()
         {
-            //Developer login of Security.xml: Default Group, no warning
+            //Developer login of Security.xml: group Developers, no warning
             var result = executeSecurityCheck("dev", "mine");
-            StringAssert.Contains(result, "Default group (highest weight, gives the AI agents): Default Group");
+            StringAssert.Contains(result, "Default group (highest weight, gives the AI agents): Developers");
             StringAssert.Contains(result, "Report code level: Scripts");
             StringAssert.Contains(result, "Web schedules available: True");
             StringAssert.Contains(result, "No warning.");

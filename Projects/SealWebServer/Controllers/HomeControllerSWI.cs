@@ -82,8 +82,8 @@ namespace SealWebServer.Controllers
             Authenticate();
 
             if (WebUser.SecurityGroups.Count == 0) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
-            //Load profile
-            if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
+            //Load profile (a guest keeps the profile of his session)
+            if (!WebUser.IsGuest && System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
             checkRecentFiles();
             WebUser.Profile.Path = WebUser.ProfilePath;
         }
@@ -165,7 +165,8 @@ namespace SealWebServer.Controllers
                 aipanelwidth = WebUser.Profile.AIPanelWidth,
                 //The tokens authenticate the user from his login name
                 hasmcp = WebUser.McpAgentConfigurations.Count > 0 && !string.IsNullOrEmpty(WebUser.WebUserName),
-                webschedules = showWebSchedules()
+                webschedules = showWebSchedules() && !WebUser.IsGuest,
+                guest = WebUser.IsGuest
             };
 
             if (!string.IsNullOrEmpty(profile.startupreport))

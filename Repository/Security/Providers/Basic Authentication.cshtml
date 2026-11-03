@@ -10,6 +10,14 @@
 	//user.WebPassword -> password from the login screen
 
 	user.Name = user.WebUserName; //Display name
+
+	//Login without user name with 'Allow access without account' (user.IsGuest is true): group Guest
+	if (user.IsGuest) {
+		user.Name = ""Guest"";
+		user.AddSecurityGroup(""Guest"");
+		return;
+	}
+
 	//user.PersonalFolderName -> may be set to defined the personal folder name
 	//user.Properties[""key""] = ""value"" -> business context of the user (e.g. customer, tier), read by the other scripts with user.GetProperty(""key"")
 

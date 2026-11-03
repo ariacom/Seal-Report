@@ -57,6 +57,10 @@
                 {
                     <div class="auth-link text-center mt-3"><a href="@accountLink.Url">@repository.TranslateWeb(accountLink.Label)</a></div>
                 }
+                @if (repository.Security.AllowGuest)
+                {
+                    <div class="auth-link text-center mt-3"><a id="login-guest" href="">@repository.TranslateWeb("Continue without an account")</a></div>
+                }
             </div>
         </div>
     </div>

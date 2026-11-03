@@ -27,6 +27,23 @@
       <Culture />
     </SecurityGroup>
     <SecurityGroup>
+      <GUID>bf28639fb3bd4c86a05fcc274f34c75d</GUID>
+      <Name>Guest</Name>
+      <Folders>
+        <SecurityFolder>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System</Path>
+          <FolderRight>None</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <Weight>1</Weight>
+      <EditProfile>false</EditProfile>
+      <Culture />
+    </SecurityGroup>
+    <SecurityGroup>
       <GUID>9bd43102dc1d499fba5bffddb9dc8cc9</GUID>
       <Name>Group System Tests</Name>
       <Folders>

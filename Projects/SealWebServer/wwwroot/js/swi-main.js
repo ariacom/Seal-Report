@@ -60,7 +60,7 @@ class SWIMain {
         $("#navbar").on("click", "a.nav-link:not(.dropdown-toggle), .dropdown-item, #search-nav-item", function () {
             SWIUtil.CollapseNavbar();
         });
-        SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#webschedules-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
+        SWIUtil.ShowHideControl($("#disconnect-nav-item,#login-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#webschedules-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
         //The authentication dialogs are real forms (Enter key and submit button both raise submit)
         $("#login-form").unbind("submit").on("submit", function (e) {
             e.preventDefault();
@@ -69,6 +69,14 @@ class SWIMain {
         $("#security-form").unbind("submit").on("submit", function (e) {
             e.preventDefault();
             _main.checkSecurityCode();
+        });
+        //Login without account (SealSecurity.AllowGuest): the Security Provider accepts an empty user name
+        $("#login-guest").unbind("click").on("click", function (e) {
+            e.preventDefault();
+            $("#login-modal-info,#login-modal-error").text("");
+            SWIUtil.HideModal($loginModal);
+            SWIUtil.ShowModal($waitDialog);
+            _gateway.Login("", "", function (data) { _main.loginSuccess(data); }, function (data) { _main.loginFailure(data, false); });
         });
         $("#login-password-reset").unbind("click").on("click", function (e) {
             e.preventDefault();
@@ -312,19 +320,21 @@ class SWIMain {
         SWIUtil.InitProfile(_main._profile);
         //My schedules
         SWISchedule.Init(_main._profile);
-        //Disconnect
-        SWIUtil.ShowHideControl($("#disconnect-nav-item"), true);
-        $("#disconnect-nav-item").unbind("click").on("click", function () {
+        //Disconnect, or Login for a guest (the guest session is closed, then the login dialog is shown)
+        SWIUtil.ShowHideControl($("#disconnect-nav-item"), !_main._profile.guest);
+        SWIUtil.ShowHideControl($("#login-nav-item"), _main._profile.guest);
+        $("#disconnect-nav-item,#login-nav-item").unbind("click").on("click", function () {
+            var guest = _main._profile.guest;
             SWIUtil.HideMessages();
             $outputPanel.hide();
             $("#report-body").empty();
             _gateway.Logout(function () {
                 $("#report-body").empty();
                 $("#nav_button").text("");
-                SWIUtil.ShowHideControl($("#disconnect-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#webschedules-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
+                SWIUtil.ShowHideControl($("#disconnect-nav-item,#login-nav-item,#main-container,#report-body,#menu-view-report,#nav_badge,.reportview,.folderview,#menu-main-button,#profile-nav-item,#webschedules-nav-item,#menu-agent-button,#search-pattern,#search-nav-item,#ai-panel-toggle,#ai-chat-panel"), false);
                 if (window.aiPanel)
                     window.aiPanel.reset();
-                $("#login-modal-info").text($("#login-modal-info").data("text"));
+                $("#login-modal-info").text(guest ? "" : $("#login-modal-info").data("text"));
                 _main.showLogin();
             });
         });

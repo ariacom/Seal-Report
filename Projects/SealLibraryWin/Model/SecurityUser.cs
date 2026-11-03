@@ -526,6 +526,11 @@ namespace Seal.Model
         public bool ForSchedule = false;
 
         /// <summary>
+        /// True if the user is a guest: set before the Security Provider script for a login without user name if SealSecurity.AllowGuest is true (the script may change it): no personal folder, the profile is neither loaded nor saved (it stays in the session) and the Web Report Server shows a 'Login' button instead of 'Disconnect', without the profile and the schedules.
+        /// </summary>
+        public bool IsGuest = false;
+
+        /// <summary>
         /// True if the user has logged in to the Web Report Server with the Two-Factor Authentication or with the OpenID Connect single sign-on (see AIServerConfiguration.McpOAuthRequireStrongLogin)
         /// </summary>
         public bool StrongAuthentication = false;
@@ -628,7 +633,7 @@ namespace Seal.Model
         {
             try
             {
-                if (DefaultGroup.EditProfile) Profile.SaveToFile();
+                if (DefaultGroup.EditProfile && !IsGuest) Profile.SaveToFile();
             }
             catch (Exception ex)
             {
@@ -641,12 +646,13 @@ namespace Seal.Model
 
         private PersonalFolderRight? _persFolderRight = null;
         /// <summary>
-        /// Right for the personal folder
+        /// Right for the personal folder (none for a guest: the guests would share the same folder)
         /// </summary>
         public PersonalFolderRight PersonalFolderRight
         {
             get
             {
+                if (IsGuest) return PersonalFolderRight.None;
                 if (_persFolderRight == null)
                 {
                     foreach (var group in SecurityGroups)
@@ -665,7 +671,7 @@ namespace Seal.Model
         /// </summary>
         public bool PersonalFolderReportDownload
         {
-            get { return SecurityGroups.Any(g => g.PersFolderRight != PersonalFolderRight.None && g.PersonalFolderReportDownload); }
+            get { return PersonalFolderRight != PersonalFolderRight.None && SecurityGroups.Any(g => g.PersFolderRight != PersonalFolderRight.None && g.PersonalFolderReportDownload); }
         }
 
         /// <summary>
@@ -674,7 +680,7 @@ namespace Seal.Model
         /// </summary>
         public bool PersonalFolderUpload
         {
-            get { return SecurityGroups.Any(g => g.PersFolderRight != PersonalFolderRight.None && g.PersonalFolderUpload); }
+            get { return PersonalFolderRight != PersonalFolderRight.None && SecurityGroups.Any(g => g.PersFolderRight != PersonalFolderRight.None && g.PersonalFolderUpload); }
         }
 
         /// <summary>
@@ -768,6 +774,8 @@ namespace Seal.Model
             Warning = "";
             Properties.Clear();
             clearUsageHooks();
+            //Guest by default for a login without user name when the guests are allowed: the script may set it back to false (e.g. Windows authentication)
+            IsGuest = Security.AllowGuest && string.IsNullOrEmpty(WebUserName) && !ForSchedule;
             string script = (Security.UseCustomScript && !string.IsNullOrEmpty(Security.Script) ? Security.Script : Security.ProviderScript);
             if (string.IsNullOrEmpty(script)) throw new Exception("No Security Script to execute. Check the rights to access the repository Security.xml file...");
             try

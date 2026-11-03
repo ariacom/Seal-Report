@@ -218,7 +218,7 @@
 
     task.LogMessage($"[{provider.Name}] Executing '{task.Name}'");
 
-    //Forbidden folder: \System is granted only ExecuteReportOuput (no Edit) to the Default Group.
+    //Forbidden folder: \System is granted only ExecuteReportOuput (no Edit) to the group Developers.
     var forbiddenName = "empty_report.srex";
     var systemFile = Path.Combine(repository.ReportsFolder, "System", forbiddenName);
 

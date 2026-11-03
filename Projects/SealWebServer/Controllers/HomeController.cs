@@ -154,8 +154,8 @@ namespace SealWebServer.Controllers
                 Authenticate();
                 if (WebUser.IsAuthenticated)
                 {
-                    //Load profile
-                    if (System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
+                    //Load profile (a guest keeps the profile of his session)
+                    if (!WebUser.IsGuest && System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
                     WebUser.Profile.Path = WebUser.ProfilePath;
                 }
             }

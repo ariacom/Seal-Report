@@ -477,7 +477,8 @@ var SWIUtil;
         });
     }
     function InitProfile(profile) {
-        SWIUtil.ShowHideControl($("#profile-nav-item"), true);
+        //A guest has no profile
+        SWIUtil.ShowHideControl($("#profile-nav-item"), !profile.guest);
         $("#profile-nav-item").unbind("click").on("click", function () {
             $outputPanel.hide();
             $("#profile-user").val(profile.name);

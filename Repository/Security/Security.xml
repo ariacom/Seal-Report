@@ -10,7 +10,12 @@
 
 	user.Name = user.WebUserName; //Display name
 	if (string.IsNullOrEmpty(user.WebUserName)) {
-		user.AddDefaultSecurityGroup();
+		//Login without user name: group Guest if the access without account is allowed (user.IsGuest is already true), otherwise the default group
+		if (user.IsGuest) {
+			user.Name = "Guest";
+			user.AddSecurityGroup("Guest");
+		}
+		else user.AddDefaultSecurityGroup();
 	}
 	else if (user.WebUserName == "nogroup" &amp;&amp; user.WebPassword == "nogroup")
 	{
@@ -35,10 +40,12 @@
   <TwoFACheckScript />
   <EnableResetPassword>true</EnableResetPassword>
   <EnableChangePassword>true</EnableChangePassword>
+  <AllowGuest>true</AllowGuest>
+  <AccountLinkSecret />
   <Groups>
     <SecurityGroup>
       <GUID>13d763a0d8514f9fbb18e4459694fedc</GUID>
-      <Name>Default Group</Name>
+      <Name>Developers</Name>
       <Folders>
         <SecurityFolder />
         <SecurityFolder>
@@ -76,6 +83,23 @@
       </AgentGUIDs>
       <Culture />
       <StartupReport />
+    </SecurityGroup>
+    <SecurityGroup>
+      <GUID>bf28639fb3bd4c86a05fcc274f34c75d</GUID>
+      <Name>Guest</Name>
+      <Folders>
+        <SecurityFolder>
+          <ManageFolder>false</ManageFolder>
+          <FolderRight>Execute</FolderRight>
+        </SecurityFolder>
+        <SecurityFolder>
+          <Path>\System</Path>
+          <FolderRight>None</FolderRight>
+        </SecurityFolder>
+      </Folders>
+      <Weight>1</Weight>
+      <EditProfile>false</EditProfile>
+      <Culture />
     </SecurityGroup>
     <SecurityGroup>
       <GUID>01cf571d32a84145adf20aaa28f40449</GUID>
