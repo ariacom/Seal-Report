@@ -271,7 +271,7 @@ namespace SealWebServer.Controllers
                     return Json(new { login = true });
                 }
 
-                if (!string.IsNullOrEmpty(WebUser.SecurityCode)) throw new Exception(Translate("Invalid code"));
+                if (!string.IsNullOrEmpty(WebUser.SecurityCode)) throw new ValidationException(Translate("Invalid code"));
                 WebUser.StrongAuthentication = true;
 
                 //Log and Audit
@@ -329,7 +329,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (string.IsNullOrEmpty(guid) || string.IsNullOrEmpty(token)) throw new Exception("Invalid arguments");
-                if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
+                if (password1 != password2) throw new ValidationException(Translate("The two passwords do not match."));
                 if (!Repository.Security.ResetPasswordActive) throw new Exception("The Reset Password feature is not enabled. Please check your configuration.");
 
                 if (WebUser == null) CreateWebUser();
@@ -366,8 +366,8 @@ namespace SealWebServer.Controllers
                 var hasScript = !string.IsNullOrEmpty(user.Security.ChangePasswordScript);
                 //Without login in the security file (e.g. accounts of a security provider), the script checks the current password
                 if (user.Login == null && (!hasScript || string.IsNullOrEmpty(user.WebUserName))) throw new Exception("No login for the user");
-                if (user.Login != null && !user.Login.CheckPassword(password)) throw new Exception(Translate("Invalid password."));
-                if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
+                if (user.Login != null && !user.Login.CheckPassword(password)) throw new ValidationException(Translate("Invalid password."));
+                if (password1 != password2) throw new ValidationException(Translate("The two passwords do not match."));
 
                 if (hasScript)
                 {
@@ -385,7 +385,7 @@ namespace SealWebServer.Controllers
                 }
                 else
                 {
-                    if (!Helper.IsPasswordComplex(password1)) throw new Exception(Translate("Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*)."));
+                    if (!Helper.IsPasswordComplex(password1)) throw new ValidationException(Translate("Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*)."));
 
                     user.Login.HashedPassword = password1;
                     user.Security.SaveToFile();
