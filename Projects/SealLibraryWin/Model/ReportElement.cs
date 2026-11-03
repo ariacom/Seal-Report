@@ -80,8 +80,9 @@ namespace Seal.Model
                     GetProperty("EmptyRepeated").SetIsBrowsable(PivotPosition == PivotPosition.Row);
 
                     GetProperty("AggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data && !MetaColumn.IsAggregate);
-                    GetProperty("TotalAggregateFunction").SetIsBrowsable(PivotPosition == PivotPosition.Data);
-                    GetProperty("ShowTotal").SetIsBrowsable(PivotPosition == PivotPosition.Data);
+                    var canTotal = PivotPosition == PivotPosition.Data || (PivotPosition == PivotPosition.Row && IsNumeric);
+                    GetProperty("TotalAggregateFunction").SetIsBrowsable(canTotal);
+                    GetProperty("ShowTotal").SetIsBrowsable(canTotal);
                     GetProperty("TotalLabel").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("CellScript").SetIsBrowsable(true);
                     GetProperty("NavigationScript").SetIsBrowsable(true);
@@ -515,12 +516,12 @@ namespace Seal.Model
 
         ShowTotal _showTotal = ShowTotal.No;
         /// <summary>
-        /// For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed.
+        /// For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed. For numeric Row elements, only 'Column' is supported: the values of the column are summed as displayed in the total row, so it must not be set if a value is repeated on several rows.
         /// </summary>
 #if WINDOWS
         [DefaultValue(ShowTotal.No)]
-        [Category("Data options"), DisplayName("Show total"), Description("For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed."), Id(3, 4)]
-        [TypeConverter(typeof(NamedEnumConverter))]
+        [Category("Data options"), DisplayName("Show total"), Description("For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed. For numeric Row elements, only 'Column' is supported: the values of the column are summed as displayed in the total row, so it must not be set if a value is repeated on several rows."), Id(3, 4)]
+        [TypeConverter(typeof(ShowTotalConverter))]
 #endif
         public ShowTotal ShowTotal
         {
@@ -529,6 +530,19 @@ namespace Seal.Model
             {
                 _showTotal = value;
                 UpdateEditorAttributes();
+            }
+        }
+
+        /// <summary>
+        /// True if the element has a value in the total row of the table: a Data element or a numeric Row element with a total per column
+        /// </summary>
+        [XmlIgnore]
+        public bool HasColumnTotal
+        {
+            get
+            {
+                if (PivotPosition == PivotPosition.Row) return ShowTotal == ShowTotal.Column && IsNumeric;
+                return PivotPosition == PivotPosition.Data && (ShowTotal == ShowTotal.Column || ShowTotal == ShowTotal.RowColumn || ShowTotal == ShowTotal.RowColumnHidden);
             }
         }
 

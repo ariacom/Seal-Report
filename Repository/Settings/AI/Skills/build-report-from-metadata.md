@@ -110,6 +110,10 @@ Minimal list with one prompted restriction:
 - **Totals**: every Data element has `<ShowTotal>`: `Column` for a flat table,
   `RowColumn` for a cross-tab. Sorting on the total column:
   `data_tables_sort_configuration` = `[{LAST},'desc']` on the Data Table view.
+  In a list (no Data element, one row per item), an additive numeric Row
+  element (count, amount, population) can also get `<ShowTotal>Column</ShowTotal>`:
+  its values are summed in the total row. Never on a ratio, a percentage, an
+  average or a value repeated on several rows.
 - **Sort**: no `<SortOrder>` unless asked. Top N → measure `1 Descendant` and a
   smaller `MaxNumberOfRecords`, plus `data_warning_show` = `false` on the Data
   Table view. A sort for the chart only uses `SerieSortType`/`SerieSortOrder`.

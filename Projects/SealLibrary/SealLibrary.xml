@@ -11469,7 +11469,12 @@
         </member>
         <member name="P:Seal.Model.ReportElement.ShowTotal">
             <summary>
-            For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed.
+            For Data elements, add a row or a column showing the total of the element in the table. 'Show only total' means that the columns containing the values of the element will be hidden in the table, only the column containing the total of the element is displayed. For numeric Row elements, only 'Column' is supported: the values of the column are summed as displayed in the total row, so it must not be set if a value is repeated on several rows.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportElement.HasColumnTotal">
+            <summary>
+            True if the element has a value in the total row of the table: a Data element or a numeric Row element with a total per column
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.TotalLabel">

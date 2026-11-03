@@ -843,7 +843,7 @@ namespace Seal.Model
         {
             get
             {
-                return Elements.Exists(i => i.PivotPosition == PivotPosition.Data && i.ShowTotal != ShowTotal.No);
+                return Elements.Exists(i => (i.PivotPosition == PivotPosition.Data && i.ShowTotal != ShowTotal.No) || (i.PivotPosition == PivotPosition.Row && i.HasColumnTotal));
             }
         }
 

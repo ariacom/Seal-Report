@@ -1411,7 +1411,8 @@ namespace Seal.Model
 
         private void buildTotals(ReportModel model)
         {
-            var colTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.ShowTotal == ShowTotal.Column || e.ShowTotal == ShowTotal.RowColumn || e.ShowTotal == ShowTotal.RowColumnHidden || e.CalculationOption == CalculationOption.PercentageColumn);
+            //Numeric Row elements may also have a value in the total row
+            var colTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.HasColumnTotal || e.CalculationOption == CalculationOption.PercentageColumn).Union(model.GetElements(PivotPosition.Row).Where(e => e.HasColumnTotal));
             var rowTotalElements = model.GetElements(PivotPosition.Data).Where(e => e.ShowTotal == ShowTotal.Row || e.ShowTotal == ShowTotal.RowColumn || e.ShowTotal == ShowTotal.RowHidden || e.ShowTotal == ShowTotal.RowColumnHidden || e.CalculationOption == CalculationOption.PercentageRow || e.CalculationOption == CalculationOption.PercentageAll);
             var totalElements = colTotalElements.Union(rowTotalElements);
             Dictionary<string, string> compilationKeys = new Dictionary<string, string>();
@@ -1455,7 +1456,7 @@ namespace Seal.Model
                             }
                             totalCell.Calculate();
 
-                            if (element.ShowTotal == ShowTotal.Column || element.ShowTotal == ShowTotal.RowColumn || element.ShowTotal == ShowTotal.RowColumnHidden)
+                            if (element.HasColumnTotal)
                             {
                                 //Add titles if not a value
                                 if (totalCell.Cells.Count == 0)
@@ -1485,7 +1486,7 @@ namespace Seal.Model
                     }
 
                     //Add line only if a total is set (not only calculation options)
-                    if (model.GetElements(PivotPosition.Data).Count(e => e.ShowTotal == ShowTotal.Column || e.ShowTotal == ShowTotal.RowColumn || e.ShowTotal == ShowTotal.RowColumnHidden) > 0) page.DataTable.Lines.Add(totalLine);
+                    if (colTotalElements.Any(e => e.HasColumnTotal)) page.DataTable.Lines.Add(totalLine);
                 }
 
                 //Totals per rows
