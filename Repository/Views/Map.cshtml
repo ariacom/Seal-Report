@@ -67,9 +67,10 @@
         return null;
     };
 
-    //Points: [latitude, longitude, category index, size value, [popup values], navigation]
+    //Points: [latitude, longitude, category index, size value, [popup values], navigation, size display value]
     var categories = new List<string>();
     var points = new List<object[]>();
+    var sizeCells = new List<ResultCell>();
     int missing = 0;
     bool showPopup = view.GetBoolValue("map_show_popup");
     for (int row = table.BodyStartRow; row < table.BodyEndRow; row++)
@@ -105,7 +106,30 @@
         {
             values.Add(table[row, labelCol].HTMLValue);
         }
-        points.Add(new object[] { Math.Round(lat.Value, 6), Math.Round(lon.Value, 6), category, sizeCol != -1 ? getDouble(table[row, sizeCol]) : null, values, navigation });
+        double? size = null;
+        string sizeDisplay = null;
+        if (sizeCol != -1)
+        {
+            size = getDouble(table[row, sizeCol]);
+            if (size != null) { sizeCells.Add(table[row, sizeCol]); sizeDisplay = table[row, sizeCol].HTMLValue; }
+        }
+        points.Add(new object[] { Math.Round(lat.Value, 6), Math.Round(lon.Value, 6), category, size, values, navigation, sizeDisplay });
+    }
+
+    //Size legend: the minimum, the maximum and the value closest to the middle of the scale (square root, so a quarter of the range)
+    var sizeLegend = new List<object[]>();
+    if (sizeCells.Count > 0)
+    {
+        var sorted = sizeCells.OrderBy(i => getDouble(i).Value).ToList();
+        double min = getDouble(sorted.First()).Value, max = getDouble(sorted.Last()).Value;
+        sizeLegend.Add(new object[] { max, sorted.Last().HTMLValue });
+        if (max > min)
+        {
+            var middle = sorted.OrderBy(i => Math.Abs(getDouble(i).Value - (min + (max - min) / 4))).First();
+            var middleValue = getDouble(middle).Value;
+            if (middleValue > min && middleValue < max) { sizeLegend.Add(new object[] { middleValue, middle.HTMLValue }); }
+            sizeLegend.Add(new object[] { min, sorted.First().HTMLValue });
+        }
     }
 
     var titles = new List<string>();
@@ -185,7 +209,10 @@
         categories = categories.Select(i => HttpUtility.HtmlEncode(i)).ToList(),
         colors = categoryColors,
         defaultColor = palette[0],
-        points = points
+        points = points,
+        colorTitle = colorCol != -1 ? table[titleRow, colorCol].HTMLValue : "",
+        sizeTitle = sizeCol != -1 ? table[titleRow, sizeCol].HTMLValue : "",
+        sizeLegend = sizeLegend
     };
 }
 
@@ -278,7 +305,11 @@ $(document).ready(function () {
         var c = p[2] < 0 ? 0 : p[2];
         var color = p[2] < 0 ? data.defaultColor : data.colors[c];
         var marker = L.circleMarker([p[0], p[1]], { radius: pointRadius(p[3]), color: color, weight: 1, fillColor: color, fillOpacity: @opacity.ToString(CultureInfo.InvariantCulture) });
-        if (data.label >= 0 && p[4][data.label]) marker.bindTooltip(p[4][data.label]);
+        //Tooltip: the label and the values of the size and the color
+        var tooltip = data.label >= 0 && p[4][data.label] ? '<b>' + p[4][data.label] + '</b>' : '';
+        if (p[6] !== null) tooltip += (tooltip ? '<br>' : '') + '<span class="text-muted">' + data.sizeTitle + ':</span> ' + p[6];
+        if (p[2] >= 0) tooltip += (tooltip ? '<br>' : '') + '<span class="text-muted">' + data.colorTitle + ':</span> ' + (data.categories[p[2]] === '' ? '-' : data.categories[p[2]]);
+        if (tooltip) marker.bindTooltip(tooltip);
         @if (showPopup)
         {
             <text>marker.bindPopup(function () { return popupContent(p); }, { maxWidth: 400 });</text>
@@ -302,12 +333,26 @@ $(document).ready(function () {
     @if (view.GetBoolValue("map_show_legend"))
     {
         <text>
-        if (data.categories.length > 0) {
+        if (data.categories.length > 0 || data.sizeLegend.length > 0) {
             var legend = L.control({ position: 'bottomright' });
             legend.onAdd = function () {
                 var div = L.DomUtil.create('div', 'map_legend');
                 div.style.cssText = 'background:rgba(255,255,255,0.9);padding:6px 10px;border-radius:4px;box-shadow:0 1px 4px rgba(0,0,0,0.3);max-width:@(legendWidth)px;max-height:' + (@height - 60) + 'px;overflow-y:auto;font-size:12px;line-height:18px;';
-                //Most frequent values first
+                var titleStyle = 'font-weight:bold;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;';
+                //Size: name of the measure and circles of the minimum, middle and maximum values
+                if (data.sizeLegend.length > 0) {
+                    div.innerHTML += '<div class="map_legend_title" style="' + titleStyle + '">' + data.sizeTitle + '</div>';
+                    var sizeColor = data.categories.length > 0 ? '#888' : data.defaultColor;
+                    var maxRadius = pointRadius(data.sizeLegend[0][0]);
+                    data.sizeLegend.forEach(function (s) {
+                        var r = pointRadius(s[0]);
+                        div.innerHTML += '<div class="map_legend_size" style="display:flex;align-items:center;white-space:nowrap;margin-bottom:2px;"><span style="flex:0 0 ' + (2 * maxRadius + 2) + 'px;display:flex;justify-content:center;"><span style="display:inline-block;width:' + (2 * r) + 'px;height:' + (2 * r) + 'px;border-radius:50%;border:1px solid ' + sizeColor + ';background:' + sizeColor + ';opacity:@opacity.ToString(CultureInfo.InvariantCulture);"></span></span><span style="margin-left:6px;">' + s[1] + '</span></div>';
+                    });
+                }
+                //Colors: name of the column and its values, most frequent values first
+                if (data.categories.length > 0) {
+                    div.innerHTML += '<div class="map_legend_title" style="' + titleStyle + (data.sizeLegend.length > 0 ? 'margin-top:6px;' : '') + '">' + data.colorTitle + '</div>';
+                }
                 var order = data.categories.map(function (v, i) { return i; }).sort(function (a, b) { return counts[b] - counts[a]; });
                 order.forEach(function (c) {
                     var name = data.categories[c] === '' ? '-' : data.categories[c];
