@@ -28,6 +28,11 @@
             Main entry of the Controller
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.AccountLink(System.Int32,System.String)">
+            <summary>
+            Opens an account link of the profile (SealSecurity.AccountLinks): redirects to its url, with a ticket signed for the current user if a secret is set
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.ActionExecuteReport(System.String,System.String)">
             <summary>
             Execute a report initiated in a previous execution
