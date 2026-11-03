@@ -215,6 +215,26 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Opens an account link of the profile (SealSecurity.AccountLinks): redirects to its url, with a ticket signed for the current user if a secret is set
+        /// </summary>
+        public ActionResult AccountLink(int index, string sessionId)
+        {
+            writeDebug("AccountLink");
+            try
+            {
+                SetSessionId(sessionId);
+                if (WebUser == null || !WebUser.IsAuthenticated) return RedirectToAction("Main");
+                var url = WebUser.Security.GetAccountLinkUrl(index, WebUser);
+                if (url == null) return RedirectToAction("Main");
+                return Redirect(url);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
         /// Execute a report initiated in a previous execution
         /// </summary>
         public ActionResult ActionExecuteReport(string execution_guid, string sessionId)

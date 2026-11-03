@@ -17760,7 +17760,7 @@
         </member>
         <member name="P:Seal.Model.SealSecurity.EnableChangePassword">
             <summary>
-            If true, the Change Password feature is enabled for users having a login defined in the security file.
+            If true, the Change Password feature is enabled for users having a login defined in the security file, and, with a Change Password Script, for the users authenticated by the Security Provider (the script checks the current password given in user.WebCurrentPassword).
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.ChangePasswordScript">
@@ -17781,6 +17781,46 @@
         <member name="P:Seal.Model.SealSecurity.ScheduleCheckScript">
             <summary>
             Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.AccountLinks">
+            <summary>
+            Links to an application that manages the accounts (sign-up, account, team...), one per line: 'label|url|location' or 'label|url|location|groups'. The location is 'login' (below the login form) or 'profile' (in the profile dialog, for the members of the groups separated by ';' if any).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.AccountLinkSecret">
+            <summary>
+            The secret of the account links (encrypted)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.AccountLinkSecretKeyName">
+            <summary>
+            Name of the key used to encrypt the secret of the account links
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.AccountLinkSecretKeyValue">
+            <summary>
+            Default value of the key used to encrypt the secret of the account links
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ClearAccountLinkSecret">
+            <summary>
+            If set, a 'profile' link opens the url with a 'ticket' parameter signed with this secret: the application checks it to open its session without login
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.GetAccountLinks(System.String,Seal.Model.SecurityUser)">
+            <summary>
+            The account links of a location ('login' or 'profile'), with their index in AccountLinks. For 'profile', only the links allowed to the user.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.GetAccountLinkUrl(System.Int32,Seal.Model.SecurityUser)">
+            <summary>
+            The url of the account link at the index, with a ticket for the user if a secret is set. Null if the link is not allowed to the user.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.GetAccountTicket(System.String,System.String,System.DateTime)">
+            <summary>
+            Ticket of an account link: base64url("v1\n" + user name + "\n" + expiry in Unix seconds + "\n" + nonce) + "." + base64url(HMAC-SHA256 of the payload with the secret)
             </summary>
         </member>
         <member name="M:Seal.Model.SealSecurity.CheckSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.ScheduleCheckMoment,Seal.Model.SecurityUser,System.Boolean)">
@@ -19171,6 +19211,11 @@
             Parameters for authentication: Password
             </summary>
         </member>
+        <member name="F:Seal.Model.SecurityUser.WebCurrentPassword">
+            <summary>
+            Change Password: current password typed by the user, to be checked by the Change Password Script when the user has no login in the security file (WebPassword is the new password)
+            </summary>
+        </member>
         <member name="F:Seal.Model.SecurityUser.WebHostName">
             <summary>
             Web host name
@@ -19621,6 +19666,11 @@
         <member name="T:Seal.Model.SWIUserProfile">
             <summary>
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+            </summary>
+        </member>
+        <member name="T:Seal.Model.SWIAccountLink">
+            <summary>
+            Class used for the Seal Web Interface: account link of the profile (see SealSecurity.AccountLinks), opened through Home/AccountLink
             </summary>
         </member>
         <member name="T:Seal.Model.SWIWebSchedule">

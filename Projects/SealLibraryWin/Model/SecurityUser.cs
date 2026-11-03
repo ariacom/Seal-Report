@@ -541,6 +541,11 @@ namespace Seal.Model
         public string WebPassword = "";
 
         /// <summary>
+        /// Change Password: current password typed by the user, to be checked by the Change Password Script when the user has no login in the security file (WebPassword is the new password)
+        /// </summary>
+        public string WebCurrentPassword = "";
+
+        /// <summary>
         /// Web host name
         /// </summary>
         public string WebHostName = "";

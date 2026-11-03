@@ -53,6 +53,10 @@
                     }
                     <a class="btn btn-outline-secondary w-100" href="@Url.Action("Login", "Home")">@repository.TranslateWeb("Login") @authenticationConfig.Name</a>
                 }
+                @foreach (var accountLink in repository.Security.GetAccountLinks("login"))
+                {
+                    <div class="auth-link text-center mt-3"><a href="@accountLink.Url">@repository.TranslateWeb(accountLink.Label)</a></div>
+                }
             </div>
         </div>
     </div>
@@ -295,6 +299,10 @@
                 <div id="profile-change-password-option" class="config-input-row">
                     <span class="config-input-label">@repository.TranslateWeb("Change password")</span>
                     <button id="profile-change-password" type="button" class="btn btn-secondary">@repository.TranslateWeb("Change password")</button>
+                </div>
+                <div id="profile-account-links-option" class="config-input-row">
+                    <span class="config-input-label">@repository.TranslateWeb("Account")</span>
+                    <div id="profile-account-links" class="config-input-field d-flex flex-wrap gap-2"></div>
                 </div>
 
                 <hr class="edit-profile" />

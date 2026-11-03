@@ -40,6 +40,16 @@ namespace Seal.Model
         public int aipanelwidth;
         public bool hasmcp;
         public bool webschedules;
+        public List<SWIAccountLink> accountlinks;
+    }
+
+    /// <summary>
+    /// Class used for the Seal Web Interface: account link of the profile (see SealSecurity.AccountLinks), opened through Home/AccountLink
+    /// </summary>
+    public class SWIAccountLink
+    {
+        public int index;
+        public string label;
     }
 
     /// <summary>

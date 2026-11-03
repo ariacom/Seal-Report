@@ -156,7 +156,9 @@ namespace SealWebServer.Controllers
                 executionmode = WebUser.Profile.ExecutionMode,
                 groupexecutionmode = defaultGroup.ExecutionMode,
                 sessionId = HttpContext.Session.GetString(SessionIdKey),
-                changepassword = Repository.Security.EnableChangePassword && WebUser.Login != null,
+                //Without login in the security file, the custom script checks the current password
+                changepassword = Repository.Security.EnableChangePassword && (WebUser.Login != null || (!string.IsNullOrEmpty(Repository.Security.ChangePasswordScript) && !string.IsNullOrEmpty(WebUser.WebUserName))),
+                accountlinks = Repository.Security.GetAccountLinks("profile", WebUser).Select(i => new SWIAccountLink() { index = i.Index, label = Repository.TranslateWeb(i.Label) }).ToList(),
                 showresetpassword = Repository.Security.ResetPasswordActive,
                 hasagent = WebUser.AgentConfiguration != null,
                 aipanelopen = WebUser.Profile.AIPanelOpen,
@@ -361,15 +363,25 @@ namespace SealWebServer.Controllers
                 var user = WebUser;
 
                 if (!user.Security.EnableChangePassword) throw new Exception("The Change Password feature is not enabled. Please check your configuration.");
-                if (user.Login == null) throw new Exception("No login for the user");
-                if (!user.Login.CheckPassword(password)) throw new Exception(Translate("Invalid password."));
+                var hasScript = !string.IsNullOrEmpty(user.Security.ChangePasswordScript);
+                //Without login in the security file (e.g. accounts of a security provider), the script checks the current password
+                if (user.Login == null && (!hasScript || string.IsNullOrEmpty(user.WebUserName))) throw new Exception("No login for the user");
+                if (user.Login != null && !user.Login.CheckPassword(password)) throw new Exception(Translate("Invalid password."));
                 if (password1 != password2) throw new Exception(Translate("The two passwords do not match."));
 
-                if (!string.IsNullOrEmpty(user.Security.ChangePasswordScript))
+                if (hasScript)
                 {
                     //Custom implementation
                     user.WebPassword = password1;
-                    RazorHelper.CompileExecute(user.Security.ChangePasswordScript, user);
+                    user.WebCurrentPassword = password;
+                    try
+                    {
+                        RazorHelper.CompileExecute(user.Security.ChangePasswordScript, user);
+                    }
+                    finally
+                    {
+                        user.WebCurrentPassword = "";
+                    }
                 }
                 else
                 {
@@ -390,8 +402,9 @@ namespace SealWebServer.Controllers
                 }
 
                 //Log and Audit
-                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Password changed for '{user.Login.Id}'");
-                Audit.LogAudit(AuditType.EventServer, null, null, $"Password changed for '{user.Login.Id}'");
+                var changedId = user.Login?.Id ?? user.WebUserName;
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Password changed for '{changedId}'");
+                Audit.LogAudit(AuditType.EventServer, null, null, $"Password changed for '{changedId}'");
 
 
                 return Json("");

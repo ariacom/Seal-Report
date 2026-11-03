@@ -865,6 +865,10 @@ namespace Seal.Model
                 {
                     _keyValues.Add(new KeyValue() { Name = OutputSharePointDevice.SecretKeyName, Value = OutputSharePointDevice.SecretKeyValue });
                 }
+                if (!_keyValues.Exists(i => i.Name == SealSecurity.AccountLinkSecretKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = SealSecurity.AccountLinkSecretKeyName, Value = SealSecurity.AccountLinkSecretKeyValue });
+                }
                 if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = ApplicationKeysKeyName, Value = ApplicationKeysKeyValue });

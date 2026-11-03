@@ -379,7 +379,8 @@ namespace Seal.Forms
     var repository = user.Security.Repository;
     var security = user.Security;
 
-    //Implementation using Logins defined in the security
+    //Implementation using Logins defined in the security (the current password is already checked)
+    //For a user authenticated by the Security Provider (user.Login is null), check the current password given in user.WebCurrentPassword
     if (!Helper.IsPasswordComplex(user.WebPassword)) throw new Exception(repository.TranslateWeb(""Your password must contain at least 8 characters, including at least one uppercase letter, one number, and one special character (e.g., !@#$%^&*).""));
     if (user.Login == null) throw new Exception(""No Login found."");
 

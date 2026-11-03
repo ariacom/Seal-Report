@@ -13,6 +13,7 @@ using Seal.Helpers;
 using System.Xml;
 #if WINDOWS
 using System.Drawing.Design;
+using System.ComponentModel.Design;
 using Seal.Forms;
 using DynamicTypeDescriptor;
 #endif
@@ -63,6 +64,8 @@ namespace Seal.Model
                 GetProperty("HideLoginPassword").SetIsBrowsable(true);
                 GetProperty("ProviderForScheduledOutputs").SetIsBrowsable(true);
                 GetProperty("ScheduleCheckScript").SetIsBrowsable(true);
+                GetProperty("AccountLinks").SetIsBrowsable(true);
+                GetProperty("ClearAccountLinkSecret").SetIsBrowsable(true);
                 GetProperty("CurrentParameters").SetIsBrowsable(true);
                 GetProperty("Error").SetIsBrowsable(true);
                 GetProperty("TestUserName").SetIsBrowsable(true);
@@ -197,10 +200,10 @@ namespace Seal.Model
         public string ResetPasswordScript2 { get; set; }
 
         /// <summary>
-        /// If true, the Change Password feature is enabled for users having a login defined in the security file.
+        /// If true, the Change Password feature is enabled for users having a login defined in the security file, and, with a Change Password Script, for the users authenticated by the Security Provider (the script checks the current password given in user.WebCurrentPassword).
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Enable Change Password"), Description("If true, the Change Password feature is enabled for users having a login defined in the security file."), Id(10, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Enable Change Password"), Description("If true, the Change Password feature is enabled for users having a login defined in the security file, and, with a Change Password Script, for the users authenticated by the Security Provider (the script checks the current password given in user.WebCurrentPassword)."), Id(10, 2)]
         [DefaultValue(false)]
 #endif
         public bool EnableChangePassword { get; set; } = false;
@@ -242,6 +245,115 @@ namespace Seal.Model
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
         public string ScheduleCheckScript { get; set; }
+
+        /// <summary>
+        /// Links to an application that manages the accounts (sign-up, account, team...), one per line: 'label|url|location' or 'label|url|location|groups'. The location is 'login' (below the login form) or 'profile' (in the profile dialog, for the members of the groups separated by ';' if any).
+        /// </summary>
+#if WINDOWS
+        [Category("Account links"), DisplayName("Account links"), Description("Links to an application that manages the accounts (sign-up, account, team...), one per line: 'label|url|location' or 'label|url|location|groups'. The location is 'login' (below the login form) or 'profile' (in the profile dialog, for the members of the groups separated by ';' if any)."), Id(1, 3)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string AccountLinks { get; set; }
+
+        /// <summary>
+        /// The secret of the account links (encrypted)
+        /// </summary>
+        public string AccountLinkSecret { get; set; }
+
+        /// <summary>
+        /// Name of the key used to encrypt the secret of the account links
+        /// </summary>
+        public const string AccountLinkSecretKeyName = "Security Account Link Secret";
+
+        /// <summary>
+        /// Default value of the key used to encrypt the secret of the account links
+        /// </summary>
+        public const string AccountLinkSecretKeyValue = "w7!Kd)2pQ_sN9e(Lz+R4fT,yB0hX";
+
+        /// <summary>
+        /// If set, a 'profile' link opens the url with a 'ticket' parameter signed with this secret: the application checks it to open its session without login
+        /// </summary>
+#if WINDOWS
+        [Category("Account links"), DisplayName("Account link secret"), Description("If set, a 'profile' link opens the url with a 'ticket' parameter signed with this secret (HMAC-SHA256): the application checks it to open its session without login. The ticket holds the user name and is valid 60 seconds."), PasswordPropertyText(true), Id(2, 3)]
+#endif
+        [XmlIgnore]
+        public string ClearAccountLinkSecret
+        {
+            get
+            {
+                try
+                {
+                    return Repository.DecryptValue(AccountLinkSecret, AccountLinkSecretKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("Error during account link secret decryption", ex);
+                    return AccountLinkSecret;
+                }
+            }
+            set
+            {
+                try
+                {
+                    AccountLinkSecret = Repository.EncryptValue(value, AccountLinkSecretKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("Error during account link secret encryption", ex);
+                    AccountLinkSecret = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// The account links of a location ('login' or 'profile'), with their index in AccountLinks. For 'profile', only the links allowed to the user.
+        /// </summary>
+        public List<(int Index, string Label, string Url)> GetAccountLinks(string location, SecurityUser user = null)
+        {
+            var result = new List<(int, string, string)>();
+            if (string.IsNullOrEmpty(AccountLinks)) return result;
+            var lines = AccountLinks.Replace("\r", "").Split('\n');
+            for (int i = 0; i < lines.Length; i++)
+            {
+                var parts = lines[i].Split('|');
+                if (parts.Length < 3 || string.IsNullOrWhiteSpace(parts[0]) || string.IsNullOrWhiteSpace(parts[1])) continue;
+                if (!string.Equals(parts[2].Trim(), location, StringComparison.OrdinalIgnoreCase)) continue;
+                if (parts.Length > 3 && !string.IsNullOrWhiteSpace(parts[3]))
+                {
+                    var groups = parts[3].Split(';').Select(g => g.Trim()).Where(g => g.Length > 0);
+                    if (user == null || !user.SecurityGroups.Exists(g => groups.Contains(g.Name))) continue;
+                }
+                result.Add((i, parts[0].Trim(), parts[1].Trim()));
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// The url of the account link at the index, with a ticket for the user if a secret is set. Null if the link is not allowed to the user.
+        /// </summary>
+        public string GetAccountLinkUrl(int index, SecurityUser user)
+        {
+            var link = GetAccountLinks("profile", user).FirstOrDefault(i => i.Index == index);
+            if (link.Url == null) return null;
+            var secret = ClearAccountLinkSecret;
+            if (string.IsNullOrEmpty(secret) || string.IsNullOrEmpty(user.WebUserName)) return link.Url;
+            return link.Url + (link.Url.Contains('?') ? "&" : "?") + "ticket=" + Uri.EscapeDataString(GetAccountTicket(user.WebUserName, secret, DateTime.UtcNow.AddSeconds(60)));
+        }
+
+        /// <summary>
+        /// Ticket of an account link: base64url("v1\n" + user name + "\n" + expiry in Unix seconds + "\n" + nonce) + "." + base64url(HMAC-SHA256 of the payload with the secret)
+        /// </summary>
+        public static string GetAccountTicket(string userName, string secret, DateTime expiryUtc)
+        {
+            var payload = System.Text.Encoding.UTF8.GetBytes($"v1\n{userName}\n{new DateTimeOffset(expiryUtc).ToUnixTimeSeconds()}\n{Guid.NewGuid():N}");
+            var signature = System.Security.Cryptography.HMACSHA256.HashData(System.Text.Encoding.UTF8.GetBytes(secret), payload);
+            return Base64Url(payload) + "." + Base64Url(signature);
+        }
+
+        static string Base64Url(byte[] data)
+        {
+            return Convert.ToBase64String(data).TrimEnd('=').Replace('+', '-').Replace('/', '_');
+        }
 
         /// <summary>
         /// Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).

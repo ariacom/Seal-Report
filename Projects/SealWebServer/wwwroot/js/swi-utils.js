@@ -483,6 +483,15 @@ var SWIUtil;
             $("#profile-user").val(profile.name);
             $("#profile-groups").val(profile.group.replaceAll(";", "\r"));
             SWIUtil.ShowHideControl($("#profile-change-password-option"), profile.editprofile && profile.changepassword);
+            //Account links: the server redirects with a ticket signed for the user
+            var $accountLinks = $("#profile-account-links").empty();
+            var accountLinks = profile.accountlinks || [];
+            accountLinks.forEach(function (link) {
+                $accountLinks.append($("<a class='btn btn-secondary' target='_blank' rel='noopener'>")
+                    .attr("href", _server + "AccountLink?index=" + link.index + "&sessionId=" + encodeURIComponent(profile.sessionId || ""))
+                    .text(link.label));
+            });
+            SWIUtil.ShowHideControl($("#profile-account-links-option"), accountLinks.length > 0);
             SWIUtil.HideModal($waitDialog);
             if (profile.editprofile && profile.changepassword) {
                 $("#profile-change-password").unbind("click").on("click", function (e) {
