@@ -28,9 +28,10 @@
             Main entry of the Controller
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.AccountLink(System.Int32,System.String)">
+        <member name="M:SealWebServer.Controllers.HomeController.AccountLink(System.Int32,System.String,System.String)">
             <summary>
-            Opens an account link of the profile (SealSecurity.AccountLinks): redirects to its url, with a ticket signed for the current user if a secret is set
+            Opens an account link of the profile (SealSecurity.AccountLinks): redirects to its url, with a ticket signed for the current user if a secret is set.
+            The link is given by its index, or by an address 'account' (parameter 'account' of the Web Report Server, see SealSecurity.FindAccountLink).
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.ActionExecuteReport(System.String,System.String)">
