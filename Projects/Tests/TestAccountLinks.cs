@@ -57,6 +57,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void FindAccountLinkAfterLogin()
+        {
+            var security = newSecurity();
+            var member = new SecurityUser(security) { WebUserName = "membre@test" };
+            var admin = new SecurityUser(security) { WebUserName = "admin@test" };
+            admin.SecurityGroups.Add(new SecurityGroup() { Name = "Admin abonné" });
+            //Exact url (case and final slash ignored), allowed to the user
+            Assert.AreEqual(3, security.FindAccountLink("https://comptes.test/entree?page=equipe", admin));
+            Assert.AreEqual(1, security.FindAccountLink("HTTPS://comptes.test/entree/", member));
+            //Link not allowed to the user, or another page of the portal: first link of the same site
+            Assert.AreEqual(1, security.FindAccountLink("https://comptes.test/entree?page=equipe", member));
+            Assert.AreEqual(1, security.FindAccountLink("https://comptes.test/abonnement", member));
+            //Another site, a link of the login only, a bad address, a guest: nothing
+            Assert.AreEqual(-1, security.FindAccountLink("https://evil.test/entree", member));
+            Assert.AreEqual(-1, security.FindAccountLink("https://comptes.test:8443/entree", member));
+            Assert.AreEqual(-1, security.FindAccountLink("/entree", member));
+            Assert.AreEqual(-1, security.FindAccountLink("", member));
+            var guest = new SecurityUser(security) { IsGuest = true };
+            Assert.AreEqual(-1, security.FindAccountLink("https://comptes.test/entree", guest));
+        }
+
+        [TestMethod]
         public void TicketIsSigned()
         {
             var security = newSecurity();

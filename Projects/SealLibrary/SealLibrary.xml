@@ -17828,6 +17828,13 @@
             The account links of a location ('login' or 'profile'), with their index in AccountLinks. For 'profile', only the links allowed to the user.
             </summary>
         </member>
+        <member name="M:Seal.Model.SealSecurity.FindAccountLink(System.String,Seal.Model.SecurityUser)">
+            <summary>
+            The index of the account link of the profile to open for an address given to the Web Report Server (parameter 'account', e.g. the page of an accounts portal
+            that asked for a login): the link having this url, otherwise the first link of the same site (scheme, host and port). -1 if no link allowed to the user matches,
+            and always for a guest: the address only selects a declared link, it can never redirect elsewhere.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSecurity.GetAccountLinkUrl(System.Int32,Seal.Model.SecurityUser)">
             <summary>
             The url of the account link at the index, with a ticket for the user if a secret is set. Null if the link is not allowed to the user.

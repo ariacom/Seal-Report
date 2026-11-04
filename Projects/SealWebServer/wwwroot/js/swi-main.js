@@ -118,10 +118,16 @@ class SWIMain {
         }
         //Parameter 'login' (e.g. the link 'Log in' of an accounts portal): show the login dialog instead of a session without account.
         //Removed from the address, so that a reload opens the usual session.
+        //Parameter 'account' (with 'login'): address of the accounts portal to go back to once logged in (an account link of the profile, see SealSecurity.FindAccountLink),
+        //kept in the session storage to survive the closing of a guest session or a reload of the translations.
         const askLogin = new URLSearchParams(window.location.search).has('login');
-        if (askLogin) {
+        const account = new URLSearchParams(window.location.search).get('account');
+        if (account)
+            sessionStorage.setItem('account', account);
+        if (askLogin || account) {
             const url = new URL(window.location.href);
             url.searchParams.delete('login');
+            url.searchParams.delete('account');
             window.history.replaceState(null, "", url.toString());
         }
         _gateway.GetUserProfile(function (data) {
@@ -215,6 +221,13 @@ class SWIMain {
     loginSuccess(data) {
         if (data.securitycoderequired) {
             _main.showSecurityCode(data);
+            return;
+        }
+        //Back to the accounts portal that asked for the login (parameter 'account'): the server opens the matching account link with its ticket, or the main page
+        const account = sessionStorage.getItem('account');
+        if (account && !data.guest) {
+            sessionStorage.removeItem('account');
+            window.location.href = _server + "AccountLink?account=" + encodeURIComponent(account) + "&sessionId=" + encodeURIComponent(data.sessionId || "");
             return;
         }
         //check if we have to reload translations

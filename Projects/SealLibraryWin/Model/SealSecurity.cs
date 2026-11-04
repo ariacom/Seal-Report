@@ -339,6 +339,21 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// The index of the account link of the profile to open for an address given to the Web Report Server (parameter 'account', e.g. the page of an accounts portal
+        /// that asked for a login): the link having this url, otherwise the first link of the same site (scheme, host and port). -1 if no link allowed to the user matches,
+        /// and always for a guest: the address only selects a declared link, it can never redirect elsewhere.
+        /// </summary>
+        public int FindAccountLink(string url, SecurityUser user)
+        {
+            if (string.IsNullOrWhiteSpace(url) || user == null || user.IsGuest || !Uri.TryCreate(url.Trim(), UriKind.Absolute, out var target)) return -1;
+            var links = GetAccountLinks("profile", user);
+            var exact = links.FirstOrDefault(i => string.Equals(i.Url.TrimEnd('/'), url.Trim().TrimEnd('/'), StringComparison.OrdinalIgnoreCase));
+            if (exact.Url != null) return exact.Index;
+            var site = links.FirstOrDefault(i => Uri.TryCreate(i.Url, UriKind.Absolute, out var link) && Uri.Compare(link, target, UriComponents.SchemeAndServer, UriFormat.Unescaped, StringComparison.OrdinalIgnoreCase) == 0);
+            return site.Url != null ? site.Index : -1;
+        }
+
+        /// <summary>
         /// The url of the account link at the index, with a ticket for the user if a secret is set. Null if the link is not allowed to the user.
         /// </summary>
         public string GetAccountLinkUrl(int index, SecurityUser user)
