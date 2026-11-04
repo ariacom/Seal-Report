@@ -896,10 +896,13 @@ class SWIMain {
                     button.append($("<span class='fa-solid fa-circle-down'></span>"));
                     $td.append(button);
                 }
-                button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-secondary btn-table report-favorite d-none d-sm-inline-block");
-                if (file.isfavorite) button.append($("<span class='fa-solid fa-star'></span>"));
-                else button.append($("<span class='fa-regular fa-star'></span>"));
-                $td.append(button);
+                //No favorites for a guest: his profile lives only in the session
+                if (!_main._profile.guest) {
+                    button = $("<button>").prop("type", "button").prop("title", SWIUtil.tr2("Mark as favorite")).addClass("btn btn-secondary btn-table report-favorite d-none d-sm-inline-block");
+                    if (file.isfavorite) button.append($("<span class='fa-solid fa-star'></span>"));
+                    else button.append($("<span class='fa-regular fa-star'></span>"));
+                    $td.append(button);
+                }
             }
             $tr.append($("<td>").css({ "text-align": "right", "white-space": "nowrap" }).addClass("d-none d-sm-table-cell").text(file.last));
         }

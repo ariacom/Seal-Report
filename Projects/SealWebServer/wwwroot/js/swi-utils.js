@@ -200,11 +200,15 @@ var SWIUtil;
         aref.addClass(value.classes);
         li.append(aref);
         const actions = $("<span class='menu-fav-actions'>");
-        const starBtn = $("<button type='button' class='menu-fav-btn menu-fav-star'>")
-            .attr('path', value.path)
-            .attr('title', isFavorite ? SWIUtil.tr2("Remove from favorites") : SWIUtil.tr2("Mark as favorite"))
-            .html(isFavorite ? "<i class='fas fa-star'></i>" : "<i class='far fa-star'></i>");
-        actions.append(starBtn);
+        //No favorites for a guest: his profile lives only in the session
+        const guest = typeof _main !== "undefined" && _main && _main._profile && _main._profile.guest;
+        if (!guest) {
+            const starBtn = $("<button type='button' class='menu-fav-btn menu-fav-star'>")
+                .attr('path', value.path)
+                .attr('title', isFavorite ? SWIUtil.tr2("Remove from favorites") : SWIUtil.tr2("Mark as favorite"))
+                .html(isFavorite ? "<i class='fas fa-star'></i>" : "<i class='far fa-star'></i>");
+            actions.append(starBtn);
+        }
         if (isFavorite) {
             const renameBtn = $("<button type='button' class='menu-fav-btn menu-fav-rename'>")
                 .attr('path', value.path)

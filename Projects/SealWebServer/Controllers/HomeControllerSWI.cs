@@ -536,7 +536,8 @@ namespace SealWebServer.Controllers
 
                 WebUser.Profile.RecentReports.RemoveAll(i => i == null || !System.IO.File.Exists(getFullPath(i.Path)));
                 WebUser.Profile.Favorites.RemoveAll(i => i == null || !System.IO.File.Exists(getFullPath(i.Path)));
-
+                //No favorites for a guest: his profile lives only in the session
+                if (WebUser.IsGuest) WebUser.Profile.Favorites.Clear();
 
                 WebUser.WebMenu = new SWIWebMenu()
                 {
@@ -1228,6 +1229,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (WebUser.IsGuest) throw new Exception("Error: favorites are not available without an account");
 
                 SWIFolder folder = getFolder(path);
                 if ((FolderRight)folder.right == FolderRight.None) throw new Exception("Error: no right on this folder");
@@ -1282,6 +1284,7 @@ namespace SealWebServer.Controllers
             try
             {
                 if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (WebUser.IsGuest) throw new Exception("Error: favorites are not available without an account");
 
                 newName = (newName ?? "").Trim();
                 if (string.IsNullOrEmpty(newName)) throw new Exception("Error: the name cannot be empty");
