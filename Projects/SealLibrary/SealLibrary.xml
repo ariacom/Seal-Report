@@ -17753,6 +17753,56 @@
             If the Two-Factor Authentication is enabled and the script is not empty, the script is executed to check the security code and validate the Two-Factor Authentication (otherwise the default implementation is used).
             </summary>
         </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFATrustDays">
+            <summary>
+            If greater than 0 and a trusted browser secret is set, the security code page proposes to trust the browser for this number of days: the browser then skips the security code (the password is still required)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.TrustedBrowserSecret">
+            <summary>
+            The secret of the cookie of the trusted browsers (encrypted)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.TrustedBrowserSecretKeyName">
+            <summary>
+            Name of the key used to encrypt the secret of the trusted browsers
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.TrustedBrowserSecretKeyValue">
+            <summary>
+            Default value of the key used to encrypt the secret of the trusted browsers
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.TrustedBrowserCookieName">
+            <summary>
+            Name of the cookie of a trusted browser
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.ClearTrustedBrowserSecret">
+            <summary>
+            Secret used to sign the cookie of the trusted browsers (HMAC-SHA256). Changing it forgets all the trusted browsers.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSecurity.TwoFATrustActive">
+            <summary>
+            True if the Two-Factor Authentication is enabled and a browser can be trusted (days and secret set)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.GetTrustedBrowserToken(System.String,System.String,System.DateTime)">
+            <summary>
+            Value of the cookie of a trusted browser: base64url("tb1\n" + user name + "\n" + expiry in Unix seconds) + "." + base64url(HMAC-SHA256 of the payload with the secret)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.IsTrustedBrowserToken(System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            True if the token is a valid cookie of a trusted browser for the user: signature, expiration and user name (not case sensitive)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.IsTrustedBrowser(System.String,System.String)">
+            <summary>
+            True if the token is a valid cookie of a trusted browser for the user with the current configuration
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealSecurity.EnableResetPassword">
             <summary>
             If true, the Reset Password feature is enabled: a link to reset the password is displayed in the login page. The reset link is sent by email, so a notification email device must be configured.
@@ -19281,6 +19331,16 @@
         <member name="F:Seal.Model.SecurityUser.SecurityCodeTries">
             <summary>
             Number of tries to check the security code for 2FA
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.TrustedBrowserToken">
+            <summary>
+            Parameters for authentication: value of the cookie of a trusted browser sent by the browser (see SealSecurity.TwoFATrustDays)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUser.TrustedBrowser">
+            <summary>
+            True if the security code of the Two-Factor Authentication was skipped because the browser is trusted (valid cookie of SealSecurity.TwoFATrustDays)
             </summary>
         </member>
         <member name="F:Seal.Model.SecurityUser.Request">

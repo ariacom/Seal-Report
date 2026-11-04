@@ -56,6 +56,8 @@ namespace Seal.Model
                 GetProperty("EnableTwoFA").SetIsBrowsable(true);
                 GetProperty("TwoFAGenerationScript").SetIsBrowsable(true);
                 GetProperty("TwoFACheckScript").SetIsBrowsable(true);
+                GetProperty("TwoFATrustDays").SetIsBrowsable(true);
+                GetProperty("ClearTrustedBrowserSecret").SetIsBrowsable(true);
                 GetProperty("EnableResetPassword").SetIsBrowsable(true);
                 GetProperty("ResetPasswordScript").SetIsBrowsable(true);
                 GetProperty("ResetPasswordScript2").SetIsBrowsable(true);
@@ -170,6 +172,127 @@ namespace Seal.Model
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
         public string TwoFACheckScript { get; set; }
+
+        /// <summary>
+        /// If greater than 0 and a trusted browser secret is set, the security code page proposes to trust the browser for this number of days: the browser then skips the security code (the password is still required)
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication: days of a trusted browser"), Description("If greater than 0 and a trusted browser secret is set, the security code page proposes to trust the browser for this number of days: the browser then skips the security code, the password is still required. The browser keeps a cookie signed with the secret, holding the user name and the expiration date: changing the secret forgets all the trusted browsers."), Id(6, 2)]
+        [DefaultValue(0)]
+#endif
+        public int TwoFATrustDays { get; set; } = 0;
+
+        /// <summary>
+        /// The secret of the cookie of the trusted browsers (encrypted)
+        /// </summary>
+        public string TrustedBrowserSecret { get; set; }
+
+        /// <summary>
+        /// Name of the key used to encrypt the secret of the trusted browsers
+        /// </summary>
+        public const string TrustedBrowserSecretKeyName = "Security Trusted Browser Secret";
+
+        /// <summary>
+        /// Default value of the key used to encrypt the secret of the trusted browsers
+        /// </summary>
+        public const string TrustedBrowserSecretKeyValue = "Hq3,vT9(zB!m_Lx7Wd)eK2+pYs0";
+
+        /// <summary>
+        /// Name of the cookie of a trusted browser
+        /// </summary>
+        public const string TrustedBrowserCookieName = "SealTrustedBrowser";
+
+        /// <summary>
+        /// Secret used to sign the cookie of the trusted browsers (HMAC-SHA256). Changing it forgets all the trusted browsers.
+        /// </summary>
+#if WINDOWS
+        [Category("Security Provider Configuration"), DisplayName("Two-Factor Authentication: trusted browser secret"), Description("Secret used to sign the cookie of the trusted browsers (HMAC-SHA256), at least 16 characters. Changing it forgets all the trusted browsers."), PasswordPropertyText(true), Id(6, 2)]
+#endif
+        [XmlIgnore]
+        public string ClearTrustedBrowserSecret
+        {
+            get
+            {
+                try
+                {
+                    return Repository.DecryptValue(TrustedBrowserSecret, TrustedBrowserSecretKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("Error during trusted browser secret decryption", ex);
+                    return TrustedBrowserSecret;
+                }
+            }
+            set
+            {
+                try
+                {
+                    TrustedBrowserSecret = Repository.EncryptValue(value, TrustedBrowserSecretKeyName);
+                }
+                catch (Exception ex)
+                {
+                    Helper.WriteLogException("Error during trusted browser secret encryption", ex);
+                    TrustedBrowserSecret = value;
+                }
+            }
+        }
+
+        /// <summary>
+        /// True if the Two-Factor Authentication is enabled and a browser can be trusted (days and secret set)
+        /// </summary>
+        [XmlIgnore]
+        public bool TwoFATrustActive
+        {
+            get { return TwoFAActive && TwoFATrustDays > 0 && (ClearTrustedBrowserSecret?.Length ?? 0) >= 16; }
+        }
+
+        /// <summary>
+        /// Value of the cookie of a trusted browser: base64url("tb1\n" + user name + "\n" + expiry in Unix seconds) + "." + base64url(HMAC-SHA256 of the payload with the secret)
+        /// </summary>
+        public static string GetTrustedBrowserToken(string userName, string secret, DateTime expiryUtc)
+        {
+            var payload = System.Text.Encoding.UTF8.GetBytes($"tb1\n{(userName ?? "").Trim()}\n{new DateTimeOffset(expiryUtc).ToUnixTimeSeconds()}");
+            var signature = System.Security.Cryptography.HMACSHA256.HashData(System.Text.Encoding.UTF8.GetBytes(secret), payload);
+            return Base64Url(payload) + "." + Base64Url(signature);
+        }
+
+        /// <summary>
+        /// True if the token is a valid cookie of a trusted browser for the user: signature, expiration and user name (not case sensitive)
+        /// </summary>
+        public static bool IsTrustedBrowserToken(string token, string userName, string secret, DateTime nowUtc)
+        {
+            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(userName) || string.IsNullOrEmpty(secret)) return false;
+            try
+            {
+                var parts = token.Split('.');
+                if (parts.Length != 2) return false;
+                var payload = FromBase64Url(parts[0]);
+                var expected = System.Security.Cryptography.HMACSHA256.HashData(System.Text.Encoding.UTF8.GetBytes(secret), payload);
+                if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(expected, FromBase64Url(parts[1]))) return false;
+                var fields = System.Text.Encoding.UTF8.GetString(payload).Split('\n');
+                if (fields.Length != 3 || fields[0] != "tb1") return false;
+                if (!string.Equals(fields[1], userName.Trim(), StringComparison.OrdinalIgnoreCase)) return false;
+                return long.TryParse(fields[2], out var expiry) && DateTimeOffset.FromUnixTimeSeconds(expiry).UtcDateTime > nowUtc;
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
+        /// <summary>
+        /// True if the token is a valid cookie of a trusted browser for the user with the current configuration
+        /// </summary>
+        public bool IsTrustedBrowser(string token, string userName)
+        {
+            return TwoFATrustActive && IsTrustedBrowserToken(token, userName, ClearTrustedBrowserSecret, DateTime.UtcNow);
+        }
+
+        static byte[] FromBase64Url(string value)
+        {
+            var s = value.Replace('-', '+').Replace('_', '/');
+            return Convert.FromBase64String(s + new string('=', (4 - s.Length % 4) % 4));
+        }
 
         /// <summary>
         /// If true, the Reset Password feature is enabled: a link to reset the password is displayed in the login page. The reset link is sent by email, so a notification email device must be configured.

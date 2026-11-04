@@ -17,9 +17,10 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
-    CheckSecurityCode(code, callback, errorcb) {
+    CheckSecurityCode(code, trust, callback, errorcb) {
         $.post(_server + "SWICheckSecurityCode", {
-            code: code
+            code: code,
+            trust: trust
         })
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });

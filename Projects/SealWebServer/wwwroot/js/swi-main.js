@@ -555,7 +555,7 @@ class SWIMain {
     checkSecurityCode() {
         SWIUtil.HideModal($securityModal);
         SWIUtil.ShowModal($waitDialog);
-        _gateway.CheckSecurityCode($("#securitycode").val(), function (data) {
+        _gateway.CheckSecurityCode($("#securitycode").val(), $("#securitycode-trust").is(":checked"), function (data) {
             $("#securitycode").val("");
             $("#security-modal-error").text("");
             if (data.login) {

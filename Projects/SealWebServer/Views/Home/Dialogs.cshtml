@@ -81,6 +81,14 @@
                         <label for="securitycode">@repository.TranslateWeb("Security code")</label>
                         <input type="text" class="form-control" id="securitycode" name="securitycode" autocomplete="one-time-code" autocapitalize="none" spellcheck="false" />
                     </div>
+                    @if (repository.Security.TwoFATrustActive)
+                    {
+                        <div class="form-check mb-3">
+                            <input class="form-check-input" type="checkbox" id="securitycode-trust" />
+                            <label class="form-check-label" for="securitycode-trust">@string.Format(repository.TranslateWeb("Trust this browser for {0} days"), repository.Security.TwoFATrustDays)</label>
+                            <div class="form-text">@repository.TranslateWeb("Do not check it on a shared computer.")</div>
+                        </div>
+                    }
                     <button id="security-modal-submit" type="submit" class="btn btn-primary w-100">@repository.TranslateWeb("Login")</button>
                 </form>
                 <div class="auth-link text-center mt-3">

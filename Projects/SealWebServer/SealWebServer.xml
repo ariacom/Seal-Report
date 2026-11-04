@@ -147,7 +147,7 @@
             Start a session with the Web Report Server using the user name, password, token (may be optional according to the authentication configured on the server) and returns information of the logged user (SWIUserProfile).
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.SWICheckSecurityCode(System.String)">
+        <member name="M:SealWebServer.Controllers.HomeController.SWICheckSecurityCode(System.String,System.Boolean)">
             <summary>
             Check the security code for a 2 factors authentication
             </summary>

@@ -869,6 +869,10 @@ namespace Seal.Model
                 {
                     _keyValues.Add(new KeyValue() { Name = SealSecurity.AccountLinkSecretKeyName, Value = SealSecurity.AccountLinkSecretKeyValue });
                 }
+                if (!_keyValues.Exists(i => i.Name == SealSecurity.TrustedBrowserSecretKeyName))
+                {
+                    _keyValues.Add(new KeyValue() { Name = SealSecurity.TrustedBrowserSecretKeyName, Value = SealSecurity.TrustedBrowserSecretKeyValue });
+                }
                 if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
                 {
                     _keyValues.Add(new KeyValue() { Name = ApplicationKeysKeyName, Value = ApplicationKeysKeyValue });

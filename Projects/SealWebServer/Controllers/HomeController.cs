@@ -167,6 +167,7 @@ namespace SealWebServer.Controllers
         void Authenticate()
         {
             WebUser.WebPrincipal = User;
+            WebUser.TrustedBrowserToken = getCookie(SealSecurity.TrustedBrowserCookieName);
             WebUser.Authenticate();
             if (string.IsNullOrEmpty(WebUser.SecurityCode)) WebHelper.WriteLogEntryWeb(WebUser.IsAuthenticated ? EventLogEntryType.SuccessAudit : EventLogEntryType.FailureAudit, WebUser.AuthenticationSummary);
         }

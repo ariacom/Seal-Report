@@ -249,7 +249,7 @@ namespace SealWebServer.Controllers
         /// <summary>
         /// Check the security code for a 2 factors authentication
         /// </summary>
-        public ActionResult SWICheckSecurityCode(string code)
+        public ActionResult SWICheckSecurityCode(string code, bool trust = false)
         {
             writeDebug("SWICheckSecurityCode");
 
@@ -274,6 +274,21 @@ namespace SealWebServer.Controllers
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode)) throw new ValidationException(Translate("Invalid code"));
                 WebUser.StrongAuthentication = true;
+
+                //Trust the browser: signed cookie, the next logins of the user from this browser skip the security code until its expiration
+                var security = WebUser.Security;
+                if (trust && security.TwoFATrustActive && !string.IsNullOrEmpty(WebUser.WebUserName))
+                {
+                    var expiry = DateTime.UtcNow.AddDays(security.TwoFATrustDays);
+                    Response.Cookies.Append(SealSecurity.TrustedBrowserCookieName, SealSecurity.GetTrustedBrowserToken(WebUser.WebUserName, security.ClearTrustedBrowserSecret, expiry), new CookieOptions()
+                    {
+                        Expires = expiry,
+                        HttpOnly = true,
+                        Secure = Request.IsHttps,
+                        SameSite = SameSiteMode.Lax,
+                        Path = Request.PathBase.HasValue ? Request.PathBase.Value : "/"
+                    });
+                }
 
                 //Log and Audit
                 WebHelper.WriteLogEntryWeb(EventLogEntryType.SuccessAudit, WebUser.AuthenticationSummary);

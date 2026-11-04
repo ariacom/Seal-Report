@@ -591,6 +591,16 @@ namespace Seal.Model
         public int SecurityCodeTries = 0;
 
         /// <summary>
+        /// Parameters for authentication: value of the cookie of a trusted browser sent by the browser (see SealSecurity.TwoFATrustDays)
+        /// </summary>
+        public string TrustedBrowserToken = null;
+
+        /// <summary>
+        /// True if the security code of the Two-Factor Authentication was skipped because the browser is trusted (valid cookie of SealSecurity.TwoFATrustDays)
+        /// </summary>
+        public bool TrustedBrowser = false;
+
+        /// <summary>
         /// Parameters for authentication: The Request done for the login
         /// </summary>
         public HttpRequest Request = null;
@@ -808,7 +818,10 @@ namespace Seal.Model
             //Scheduled output: no Two-Factor Authentication and no logged user
             if (ForSchedule) return;
 
-            if (string.IsNullOrEmpty(Error) && Security.TwoFAActive)
+            //Trusted browser: the Two-Factor Authentication was done in the previous days, the password has just been checked
+            TrustedBrowser = string.IsNullOrEmpty(Error) && Security.TwoFAActive && !IsGuest && SecurityGroups.Count > 0 && Security.IsTrustedBrowser(TrustedBrowserToken, WebUserName);
+            if (TrustedBrowser) StrongAuthentication = true;
+            else if (string.IsNullOrEmpty(Error) && Security.TwoFAActive)
             {
                 script = Security.TwoFAGenerationScriptEffective;
                 try
@@ -1143,6 +1156,7 @@ namespace Seal.Model
                 if (!string.IsNullOrEmpty(SecurityCode)) message += string.Format("Security code generated: {0}\r\n", SecurityCode);
                 if (!string.IsNullOrEmpty(WebSecurityCode)) message += string.Format("Security code: {0}\r\n", WebSecurityCode);
                 if (SecurityCodeTries != 0) message += string.Format("Security code tries: {0}\r\n", SecurityCodeTries);
+                if (TrustedBrowser) message += "Security code skipped: trusted browser\r\n";
                 foreach (var group in SecurityGroups)
                 {
                     message += string.Format("Security group: {0}\r\n", group.Name);
