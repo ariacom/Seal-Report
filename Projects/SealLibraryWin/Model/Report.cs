@@ -1090,6 +1090,12 @@ namespace Seal.Model
         public bool IsNavigating = false; //If false, do evaluate restrictions prompted...
 
         /// <summary>
+        /// True if the report was opened by a navigation link (sub-report or drill), also in a new window where IsNavigating is reset. The init scripts may test it to keep the restrictions set by the navigation.
+        /// </summary>
+        [XmlIgnore]
+        public bool FromNavigation = false;
+
+        /// <summary>
         /// True if the report has navigation links in the result
         /// </summary>
         [XmlIgnore]

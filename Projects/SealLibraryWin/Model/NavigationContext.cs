@@ -127,6 +127,7 @@ namespace Seal.Model
             newReport.WebUrl = rootReport.WebUrl;
             newReport.ForceShowErrorMessages = rootReport.ForceShowErrorMessages;
             newReport.IsNavigating = true;
+            newReport.FromNavigation = true;
             if (!newWindow) newReport.HasNavigation = true;
             newReport.ExecutionView.InitParameters(false);
             newReport.ExecutionView.SetParameter(Parameter.ForceExecutionParameter, true);

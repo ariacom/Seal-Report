@@ -10591,6 +10591,11 @@
             True is the report execution occured after an navigation (sub-report or drill)
             </summary>
         </member>
+        <member name="F:Seal.Model.Report.FromNavigation">
+            <summary>
+            True if the report was opened by a navigation link (sub-report or drill), also in a new window where IsNavigating is reset. The init scripts may test it to keep the restrictions set by the navigation.
+            </summary>
+        </member>
         <member name="F:Seal.Model.Report.HasNavigation">
             <summary>
             True if the report has navigation links in the result
