@@ -1405,7 +1405,7 @@ namespace Seal.Model
         {
             get
             {
-                return Path.Combine(AssembliesFolder, "Dynamics\\Net");
+                return Path.Combine(AssembliesFolder, "Dynamics", "Net");
             }
         }
 
@@ -1416,7 +1416,7 @@ namespace Seal.Model
         {
             get
             {
-                return Path.Combine(AssembliesFolder, "Dynamics\\Win");
+                return Path.Combine(AssembliesFolder, "Dynamics", "Win");
             }
         }
 
@@ -1460,7 +1460,7 @@ namespace Seal.Model
         {
             get
             {
-                return Path.Combine(AssembliesFolder, "RazorCache\\Net");
+                return Path.Combine(AssembliesFolder, "RazorCache", "Net");
             }
         }
 
@@ -1471,7 +1471,7 @@ namespace Seal.Model
         {
             get
             {
-                return Path.Combine(AssembliesFolder, "RazorCache\\Win");
+                return Path.Combine(AssembliesFolder, "RazorCache", "Win");
             }
         }
 
