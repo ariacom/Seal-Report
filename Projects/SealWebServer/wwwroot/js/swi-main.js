@@ -116,12 +116,27 @@ class SWIMain {
             SWIUtil.ShowModal($passwordResetModal2);
             return;
         }
+        //Parameter 'login' (e.g. the link 'Log in' of an accounts portal): show the login dialog instead of a session without account.
+        //Removed from the address, so that a reload opens the usual session.
+        const askLogin = new URLSearchParams(window.location.search).has('login');
+        if (askLogin) {
+            const url = new URL(window.location.href);
+            url.searchParams.delete('login');
+            window.history.replaceState(null, "", url.toString());
+        }
         _gateway.GetUserProfile(function (data) {
             SWIUtil.ShowHideControl($("#login-password-reset"), data.showresetpassword);
             var login = sessionStorage.getItem('login');
             sessionStorage.removeItem('login');
             if (login) {
                 _main.loginFailure(data, true);
+            }
+            else if (askLogin && data.guest) {
+                //Session of a guest: closed, then the login dialog
+                _gateway.Logout(function () { _main.showLogin(); });
+            }
+            else if (askLogin && data.authenticated != null && data.authenticated == false) {
+                _main.showLogin();
             }
             else if (data.authenticated != null && data.authenticated == false) {
                 //Try to login without authentication
