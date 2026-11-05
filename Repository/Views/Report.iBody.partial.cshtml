@@ -38,8 +38,8 @@
     }
 
     function processInitProgressBar() {
-        $(".alert-danger").addClass('d-none');
-        $(".alert-danger").html("");
+        //Only the messages of the report: not the ones of the dialogs of the Web Report Server page (e.g. login error)
+        $(".alert-danger").not(".modal .alert-danger").addClass('d-none').html("");
 
         $("#execute_button").text('@Raw(Helper.ToJS(report.Translate("Cancel")))');
         $("#execute_button").removeClass("btn-success").addClass("btn-warning");
