@@ -5517,6 +5517,12 @@
             First day of the current semester
             </summary>
         </member>
+        <member name="F:Seal.Model.DateRestrictionKeyword.LastExecution">
+            <summary>
+            Start of the last successful execution of the web schedule executing the report (e.g. to get only the new records since the last result).
+            If the report is not executed by a web schedule, or if the schedule has never been executed successfully, the current day minus 30 days is used.
+            </summary>
+        </member>
         <member name="T:Seal.Model.AxisType">
             <summary>
             Axis used for a chart serie
@@ -12043,7 +12049,7 @@
             Execute a report schedule
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportExecution.saveWebScheduleExecution(Seal.Model.SealSchedule,System.String,System.Int32)">
+        <member name="M:Seal.Model.ReportExecution.saveWebScheduleExecution(Seal.Model.SealSchedule,System.String,System.Int32,System.DateTime)">
             <summary>
             Save the result of the last execution in the web schedule file. The next execution is also calculated as the file may be saved by an outer process.
             </summary>
@@ -13551,6 +13557,16 @@
         <member name="M:Seal.Model.ReportRestriction.HasDateKeyword(System.String)">
             <summary>
             Helper to find if a string has a date keyword
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportRestriction.LastExecutionDefaultDays">
+            <summary>
+            Number of days before the current day used by the keyword 'LastExecution' when the report is not executed by a web schedule, or if the schedule has never been executed successfully
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportRestriction.GetLastExecutionDate">
+            <summary>
+            Value of the keyword 'LastExecution': start of the last successful execution of the web schedule executing the report, otherwise the current day minus LastExecutionDefaultDays
             </summary>
         </member>
         <member name="P:Seal.Model.ReportRestriction.FinalDate1">
@@ -17417,6 +17433,16 @@
         <member name="M:Seal.Model.SealSchedule.ShouldSerializeLastExecution">
             <summary>
             Xml serialization helper: serialize LastExecution only if set
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealSchedule.LastSuccessfulExecution">
+            <summary>
+            Web schedule: date time of the start of the last successful execution (a result cancelled because it has no records is successful), used by the date keyword 'LastExecution'
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSchedule.ShouldSerializeLastSuccessfulExecution">
+            <summary>
+            Xml serialization helper: serialize LastSuccessfulExecution only if set
             </summary>
         </member>
         <member name="P:Seal.Model.SealSchedule.LastError">

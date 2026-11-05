@@ -188,6 +188,16 @@ namespace Seal.Model
         public bool ShouldSerializeLastExecution() { return LastExecution != DateTime.MinValue; }
 
         /// <summary>
+        /// Web schedule: date time of the start of the last successful execution (a result cancelled because it has no records is successful), used by the date keyword 'LastExecution'
+        /// </summary>
+        public DateTime LastSuccessfulExecution { get; set; } = DateTime.MinValue;
+        /// <summary>
+        /// Xml serialization helper: serialize LastSuccessfulExecution only if set
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeLastSuccessfulExecution() { return LastSuccessfulExecution != DateTime.MinValue; }
+
+        /// <summary>
         /// Web schedule: error of the last execution, empty if the execution was successful
         /// </summary>
         public string LastError { get; set; }

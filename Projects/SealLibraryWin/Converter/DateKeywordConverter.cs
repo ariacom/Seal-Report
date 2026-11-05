@@ -30,6 +30,7 @@ namespace Seal.Forms
                     DateRestrictionKeyword.ThisSemester.ToString(), DateRestrictionKeyword.ThisSemester.ToString() + "-1S",
                     DateRestrictionKeyword.ThisMinute.ToString(), DateRestrictionKeyword.ThisMinute.ToString() + "-1m", DateRestrictionKeyword.ThisMinute.ToString() + "-30s",
                     DateRestrictionKeyword.ThisHour.ToString(), DateRestrictionKeyword.ThisHour.ToString() + "-1h",
+                    DateRestrictionKeyword.LastExecution.ToString(), DateRestrictionKeyword.LastExecution.ToString() + "-1D",
                     DateRestrictionKeyword.Now.ToString() + "+1.5s -2m +3h -4D +5W -6M +7Q -8S +9Y"
                 });
         }

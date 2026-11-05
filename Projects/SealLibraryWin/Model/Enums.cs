@@ -684,6 +684,12 @@ namespace Seal.Model
         /// </summary>
         [Description("This Semester")]
         ThisSemester,
+        /// <summary>
+        /// Start of the last successful execution of the web schedule executing the report (e.g. to get only the new records since the last result).
+        /// If the report is not executed by a web schedule, or if the schedule has never been executed successfully, the current day minus 30 days is used.
+        /// </summary>
+        [Description("Last Execution")]
+        LastExecution,
     }
 
     /// <summary>

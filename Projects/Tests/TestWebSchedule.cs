@@ -253,6 +253,56 @@ namespace Test
             Assert.IsFalse(content.Contains("1997"), "other orders filtered");
         }
 
+        /// <summary>
+        /// Date keyword 'LastExecution': start of the last successful execution of the web schedule executing the report, otherwise today minus 30 days
+        /// </summary>
+        [TestMethod]
+        public void LastExecutionDateKeyword()
+        {
+            //Without schedule: today minus 30 days, offsets applied
+            var report = Report.LoadFromFile(_repository.ReportsFolder + RestrictionsReportWebPath, _repository, false);
+            var restriction = WebScheduleOutput.GetPromptedRestrictions(report).First(i => i.DisplayNameEl == "Order Date");
+            Assert.IsTrue(ReportRestriction.HasDateKeyword("LastExecution"));
+            restriction.Date1Keyword = "LastExecution";
+            Assert.AreEqual(DateTime.Today.AddDays(-ReportRestriction.LastExecutionDefaultDays), restriction.FinalDate1);
+            restriction.Date1Keyword = "LastExecution-1D";
+            Assert.AreEqual(DateTime.Today.AddDays(-ReportRestriction.LastExecutionDefaultDays - 1), restriction.FinalDate1);
+
+            //Successful execution: start of the execution saved
+            var schedule = createWebSchedule("last execution", reportWebPath: RestrictionsReportWebPath, setOutput: setOrderRestrictions);
+            Assert.AreEqual(DateTime.MinValue, SealSchedule.LoadFromFile(schedule.FilePath).LastSuccessfulExecution, "never executed");
+            var before = DateTime.Now;
+            ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
+            var executed = SealSchedule.LoadFromFile(schedule.FilePath);
+            Assert.IsTrue(string.IsNullOrEmpty(executed.LastError), executed.LastError);
+            Assert.IsTrue(executed.LastSuccessfulExecution >= before && executed.LastSuccessfulExecution <= executed.LastExecution, "start of the successful execution");
+
+            //Report executed by the web schedule: the keyword gives the last successful execution
+            var scheduledReport = SealReportScheduler.GetScheduledReport(executed);
+            scheduledReport.CurrentScheduleGUID = executed.GUID;
+            restriction = WebScheduleOutput.GetPromptedRestrictions(scheduledReport).First(i => i.DisplayNameEl == "Order Date");
+            restriction.Date1Keyword = "LastExecution";
+            Assert.AreEqual(executed.LastSuccessfulExecution, restriction.FinalDate1);
+            restriction.Date1Keyword = "LastExecution-2h";
+            Assert.AreEqual(executed.LastSuccessfulExecution.AddHours(-2), restriction.FinalDate1);
+
+            //Refused execution: the last successful execution is kept, no record is lost at the next execution
+            var security = _repository.Security;
+            try
+            {
+                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Execution) { check.Refusal = \"refused\"; } }";
+                ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
+            }
+            finally
+            {
+                security.ScheduleCheckScript = null;
+            }
+            var refused = SealSchedule.LoadFromFile(schedule.FilePath);
+            Assert.AreEqual("refused", refused.LastError);
+            Assert.IsTrue(refused.LastExecution >= executed.LastExecution);
+            Assert.AreEqual(executed.LastSuccessfulExecution, refused.LastSuccessfulExecution, "kept after a refused execution");
+        }
+
         [TestMethod]
         public void NotPromptedRestrictionIsIgnored()
         {

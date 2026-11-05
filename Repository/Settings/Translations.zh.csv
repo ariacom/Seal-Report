@@ -490,3 +490,4 @@ Report;Reset restrictions;重置限制条件
 Web;You have been signed out.;您已退出登录。
 Web;Show password;显示密码
 Web;or;或
+Report;LastExecution;上次执行

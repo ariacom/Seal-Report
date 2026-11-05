@@ -2313,6 +2313,8 @@ namespace Seal.Model
 
                 string lastError = "";
                 int lastDuration = -1;
+                //Start of the successful execution, used by the date keyword 'LastExecution'
+                DateTime successfulExecution = DateTime.MinValue;
 
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Starting execution of schedule '{0} ({1})'.\r\nReport '{2}'\r\nUser '{3}\\{4}'", schedule.Name, scheduleGUID, report.FilePath, Environment.UserDomainName, Environment.UserName));
                 int retries = schedule.ErrorNumberOfRetries + 1;
@@ -2352,6 +2354,8 @@ namespace Seal.Model
                         report.CurrentViewGUID = report.ViewGUID;
                     }
 
+                    var executionStart = DateTime.Now;
+                    bool stopped = false;
                     reportExecution.Execute();
                     if (!useSealScheduler) schedule.SynchronizeTask();
 
@@ -2361,6 +2365,7 @@ namespace Seal.Model
                         {
                             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}': Cancelling report execution...", schedule.Name));
                             report.CancelExecution();
+                            stopped = true;
                             break;
                         }
                         Thread.Sleep(100);
@@ -2415,6 +2420,8 @@ namespace Seal.Model
                     else
                     {
                         lastError = "";
+                        //A result without records cancelled by 'Cancel if no records' is a successful execution, not a stop of the scheduler
+                        if (!stopped) successfulExecution = executionStart;
                         Helper.WriteLogEntryScheduler(EventLogEntryType.Information, string.Format("Schedule '{0}' has been executed\r\nReport '{1}", schedule.Name, report.FilePath));
 
                         if (!string.IsNullOrEmpty(schedule.NotificationEmailTo) && !report.Cancel)
@@ -2428,7 +2435,7 @@ namespace Seal.Model
                     }
                 }
 
-                if (webSchedule != null) saveWebScheduleExecution(webSchedule, lastError, lastDuration);
+                if (webSchedule != null) saveWebScheduleExecution(webSchedule, lastError, lastDuration, successfulExecution);
 
                 FileHelper.PurgeTempApplicationDirectory();
             }
@@ -2441,11 +2448,12 @@ namespace Seal.Model
         /// <summary>
         /// Save the result of the last execution in the web schedule file. The next execution is also calculated as the file may be saved by an outer process.
         /// </summary>
-        static void saveWebScheduleExecution(SealSchedule webSchedule, string lastError, int lastDuration = -1)
+        static void saveWebScheduleExecution(SealSchedule webSchedule, string lastError, int lastDuration = -1, DateTime successfulExecution = default)
         {
             try
             {
                 webSchedule.LastExecution = DateTime.Now;
+                if (successfulExecution != DateTime.MinValue) webSchedule.LastSuccessfulExecution = successfulExecution;
                 webSchedule.LastError = lastError;
                 webSchedule.LastDuration = lastDuration;
                 webSchedule.CalculateNextExecution();

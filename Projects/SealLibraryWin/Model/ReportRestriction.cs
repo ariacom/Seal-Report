@@ -1121,8 +1121,28 @@ namespace Seal.Model
                 keyword.StartsWith(DateRestrictionKeyword.ThisMonth.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisQuarter.ToString()) ||
                 keyword.StartsWith(DateRestrictionKeyword.ThisSemester.ToString()) ||
-                keyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString())
+                keyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString()) ||
+                keyword.StartsWith(DateRestrictionKeyword.LastExecution.ToString())
                 ;
+        }
+
+        /// <summary>
+        /// Number of days before the current day used by the keyword 'LastExecution' when the report is not executed by a web schedule, or if the schedule has never been executed successfully
+        /// </summary>
+        public const int LastExecutionDefaultDays = 30;
+
+        /// <summary>
+        /// Value of the keyword 'LastExecution': start of the last successful execution of the web schedule executing the report, otherwise the current day minus LastExecutionDefaultDays
+        /// </summary>
+        DateTime GetLastExecutionDate()
+        {
+            var scheduleGUID = _report?.CurrentScheduleGUID;
+            if (!string.IsNullOrEmpty(scheduleGUID))
+            {
+                var schedule = _report.Schedules.FirstOrDefault(i => i.GUID == scheduleGUID);
+                if (schedule != null && schedule.IsWebSchedule && schedule.SealSchedule.LastSuccessfulExecution != DateTime.MinValue) return schedule.SealSchedule.LastSuccessfulExecution;
+            }
+            return DateTime.Today.AddDays(-LastExecutionDefaultDays);
         }
 
         static char[] DateUnits = new char[] { 's', 'm', 'h', 'D', 'W', 'M', 'Q', 'S', 'Y' };
@@ -1226,6 +1246,10 @@ namespace Seal.Model
                 else if (dateKeyword.StartsWith(DateRestrictionKeyword.ThisYear.ToString()))
                 {
                     result = CalcFinalDate(new DateTime(DateTime.Today.Year, 1, 1), dateKeyword, DateRestrictionKeyword.ThisYear, 'Y');
+                }
+                else if (dateKeyword.StartsWith(DateRestrictionKeyword.LastExecution.ToString()))
+                {
+                    result = CalcFinalDate(GetLastExecutionDate(), dateKeyword, DateRestrictionKeyword.LastExecution, 'D');
                 }
             }
             else if (date == DateTime.MinValue) result = DateTime.Now;
