@@ -370,10 +370,10 @@ namespace Seal.Model
         public bool ProviderForScheduledOutputs { get; set; } = false;
 
         /// <summary>
-        /// Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled.
+        /// Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel.
         /// </summary>
 #if WINDOWS
-        [Category("Security Provider Configuration"), DisplayName("Schedule Check Script"), Description("Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled."), Id(14, 2)]
+        [Category("Security Provider Configuration"), DisplayName("Schedule Check Script"), Description("Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel."), Id(14, 2)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
@@ -521,6 +521,27 @@ namespace Seal.Model
                 Helper.WriteLogEntryScheduler(System.Diagnostics.EventLogEntryType.Error, message);
                 return message;
             }
+        }
+
+        /// <summary>
+        /// Execute the 'Schedule Check Script' at the moment New: the script can change the default values of the new web schedule and set the label of the link.
+        /// Returns the check (its Refusal is ignored); an error of the script keeps the default values (logged).
+        /// </summary>
+        public ScheduleCheck PrepareNewSchedule(Report report, SealSchedule schedule, SecurityUser user)
+        {
+            var check = new ScheduleCheck() { Security = this, Report = report, Schedule = schedule, Moment = ScheduleCheckMoment.New, User = user, IsNew = true };
+            if (string.IsNullOrEmpty(ScheduleCheckScript)) return check;
+            try
+            {
+                RazorHelper.CompileExecute(ScheduleCheckScript, check);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryScheduler(System.Diagnostics.EventLogEntryType.Error, $"Error in the Schedule Check Script (new schedule) for the report '{report?.FilePath}': {ex.Message}");
+                check.LinkLabel = null;
+            }
+            check.Refusal = null;
+            return check;
         }
 
         /// <summary>

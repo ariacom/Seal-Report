@@ -489,6 +489,12 @@
             Returns the report to schedule after checking the right 'Edit schedules' of the user on the report (the target of a shortcut is scheduled)
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.prepareNewWebSchedule(Seal.Model.Report,System.String,System.String)">
+            <summary>
+            New web schedule of a report with the default values (daily at 8:00 from tomorrow, the email of the user, the format of the report),
+            then changed by the Schedule Check Script (moment New) which can also set the label of the link of the outputs panel
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.toOutputFolderPath(System.String)">
             <summary>
             Folder path of a Folder device output: from the Web Report Server path to the path with the repository keywords

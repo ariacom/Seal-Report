@@ -125,6 +125,48 @@ namespace Test
             }
         }
 
+        /// <summary>
+        /// Moment New of the Schedule Check Script: the script changes the default values of a new web schedule and the label of the link, its refusal is ignored
+        /// </summary>
+        [TestMethod]
+        public void ScheduleCheckScriptNewSchedule()
+        {
+            var security = _repository.Security;
+            var report = Report.LoadFromFile(_repository.ReportsFolder + ReportWebPath, _repository, false);
+            SealSchedule newSchedule() { return new SealSchedule() { Name = "New", Type = TriggerType.Daily, Output = new WebScheduleOutput() }; }
+            try
+            {
+                //No script: default values kept, no label
+                security.ScheduleCheckScript = null;
+                var check = security.PrepareNewSchedule(report, newSchedule(), getOwner());
+                Assert.AreEqual(ScheduleCheckMoment.New, check.Moment);
+                Assert.IsTrue(check.IsNew);
+                Assert.IsNull(check.LinkLabel);
+                Assert.AreEqual(TriggerType.Daily, check.Schedule.Type);
+
+                //The script changes the values and the label, its refusal is ignored; the other moments are not concerned
+                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.New) { check.Schedule.Type = TriggerType.Weekly; check.Schedule.Weekdays = new int[] { 1 }; check.Schedule.Output.CancelIfNoRecords = true; check.Schedule.Name = \"Alert \" + check.Report.ExecutionName; check.LinkLabel = \"Create an alert...\"; check.Refusal = \"ignored\"; } }";
+                check = security.PrepareNewSchedule(report, newSchedule(), getOwner());
+                Assert.AreEqual(TriggerType.Weekly, check.Schedule.Type);
+                CollectionAssert.AreEqual(new int[] { 1 }, check.Schedule.Weekdays);
+                Assert.IsTrue(check.Schedule.Output.CancelIfNoRecords);
+                Assert.AreEqual("Alert " + report.ExecutionName, check.Schedule.Name);
+                Assert.AreEqual("Create an alert...", check.LinkLabel);
+                Assert.IsNull(check.Refusal, "the refusal is ignored at the moment New");
+                Assert.IsNull(security.CheckSchedule(report, newSchedule(), ScheduleCheckMoment.Save, getOwner(), true), "moment Save not concerned");
+
+                //A script in error keeps the default values
+                security.ScheduleCheckScript = "@{ throw new Exception(\"script error\"); }";
+                check = security.PrepareNewSchedule(report, newSchedule(), getOwner());
+                Assert.AreEqual(TriggerType.Daily, check.Schedule.Type);
+                Assert.IsNull(check.LinkLabel);
+            }
+            finally
+            {
+                security.ScheduleCheckScript = null;
+            }
+        }
+
         [TestMethod]
         public void ExecuteWebSchedule()
         {

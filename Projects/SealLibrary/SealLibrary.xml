@@ -4521,6 +4521,12 @@
             The owner executes his web schedule from the Web Report Server
             </summary>
         </member>
+        <member name="F:Seal.Model.ScheduleCheckMoment.New">
+            <summary>
+            A new web schedule is prepared in the Web Report Server (dialog 'Schedule...' and link of the outputs panel): the script can change
+            the default values of Schedule and set LinkLabel. The refusal is ignored, the schedule is checked again when it is saved.
+            </summary>
+        </member>
         <member name="T:Seal.Model.ScheduleCheck">
             <summary>
             Model of the 'Schedule Check Script' of the security: the script sets Refusal to refuse the schedule
@@ -4559,6 +4565,11 @@
         <member name="F:Seal.Model.ScheduleCheck.Refusal">
             <summary>
             Set by the script to refuse the schedule: message shown to the user, or stored as the last error of a web schedule
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ScheduleCheck.LinkLabel">
+            <summary>
+            Moment New: label of the link creating a web schedule of the report in the outputs panel of the Web Report Server (e.g. 'Create an alert...'), the default label if empty
             </summary>
         </member>
         <member name="T:Seal.Model.ValidationException">
@@ -17881,7 +17892,7 @@
         </member>
         <member name="P:Seal.Model.SealSecurity.ScheduleCheckScript">
             <summary>
-            Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled.
+            Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel.
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.AccountLinks">
@@ -17934,6 +17945,12 @@
         <member name="M:Seal.Model.SealSecurity.CheckSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.ScheduleCheckMoment,Seal.Model.SecurityUser,System.Boolean)">
             <summary>
             Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.PrepareNewSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.SecurityUser)">
+            <summary>
+            Execute the 'Schedule Check Script' at the moment New: the script can change the default values of the new web schedule and set the label of the link.
+            Returns the check (its Refusal is ignored); an error of the script keeps the default values (logged).
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.TwoFAActive">
@@ -19982,6 +19999,11 @@
         <member name="T:Seal.Model.SWIReportDetail">
             <summary>
             Class used for the Seal Web Interface: Communication from the Browser to the Web Report Server
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIReportDetail.schedulelabel">
+            <summary>
+            Label of the link creating a web schedule, set by the Schedule Check Script (moment New), the default label if empty
             </summary>
         </member>
         <member name="T:Seal.Model.SWIItem">

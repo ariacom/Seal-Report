@@ -392,6 +392,10 @@ namespace Seal.Model
         public List<SWIView> views = new List<SWIView>();
         public List<SWIOutput> outputs = new List<SWIOutput>();
         public bool canschedule;
+        /// <summary>
+        /// Label of the link creating a web schedule, set by the Schedule Check Script (moment New), the default label if empty
+        /// </summary>
+        public string schedulelabel;
         public List<SWIWebSchedule> webschedules = new List<SWIWebSchedule>();
     }
 

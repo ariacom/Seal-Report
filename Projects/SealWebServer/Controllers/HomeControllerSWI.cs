@@ -758,7 +758,8 @@ namespace SealWebServer.Controllers
                 if (file.right == 0) throw new Exception("Error: no right on this report or file");
 
                 int effRight = file.right;
-                string newPath = file.isshortcut ? getFullPath(resolveShortcut(path, out effRight)) : getFullPath(path);
+                string execPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
+                string newPath = getFullPath(execPath);
                 if (!System.IO.File.Exists(newPath)) throw new Exception("Report path not found");
                 Repository repository = Repository;
                 Report report = Report.LoadFromFile(newPath, repository, false);
@@ -771,7 +772,12 @@ namespace SealWebServer.Controllers
 
                 //Web schedules of the user for this report (without the right, they are still listed in 'My schedules' to be deleted)
                 result.canschedule = WebUser.CanUseWebSchedules && (FolderRight)effRight >= FolderRight.Schedule && !folder.IsRepository;
-                if (result.canschedule) result.webschedules = getUserWebSchedules().Where(i => i.ReportGUID == report.GUID).OrderBy(i => i.Name).Select(i => toSWIWebSchedule(i, false)).ToList();
+                if (result.canschedule)
+                {
+                    result.webschedules = getUserWebSchedules().Where(i => i.ReportGUID == report.GUID).OrderBy(i => i.Name).Select(i => toSWIWebSchedule(i, false)).ToList();
+                    //Label of the link creating a schedule, set by the Schedule Check Script (e.g. 'Create an alert...')
+                    if (!string.IsNullOrEmpty(repository.Security.ScheduleCheckScript)) result.schedulelabel = prepareNewWebSchedule(report, execPath, null).LinkLabel;
+                }
 
                 return Json(result);
 

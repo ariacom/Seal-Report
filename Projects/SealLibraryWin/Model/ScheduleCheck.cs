@@ -21,7 +21,12 @@ namespace Seal.Model
         /// <summary>
         /// The owner executes his web schedule from the Web Report Server
         /// </summary>
-        ExecuteNow
+        ExecuteNow,
+        /// <summary>
+        /// A new web schedule is prepared in the Web Report Server (dialog 'Schedule...' and link of the outputs panel): the script can change
+        /// the default values of Schedule and set LinkLabel. The refusal is ignored, the schedule is checked again when it is saved.
+        /// </summary>
+        New
     }
 
     /// <summary>
@@ -57,5 +62,9 @@ namespace Seal.Model
         /// Set by the script to refuse the schedule: message shown to the user, or stored as the last error of a web schedule
         /// </summary>
         public string Refusal;
+        /// <summary>
+        /// Moment New: label of the link creating a web schedule of the report in the outputs panel of the Web Report Server (e.g. 'Create an alert...'), the default label if empty
+        /// </summary>
+        public string LinkLabel;
     }
 }

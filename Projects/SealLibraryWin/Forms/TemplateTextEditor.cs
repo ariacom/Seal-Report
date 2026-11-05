@@ -372,6 +372,8 @@ namespace Seal.Forms
     ScheduleCheck check = Model;
     //check.Report, check.Schedule (null when the AI tool checks a new schedule), check.Moment, check.User (null for a schedule of a report), check.IsNew
     //Set check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled
+    //Moment New (new web schedule in the Web Report Server): change the default values of check.Schedule and set check.LinkLabel, the refusal is ignored
+    //if (check.Moment == ScheduleCheckMoment.New) { check.Schedule.Output.CancelIfNoRecords = true; check.LinkLabel = ""Create an alert...""; return; }
 }
 ";
         const string razorChangePasswordScriptTemplate = @"@{

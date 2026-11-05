@@ -380,7 +380,8 @@ namespace SWISchedule {
             $panel.append($item);
         });
         var $new = $("<div>").addClass("output-item");
-        var $link = $("<a href='#'>").addClass("webschedule-link").html("<i class='fa-solid fa-clock me-1'></i>" + SWIUtil.tr("Schedule..."));
+        //The label can be set by the Schedule Check Script of the server (e.g. 'Create an alert...')
+        var $link = $("<a href='#'>").addClass("webschedule-link").append($("<i class='fa-solid fa-clock me-1'></i>")).append(data.schedulelabel ? $("<span>").text(data.schedulelabel) : SWIUtil.tr("Schedule..."));
         $link.on("click", function (e) { e.preventDefault(); Edit(path, ""); });
         $new.append($link);
         $panel.append($new);

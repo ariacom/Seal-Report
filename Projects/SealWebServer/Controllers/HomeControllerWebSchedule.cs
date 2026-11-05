@@ -89,27 +89,17 @@ namespace SealWebServer.Controllers
                 }
                 else
                 {
-                    //New schedule with default values
-                    var start = DateTime.Today.AddDays(1).AddHours(8);
+                    //New schedule with default values, that the Schedule Check Script can change (moment New)
                     var device = result.devices.FirstOrDefault(i => i.type == "email") ?? result.devices.FirstOrDefault();
-                    result.schedule = new SWIWebSchedule()
+                    var newSchedule = prepareNewWebSchedule(report, execPath, device?.guid).Schedule;
+                    result.schedule = toSWIWebSchedule(newSchedule, true);
+                    result.schedule.guid = null;
+                    result.schedule.reportname = report.ExecutionName;
+                    if (string.IsNullOrEmpty(result.schedule.folder))
                     {
-                        name = report.ExecutionName,
-                        enabled = true,
-                        path = execPath,
-                        reportname = report.ExecutionName,
-                        deviceguid = device?.guid,
-                        format = Repository.ResultAllowedFormats.Contains(report.Format) ? report.Format : Repository.ResultAllowedFormats.FirstOrDefault(),
-                        folder = device?.type == "folder" ? result.folders.FirstOrDefault()?.id : device?.directories.FirstOrDefault(),
-                        file = Repository.SealReportDisplayNameKeyword2,
-                        to = WebUser.Email,
-                        type = TriggerType.Daily,
-                        start = start.ToString(WebScheduleDateFormat, CultureInfo.InvariantCulture),
-                        interval = 1,
-                        weekdays = new int[] { (int)start.DayOfWeek },
-                        months = Enumerable.Range(1, 12).ToArray(),
-                        days = new int[] { 1 }
-                    };
+                        var newDevice = result.devices.FirstOrDefault(i => i.guid == newSchedule.Output.DeviceGUID);
+                        result.schedule.folder = newDevice?.type == "folder" ? result.folders.FirstOrDefault()?.id : newDevice?.directories.FirstOrDefault();
+                    }
                 }
                 //The restriction values can be edited only if the report has prompted restrictions
                 result.schedule.hasrestrictions = WebScheduleOutput.GetPromptedRestrictions(report).Count > 0;
@@ -356,6 +346,37 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// New web schedule of a report with the default values (daily at 8:00 from tomorrow, the email of the user, the format of the report),
+        /// then changed by the Schedule Check Script (moment New) which can also set the label of the link of the outputs panel
+        /// </summary>
+        ScheduleCheck prepareNewWebSchedule(Report report, string execPath, string deviceGUID)
+        {
+            var start = DateTime.Today.AddDays(1).AddHours(8);
+            var schedule = new SealSchedule()
+            {
+                Name = report.ExecutionName,
+                Enabled = true,
+                WebPath = execPath,
+                ReportGUID = report.GUID,
+                Type = TriggerType.Daily,
+                Start = start,
+                DaysInterval = 1,
+                WeeksInterval = 1,
+                Weekdays = new int[] { (int)start.DayOfWeek },
+                Months = Enumerable.Range(1, 12).ToArray(),
+                Days = new int[] { 1 },
+                Output = new WebScheduleOutput()
+                {
+                    DeviceGUID = deviceGUID,
+                    Format = Repository.ResultAllowedFormats.Contains(report.Format) ? report.Format : Repository.ResultAllowedFormats.FirstOrDefault(),
+                    FileName = Repository.SealReportDisplayNameKeyword,
+                    EmailTo = WebUser.Email
+                }
+            };
+            return WebUser.Security.PrepareNewSchedule(report, schedule, WebUser);
+        }
+
+        /// <summary>
         /// Folder path of a Folder device output: from the Web Report Server path to the path with the repository keywords
         /// </summary>
         string toOutputFolderPath(string swiPath)
@@ -437,7 +458,7 @@ namespace SealWebServer.Controllers
             };
             if (!forEdit) return result;
 
-            result.folder = device is OutputFolderDevice ? fromOutputFolderPath(output.FolderPath) : output.FolderPath;
+            result.folder = device is OutputFolderDevice ? (string.IsNullOrEmpty(output.FolderPath) ? "" : fromOutputFolderPath(output.FolderPath)) : output.FolderPath;
             result.file = string.IsNullOrEmpty(output.FileName) ? "" : output.FileName.Replace(Repository.SealReportDisplayNameKeyword, Repository.SealReportDisplayNameKeyword2);
             result.to = output.EmailTo;
             result.cc = output.EmailCC;
