@@ -9318,6 +9318,16 @@
             Specifies how outgoing email messages will be handled
             </summary>
         </member>
+        <member name="P:Seal.Model.OutputEmailDevice.PickupDirectory">
+            <summary>
+            If the delivery method is 'SpecifiedPickupDirectory', folder where the emails are written as .eml files instead of being sent (e.g. for development). The folder is created if it does not exist. The keyword %SEALREPOSITORY% can be used for the repository folder.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.PickupDirectoryPath">
+            <summary>
+            The pickup directory with the repository keywords replaced
+            </summary>
+        </member>
         <member name="P:Seal.Model.OutputEmailDevice.EnableSsl">
             <summary>
             If true, the client uses Secure Socket Layer
@@ -9380,7 +9390,7 @@
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.ReplyTo">
             <summary>
-            The reply addresses used for the email
+            The default reply addresses of the emails sent by the device (notifications, report outputs without specific reply addresses). If empty, the sender email address is used.
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.UsedForNotification">

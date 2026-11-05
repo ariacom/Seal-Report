@@ -27,6 +27,7 @@ using DynamicTypeDescriptor;
 using System.ComponentModel.Design;
 using System.Drawing.Design;
 using Seal.Forms;
+using System.Windows.Forms.Design;
 #endif
 
 namespace Seal.Model
@@ -133,6 +134,7 @@ namespace Seal.Model
                 GetProperty("Port").SetIsBrowsable(true);
                 GetProperty("UseDefaultCredentials").SetIsBrowsable(true);
                 GetProperty("DeliveryMethod").SetIsBrowsable(true);
+                GetProperty("PickupDirectory").SetIsBrowsable(true);
                 GetProperty("EnableSsl").SetIsBrowsable(true);
                 GetProperty("SecureSocketOptions").SetIsBrowsable(true);
                 GetProperty("ChangeSender").SetIsBrowsable(true);
@@ -146,6 +148,7 @@ namespace Seal.Model
                 GetProperty("Port").SetIsReadOnly(!isSmtp);
                 GetProperty("UseDefaultCredentials").SetIsReadOnly(_type != EmailServerType.SMTP);
                 GetProperty("DeliveryMethod").SetIsReadOnly(_type != EmailServerType.SMTP);
+                GetProperty("PickupDirectory").SetIsReadOnly(_type != EmailServerType.SMTP);
                 GetProperty("EnableSsl").SetIsReadOnly(_type != EmailServerType.SMTP);
                 GetProperty("SecureSocketOptions").SetIsReadOnly(_type != EmailServerType.SMTPMimeKit);
                 GetProperty("ChangeSender").SetIsReadOnly(!isSmtp);
@@ -204,7 +207,7 @@ namespace Seal.Model
     var subject = Helper.IfNullOrEmpty(output.EmailSubject, report.ExecutionName);
     var sender = device.SenderEmail;
     if (device.ChangeSender && !string.IsNullOrEmpty(output.EmailFrom)) sender = output.EmailFrom;
-    var replyTo = device.SenderEmail;
+    var replyTo = Helper.IfNullOrEmpty(device.ReplyTo, device.SenderEmail);
     if (device.ChangeSender && !string.IsNullOrEmpty(output.EmailReplyTo)) replyTo = output.EmailReplyTo;
     //Body
     var body = Helper.IfNullOrEmpty(output.EmailBody, report.Translate(""Please find the report '{0}' in attachment."", report.ExecutionName));
@@ -274,13 +277,19 @@ namespace Seal.Model
     //client
     var client = new SmtpClient()
     {
-        Host = device.Server,
         Port = device.Port,
         DeliveryMethod = device.DeliveryMethod,
         EnableSsl = device.EnableSsl,
         Timeout = device.Timeout,
         UseDefaultCredentials = device.UseDefaultCredentials
     };
+    if (!string.IsNullOrEmpty(device.Server)) client.Host = device.Server;
+    if (device.DeliveryMethod == SmtpDeliveryMethod.SpecifiedPickupDirectory)
+    {
+        //The email is written as a .eml file in the pickup directory instead of being sent (e.g. for development)
+        client.PickupDirectoryLocation = device.PickupDirectoryPath;
+        System.IO.Directory.CreateDirectory(client.PickupDirectoryLocation);
+    }
     if (!string.IsNullOrEmpty(device.UserName)) client.Credentials = new NetworkCredential(device.UserName, device.ClearPassword);
     
     //Send message
@@ -372,7 +381,7 @@ namespace Seal.Model
 		Subject = def.subject,
 		PlainTextContent = def.isHtmlBody ? """" : def.body,
 		HtmlContent = !def.isHtmlBody ? """" : def.body,
-		ReplyTo = new EmailAddress(def.replyTo)
+		ReplyTo = new EmailAddress(Helper.GetEmailAddresses(def.replyTo).FirstOrDefault() ?? def.sender)
 	};
 
 	msg.SetSubject(def.subject);
@@ -429,9 +438,11 @@ namespace Seal.Model
     var to = new List<Recipient>();
     var cc = new List<Recipient>();
     var bcc = new List<Recipient>();
+    var replyTo = new List<Recipient>();
     foreach (var addr in Helper.GetEmailAddresses(def.to)) to.Add(new Recipient() { EmailAddress = new Microsoft.Graph.Models.EmailAddress() { Address = addr } });
     foreach (var addr in Helper.GetEmailAddresses(def.cc)) cc.Add(new Recipient() { EmailAddress = new Microsoft.Graph.Models.EmailAddress() { Address = addr } });
     foreach (var addr in Helper.GetEmailAddresses(def.bcc)) bcc.Add(new Recipient() { EmailAddress = new Microsoft.Graph.Models.EmailAddress() { Address = addr } });
+    foreach (var addr in Helper.GetEmailAddresses(def.replyTo)) replyTo.Add(new Recipient() { EmailAddress = new Microsoft.Graph.Models.EmailAddress() { Address = addr } });
 
     // Body
     var messageBody = new ItemBody
@@ -449,6 +460,7 @@ namespace Seal.Model
         ToRecipients = to,
         CcRecipients = cc,
         BccRecipients = bcc,
+        ReplyTo = replyTo,
     };
 
     // Attachment
@@ -610,10 +622,25 @@ namespace Seal.Model
         public SmtpDeliveryMethod DeliveryMethod { get; set; } = SmtpDeliveryMethod.Network;
 
         /// <summary>
+        /// If the delivery method is 'SpecifiedPickupDirectory', folder where the emails are written as .eml files instead of being sent (e.g. for development). The folder is created if it does not exist. The keyword %SEALREPOSITORY% can be used for the repository folder.
+        /// </summary>
+#if WINDOWS
+        [Category("SMTP Definition"), DisplayName("Pickup directory (System.Net.Mail)"), Description("If the delivery method is 'SpecifiedPickupDirectory', folder where the emails are written as .eml files instead of being sent (e.g. for development). The folder is created if it does not exist. The keyword %SEALREPOSITORY% can be used for the repository folder."), Id(7, 1)]
+        [Editor(typeof(FolderNameEditor), typeof(UITypeEditor))]
+#endif
+        public string PickupDirectory { get; set; }
+
+        /// <summary>
+        /// The pickup directory with the repository keywords replaced
+        /// </summary>
+        [XmlIgnore]
+        public string PickupDirectoryPath => Repository.Instance.ReplaceRepositoryKeyword(PickupDirectory);
+
+        /// <summary>
         /// If true, the client uses Secure Socket Layer
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Enable SSL (System.Net.Mail)"), Description("If true, the client uses Secure Socket Layer."), Id(7, 1)]
+        [Category("SMTP Definition"), DisplayName("Enable SSL (System.Net.Mail)"), Description("If true, the client uses Secure Socket Layer."), Id(8, 1)]
         [DefaultValue(false)]
 #endif
         public bool EnableSsl { get; set; } = false;
@@ -622,7 +649,7 @@ namespace Seal.Model
         /// If true, the client uses Secure Socket Layer
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Secure Socket Options (MimeKit)"), Description("Socket options used for the connection."), Id(8, 1)]
+        [Category("SMTP Definition"), DisplayName("Secure Socket Options (MimeKit)"), Description("Socket options used for the connection."), Id(9, 1)]
         [DefaultValue(SecureSocketOptions.Auto)]
 #endif
         public SecureSocketOptions SecureSocketOptions { get; set; } = SecureSocketOptions.Auto;
@@ -631,7 +658,7 @@ namespace Seal.Model
         /// If true, the default credentials are used
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("Use default credentials (System.Net.Mail)"), Description("If true, the default credentials are used."), Id(9, 1)]
+        [Category("SMTP Definition"), DisplayName("Use default credentials (System.Net.Mail)"), Description("If true, the default credentials are used."), Id(10, 1)]
         [DefaultValue(false)]
 #endif
         public bool UseDefaultCredentials { get; set; } = false;
@@ -640,7 +667,7 @@ namespace Seal.Model
         /// Script used to send the Email via SMTP (System.Net.Mail). The script can be customized.
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("SMTP script (System.Net.Mail)"), Description("Script used to send the Email via SMTP (System.Net.Mail). The script can be customized."), Id(10, 1)]
+        [Category("SMTP Definition"), DisplayName("SMTP script (System.Net.Mail)"), Description("Script used to send the Email via SMTP (System.Net.Mail). The script can be customized."), Id(11, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
@@ -650,7 +677,7 @@ namespace Seal.Model
         /// Script used to send the Email via SMTP (MimeKit). The script can be customized.
         /// </summary>
 #if WINDOWS
-        [Category("SMTP Definition"), DisplayName("SMTP script (MimeKit)"), Description("Script used to send the Email via SMTP (MimeKit). The script can be customized."), Id(11, 1)]
+        [Category("SMTP Definition"), DisplayName("SMTP script (MimeKit)"), Description("Script used to send the Email via SMTP (MimeKit). The script can be customized."), Id(12, 1)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
@@ -766,10 +793,10 @@ namespace Seal.Model
         public string SenderEmail { get; set; }
 
         /// <summary>
-        /// The reply addresses used for the email
+        /// The default reply addresses of the emails sent by the device (notifications, report outputs without specific reply addresses). If empty, the sender email address is used.
         /// </summary>
 #if WINDOWS
-        [Category("Addresses"), DisplayName("Reply addresses"), Description("The reply addresses used for the email."), Id(2, 5)]
+        [Category("Addresses"), DisplayName("Reply addresses"), Description("The default reply addresses of the emails sent by the device (notifications, report outputs without specific reply addresses). If empty, the sender email address is used."), Id(2, 5)]
         [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
 #endif
         public string ReplyTo { get; set; }
@@ -895,7 +922,9 @@ namespace Seal.Model
         /// </summary>
         public override void Validate()
         {
-            if (Type == EmailServerType.SMTP && string.IsNullOrEmpty(Server)) throw new Exception("The SMTP Server cannot be empty for a SMTP Email device.");
+            var isPickup = Type == EmailServerType.SMTP && DeliveryMethod == SmtpDeliveryMethod.SpecifiedPickupDirectory;
+            if (isPickup && string.IsNullOrEmpty(PickupDirectory)) throw new Exception("The Pickup directory cannot be empty for a SMTP Email device with the delivery method 'SpecifiedPickupDirectory'.");
+            if (Type == EmailServerType.SMTP && !isPickup && string.IsNullOrEmpty(Server)) throw new Exception("The SMTP Server cannot be empty for a SMTP Email device.");
             if (Type == EmailServerType.SMTP && string.IsNullOrEmpty(SenderEmail)) throw new Exception("The Email Sender cannot be empty for a SMTP Email device.");
         }
 
@@ -914,7 +943,7 @@ namespace Seal.Model
         public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName)
         {
             if (string.IsNullOrEmpty(sender)) sender = SenderEmail;
-            if (string.IsNullOrEmpty(replyTo)) replyTo = sender;
+            if (string.IsNullOrEmpty(replyTo)) replyTo = Helper.IfNullOrEmpty(ReplyTo, sender);
 
             var emailDefinition = new EmailDefinition()
             {
