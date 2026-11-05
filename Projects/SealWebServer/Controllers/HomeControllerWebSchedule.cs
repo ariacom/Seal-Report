@@ -53,7 +53,12 @@ namespace SealWebServer.Controllers
                 checkWebScheduleUser();
 
                 SealSchedule schedule = string.IsNullOrEmpty(guid) ? null : getUserWebSchedule(guid);
-                if (schedule != null) path = schedule.WebPath;
+                if (schedule != null)
+                {
+                    path = schedule.WebPath;
+                    //Report deleted or moved since the schedule was saved (the scheduler disables it): only the deletion is possible
+                    if (!System.IO.File.Exists(getFullPath(path))) throw new ValidationException(Translate("The report of this schedule does not exist anymore: delete the schedule"));
+                }
                 var report = getWebScheduleReport(path, out string execPath);
 
                 var result = new SWIWebScheduleEdit();
@@ -331,6 +336,7 @@ namespace SealWebServer.Controllers
             if (folder.right == 0) throw new Exception("Error: no right on this folder");
             //The reports of a Repository Folder are plain files that cannot be executed
             if (folder.IsRepository) throw new ValidationException(Translate("You have no right to schedule this report"));
+            if (!System.IO.File.Exists(getFullPath(path))) throw new ValidationException(Translate("The report does not exist"));
             var file = getFileDetail(path);
             if (file.right == 0) throw new Exception("Error: no right on this report or file");
             int effRight = file.right;

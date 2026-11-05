@@ -315,7 +315,8 @@ var SWISchedule;
                 var $next = $("<td class='text-nowrap'>").text(s.enabled ? s.nextexecution : "");
                 //Last execution: date, then status and duration
                 var $badge = $("<span class='badge'>").addClass(StatusBadges[s.status]).text(SWIUtil.tr2(StatusTexts[s.status]));
-                if (s.status == "error")
+                //Error of the last execution, or reason of the deactivation by the scheduler (e.g. report deleted)
+                if (s.lasterror)
                     $badge.attr("title", s.lasterror);
                 var $last = $("<td class='text-nowrap'>");
                 if (s.lastexecution)
