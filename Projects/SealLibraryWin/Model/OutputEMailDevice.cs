@@ -171,6 +171,7 @@ namespace Seal.Model
                 GetProperty("SenderEmail").SetIsBrowsable(true);
                 GetProperty("ReplyTo").SetIsBrowsable(true);
                 GetProperty("UsedForNotification").SetIsBrowsable(true);
+                GetProperty("MaxMessageSize").SetIsBrowsable(true);
 
                 GetProperty("HelperTestEmail").SetIsBrowsable(true);
                 GetProperty("TestEmailTo").SetIsBrowsable(true);
@@ -236,7 +237,7 @@ namespace Seal.Model
         }
     }
 
-    device.SendEmail(sender, output.EmailTo, replyTo, output.EmailCC, output.EmailBCC, subject, isHtmlBody, body, attachPath, attachName);
+    device.SendEmail(sender, output.EmailTo, replyTo, output.EmailCC, output.EmailBCC, subject, isHtmlBody, body, attachPath, attachName, report);
 
     output.Information = report.Translate(""Email sent to '{0}'"", output.EmailTo.Replace(""\r\n"", ""\n"").Replace(""\r"", ""\n"").Replace(""\n"", "";""));
     report.LogMessage(output.Information);      
@@ -820,6 +821,15 @@ namespace Seal.Model
         public bool ChangeSender { get; set; } = true;
 
         /// <summary>
+        /// Maximum size in MB of an email sent by the device (body and attachment, encoded size), 0 for no limit. A larger result is first compressed in a ZIP file; if it is still too large, the email is sent without the result, with a message telling it.
+        /// </summary>
+#if WINDOWS
+        [Category("Advanced"), DisplayName("Maximum size of an email (MB)"), Description("Maximum size in MB of an email sent by the device (body and attachment, encoded size), 0 for no limit. A larger result is first compressed in a ZIP file (an HTML body too large is sent as a ZIP attachment); if it is still too large, the email is sent without the result, with a message telling it. Mail servers usually accept 10 to 25 MB."), Id(3, 6)]
+        [DefaultValue(0)]
+#endif
+        public int MaxMessageSize { get; set; } = 0;
+
+        /// <summary>
         /// The destination email address used to send the test email
         /// </summary>
 #if WINDOWS
@@ -942,6 +952,15 @@ namespace Seal.Model
         /// </summary>
         public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName)
         {
+            SendEmail(sender, to, replyTo, cc, bcc, subject, isHtmlBody, body, attachPath, attachName, null);
+        }
+
+        /// <summary>
+        /// Send an Email either through SMTP or SendGrid or Graph API, for the result of a report (translation of the messages of the maximum size, execution log)
+        /// </summary>
+        public void SendEmail(string sender, string to, string replyTo, string cc, string bcc, string subject, bool isHtmlBody, string body, string attachPath, string attachName, Report report)
+        {
+            LimitMessageSize(report, subject, ref isHtmlBody, ref body, ref attachPath, ref attachName);
             if (string.IsNullOrEmpty(sender)) sender = SenderEmail;
             if (string.IsNullOrEmpty(replyTo)) replyTo = Helper.IfNullOrEmpty(ReplyTo, sender);
 
@@ -966,6 +985,80 @@ namespace Seal.Model
             else if (Type == EmailServerType.MSGraph) script = string.IsNullOrWhiteSpace(MSGraphScript) ? MSGraphScriptTemplate : MSGraphScript;
 
             RazorHelper.CompileExecute(script, emailDefinition);
+        }
+
+        /// <summary>
+        /// Encoded size of a content in an email (base64: 4 bytes for 3)
+        /// </summary>
+        static long encodedSize(long size)
+        {
+            return (size + 2) / 3 * 4;
+        }
+
+        /// <summary>
+        /// Apply the maximum size of the device (MaxMessageSize) to an email: the attachment is compressed in a ZIP file, an HTML body
+        /// becomes a ZIP attachment; if the email is still too large, the result is removed and the body tells it.
+        /// Returns the message of the change (also logged in the report), null if the email is unchanged.
+        /// </summary>
+        public string LimitMessageSize(Report report, string subject, ref bool isHtmlBody, ref string body, ref string attachPath, ref string attachName)
+        {
+            if (MaxMessageSize <= 0) return null;
+            long max = MaxMessageSize * 1024L * 1024L;
+            bool hasAttachment = !string.IsNullOrEmpty(attachPath) && File.Exists(attachPath);
+            long bodySize = System.Text.Encoding.UTF8.GetByteCount(body ?? "");
+            long attachSize = hasAttachment ? new FileInfo(attachPath).Length : 0;
+            if (encodedSize(bodySize) + encodedSize(attachSize) <= max) return null;
+
+            string translate(string text, params object[] args)
+            {
+                var translated = report != null ? report.Translate(text) : Repository.Instance.TranslateReport(text);
+                try { return string.Format(translated, args); } catch { return string.Format(text, args); }
+            }
+            string megaBytes(long size) { return Math.Round(size / 1048576.0, 1).ToString(report?.ExecutionView?.CultureInfo ?? System.Globalization.CultureInfo.InvariantCulture); }
+            var name = Helper.IfNullOrEmpty(report?.ExecutionName, subject);
+            string message = null;
+
+            //1. The attachment or the HTML body in a ZIP file
+            string zipPath = null, zipName = null, zipBody = null;
+            if (hasAttachment && !attachPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            {
+                var entryName = Helper.IfNullOrEmpty(attachName, Path.GetFileName(attachPath));
+                zipPath = FileHelper.GetTempUniqueFileName(entryName, ".zip", true);
+                FileHelper.CreateZIP(attachPath, entryName, zipPath, null);
+                zipName = Path.GetFileNameWithoutExtension(entryName) + ".zip";
+                zipBody = body;
+            }
+            else if (!hasAttachment && isHtmlBody)
+            {
+                var entryName = Helper.CleanFileName(Helper.IfNullOrEmpty(name, "result")) + ".html";
+                var htmlPath = FileHelper.GetTempUniqueFileName(entryName, "", true);
+                File.WriteAllText(htmlPath, body, System.Text.Encoding.UTF8);
+                zipPath = FileHelper.GetTempUniqueFileName(entryName, ".zip", true);
+                FileHelper.CreateZIP(htmlPath, entryName, zipPath, null);
+                try { File.Delete(htmlPath); } catch { }
+                zipName = Path.GetFileNameWithoutExtension(entryName) + ".zip";
+                zipBody = translate("The result of the report '{0}' is too large to be displayed in the email: it is attached as a ZIP file.", name);
+            }
+            if (zipPath != null && encodedSize(System.Text.Encoding.UTF8.GetByteCount(zipBody ?? "")) + encodedSize(new FileInfo(zipPath).Length) <= max)
+            {
+                message = translate("The result has been compressed in a ZIP file to respect the maximum size of the emails ({0} MB).", MaxMessageSize);
+                if (!hasAttachment) isHtmlBody = false;
+                body = zipBody;
+                attachPath = zipPath;
+                attachName = zipName;
+            }
+            else
+            {
+                //2. Still too large: the email is sent without the result
+                message = translate("The result of the report '{0}' ({1} MB) exceeds the maximum size of the emails ({2} MB): it is not attached. Please execute the report to get its result.", name, megaBytes(hasAttachment ? attachSize : bodySize), MaxMessageSize);
+                isHtmlBody = false;
+                body = message;
+                attachPath = "";
+                attachName = "";
+                Helper.WriteLogEntry("Seal Email", System.Diagnostics.EventLogEntryType.Warning, string.Format("Email '{0}' to the device '{1}': {2}", subject, Name, message));
+            }
+            report?.LogMessage(message);
+            return message;
         }
 
         /// <summary>

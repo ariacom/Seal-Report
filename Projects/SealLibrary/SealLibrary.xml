@@ -9414,6 +9414,11 @@
             If true, the Email Sender or Reply address can be changed in the Report Designer
             </summary>
         </member>
+        <member name="P:Seal.Model.OutputEmailDevice.MaxMessageSize">
+            <summary>
+            Maximum size in MB of an email sent by the device (body and attachment, encoded size), 0 for no limit. A larger result is first compressed in a ZIP file; if it is still too large, the email is sent without the result, with a message telling it.
+            </summary>
+        </member>
         <member name="P:Seal.Model.OutputEmailDevice.TestEmailTo">
             <summary>
             The destination email address used to send the test email
@@ -9462,6 +9467,23 @@
         <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String)">
             <summary>
             Send an Email either through SMTP or SendGrid or Graph API 
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputEmailDevice.SendEmail(System.String,System.String,System.String,System.String,System.String,System.String,System.Boolean,System.String,System.String,System.String,Seal.Model.Report)">
+            <summary>
+            Send an Email either through SMTP or SendGrid or Graph API, for the result of a report (translation of the messages of the maximum size, execution log)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputEmailDevice.encodedSize(System.Int64)">
+            <summary>
+            Encoded size of a content in an email (base64: 4 bytes for 3)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.OutputEmailDevice.LimitMessageSize(Seal.Model.Report,System.String,System.Boolean@,System.String@,System.String@,System.String@)">
+            <summary>
+            Apply the maximum size of the device (MaxMessageSize) to an email: the attachment is compressed in a ZIP file, an HTML body
+            becomes a ZIP attachment; if the email is still too large, the result is removed and the body tells it.
+            Returns the message of the change (also logged in the report), null if the email is unchanged.
             </summary>
         </member>
         <member name="M:Seal.Model.OutputEmailDevice.Process(Seal.Model.Report)">
