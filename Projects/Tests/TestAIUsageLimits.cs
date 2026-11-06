@@ -25,6 +25,8 @@ namespace Test
         {
             public int Calls = 0;
             public int ToolCallReplies = int.MaxValue;
+            /// <summary>Optional tool calls of the replies (name, arguments), one per reply; by default a different call each time</summary>
+            public List<(string Name, string Arguments)> Script = null;
             public AIUsage LastUsage { get; private set; } = new AIUsage();
 
             public string HandleChat(List<ChatMessage> messages)
@@ -39,8 +41,9 @@ namespace Test
                 Calls++;
                 LastUsage = new AIUsage() { InputTokens = 1000000, Calls = 1 };
                 toolCalls = null;
-                if (Calls > ToolCallReplies) return "answer";
-                toolCalls = new List<AIToolCall>() { new AIToolCall() { Id = "call" + Calls, Name = "no_such_tool", Arguments = "{}" } };
+                if (Calls > ToolCallReplies || (Script != null && Calls > Script.Count)) return "answer";
+                (string Name, string Arguments) call = Script != null ? Script[Calls - 1] : ("no_such_tool", "{\"n\":" + Calls + "}");
+                toolCalls = new List<AIToolCall>() { new AIToolCall() { Id = "call" + Calls, Name = call.Name, Arguments = call.Arguments } };
                 return "";
             }
         }
@@ -195,6 +198,60 @@ namespace Test
                 Assert.IsNull(agent.LastChatRefusal);
                 Assert.AreEqual(1, notified);
             });
+        }
+
+        static List<string> toolResults(AIAgent agent) => agent.Messages.OfType<ToolChatMessage>().Select(m => m.Content[0].Text).ToList();
+
+        [TestMethod]
+        public void RepeatedToolCallsStopTheLoop()
+        {
+            //The same call 5 times in a row: the 2nd and 3rd are refused, the loop ends and the final answer is asked without tools
+            var provider = new TestProvider() { Script = Enumerable.Repeat(("no_such_tool", "{\"a\":1,\"b\":\"x\"}"), 5).ToList() };
+            var log = new TestLog();
+            var agent = new AIAgent(_agent, provider);
+            Assert.AreEqual("final answer", agent.Chat("hello", null, log));
+            Assert.AreEqual(4, provider.Calls, "3 replies with tool calls, then the final call");
+            var results = toolResults(agent);
+            Assert.AreEqual(3, results.Count);
+            Assert.AreNotEqual(AIAgent.RepeatedToolCallError, results[0], "the first call is executed");
+            Assert.AreEqual(AIAgent.RepeatedToolCallError, results[1]);
+            Assert.AreEqual(AIAgent.RepeatedToolCallError, results[2]);
+            Assert.AreEqual(2, log.Messages.Count(m => m.StartsWith("****** Repeated Tool Call")));
+
+            //Same arguments with another formatting and order: still identical
+            provider = new TestProvider() { Script = new List<(string, string)>() { ("no_such_tool", "{\"a\":1,\"b\":\"x\"}"), ("no_such_tool", "{ \"b\" : \"x\", \"a\" : 1 }") } };
+            agent = new AIAgent(_agent, provider);
+            Assert.AreEqual("answer", agent.Chat("hello"));
+            Assert.AreEqual(AIAgent.RepeatedToolCallError, toolResults(agent)[1]);
+        }
+
+        [TestMethod]
+        public void RepeatedToolCallAfterAnotherCallIsExecuted()
+        {
+            //Execute, fix, execute again: the same call after another call is executed
+            var provider = new TestProvider()
+            {
+                Script = new List<(string, string)>() { ("no_such_tool", "{\"path\":\"r\"}"), ("no_such_patch", "{\"path\":\"r\"}"), ("no_such_tool", "{\"path\":\"r\"}"), ("no_such_patch", "{\"path\":\"r\"}"), ("no_such_tool", "{\"path\":\"r\"}") }
+            };
+            var agent = new AIAgent(_agent, provider);
+            Assert.AreEqual("answer", agent.Chat("hello"));
+            Assert.AreEqual(6, provider.Calls);
+            Assert.IsFalse(toolResults(agent).Contains(AIAgent.RepeatedToolCallError));
+
+            //Different arguments: executed
+            provider = new TestProvider() { Script = new List<(string, string)>() { ("no_such_tool", "{\"a\":1}"), ("no_such_tool", "{\"a\":2}") } };
+            agent = new AIAgent(_agent, provider);
+            Assert.AreEqual("answer", agent.Chat("hello"));
+            Assert.IsFalse(toolResults(agent).Contains(AIAgent.RepeatedToolCallError));
+        }
+
+        [TestMethod]
+        public void NormalizeToolArguments()
+        {
+            Assert.AreEqual(AIAgent.NormalizeToolArguments("{\"b\":[{\"y\":1,\"x\":2}],\"a\":null}"), AIAgent.NormalizeToolArguments("{ \"a\": null, \"b\": [ { \"x\": 2, \"y\": 1 } ] }"));
+            Assert.AreNotEqual(AIAgent.NormalizeToolArguments("{\"a\":[1,2]}"), AIAgent.NormalizeToolArguments("{\"a\":[2,1]}"), "the order of an array matters");
+            Assert.AreEqual("", AIAgent.NormalizeToolArguments(null));
+            Assert.AreEqual("not json", AIAgent.NormalizeToolArguments(" not json "));
         }
 
         [TestMethod]

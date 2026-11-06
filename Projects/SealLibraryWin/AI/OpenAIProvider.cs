@@ -49,9 +49,7 @@ namespace Seal.AI
             if (_maxTokens > 0)
                 body["max_completion_tokens"] = _maxTokens;
 
-            var request = BuildRequest(body);
-            var response = _httpClient.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+            var response = Send(body);
 
             var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(
                 response.Content.ReadAsStringAsync().Result);
@@ -91,9 +89,7 @@ namespace Seal.AI
             if (_maxTokens > 0)
                 body["max_completion_tokens"] = _maxTokens;
 
-            var request = BuildRequest(body);
-            var response = _httpClient.SendAsync(request).Result;
-            response.EnsureSuccessStatusCode();
+            var response = Send(body);
 
             var responseObject = JsonSerializer.Deserialize<OpenAIResponse>(
                 response.Content.ReadAsStringAsync().Result);
@@ -128,6 +124,26 @@ namespace Seal.AI
 
             messages.Add(new AssistantChatMessage(result));
             return result;
+        }
+
+        /// <summary>
+        /// Sends the request and returns the successful response; if the model refuses the temperature
+        /// (e.g. GPT-6 accepts only its default value), sends it again without temperature, and the next
+        /// requests to the model omit it. The error message returned by the API is added to the exception.
+        /// </summary>
+        private HttpResponseMessage Send(Dictionary<string, object> body)
+        {
+            if (!SendTemperature) body.Remove("temperature");
+            if (NoReasoning) body["reasoning_effort"] = "none";
+            var response = _httpClient.SendAsync(BuildRequest(body)).Result;
+            if (response.IsSuccessStatusCode) return response;
+
+            var errorBody = response.Content.ReadAsStringAsync().Result;
+            if (body.ContainsKey("temperature") && HandleTemperatureRefused((int)response.StatusCode, errorBody))
+                return Send(body);
+            if (!body.ContainsKey("reasoning_effort") && HandleReasoningRefused((int)response.StatusCode, errorBody))
+                return Send(body);
+            throw new HttpRequestException($"OpenAI: HTTP {(int)response.StatusCode} {GetErrorMessage(errorBody) ?? response.ReasonPhrase}", null, response.StatusCode);
         }
 
         private HttpRequestMessage BuildRequest(Dictionary<string, object> body)

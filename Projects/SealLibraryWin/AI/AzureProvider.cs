@@ -26,9 +26,12 @@ namespace Seal.AI
             _maxTokens = maxTokens;
             _topP = topP;
 
+            var clientOptions = new AzureOpenAIClientOptions();
+            clientOptions.AddPolicy(new ReasoningNonePolicy(() => NoReasoning), System.ClientModel.Primitives.PipelinePosition.PerCall);
             _azureClient = new AzureOpenAIClient(
                 new Uri(endpoint),
-                new System.ClientModel.ApiKeyCredential(key)
+                new System.ClientModel.ApiKeyCredential(key),
+                clientOptions
             );
 
             _chatClient = _azureClient.GetChatClient(model);
@@ -38,10 +41,9 @@ namespace Seal.AI
         {
             get
             {
-                var options = new ChatCompletionOptions
-                {
-                    Temperature = _temperature
-                };
+                var options = new ChatCompletionOptions();
+                if (SendTemperature)
+                    options.Temperature = _temperature;
                 if (_maxTokens > 0)
                     options.MaxOutputTokenCount = _maxTokens;
                 if (_topP < 1.0f)
@@ -50,10 +52,37 @@ namespace Seal.AI
             }
         }
 
+        /// <summary>
+        /// Sends the request; if the model refuses the temperature (e.g. GPT-6 accepts only its default value),
+        /// sends it again without temperature, and the next requests to the model omit it.
+        /// The error message returned by Azure is added to the exception.
+        /// </summary>
+        private ChatCompletion Complete(List<ChatMessage> messages, ChatCompletionOptions options)
+        {
+            try
+            {
+                return _chatClient.CompleteChat(messages, options);
+            }
+            catch (System.ClientModel.ClientResultException ex)
+            {
+                var body = ex.GetRawResponse()?.Content?.ToString();
+                if (options.Temperature != null && HandleTemperatureRefused(ex.Status, body))
+                {
+                    options.Temperature = null;
+                    return Complete(messages, options);
+                }
+                if (HandleReasoningRefused(ex.Status, body))
+                    return Complete(messages, options); //sent with reasoning_effort 'none' by the ReasoningNonePolicy
+                var message = GetErrorMessage(body);
+                if (string.IsNullOrEmpty(message)) throw;
+                throw new Exception($"Azure OpenAI: HTTP {ex.Status} {message}", ex);
+            }
+        }
+
         /// <inheritdoc/>
         public override string HandleChat(List<ChatMessage> messages)
         {
-            ChatCompletion completion = _chatClient.CompleteChat(messages, Options);
+            ChatCompletion completion = Complete(messages, Options);
             SetLastUsage(completion.Usage?.InputTokenCount ?? 0, completion.Usage?.OutputTokenCount ?? 0, completion.Usage?.InputTokenDetails?.CachedTokenCount ?? 0);
 
             if (completion.FinishReason == ChatFinishReason.Stop)
@@ -79,7 +108,7 @@ namespace Seal.AI
                 options.Tools.Add(ChatTool.CreateFunctionTool(tool.Name, tool.Description, schema));
             }
 
-            ChatCompletion completion = _chatClient.CompleteChat(messages, options);
+            ChatCompletion completion = Complete(messages, options);
             SetLastUsage(completion.Usage?.InputTokenCount ?? 0, completion.Usage?.OutputTokenCount ?? 0, completion.Usage?.InputTokenDetails?.CachedTokenCount ?? 0);
 
             if (completion.FinishReason == ChatFinishReason.ToolCalls)
@@ -118,6 +147,39 @@ namespace Seal.AI
             if (completion.FinishReason == ChatFinishReason.Length)
                 return new Exception("Azure OpenAI: the reply was truncated because the maximum number of output tokens was reached. Increase the Max Tokens of the provider.");
             return new Exception($"Azure OpenAI: the model returned no reply (finish reason: {completion.FinishReason}).");
+        }
+
+        /// <summary>
+        /// Adds "reasoning_effort": "none" to the request body when the model accepts the function tools only without reasoning
+        /// (e.g. GPT-6 on the chat completions API): the version of the SDK has no option for it.
+        /// </summary>
+        private class ReasoningNonePolicy : System.ClientModel.Primitives.PipelinePolicy
+        {
+            readonly Func<bool> _apply;
+
+            public ReasoningNonePolicy(Func<bool> apply) { _apply = apply; }
+
+            public override void Process(System.ClientModel.Primitives.PipelineMessage message, IReadOnlyList<System.ClientModel.Primitives.PipelinePolicy> pipeline, int currentIndex)
+            {
+                Patch(message);
+                ProcessNext(message, pipeline, currentIndex);
+            }
+
+            public override System.Threading.Tasks.ValueTask ProcessAsync(System.ClientModel.Primitives.PipelineMessage message, IReadOnlyList<System.ClientModel.Primitives.PipelinePolicy> pipeline, int currentIndex)
+            {
+                Patch(message);
+                return ProcessNextAsync(message, pipeline, currentIndex);
+            }
+
+            void Patch(System.ClientModel.Primitives.PipelineMessage message)
+            {
+                if (!_apply() || message.Request.Content == null) return;
+                using var stream = new System.IO.MemoryStream();
+                message.Request.Content.WriteTo(stream);
+                if (System.Text.Json.Nodes.JsonNode.Parse(stream.ToArray()) is not System.Text.Json.Nodes.JsonObject body || body.ContainsKey("reasoning_effort")) return;
+                body["reasoning_effort"] = "none";
+                message.Request.Content = System.ClientModel.BinaryContent.Create(BinaryData.FromString(body.ToJsonString()));
+            }
         }
 
         /// <summary>

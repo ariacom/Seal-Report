@@ -50,6 +50,16 @@ namespace Test
         }
 
         [TestMethod]
+        public void PathWithJsonEscapesIsRestored()
+        {
+            //"Personal\new.srex" sent unescaped in the JSON of the tool call arrives with a new line
+            Assert.AreEqual("Personal\\new.srex", AIReportWriter.RestoreJsonEscapes("Personal\new.srex"));
+            Assert.AreEqual("Personal\\top\\report.srex", AIReportWriter.RestoreJsonEscapes("Personal\top\report.srex"));
+            Assert.AreEqual("Reports\\Sales\\a.srex", AIReportWriter.RestoreJsonEscapes("Reports\\Sales\\a.srex"));
+            Assert.IsNull(AIReportWriter.RestoreJsonEscapes(null));
+        }
+
+        [TestMethod]
         public void ExecutionHasTheUserOfTheToolCall()
         {
             var user = new SecurityUser(_repository.Security) { Name = "ai_user" };

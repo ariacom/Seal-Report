@@ -392,8 +392,12 @@ namespace Seal.AI
             var maxToolCalls = Configuration.MaxToolCalls > 0 ? Configuration.MaxToolCalls : AIAgentConfiguration.DefaultMaxToolCalls;
             if (maxIterations <= 0) maxIterations = maxToolCalls;
             var toolCallCount = 0;
+            //Guard against the loops: a call identical to the previous executed call (same tool, same arguments, no other call between) is refused,
+            //the second refusal of the turn ends the tool loop
+            string lastCallKey = null;
+            var repeatedCalls = 0;
 
-            for (int i = 0; i < maxIterations && toolCallCount < maxToolCalls; i++)
+            for (int i = 0; i < maxIterations && toolCallCount < maxToolCalls && repeatedCalls < MaxRepeatedToolCalls; i++)
             {
                 if (cancelOperation?.Cancel == true) break;
 
@@ -432,6 +436,16 @@ namespace Seal.AI
                         continue;
                     }
 
+                    var callKey = toolCall.Name + "\n" + NormalizeToolArguments(toolCall.Arguments);
+                    if (callKey == lastCallKey)
+                    {
+                        repeatedCalls++;
+                        if (log != null) log.LogMessage($"****** Repeated Tool Call {i} {toolCall.Name} ({repeatedCalls}/{MaxRepeatedToolCalls}): not executed");
+                        Messages.Add(new ToolChatMessage(toolCall.Id, RepeatedToolCallError));
+                        continue;
+                    }
+                    lastCallKey = callKey;
+
                     progress?.Invoke(host.GetProgressLabel(toolCall));
                     var result = host.Execute(toolCall, cancelOperation);
                     if (result.ToolsChanged) toolsChanged = true;
@@ -462,7 +476,7 @@ namespace Seal.AI
                 // Continue: send again with the tool results now in the history
             }
 
-            // Safety net: max iterations reached — ask for a plain reply without tools
+            // Safety net: max iterations, tool calls or repeated calls reached — ask for a plain reply without tools
             if (cancelOperation?.Cancel == true)
             {
                 Messages.RemoveRange(messageCountBefore, Messages.Count - messageCountBefore);
@@ -472,6 +486,46 @@ namespace Seal.AI
             var finalReply = provider.HandleChat(Messages);
             addUsage();
             return finalReply;
+        }
+
+        /// <summary>
+        /// Number of refused repeated tool calls (identical to the previous call) ending the tool loop of a turn: the agent is then asked for a final reply without tools.
+        /// </summary>
+        public const int MaxRepeatedToolCalls = 2;
+
+        /// <summary>
+        /// Result sent to the model for a tool call identical to its previous call, which is not executed.
+        /// </summary>
+        public const string RepeatedToolCallError = "Error: this call is identical to your previous call (same tool, same arguments): its result is above and would not change. Do not repeat it: change the arguments (e.g. add a restriction) or answer the user with what you have found.";
+
+        /// <summary>
+        /// Normalized text of the JSON arguments of a tool call (no formatting, properties sorted by name) to compare two calls; the text itself if it is not JSON.
+        /// </summary>
+        public static string NormalizeToolArguments(string arguments)
+        {
+            if (string.IsNullOrWhiteSpace(arguments)) return "";
+            try
+            {
+                return normalizeJson(System.Text.Json.Nodes.JsonNode.Parse(arguments))?.ToJsonString() ?? "";
+            }
+            catch
+            {
+                return arguments.Trim();
+            }
+        }
+
+        static System.Text.Json.Nodes.JsonNode normalizeJson(System.Text.Json.Nodes.JsonNode node)
+        {
+            if (node is System.Text.Json.Nodes.JsonObject obj)
+            {
+                var sorted = new System.Text.Json.Nodes.JsonObject();
+                foreach (var property in obj.OrderBy(p => p.Key, StringComparer.Ordinal))
+                    sorted[property.Key] = normalizeJson(property.Value);
+                return sorted;
+            }
+            if (node is System.Text.Json.Nodes.JsonArray array)
+                return new System.Text.Json.Nodes.JsonArray(array.Select(normalizeJson).ToArray());
+            return node?.DeepClone();
         }
 
         string stopByCostLimit()

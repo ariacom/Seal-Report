@@ -93,6 +93,45 @@
             True if the provider sends the images of a tool result (image parts of a <see cref="T:OpenAI.Chat.ToolChatMessage"/>) to the model.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIProvider._noTemperatureModels">
+            <summary>
+            Models (endpoint|model) that refused the temperature parameter (e.g. GPT-6 accepts only its default value):
+            the next requests to these models are sent without temperature.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProvider.SendTemperature">
+            <summary>
+            True if the temperature must be sent to the model: false once the model refused it.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.HandleTemperatureRefused(System.Int32,System.String)">
+            <summary>
+            If the error body of an HTTP 400 says that the model refuses the temperature parameter, remembers it for
+            the model and returns true: the caller retries the request without temperature.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIProvider._noReasoningModels">
+            <summary>
+            Models (endpoint|model) that refused function tools with their default reasoning on the chat completions API
+            (e.g. GPT-6): the next requests to these models are sent with reasoning_effort 'none'.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIProvider.NoReasoning">
+            <summary>
+            True if the request must be sent with reasoning_effort 'none': the model refused the tools with its default reasoning.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.HandleReasoningRefused(System.Int32,System.String)">
+            <summary>
+            If the error body of an HTTP 400 says that the model accepts the function tools only with reasoning_effort 'none',
+            remembers it for the model and returns true: the caller retries the request with reasoning_effort 'none'.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.GetErrorMessage(System.String)">
+            <summary>
+            Returns the message of an OpenAI-like JSON error body ({"error":{"message":...}}), else the body itself (truncated).
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIProvider.SetLastUsage(System.Int32,System.Int32,System.Int32)">
             <summary>
             Records the token usage of the API call that just completed.
@@ -475,6 +514,13 @@
         <member name="M:Seal.AI.AzureProvider.Initialize(System.String,System.String,System.String,System.Single,System.Int32,System.Single)">
             <inheritdoc/>
         </member>
+        <member name="M:Seal.AI.AzureProvider.Complete(System.Collections.Generic.List{OpenAI.Chat.ChatMessage},OpenAI.Chat.ChatCompletionOptions)">
+            <summary>
+            Sends the request; if the model refuses the temperature (e.g. GPT-6 accepts only its default value),
+            sends it again without temperature, and the next requests to the model omit it.
+            The error message returned by Azure is added to the exception.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AzureProvider.HandleChat(System.Collections.Generic.List{OpenAI.Chat.ChatMessage})">
             <inheritdoc/>
         </member>
@@ -485,6 +531,12 @@
             <summary>
             Exception for a completion that ended neither with a reply nor with tool calls
             (content filter, max output tokens...), instead of silently returning an empty reply.
+            </summary>
+        </member>
+        <member name="T:Seal.AI.AzureProvider.ReasoningNonePolicy">
+            <summary>
+            Adds "reasoning_effort": "none" to the request body when the model accepts the function tools only without reasoning
+            (e.g. GPT-6 on the chat completions API): the version of the SDK has no option for it.
             </summary>
         </member>
         <member name="M:Seal.AI.AzureProvider.FilteredCategories(OpenAI.Chat.ChatCompletion)">
@@ -536,6 +588,13 @@
         </member>
         <member name="M:Seal.AI.OpenAIProvider.HandleChatWithTools(System.Collections.Generic.List{OpenAI.Chat.ChatMessage},System.Collections.Generic.IList{Seal.AI.AITool},System.Collections.Generic.IList{Seal.AI.AIToolCall}@)">
             <inheritdoc/>
+        </member>
+        <member name="M:Seal.AI.OpenAIProvider.Send(System.Collections.Generic.Dictionary{System.String,System.Object})">
+            <summary>
+            Sends the request and returns the successful response; if the model refuses the temperature
+            (e.g. GPT-6 accepts only its default value), sends it again without temperature, and the next
+            requests to the model omit it. The error message returned by the API is added to the exception.
+            </summary>
         </member>
         <member name="M:Seal.AI.OpenAIProvider.SerializeMessage(OpenAI.Chat.ChatMessage)">
             <summary>
@@ -1216,6 +1275,21 @@
             instructions are returned as the tool result and the skill's own tools are merged into the active
             tool set for the rest of the conversation.
             </remarks>
+        </member>
+        <member name="F:Seal.AI.AIAgent.MaxRepeatedToolCalls">
+            <summary>
+            Number of refused repeated tool calls (identical to the previous call) ending the tool loop of a turn: the agent is then asked for a final reply without tools.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.RepeatedToolCallError">
+            <summary>
+            Result sent to the model for a tool call identical to its previous call, which is not executed.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIAgent.NormalizeToolArguments(System.String)">
+            <summary>
+            Normalized text of the JSON arguments of a tool call (no formatting, properties sorted by name) to compare two calls; the text itself if it is not JSON.
+            </summary>
         </member>
         <member name="M:Seal.AI.AIAgent.removeToolResultImages">
             <summary>
@@ -2345,6 +2419,12 @@
         <member name="M:Seal.AI.AIReportWriter.#ctor(Seal.AI.AIToolConfiguration)">
             <summary>
             Constructor for the tool executing the call
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.RestoreJsonEscapes(System.String)">
+            <summary>
+            Restores the backslashes of a path read as JSON escapes by the model (e.g. "Personal\new.srex" sent unescaped arrives as
+            'Personal' + new line + 'ew.srex'): a path never contains these control characters.
             </summary>
         </member>
         <member name="M:Seal.AI.AIReportWriter.ResolveNewReportPath(System.String,System.String@)">

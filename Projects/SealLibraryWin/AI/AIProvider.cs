@@ -79,6 +79,72 @@ namespace Seal.AI
         public virtual bool SupportsToolResultImages => false;
 
         /// <summary>
+        /// Models (endpoint|model) that refused the temperature parameter (e.g. GPT-6 accepts only its default value):
+        /// the next requests to these models are sent without temperature.
+        /// </summary>
+        static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> _noTemperatureModels = new();
+
+        /// <summary>
+        /// True if the temperature must be sent to the model: false once the model refused it.
+        /// </summary>
+        protected bool SendTemperature => !_noTemperatureModels.ContainsKey(_endpoint + "|" + _model);
+
+        /// <summary>
+        /// If the error body of an HTTP 400 says that the model refuses the temperature parameter, remembers it for
+        /// the model and returns true: the caller retries the request without temperature.
+        /// </summary>
+        protected bool HandleTemperatureRefused(int status, string errorBody)
+        {
+            if (status != 400 || !SendTemperature || string.IsNullOrEmpty(errorBody)) return false;
+            if (!errorBody.Contains("\"temperature\"") && !errorBody.Contains("'temperature'")) return false;
+            _noTemperatureModels[_endpoint + "|" + _model] = true;
+            return true;
+        }
+
+        /// <summary>
+        /// Models (endpoint|model) that refused function tools with their default reasoning on the chat completions API
+        /// (e.g. GPT-6): the next requests to these models are sent with reasoning_effort 'none'.
+        /// </summary>
+        static readonly System.Collections.Concurrent.ConcurrentDictionary<string, bool> _noReasoningModels = new();
+
+        /// <summary>
+        /// True if the request must be sent with reasoning_effort 'none': the model refused the tools with its default reasoning.
+        /// </summary>
+        protected bool NoReasoning => _noReasoningModels.ContainsKey(_endpoint + "|" + _model);
+
+        /// <summary>
+        /// If the error body of an HTTP 400 says that the model accepts the function tools only with reasoning_effort 'none',
+        /// remembers it for the model and returns true: the caller retries the request with reasoning_effort 'none'.
+        /// </summary>
+        protected bool HandleReasoningRefused(int status, string errorBody)
+        {
+            if (status != 400 || NoReasoning || string.IsNullOrEmpty(errorBody)) return false;
+            if (!errorBody.Contains("reasoning_effort") || !errorBody.Contains("'none'")) return false;
+            _noReasoningModels[_endpoint + "|" + _model] = true;
+            return true;
+        }
+
+        /// <summary>
+        /// Returns the message of an OpenAI-like JSON error body ({"error":{"message":...}}), else the body itself (truncated).
+        /// </summary>
+        protected static string GetErrorMessage(string errorBody)
+        {
+            if (string.IsNullOrWhiteSpace(errorBody)) return null;
+            try
+            {
+                using var doc = System.Text.Json.JsonDocument.Parse(errorBody);
+                if (doc.RootElement.TryGetProperty("error", out var error))
+                {
+                    if (error.ValueKind == System.Text.Json.JsonValueKind.Object && error.TryGetProperty("message", out var message)) return message.GetString();
+                    if (error.ValueKind == System.Text.Json.JsonValueKind.String) return error.GetString();
+                }
+                if (doc.RootElement.TryGetProperty("message", out var msg) && msg.ValueKind == System.Text.Json.JsonValueKind.String) return msg.GetString();
+            }
+            catch { }
+            return errorBody.Length > 500 ? errorBody.Substring(0, 500) : errorBody;
+        }
+
+        /// <summary>
         /// Records the token usage of the API call that just completed.
         /// </summary>
         protected void SetLastUsage(int inputTokens, int outputTokens, int cachedInputTokens = 0)

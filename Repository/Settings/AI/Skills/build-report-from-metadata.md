@@ -114,9 +114,11 @@ Minimal list with one prompted restriction:
   element (count, amount, population) can also get `<ShowTotal>Column</ShowTotal>`:
   its values are summed in the total row. Never on a ratio, a percentage, an
   average or a value repeated on several rows.
-- **Sort**: no `<SortOrder>` unless asked. Top N → measure `1 Descendant` and a
-  smaller `MaxNumberOfRecords`, plus `data_warning_show` = `false` on the Data
-  Table view. A sort for the chart only uses `SerieSortType`/`SerieSortOrder`.
+- **Sort**: no `<SortOrder>` unless asked. Top N → measure `1 Descendant`, every Page, Row and Column element
+  `<SortOrder>Not sorted</SortOrder>` (they are sorted before the Data elements:
+  otherwise the limit keeps the first labels in alphabetical order), a smaller
+  `MaxNumberOfRecords`, plus `data_warning_show` = `false` on the Data Table view.
+  Check that the first row has the largest value. A sort for the chart only uses `SerieSortType`/`SerieSortOrder`.
 - **Restrictions**: every requested filter is prompted (`Prompt`, `PromptTwoValues`
   for a date range) and pre-filled with the requested value; `None` only for a
   fixed filter the user asked for. `<Prompt>` holds one of these types, never a

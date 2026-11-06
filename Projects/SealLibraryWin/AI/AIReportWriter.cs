@@ -113,12 +113,22 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Restores the backslashes of a path read as JSON escapes by the model (e.g. "Personal\new.srex" sent unescaped arrives as
+        /// 'Personal' + new line + 'ew.srex'): a path never contains these control characters.
+        /// </summary>
+        public static string RestoreJsonEscapes(string path)
+        {
+            if (string.IsNullOrEmpty(path)) return path;
+            return path.Replace("\t", "\\t").Replace("\n", "\\n").Replace("\r", "\\r").Replace("\f", "\\f").Replace("\b", "\\b");
+        }
+
+        /// <summary>
         /// Full path of a report to create from its path relative to a root (Reports or Personal, Reports by default). Returns an error or null.
         /// </summary>
         public string ResolveNewReportPath(string path, out string fullPath)
         {
             fullPath = null;
-            path = FileHelper.ConvertOSFilePath(path ?? "");
+            path = FileHelper.ConvertOSFilePath(RestoreJsonEscapes(path ?? ""));
             var roots = getRoots();
             //A folder is not a report path: 'Personal\' would resolve outside the user's folders and end in a misleading 'write access denied'
             if (string.IsNullOrWhiteSpace(path) || path.EndsWith(Path.DirectorySeparatorChar) || roots.ContainsKey(path))
@@ -139,7 +149,7 @@ namespace Seal.AI
         public string ResolveExistingReportPath(string path, out string fullPath)
         {
             fullPath = null;
-            path = FileHelper.ConvertOSFilePath(path ?? "");
+            path = FileHelper.ConvertOSFilePath(RestoreJsonEscapes(path ?? ""));
             foreach (var kv in getRoots())
             {
                 var candidate = path.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase) ? Path.Combine(kv.Value, path.Substring(kv.Key.Length + 1)) : Path.Combine(kv.Value, path);
