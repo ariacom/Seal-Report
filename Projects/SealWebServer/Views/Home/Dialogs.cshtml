@@ -55,7 +55,7 @@
                 }
                 @foreach (var accountLink in repository.Security.GetAccountLinks("login"))
                 {
-                    <div class="auth-link text-center mt-3"><a href="@accountLink.Url">@repository.TranslateWeb(accountLink.Label)</a></div>
+                    <div class="auth-link text-center mt-3"><a href="@accountLink.Url" target="_blank" rel="noopener">@repository.TranslateWeb(accountLink.Label)</a></div>
                 }
                 @if (repository.Security.AllowGuest)
                 {
