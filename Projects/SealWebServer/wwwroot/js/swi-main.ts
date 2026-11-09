@@ -149,7 +149,9 @@ class SWIMain {
             return;
         }
 
-        //Parameter 'login' (e.g. the link 'Log in' of an accounts portal): show the login dialog instead of a session without account.
+        //Parameter 'login' (e.g. the link 'Log in' of an accounts portal): show the login dialog instead of a session without account,
+        //and also instead of a session already authenticated (closed first): otherwise, after a logout of the accounts portal, 'Log in'
+        //went back at once with the account still open in Seal, without asking anything.
         //Removed from the address, so that a reload opens the usual session.
         //Parameter 'account' (with 'login'): address of the accounts portal to go back to once logged in (an account link of the profile, see SealSecurity.FindAccountLink),
         //kept in the session storage to survive the closing of a guest session or a reload of the translations.
@@ -171,8 +173,8 @@ class SWIMain {
                 if (login) {
                     _main.loginFailure(data, true);
                 }
-                else if (askLogin && data.guest) {
-                    //Session of a guest: closed, then the login dialog
+                else if (askLogin && data.authenticated !== false) {
+                    //Session of a guest or of an authenticated user: closed, then the login dialog
                     _gateway.Logout(function () { _main.showLogin(); });
                 }
                 else if (askLogin && data.authenticated != null && data.authenticated == false) {

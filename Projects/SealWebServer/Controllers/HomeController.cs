@@ -238,6 +238,28 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Logout coming from an accounts portal (its 'Log out'): closes the session of the Web Report Server, then goes back to the address 'account' when it is
+        /// the address of a declared account link (SealSecurity.FindAccountLinkAddress, never another site, no ticket), otherwise to the main page.
+        /// Uses the session cookie of the browser (top-level navigation): no session id in the address.
+        /// </summary>
+        public ActionResult AccountLogout(string account)
+        {
+            writeDebug("AccountLogout");
+            try
+            {
+                if (WebUser != null && (WebUser.IsAuthenticated || WebUser.IsGuest)) logoutWebUser();
+                //the session may be new (expired, restart): the repository is not created yet
+                var url = (Repository ?? CreateRepository()).Security.FindAccountLinkAddress(account);
+                if (url == null) return RedirectToAction("Main");
+                return Redirect(url);
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
+        /// <summary>
         /// Execute a report initiated in a previous execution
         /// </summary>
         public ActionResult ActionExecuteReport(string execution_guid, string sessionId)

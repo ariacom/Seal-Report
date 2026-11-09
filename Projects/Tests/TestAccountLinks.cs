@@ -79,6 +79,26 @@ namespace Test
         }
 
         [TestMethod]
+        public void AccountLinkAddressAfterLogout()
+        {
+            var security = newSecurity();
+            //Home/AccountLogout: back to the page of the portal itself (any link, any group), never a ticket
+            Assert.AreEqual("https://comptes.test/", security.FindAccountLinkAddress("https://comptes.test/"));
+            Assert.AreEqual("https://comptes.test/abonnement?x=1", security.FindAccountLinkAddress("https://comptes.test/abonnement?x=1"));
+            security.ClearAccountLinkSecret = "le secret partagé";
+            Assert.IsFalse(security.FindAccountLinkAddress("https://comptes.test/entree").Contains("ticket"));
+            //Another site, port or scheme, a relative or bad address: nothing (no open redirect)
+            Assert.IsNull(security.FindAccountLinkAddress("https://evil.test/"));
+            Assert.IsNull(security.FindAccountLinkAddress("https://comptes.test.evil.test/"));
+            Assert.IsNull(security.FindAccountLinkAddress("https://comptes.test:8443/"));
+            Assert.IsNull(security.FindAccountLinkAddress("http://comptes.test/"));
+            Assert.IsNull(security.FindAccountLinkAddress("javascript:alert(1)"));
+            Assert.IsNull(security.FindAccountLinkAddress("/entree"));
+            Assert.IsNull(security.FindAccountLinkAddress(null));
+            Assert.IsNull(new SealSecurity().FindAccountLinkAddress("https://comptes.test/"));
+        }
+
+        [TestMethod]
         public void TicketIsSigned()
         {
             var security = newSecurity();

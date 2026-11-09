@@ -480,6 +480,20 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// The address of a declared account link (any location, any group) matching an address given to the Web Report Server (parameter 'account' of
+        /// Home/AccountLogout, e.g. the page of an accounts portal after its logout): the address itself when it is on the site (scheme, host and port)
+        /// of a declared link, null otherwise: it can never redirect to another site. Never a ticket.
+        /// </summary>
+        public string FindAccountLinkAddress(string url)
+        {
+            if (string.IsNullOrWhiteSpace(url) || string.IsNullOrEmpty(AccountLinks) || !Uri.TryCreate(url.Trim(), UriKind.Absolute, out var target)) return null;
+            if (target.Scheme != Uri.UriSchemeHttps && target.Scheme != Uri.UriSchemeHttp) return null;
+            var site = AccountLinks.Replace("\r", "").Split('\n').Select(i => i.Split('|')).Where(i => i.Length >= 3 && !string.IsNullOrWhiteSpace(i[1]))
+                .Any(i => Uri.TryCreate(i[1].Trim(), UriKind.Absolute, out var link) && Uri.Compare(link, target, UriComponents.SchemeAndServer, UriFormat.Unescaped, StringComparison.OrdinalIgnoreCase) == 0);
+            return site ? target.AbsoluteUri : null;
+        }
+
+        /// <summary>
         /// The url of the account link at the index, with a ticket for the user if a secret is set. Null if the link is not allowed to the user.
         /// </summary>
         public string GetAccountLinkUrl(int index, SecurityUser user)

@@ -1329,6 +1329,31 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
+        /// Logout of the user of the session: audit, session cleared, new user without login (shared by SWILogout and AccountLogout)
+        /// </summary>
+        void logoutWebUser()
+        {
+            if (WebUser != null) WebUser.Logout();
+            //Audit
+            Audit.LogAudit(AuditType.Logout, WebUser);
+            Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.AuthenticatedLoggedUserCount.ToString());
+            //Clear session
+            NavigationContext.Navigations.Clear();
+            setSessionValue(SessionUser, null);
+            setSessionValue(SessionNavigationContext, null);
+            setSessionValue(SessionUploadedFiles, null);
+            setSessionValue(SessionAgent, null);
+            setSessionValue(SessionAgentConfiguration, null);
+            CreateWebUser();
+
+            //SignOut
+            if (AuthenticationConfig.Enabled)
+            {
+                SignOut("Cookies", "oidc");
+            }
+        }
+
+        /// <summary>
         /// Clear the current user session.
         /// </summary>
         public ActionResult SWILogout(string sessionId)
@@ -1338,25 +1363,7 @@ namespace SealWebServer.Controllers
             try
             {
                 SetSessionId(sessionId);
-                if (WebUser != null) WebUser.Logout();
-                //Audit
-                Audit.LogAudit(AuditType.Logout, WebUser);
-                Audit.LogEventAudit(AuditType.EventLoggedUsers, SealSecurity.AuthenticatedLoggedUserCount.ToString());
-                //Clear session
-                NavigationContext.Navigations.Clear();
-                setSessionValue(SessionUser, null);
-                setSessionValue(SessionNavigationContext, null);
-                setSessionValue(SessionUploadedFiles, null);
-                setSessionValue(SessionAgent, null);
-                setSessionValue(SessionAgentConfiguration, null);
-                CreateWebUser();
-
-                //SignOut
-                if (AuthenticationConfig.Enabled)
-                {
-                    SignOut("Cookies", "oidc");
-                }
-
+                logoutWebUser();
                 return Json(new { });
             }
             catch (Exception ex)
