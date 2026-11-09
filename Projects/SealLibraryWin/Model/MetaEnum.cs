@@ -305,11 +305,11 @@ namespace Seal.Model
 
         private bool _loadOnDemand = false;
         /// <summary>
-        /// If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. The list should be bound to restrictions only (property 'Enumerated List' of the restriction): a column displayed with this list shows the identifiers.
+        /// If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. For a column displayed with this list, the labels of the identifiers of the result are loaded after the execution of the model with the 'SQL Select Statement for selected values'.
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Dynamic display"), DisplayName("Values loaded on demand"), Description("If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. The list should be bound to restrictions only (property 'Enumerated List' of the restriction): a column displayed with this list shows the identifiers."), Id(5, 2)]
+        [Category("Dynamic display"), DisplayName("Values loaded on demand"), Description("If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. For a column displayed with this list, the labels of the identifiers of the result are loaded after the execution of the model with the 'SQL Select Statement for selected values'."), Id(5, 2)]
 #endif
         public bool LoadOnDemand
         {
@@ -357,6 +357,33 @@ namespace Seal.Model
                   (!string.IsNullOrEmpty(SqlDisplay) && SqlDisplay.Contains(Repository.EnumValuesKeyword)) ||
                   (!string.IsNullOrEmpty(ScriptDisplay) && ScriptDisplay.Contains(Repository.EnumValuesKeyword))
                   ;
+            }
+        }
+
+        /// <summary>
+        /// Names of the enumerated lists this list depends on: the '{EnumValues_&lt;Name>}' keywords of the SQL or Script for prompted restriction
+        /// </summary>
+        [XmlIgnore]
+        public List<string> DependencyNames
+        {
+            get
+            {
+                var result = new List<string>();
+                foreach (var text in new[] { SqlDisplay, ScriptDisplay })
+                {
+                    if (string.IsNullOrEmpty(text)) continue;
+                    int index = text.IndexOf(Repository.EnumValuesKeyword);
+                    while (index >= 0)
+                    {
+                        int start = index + Repository.EnumValuesKeyword.Length;
+                        int end = text.IndexOf('}', start);
+                        if (end < 0) break;
+                        var name = text.Substring(start, end - start);
+                        if (!result.Contains(name)) result.Add(name);
+                        index = text.IndexOf(Repository.EnumValuesKeyword, end);
+                    }
+                }
+                return result;
             }
         }
 
@@ -707,13 +734,18 @@ namespace Seal.Model
                 if (!string.IsNullOrEmpty(SqlSelected))
                 {
                     var databaseType = _source.Connection != null ? _source.Connection.DatabaseType : DatabaseType.Standard;
-                    var idList = string.Join(",", missing.Select(i => "'" + Helper.EscapeSQLStringLiteral(i, databaseType) + "'"));
-                    var finalSQL = RazorHelper.CompileExecute(SqlSelected, this).Replace(Repository.EnumSelectedKeyword + "}", idList);
-                    finalSQL = Helper.ClearAllSQLKeywords(finalSQL);
+                    var sqlSelected = RazorHelper.CompileExecute(SqlSelected, this);
                     DbConnection connection = _source.GetOpenConnection();
                     try
                     {
-                        found = getValues(connection, finalSQL);
+                        //By batches: the identifiers of a whole result (e.g. a column of the model) may be thousands, and Oracle limits an IN list to 1000 items
+                        const int batchSize = 1000;
+                        for (int start = 0; start < missing.Count; start += batchSize)
+                        {
+                            var idList = string.Join(",", missing.Skip(start).Take(batchSize).Select(i => "'" + Helper.EscapeSQLStringLiteral(i, databaseType) + "'"));
+                            var finalSQL = Helper.ClearAllSQLKeywords(sqlSelected.Replace(Repository.EnumSelectedKeyword + "}", idList));
+                            found.AddRange(getValues(connection, finalSQL));
+                        }
                     }
                     finally
                     {

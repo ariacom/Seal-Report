@@ -202,7 +202,8 @@ function initRestrictions(parent) {
         if ($(this).attr("id")) {
             $("#id_load").val($(this).attr("id"));
 
-            if ($(this).attr("dependencies") == "true" && $(this).attr("filterchars") == 0) requestEnumData("", false);
+            //A list with dependencies is requested at once: the server builds it if a list it depends on has a value (even with filter characters to type), otherwise the message is shown
+            if ($(this).attr("dependencies") == "true") requestEnumData("", false);
             else setEnumMessage($(this).attr("id"));
 
             var filter = "";

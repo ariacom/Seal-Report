@@ -3259,6 +3259,21 @@ model.ResultTable = query2.CopyToDataTable2();
         {
             bool hasEnum = false;
             List<ReportElement> specialSortByPositionElements = new List<ReportElement>();
+
+            //Lists loaded on demand: the list is never loaded as a whole, so the labels of the identifiers present in the result are loaded now (one query per list)
+            foreach (var element in Elements.Where(i => i.IsEnum && i.EnumEL.IsLoadOnDemand))
+            {
+                if (Report.Cancel) return;
+                DataColumn col = ResultTable.Columns[element.SQLColumnName];
+                if (col == null) continue;
+                var ids = new HashSet<string>();
+                foreach (DataRow row in ResultTable.Rows)
+                {
+                    if (!row.IsNull(col)) ids.Add(row[col].ToString());
+                }
+                element.EnumEL.EnsureValues(ids);
+            }
+
             foreach (var element in Elements)
             {
                 if (element.IsEnum)

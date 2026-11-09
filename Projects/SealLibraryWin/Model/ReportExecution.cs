@@ -2648,7 +2648,10 @@ namespace Seal.Model
                 }
 
                 var values = new List<MetaEV>();
-                if ((enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars) || (enumRE.HasDependencies && CurrentEnumValues.Count > 0))
+                if (filter == null) filter = ""; //An empty filter is posted as null by the web server (list with dependencies requested when the popup opens)
+                //A list with dependencies is built as soon as one of the lists it depends on has a value (e.g. the communes of the region chosen), even if the filter typed is shorter than the characters required: the text typed then refines it
+                bool hasDependencyValue = enumRE.HasDependencies && (enumRE.FilterChars == 0 || Report.AllExecutionRestrictions.Any(i => i.EnumRE != null && i.EnumValues.Count > 0 && enumRE.DependencyNames.Contains(i.EnumRE.Name)));
+                if ((enumRE.FilterChars > 0 && filter.Length >= enumRE.FilterChars) || (hasDependencyValue && CurrentEnumValues.Count > 0))
                 {
                     values = enumRE.GetSubSetValues(filter, CurrentEnumValues);
                     if (enumRE.IsLoadOnDemand)
