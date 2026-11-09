@@ -200,29 +200,33 @@ namespace Seal.Model
                         }
                         else
                         {
-                            //Execute using the task scheduler
-                            var path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location), Repository.SealTaskScheduler);
+                            //Execute using the task scheduler: SealTaskScheduler.exe on Windows, 'dotnet SealTaskScheduler.dll' elsewhere (no .exe published)
+                            var isWindows = RuntimeInformation.IsOSPlatform(OSPlatform.Windows);
+                            var fileName = isWindows ? Repository.SealTaskScheduler : Path.ChangeExtension(Repository.SealTaskScheduler, ".dll");
+                            var directory = Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location);
+                            var path = Path.Combine(directory, fileName);
                             var arg = schedule.GUID;
                             if (!File.Exists(path))
                             {
                                 //Try in the Core distribution
-                                path = Path.Combine(Path.GetDirectoryName(Assembly.GetExecutingAssembly().Location) + "\\" + Repository.CoreInstallationSubDirectory, Repository.SealTaskScheduler);
+                                path = Path.Combine(directory, Repository.CoreInstallationSubDirectory, fileName);
                             }
 #if DEBUG
                             if (!File.Exists(path))
                             {
                                 //Try in debug folder
-                                path = Path.Combine($@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net{Environment.Version.Major}.0", Repository.SealTaskScheduler);
+                                path = Path.Combine($@"C:\_dev\Seal-Report\Projects\SealTaskScheduler\bin\Debug\net{Environment.Version.Major}.0", fileName);
                             }
-                            
+
 #endif
                             if (!File.Exists(path)) throw new Exception($"Unable to execute in Outer Process. {path} was not found.");
 
-                            if (!RuntimeInformation.IsOSPlatform(OSPlatform.Windows))
+                            var workingDirectory = Path.GetDirectoryName(path);
+                            if (!isWindows)
                             {
-                                //Non-windows
+                                //Non-windows: full path of the dll, the current directory of the initiator is not its folder
+                                arg = $"\"{path}\" {schedule.GUID}";
                                 path = "dotnet";
-                                arg = Repository.SealTaskScheduler.Replace(".exe",".dll") + " " + schedule.GUID;
                             }
                             Helper.WriteLogEntryScheduler(EventLogEntryType.Information, $"Executing schedule in outer process: {path} {arg}");
 
@@ -242,7 +246,8 @@ namespace Seal.Model
                                         CreateNoWindow = true,
                                         WindowStyle = ProcessWindowStyle.Hidden,
                                         FileName = path,
-                                        Arguments = arg
+                                        Arguments = arg,
+                                        WorkingDirectory = workingDirectory
                                     }
                                 };
                                 p.Start();
@@ -274,6 +279,20 @@ namespace Seal.Model
                 //A web schedule that cannot be prepared (e.g. output device deleted) is disabled
                 var schedule = param as SealSchedule;
                 if (schedule != null && schedule.IsWebSchedule && schedule.BeingExecuted) disableWebSchedule(schedule, ex.Message);
+                else if (schedule != null && schedule.BeingExecuted)
+                {
+                    //The schedule is executed again at its next execution (it was never executed again until a restart of the scheduler)
+                    try
+                    {
+                        schedule.CalculateNextExecution();
+                        schedule.SaveToFile();
+                    }
+                    catch (Exception ex2)
+                    {
+                        Helper.WriteLogEntryScheduler(EventLogEntryType.Error, $"Unable to save the schedule '{schedule.FilePath}':\r\n{ex2.Message}");
+                    }
+                    schedule.BeingExecuted = false;
+                }
             }
         }
 
