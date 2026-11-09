@@ -34,6 +34,13 @@
             The link is given by its index, or by an address 'account' (parameter 'account' of the Web Report Server, see SealSecurity.FindAccountLink).
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.AccountLogout(System.String)">
+            <summary>
+            Logout coming from an accounts portal (its 'Log out'): closes the session of the Web Report Server, then goes back to the address 'account' when it is
+            the address of a declared account link (SealSecurity.FindAccountLinkAddress, never another site, no ticket), otherwise to the main page.
+            Uses the session cookie of the browser (top-level navigation): no session id in the address.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.ActionExecuteReport(System.String,System.String)">
             <summary>
             Execute a report initiated in a previous execution
@@ -288,6 +295,11 @@
             user's profile is changed; the underlying report file is not modified.
             </summary>
         </member>
+        <member name="M:SealWebServer.Controllers.HomeController.logoutWebUser">
+            <summary>
+            Logout of the user of the session: audit, session cleared, new user without login (shared by SWILogout and AccountLogout)
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWILogout(System.String)">
             <summary>
             Clear the current user session.
@@ -433,6 +445,11 @@
             Returns the version of the Seal Web Interface and the version of the Seal Library.
             </summary>
         </member>
+        <member name="F:SealWebServer.Controllers.HomeController.TasksOnlyLabel">
+            <summary>
+            Destination of a web schedule executing only the tasks of the report (no output device)
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWIGetWebSchedules(System.String)">
             <summary>
             Returns the web schedules of the logged user
@@ -518,6 +535,51 @@
         <member name="M:SealWebServer.Controllers.HomeController.setWebSchedule(Seal.Model.SealSchedule,Seal.Model.SWIWebSchedule,Seal.Model.Report,System.String)">
             <summary>
             Checks and sets the definition of a web schedule from the Web Report Server
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.setScheduleRecurrence(Seal.Model.SealSchedule,Seal.Model.SWIWebSchedule)">
+            <summary>
+            Checks and sets the recurrence of a schedule (web schedule or schedule of a report) from the Web Report Server
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.fillScheduleChoices(Seal.Model.SWIWebScheduleEdit)">
+            <summary>
+            Days of the week and months proposed to edit a schedule
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.setSWIRecurrence(Seal.Model.SWIWebSchedule,Seal.Model.SealSchedule)">
+            <summary>
+            Recurrence of a schedule to edit
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.canEditReportSchedules(Seal.Model.SWIFolder,System.Int32)">
+            <summary>
+            True if the user can edit the schedules defined in the report file: right Edit on the report, Seal Report Scheduler
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.getReportScheduleReport(System.String,System.String@)">
+            <summary>
+            Returns the report of a schedule defined in a report file after checking the right Edit of the user on the report (the target of a shortcut is edited)
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.getSWIReportSchedules(Seal.Model.Report,System.String)">
+            <summary>
+            Schedules of the report file displayed in the panel of the report
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIGetReportSchedule(System.String,System.String,System.String)">
+            <summary>
+            Returns a schedule defined in a report file to edit
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWISaveReportSchedule(System.String,System.String,System.String)">
+            <summary>
+            Saves the name, state and recurrence of a schedule defined in a report file, then the report file
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SWIDeleteReportSchedule(System.String,System.String,System.String)">
+            <summary>
+            Deletes a schedule defined in a report file, then saves the report file
             </summary>
         </member>
         <member name="T:SealWebServer.Controllers.McpAuthorizeModel">

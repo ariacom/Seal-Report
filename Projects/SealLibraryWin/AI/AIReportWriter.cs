@@ -382,6 +382,57 @@ namespace Seal.AI
         static string text(XElement parent, string name) => parent?.Element(name) == null ? null : parent.Element(name).Value?.Trim();
 
         /// <summary>
+        /// Returns the data source referenced by a report source among the sources the user can access: by the GUID of <c>&lt;MetaSourceGUID&gt;</c>,
+        /// else by a unique source whose name is this value or the <c>&lt;Name&gt;</c> of the report source (case insensitive),
+        /// else the only source of the user when <c>&lt;MetaSourceGUID&gt;</c> is empty. Returns null if no source or several sources match.
+        /// </summary>
+        /// <param name="metaSourceGuid">The value of &lt;MetaSourceGUID&gt;</param>
+        /// <param name="reportSourceName">The &lt;Name&gt; of the report source</param>
+        /// <param name="available">The data sources the user can access</param>
+        public static MetaSource ResolveMetaSource(string metaSourceGuid, string reportSourceName, IList<MetaSource> available)
+        {
+            metaSourceGuid = metaSourceGuid?.Trim();
+            if (!string.IsNullOrEmpty(metaSourceGuid))
+            {
+                var byGuid = available.FirstOrDefault(s => string.Equals(s.GUID, metaSourceGuid, StringComparison.OrdinalIgnoreCase));
+                if (byGuid != null) return byGuid;
+            }
+            foreach (var name in new[] { metaSourceGuid, reportSourceName?.Trim() }.Where(n => !string.IsNullOrEmpty(n)))
+            {
+                var byName = available.Where(s => string.Equals(s.Name?.Trim(), name, StringComparison.OrdinalIgnoreCase)).ToList();
+                if (byName.Count == 1) return byName[0];
+            }
+            if (string.IsNullOrEmpty(metaSourceGuid) && available.Count == 1) return available[0];
+            return null;
+        }
+
+        /// <summary>
+        /// Error returned when the XML has no &lt;ReportSource&gt; element: the agent invented a structure (e.g. &lt;Model&gt;, &lt;DataItems&gt;), the expected tree is given
+        /// </summary>
+        public static string MissingReportSourceError(XDocument doc)
+        {
+            //Elements of the root that are not properties of a report
+            var properties = new HashSet<string>(typeof(Report).GetProperties().Select(p => p.Name));
+            var invented = doc.Root == null ? new List<string>() : doc.Root.Elements().Select(e => e.Name.LocalName).Where(n => !properties.Contains(n)).Distinct().Take(5).ToList();
+            return "Error: the XML has no <Sources><ReportSource> element, it is not the XML of a Seal report" +
+                (invented.Count > 0 ? " (" + string.Join(", ", invented.Select(n => $"<{n}>")) + " do not exist)" : "") +
+                ". Never invent the structure: load the skill 'build-report-from-metadata' and start from its minimal example: " +
+                "<Report> > <Sources><ReportSource> (<MetaSourceGUID> from datasource_list) > <Models><ReportModel> (<SourceGUID>, <Elements><ReportElement> with <MetaColumnGUID>) > <Views><ReportView>.";
+        }
+
+        /// <summary>
+        /// Error returned when the data source of a report is not found: it lists the sources the user can access with their GUID, so the agent can fix the XML in one call
+        /// </summary>
+        public static string UnknownSourceError(string metaSourceGuid, IList<MetaSource> available)
+        {
+            const int max = 15;
+            var list = string.Join(", ", available.Take(max).Select(s => $"'{s.Name}' ({s.GUID})"));
+            if (available.Count > max) list += $", ... ({available.Count - max} more in datasource_list)";
+            return $"Error: MetaSourceGUID '{metaSourceGuid}' does not match any data source you can access. " +
+                (available.Count == 0 ? "You cannot access any data source." : $"Your data sources: {list}. Copy one of these GUIDs in <MetaSourceGUID>.");
+        }
+
+        /// <summary>
         /// Returns the XML text of a document with its declaration
         /// </summary>
         public static string ToXmlText(XDocument doc)
@@ -414,9 +465,19 @@ namespace Seal.AI
             foreach (var reportSource in reportSources)
             {
                 var msGuid = text(reportSource, "MetaSourceGUID");
-                if (string.IsNullOrEmpty(msGuid)) continue;
-                var metaSource = available.FirstOrDefault(s => string.Equals(s.GUID, msGuid, StringComparison.OrdinalIgnoreCase));
-                if (metaSource == null) return $"Error: MetaSourceGUID '{msGuid}' does not match any data source you can access. Use the GUID from datasource_list.";
+                var metaSource = ResolveMetaSource(msGuid, text(reportSource, "Name"), available);
+                if (metaSource == null)
+                {
+                    //A source without any reference is ignored if another source of the report is valid
+                    if (string.IsNullOrEmpty(msGuid) && reportSources.Count > 1) continue;
+                    return UnknownSourceError(msGuid, available);
+                }
+                if (!string.Equals(metaSource.GUID, msGuid, StringComparison.OrdinalIgnoreCase))
+                {
+                    log($"Resolved MetaSourceGUID '{msGuid}' -> '{metaSource.GUID}' (source '{metaSource.Name}')");
+                    if (reportSource.Element("MetaSourceGUID") != null) reportSource.Element("MetaSourceGUID").Value = metaSource.GUID;
+                    else reportSource.Add(new XElement("MetaSourceGUID", metaSource.GUID));
+                }
                 var columns = new SourceColumns() { Source = metaSource };
                 foreach (var table in metaSource.MetaData.Tables)
                     foreach (var col in table.Columns) columns.Add(col.GUID, col.Name, col.DisplayName, col);
@@ -425,10 +486,11 @@ namespace Seal.AI
                     columns.Add(text(col, "GUID"), text(col, "Name"), text(col, "DisplayName"), null);
                 sourceColumnsByReportSource[reportSource] = columns;
             }
+            if (reportSources.Count == 0) return MissingReportSourceError(doc);
             if (sourceColumnsByReportSource.Count == 0)
             {
                 var msGuid = doc.Descendants("MetaSourceGUID").Select(e => e.Value?.Trim()).FirstOrDefault(v => !string.IsNullOrEmpty(v));
-                return $"Error: MetaSourceGUID '{msGuid}' does not match any data source you can access. Use the GUID from datasource_list.";
+                return UnknownSourceError(msGuid, available);
             }
             var defaultColumns = sourceColumnsByReportSource.Values.First();
             var columnsByInternalGuid = new Dictionary<string, SourceColumns>(StringComparer.OrdinalIgnoreCase);
@@ -788,8 +850,8 @@ namespace Seal.AI
                 var columnGuid = text(menum, "FromColumnGUID") ?? "";
                 var reportSource = menum.Ancestors("ReportSource").First();
                 var msGuid = text(reportSource, "MetaSourceGUID");
-                var source = available.FirstOrDefault(s => string.Equals(s.GUID, msGuid, StringComparison.OrdinalIgnoreCase));
-                if (source == null) return $"Error: enumerated list '{enumName}': MetaSourceGUID '{msGuid}' does not match any data source you can access. Use the GUID from datasource_list.";
+                var source = ResolveMetaSource(msGuid, text(reportSource, "Name"), available);
+                if (source == null) return $"Error: enumerated list '{enumName}': " + UnknownSourceError(msGuid, available).Substring("Error: ".Length);
                 if (source.IsNoSQL) return $"Error: enumerated list '{enumName}': <FromColumnGUID> is not supported on the NoSQL source '{source.Name}', define a static list with <Values><MetaEV><Id>…</Id><Val>…</Val></MetaEV></Values> (values from database_get_sample_values).";
                 var column = source.MetaData.Tables.SelectMany(t => t.Columns).FirstOrDefault(c => string.Equals(c.GUID, columnGuid, StringComparison.OrdinalIgnoreCase));
                 if (column == null || column.MetaTable == null) return $"Error: enumerated list '{enumName}': <FromColumnGUID> '{columnGuid}' is not a column of source '{source.Name}'. Copy the exact column GUID from datasource_get_detail.";

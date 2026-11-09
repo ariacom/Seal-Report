@@ -84,6 +84,20 @@ Minimal list with one prompted restriction:
 </Report>
 ```
 
+Other restriction types, in the same `<Restrictions>` (each key in `<Restriction>`,
+e.g. `<Restriction>[f1] AND [f2] AND [f3]</Restriction>`):
+
+```xml
+<ReportRestriction><GUID>f2</GUID><Name>Orders.ShipCountry</Name><MetaColumnGUID>«column GUID»</MetaColumnGUID>
+  <Prompt>Prompt</Prompt><Operator>Equal</Operator><EnumValues><string>Germany</string></EnumValues></ReportRestriction>
+<ReportRestriction><GUID>f3</GUID><Name>Orders.Freight</Name><MetaColumnGUID>«column GUID»</MetaColumnGUID>
+  <Prompt>Prompt</Prompt><Operator>GreaterEqual</Operator><Value1>10</Value1></ReportRestriction>
+```
+
+Enumerated column → `Equal` + `<EnumValues>` (the id of the list), never `<Value1>`;
+number → `Greater`, `GreaterEqual`, `Smaller`, `SmallerEqual`, `Between` with
+`<Value1>`/`<Value2>`; date or year → `<Date1>`/`<Date2>` (`2024-01-01`).
+
 ## GUID rules
 
 - `<MetaSourceGUID>` from `datasource_list`, every `<MetaColumnGUID>` and

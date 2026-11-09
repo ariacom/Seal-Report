@@ -60,6 +60,59 @@ namespace Test
         }
 
         [TestMethod]
+        public void SourceResolvedByNameOrByDefault()
+        {
+            var available = _repository.Sources.ToList();
+            //By GUID, by name in <MetaSourceGUID>, by the <Name> of the report source when <MetaSourceGUID> is empty or unknown
+            Assert.AreEqual(_northwind, AIReportWriter.ResolveMetaSource(_northwind.GUID.ToUpper(), null, available));
+            Assert.AreEqual(_northwind, AIReportWriter.ResolveMetaSource("northwind", null, available));
+            Assert.AreEqual(_northwind, AIReportWriter.ResolveMetaSource("", "Northwind", available));
+            Assert.AreEqual(_northwind, AIReportWriter.ResolveMetaSource("not-a-guid", "Northwind", available));
+            //Empty with one source only: this source; with several sources: no choice
+            Assert.AreEqual(_northwind, AIReportWriter.ResolveMetaSource("", "My source", new List<MetaSource> { _northwind }));
+            Assert.IsNull(AIReportWriter.ResolveMetaSource("", "My source", available));
+            //Unknown value: no guess, even with one source
+            Assert.IsNull(AIReportWriter.ResolveMetaSource("not-a-guid", "My source", new List<MetaSource> { _northwind }));
+            //Ambiguous name: no choice
+            var twin = new MetaSource() { Name = "Northwind", GUID = Guid.NewGuid().ToString() };
+            Assert.IsNull(AIReportWriter.ResolveMetaSource("Northwind", null, new List<MetaSource> { _northwind, twin }));
+        }
+
+        [TestMethod]
+        public void SourceNameIsReplacedByItsGuid()
+        {
+            var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")).Replace($"<MetaSourceGUID>{_northwind.GUID}</MetaSourceGUID>", "<MetaSourceGUID></MetaSourceGUID>"));
+            Assert.IsNull(Validate(doc));
+            Assert.AreEqual(_northwind.GUID, (string)doc.Descendants("MetaSourceGUID").Single());
+        }
+
+        [TestMethod]
+        public void UnknownSourceErrorListsTheSources()
+        {
+            var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")).Replace($"<MetaSourceGUID>{_northwind.GUID}</MetaSourceGUID>", "<MetaSourceGUID>x1</MetaSourceGUID>").Replace("<Name>Northwind</Name>", "<Name>Unknown</Name>"));
+            var error = Validate(doc);
+            StringAssert.StartsWith(error, "Error: MetaSourceGUID 'x1' does not match");
+            StringAssert.Contains(error, $"'Northwind' ({_northwind.GUID})");
+            //More than 15 sources: the list is cut
+            var many = Enumerable.Range(1, 20).Select(i => new MetaSource() { Name = "S" + i, GUID = "g" + i }).ToList();
+            error = AIReportWriter.UnknownSourceError("", many);
+            StringAssert.Contains(error, "'S15' (g15)");
+            Assert.IsFalse(error.Contains("'S16'"), error);
+            StringAssert.Contains(error, "5 more in datasource_list");
+        }
+
+        [TestMethod]
+        public void InventedStructureIsExplained()
+        {
+            //Seen with gpt-5.4-mini: a valid GUID in a structure that is not a Seal report
+            var doc = XDocument.Parse($"<Report><MetaSourceGUID>{_northwind.GUID}</MetaSourceGUID><Name>Test</Name><Models><Model><Name>Orders</Name><DataItems /></Model></Models></Report>");
+            var error = Validate(doc);
+            StringAssert.StartsWith(error, "Error: the XML has no <Sources><ReportSource> element");
+            StringAssert.Contains(error, "(<MetaSourceGUID>, <Name> do not exist)");
+            StringAssert.Contains(error, "build-report-from-metadata");
+        }
+
+        [TestMethod]
         public void ExecutionHasTheUserOfTheToolCall()
         {
             var user = new SecurityUser(_repository.Security) { Name = "ai_user" };
@@ -179,8 +232,8 @@ namespace Test
             doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName"), "other"));
             StringAssert.Contains(Validate(doc), "not referenced in the <Restriction> expression");
 
-            //Unknown data source
-            doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")).Replace(_northwind.GUID, Guid.NewGuid().ToString()));
+            //Unknown data source (a wrong GUID with the name of a source is resolved by SourceResolvedByNameOrByDefault)
+            doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")).Replace(_northwind.GUID, Guid.NewGuid().ToString()).Replace("<Name>Northwind</Name>", "<Name>Unknown</Name>"));
             StringAssert.Contains(Validate(doc), "does not match any data source");
 
             //View on no model

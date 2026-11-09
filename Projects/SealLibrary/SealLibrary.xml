@@ -2462,6 +2462,26 @@
             Columns of a data source used by a report source: the columns of the data source and of the tables defined in the report source
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.ResolveMetaSource(System.String,System.String,System.Collections.Generic.IList{Seal.Model.MetaSource})">
+            <summary>
+            Returns the data source referenced by a report source among the sources the user can access: by the GUID of <c>&lt;MetaSourceGUID&gt;</c>,
+            else by a unique source whose name is this value or the <c>&lt;Name&gt;</c> of the report source (case insensitive),
+            else the only source of the user when <c>&lt;MetaSourceGUID&gt;</c> is empty. Returns null if no source or several sources match.
+            </summary>
+            <param name="metaSourceGuid">The value of &lt;MetaSourceGUID&gt;</param>
+            <param name="reportSourceName">The &lt;Name&gt; of the report source</param>
+            <param name="available">The data sources the user can access</param>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.MissingReportSourceError(System.Xml.Linq.XDocument)">
+            <summary>
+            Error returned when the XML has no &lt;ReportSource&gt; element: the agent invented a structure (e.g. &lt;Model&gt;, &lt;DataItems&gt;), the expected tree is given
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.UnknownSourceError(System.String,System.Collections.Generic.IList{Seal.Model.MetaSource})">
+            <summary>
+            Error returned when the data source of a report is not found: it lists the sources the user can access with their GUID, so the agent can fix the XML in one call
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.ToXmlText(System.Xml.Linq.XDocument)">
             <summary>
             Returns the XML text of a document with its declaration
@@ -4740,8 +4760,47 @@
         </member>
         <member name="F:Seal.Model.Audit.Duration">
             <summary>
-            Duration in seconds for events without a Report (e.g. AI Chat exchanges).
-            When Report is set, the report execution duration is used instead.
+            Duration in seconds of the event (e.g. AI Chat exchange, export of a report result).
+            If not set and Report is set, the report execution duration is used.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.ExecutionRows">
+            <summary>
+            For report events, number of rows of the result: sum of the rows of the models executed, null if no model was executed. 0 means an empty result.
+            Set from the report if not set by the caller (logged in the column 'execution_rows').
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.ExecutionRestrictions">
+            <summary>
+            For report events, restrictions prompted having a value at the execution, e.g. 'Country In France ; Order Date >= 01/01/2026'.
+            Set from the report if not set by the caller (logged in the column 'execution_restrictions', 254 characters at most). It may contain values typed by the user.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.ExecutionKind">
+            <summary>
+            For report events, kind of the action: 'Execution', 'Navigation' (report executed or opened by a navigation link: sub-report or drill) or 'Export' (result exported from the Web Report Server).
+            Set from the report if not set by the caller (logged in the column 'execution_kind').
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.ExecutionContext">
+            <summary>
+            If set, logged in the column 'execution_context' instead of the execution context of the report (e.g. context of the check of a report)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.OutputInformation">
+            <summary>
+            If set, logged in the column 'output_information' instead of the information of the report output (e.g. size of the HTML result of a check)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.ExecutionColumns">
+            <summary>
+            Columns of the table 'sr_audit' for the report events, added when upgrading an existing audit database
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Audit.HasExecutionColumns">
+            <summary>
+            False if the columns execution_rows, execution_restrictions and execution_kind are not in the table 'sr_audit' and could not be added
+            (e.g. the account of the audit source cannot alter the table): the events are then audited without them.
             </summary>
         </member>
         <member name="F:Seal.Model.Audit.AIAgentName">
@@ -4804,6 +4863,29 @@
             Audit a report execution
             </summary>
         </member>
+        <member name="M:Seal.Model.Audit.LogReportExportAudit(Seal.Model.Report,Seal.Model.ReportFormat,System.Int32)">
+            <summary>
+            Audit the export of a report result from the Web Report Server (e.g. Excel, CSV, PDF, HTML Print).
+            The detail is the format, the duration is the time to generate the result.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.LogReportCheckAudit(Seal.Model.Report,System.String,System.String,Seal.Model.ReportExecutionContext,System.Nullable{System.Int32},System.Nullable{System.Int64})">
+            <summary>
+            Audit the check of a report execution by the System report '310 Reports - Check Executions':
+            status in the detail (OK, Error, Empty, Skipped), duration, rows and restrictions of the execution, size of the HTML result in the output information, kind 'Check'.
+            </summary>
+            <param name="report">Report checked</param>
+            <param name="status">Status of the check: OK, Error, Empty or Skipped</param>
+            <param name="error">Error of the execution or reason of the skip</param>
+            <param name="context">Execution context of the check (context of the report executing the checks)</param>
+            <param name="durationSeconds">Duration of the execution, null to take the execution duration of the report</param>
+            <param name="htmlSize">Size in bytes of the HTML result, null if not rendered</param>
+        </member>
+        <member name="M:Seal.Model.Audit.SetExecutionProperties">
+            <summary>
+            Set the execution properties not set by the caller (rows, restrictions, kind) from the report of the event
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.LogEventAudit(Seal.Model.AuditType,System.String)">
             <summary>
             Audit an event
@@ -4850,10 +4932,23 @@
             before or after its own processing.
             </summary>
         </member>
-        <member name="M:Seal.Model.Audit.CheckAuditTable(System.Data.Common.DbCommand)">
+        <member name="M:Seal.Model.Audit.ShortenError(System.String)">
             <summary>
-            Creates the sr_audit table on first use, or adds the AI Chat columns when upgrading an
+            Shortens an error for a column of 254 characters: the start and the end of the message, the error of the database
+            being usually at the end (e.g. after the SQL statement of a model in error).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.GetDateTimeSqlType(Seal.Model.ConnectionType)">
+            <summary>
+            SQL type of a date and time column for the audit tables: 'timestamp' for PostgreSQL and Oracle (no 'datetime' type), 'datetime' otherwise (SQLite, SQL Server, MySQL).
+            Also used by the System report '900 Tests - Run Tests and Audit' to create the sr_test_results table.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.CheckAuditTable(System.Data.Common.DbCommand,Seal.Model.ConnectionType)">
+            <summary>
+            Creates the sr_audit table on first use, or adds the AI Chat columns and the columns of the report events when upgrading an
             existing audit database. Executed once per process (see <see cref="F:Seal.Model.Audit.CheckTableCreation"/>).
+            The column types are standard SQL; the date type depends on the database (see <see cref="M:Seal.Model.Audit.GetDateTimeSqlType(Seal.Model.ConnectionType)"/>).
             </summary>
         </member>
         <member name="T:Seal.Model.CategoryFolder">
@@ -6325,6 +6420,16 @@
             AI chat message refused by the limits of the user (SecurityUser.CheckAIChat, SecurityUser.GetAICostLimit)
             </summary>
         </member>
+        <member name="F:Seal.Model.AuditType.ReportExport">
+            <summary>
+            Export of a report result from the Web Report Server (e.g. Excel, CSV, PDF, HTML Print)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AuditType.ReportCheck">
+            <summary>
+            Check of a report execution by the System report '310 Reports - Check Executions' (status, duration, rows)
+            </summary>
+        </member>
         <member name="T:Seal.Model.TriggerType">
             <summary>
             Type of the schedule trigger
@@ -7648,7 +7753,7 @@
         </member>
         <member name="P:Seal.Model.MetaEnum.LoadOnDemand">
             <summary>
-            If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. The list should be bound to restrictions only (property 'Enumerated List' of the restriction): a column displayed with this list shows the identifiers.
+            If True, the values are never loaded as a whole: a prompted restriction only gets the values returned by the 'SQL Select Statement for prompted restriction' (or its Script) for the filter typed by the user, and the selected values are loaded with the 'SQL Select Statement for selected values'. Used for large lists (e.g. thousands of customers or companies). Requires a list dynamic, refreshed before the execution, with filter characters to type and a '{EnumFilter}' keyword. For a column displayed with this list, the labels of the identifiers of the result are loaded after the execution of the model with the 'SQL Select Statement for selected values'.
             </summary>
         </member>
         <member name="M:Seal.Model.MetaEnum.ShouldSerializeLoadOnDemand">
@@ -7669,6 +7774,11 @@
         <member name="P:Seal.Model.MetaEnum.HasDependencies">
             <summary>
             True if the list has dependencies to other list
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.DependencyNames">
+            <summary>
+            Names of the enumerated lists this list depends on: the '{EnumValues_&lt;Name>}' keywords of the SQL or Script for prompted restriction
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.Values">
@@ -10669,6 +10779,11 @@
         <member name="F:Seal.Model.Report.CheckingExecution">
             <summary>
             True if the report is being tested for execution (from the Server Manager)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.Report.AuditExecution">
+            <summary>
+            If false, the execution of the report is not audited as a report execution (e.g. a report executed by the System report '310 Reports - Check Executions', which audits its own check events)
             </summary>
         </member>
         <member name="F:Seal.Model.Report.SchedulesModified">
@@ -14066,6 +14181,16 @@
         <member name="P:Seal.Model.ReportSchedule.NotificationEmailFrom">
             <summary>
             The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportSchedule.AuditExecutions">
+            <summary>
+            If false, the successful executions of the schedule are not audited (the executions in error are always audited). It may be used for a technical schedule executed very often.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportSchedule.ShouldSerializeAuditExecutions">
+            <summary>
+            Serialize AuditExecutions only if false
             </summary>
         </member>
         <member name="P:Seal.Model.ReportSchedule.ErrorNumberOfRetries">
@@ -17647,6 +17772,16 @@
             Identifier of the output device
             </summary>
         </member>
+        <member name="P:Seal.Model.WebScheduleOutput.IsTasksOnly">
+            <summary>
+            True if the schedule executes only the tasks of the report, without output (no device)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.WebScheduleOutput.CanScheduleTasksOnly(Seal.Model.Report)">
+            <summary>
+            True if a web schedule of the report can execute only its tasks (the report has tasks)
+            </summary>
+        </member>
         <member name="P:Seal.Model.WebScheduleOutput.Format">
             <summary>
             Format of the result
@@ -18043,6 +18178,13 @@
             The index of the account link of the profile to open for an address given to the Web Report Server (parameter 'account', e.g. the page of an accounts portal
             that asked for a login): the link having this url, otherwise the first link of the same site (scheme, host and port). -1 if no link allowed to the user matches,
             and always for a guest: the address only selects a declared link, it can never redirect elsewhere.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.FindAccountLinkAddress(System.String)">
+            <summary>
+            The address of a declared account link (any location, any group) matching an address given to the Web Report Server (parameter 'account' of
+            Home/AccountLogout, e.g. the page of an accounts portal after its logout): the address itself when it is on the site (scheme, host and port)
+            of a declared link, null otherwise: it can never redirect to another site. Never a ticket.
             </summary>
         </member>
         <member name="M:Seal.Model.SealSecurity.GetAccountLinkUrl(System.Int32,Seal.Model.SecurityUser)">
@@ -20117,6 +20259,11 @@
         <member name="F:Seal.Model.SWIReportDetail.schedulelabel">
             <summary>
             Label of the link creating a web schedule, set by the Schedule Check Script (moment New), the default label if empty
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SWIReportDetail.reportschedules">
+            <summary>
+            Schedules defined in the report file, for a user having the right Edit on the report (Seal Report Scheduler only)
             </summary>
         </member>
         <member name="T:Seal.Model.SWIItem">

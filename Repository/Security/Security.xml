@@ -38,6 +38,7 @@
 }</Script>
   <TwoFAGenerationScript />
   <TwoFACheckScript />
+  <TrustedBrowserSecret />
   <EnableResetPassword>true</EnableResetPassword>
   <EnableChangePassword>true</EnableChangePassword>
   <AllowGuest>true</AllowGuest>
@@ -50,7 +51,6 @@
         <SecurityFolder />
         <SecurityFolder>
           <Path>\System</Path>
-          <FolderRight>ExecuteReportOuput</FolderRight>
           <ExpandSubFolders>false</ExpandSubFolders>
           <Icon>fa-solid fa-gear</Icon>
         </SecurityFolder>
