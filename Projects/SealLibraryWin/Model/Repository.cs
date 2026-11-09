@@ -2129,7 +2129,7 @@ namespace Seal.Model
         /// </summary>
         public string TranslateFolderName(string path)
         {
-            return RepositoryTranslate("FolderName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileName(path));
+            return RepositoryTranslate("FolderName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileName(FileHelper.ConvertOSFilePath(path)));
         }
 
         /// <summary>
@@ -2137,7 +2137,7 @@ namespace Seal.Model
         /// </summary>
         public string TranslateFileName(string path)
         {
-            return RepositoryTranslate("FileName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileNameWithoutExtension(path));
+            return RepositoryTranslate("FileName", path.StartsWith(ReportsFolder) ? path.Substring(ReportsFolder.Length) : path, Path.GetFileNameWithoutExtension(FileHelper.ConvertOSFilePath(path)));
         }
 
         /// <summary>
