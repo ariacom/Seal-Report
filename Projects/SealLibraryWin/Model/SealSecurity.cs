@@ -24,6 +24,9 @@ namespace Seal.Model
     /// <summary>
     /// SealSecurity defines all the repository security
     /// </summary>
+#if WINDOWS
+    [DefaultProperty("Groups")] //Otherwise the property grid selects the first property by name (AccountLinks)
+#endif
     public class SealSecurity : RootEditor
     {
         /// <summary>
