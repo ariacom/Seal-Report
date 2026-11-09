@@ -521,7 +521,7 @@ namespace Seal.Model
                     parameter.ParameterName = placeholderPrefix + "p" + (i + 1);
                     parameter.DbType = values[i].Item2;
                     var value = values[i].Item3 ?? DBNull.Value;
-                    if (value is string stringValue && stringValue.Length >= 255) value = stringValue.Substring(0, 254);
+                    if (value is string stringValue && stringValue.Length >= 255) value = values[i].Item1.EndsWith("_error") ? ShortenError(stringValue) : stringValue.Substring(0, 254);
                     parameter.Value = value;
                     command.Parameters.Add(parameter);
                 }
@@ -531,6 +531,18 @@ namespace Seal.Model
             {
                 connection.Close();
             }
+        }
+
+        /// <summary>
+        /// Shortens an error for a column of 254 characters: the start and the end of the message, the error of the database
+        /// being usually at the end (e.g. after the SQL statement of a model in error).
+        /// </summary>
+        public static string ShortenError(string error)
+        {
+            if (string.IsNullOrEmpty(error) || error.Length < 255) return error;
+            var text = System.Text.RegularExpressions.Regex.Replace(error.Trim(), @"\s+", " ");
+            if (text.Length < 255) return text;
+            return text.Substring(0, 80) + " (...) " + text.Substring(text.Length - 167);
         }
 
         /// <summary>

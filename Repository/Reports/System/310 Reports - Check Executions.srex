@@ -317,7 +317,7 @@
                 <Name>html_size</Name>
                 <Type>Numeric</Type>
                 <Category>Master</Category>
-                <Description>Size in bytes of the HTML result</Description>
+                <Description>Size in bytes of the HTML result, without the lists of values of the criteria (the Web Report Server loads the large ones on demand)</Description>
                 <DisplayName>HTML size</DisplayName>
                 <DisplayOrder>10</DisplayOrder>
                 <Format>N0</Format>
@@ -740,7 +740,12 @@
                             foreach (var model in report.ExecutionModels.Where(i =&gt; i.ResultTable != null)) rows = (rows ?? 0) + model.ResultTable.Rows.Count;
                         }
                         long? htmlSize = null;
-                        if (!string.IsNullOrEmpty(report.ResultFilePath) &amp;&amp; File.Exists(report.ResultFilePath)) htmlSize = new FileInfo(report.ResultFilePath).Length;
+                        if (!string.IsNullOrEmpty(report.ResultFilePath) &amp;&amp; File.Exists(report.ResultFilePath))
+                        {
+                            //Without the lists of values of the criteria: the Web Report Server loads the large ones on demand
+                            var resultHtml = File.ReadAllText(report.ResultFilePath);
+                            htmlSize = System.Text.Encoding.UTF8.GetByteCount(System.Text.RegularExpressions.Regex.Replace(resultHtml, "&lt;option[^&gt;]*&gt;[^&lt;]*&lt;/option&gt;", ""));
+                        }
                         var error = (timeout ? "Execution timeout reached.\r\n" : "") + report.ExecutionErrors + Helper.AddNotEmpty("\r\n", view.Error);
                         var status = timeout || report.HasErrors || !string.IsNullOrWhiteSpace(error) ? "Error" : (rows == 0 ? "Empty" : "OK");
                         results[reportExecution] = new object[] { status, (int)watch.ElapsedMilliseconds, rows, htmlSize, string.IsNullOrWhiteSpace(error) ? null : error };
