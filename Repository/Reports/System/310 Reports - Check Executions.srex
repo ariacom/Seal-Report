@@ -94,6 +94,52 @@
       <OperatorStyle>NotModifiable</OperatorStyle>
       <TypeRe>Text</TypeRe>
     </ReportRestriction>
+    <ReportRestriction>
+      <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a01</GUID>
+      <Type>Text</Type>
+      <DisplayName>Mode</DisplayName>
+      <EnumGUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a00</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a00</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <DisplayOrderRE>0</DisplayOrderRE>
+      <EnumValues>
+        <string>Check</string>
+      </EnumValues>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a00</EnumGUIDRE>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a02</GUID>
+      <Type>Text</Type>
+      <DisplayName>Required restriction values</DisplayName>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <TypeRe>Text</TypeRe>
+    </ReportRestriction>
+    <ReportRestriction>
+      <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a03</GUID>
+      <Type>Text</Type>
+      <DisplayName>Save results in the audit</DisplayName>
+      <EnumGUID>53d43ae0-1513-4e46-b3b7-084f36f13833</EnumGUID>
+      <PivotPosition>Row</PivotPosition>
+      <TypeEd>Text</TypeEd>
+      <EnumGUIDEL>53d43ae0-1513-4e46-b3b7-084f36f13833</EnumGUIDEL>
+      <Prompt>PromptOneValue</Prompt>
+      <OperatorStyle>NotModifiable</OperatorStyle>
+      <DisplayOrderRE>0</DisplayOrderRE>
+      <EnumValues>
+        <string>No</string>
+      </EnumValues>
+      <EnumLayout>SelectNoFilter</EnumLayout>
+      <TypeRe>Text</TypeRe>
+      <EnumGUIDRE>53d43ae0-1513-4e46-b3b7-084f36f13833</EnumGUIDRE>
+    </ReportRestriction>
   </InputValues>
   <Sources>
     <ReportSource>
@@ -127,6 +173,10 @@
     table.Columns.Add(new DataColumn("messages", typeof(string)));
     table.Columns.Add(new DataColumn("has_error", typeof(string)));
     table.Columns.Add(new DataColumn("errors", typeof(string)));
+    table.Columns.Add(new DataColumn("status", typeof(string)));
+    table.Columns.Add(new DataColumn("duration_ms", typeof(int)));
+    table.Columns.Add(new DataColumn("rows", typeof(int)));
+    table.Columns.Add(new DataColumn("html_size", typeof(long)));
     metaTable.NoSQLTable = table;
     log.LogMessage("{0} column(s) defined", table.Columns.Count);
 }
@@ -140,20 +190,28 @@
     ReportModel reportModel = metaTable.NoSQLModel;
     Report report = (reportModel != null ? reportModel.Report : null);
 
+    //Result of each check (status, duration in ms, rows, HTML size, reason of a skip), see the task Check Executions
+    var results = report != null ? report.Tag3 as Dictionary&lt;ReportExecution, object[]&gt; : null;
     if (report != null &amp;&amp; report.Tag != null) {
         foreach (var item in ((List&lt;ReportExecution&gt;) report.Tag)) {
+            object[] result = null;
+            if (results != null) results.TryGetValue(item, out result);
             table.Rows.Add(
-                item.Report.DisplayNameEx, 
-                item.Report.FilePath.Replace(report.Repository.ReportsFolder, ""), 
+                item.Report.DisplayNameEx,
+                item.Report.FilePath.Replace(report.Repository.ReportsFolder, ""),
                 ((ReportView)item.Tag).Name,
                 item.Report.ExecutionMessages,
-                item.Report.HasErrors ? "Yes" : "No",
-                (item.Report.ExecutionErrors + Helper.AddNotEmpty("\r\n",((ReportView)item.Tag).Error))
-                );                             
+                result != null ? ((string)result[0] == "Error" ? "Yes" : "No") : (item.Report.HasErrors ? "Yes" : "No"),
+                result != null &amp;&amp; result[4] != null ? (string)result[4] : (item.Report.ExecutionErrors + Helper.AddNotEmpty("\\r\\n",((ReportView)item.Tag).Error)),
+                result != null ? result[0] : DBNull.Value,
+                result != null &amp;&amp; result[1] != null ? result[1] : DBNull.Value,
+                result != null &amp;&amp; result[2] != null ? result[2] : DBNull.Value,
+                result != null &amp;&amp; result[3] != null ? result[3] : DBNull.Value
+                );
         }
-        
+
     }
-    
+
     if (report != null &amp;&amp; report.Tag2 != null) {
         foreach (var item in ((Dictionary&lt;string,string&gt;) report.Tag2)) {
             table.Rows.Add(
@@ -162,7 +220,11 @@
                 "",
                 "",
                 "Yes",
-                item.Value
+                item.Value,
+                "Error",
+                DBNull.Value,
+                DBNull.Value,
+                DBNull.Value
                 );
         }
     }
@@ -221,6 +283,45 @@
                 <DisplayName>Errors</DisplayName>
                 <DisplayOrder>6</DisplayOrder>
               </MetaColumn>
+              <MetaColumn>
+                <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b01</GUID>
+                <Name>status</Name>
+                <Type>Text</Type>
+                <Category>Master</Category>
+                <Description>Status of the check: OK, Error, Empty (Measure mode: executed without any row) or Skipped (required restriction without value)</Description>
+                <DisplayName>Status</DisplayName>
+                <DisplayOrder>7</DisplayOrder>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b02</GUID>
+                <Name>duration_ms</Name>
+                <Type>Numeric</Type>
+                <Category>Master</Category>
+                <Description>Duration of the execution and of the rendering in milliseconds</Description>
+                <DisplayName>Duration (ms)</DisplayName>
+                <DisplayOrder>8</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b03</GUID>
+                <Name>rows</Name>
+                <Type>Numeric</Type>
+                <Category>Master</Category>
+                <Description>Measure mode: number of rows of the result (sum of the models executed)</Description>
+                <DisplayName>Rows</DisplayName>
+                <DisplayOrder>9</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
+              <MetaColumn>
+                <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b04</GUID>
+                <Name>html_size</Name>
+                <Type>Numeric</Type>
+                <Category>Master</Category>
+                <Description>Size in bytes of the HTML result</Description>
+                <DisplayName>HTML size</DisplayName>
+                <DisplayOrder>10</DisplayOrder>
+                <Format>N0</Format>
+              </MetaColumn>
             </Columns>
           </MetaTable>
         </Tables>
@@ -228,6 +329,18 @@
           <MetaEnum>
             <GUID>482a21ca-667c-4a77-b498-53a45b9e4ec9</GUID>
             <Name>Folders</Name>
+          </MetaEnum>
+          <MetaEnum>
+            <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4a00</GUID>
+            <Name>Mode</Name>
+            <Values>
+              <MetaEV>
+                <Id>Check</Id>
+              </MetaEV>
+              <MetaEV>
+                <Id>Measure</Id>
+              </MetaEV>
+            </Values>
           </MetaEnum>
           <MetaEnum>
             <GUID>53d43ae0-1513-4e46-b3b7-084f36f13833</GUID>
@@ -289,6 +402,38 @@
           <PivotPosition>Row</PivotPosition>
           <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>b1701622-aa3c-4879-9944-2d57a1f8cb4d</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4c01</GUID>
+          <Name>status</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <AggregateFunction>Count</AggregateFunction>
+          <MetaColumnGUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b01</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4c02</GUID>
+          <Name>duration_ms</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b02</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4c03</GUID>
+          <Name>rows</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b03</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4c04</GUID>
+          <Name>html_size</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5f0d6c2e-8b41-4e7a-9a3d-2c7e1b9f4b04</MetaColumnGUID>
         </ReportElement>
       </Elements>
     </ReportModel>
@@ -410,6 +555,8 @@
     //Stores all executions in the Tag
     rootReport.Tag = new List&lt;ReportExecution&gt;();
     rootReport.Tag2 = new Dictionary&lt;string,string&gt;();
+    //Result of each check: status, duration in ms, rows, HTML size, reason of a skip
+    rootReport.Tag3 = new Dictionary&lt;ReportExecution, object[]&gt;();
     try
     {
         //Init the NoSQL table
@@ -462,6 +609,17 @@
         var execTasks = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execute tasks"));
         var execTimeout = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Execution timeout"));
         var pathContains = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Path contains")).FirstStringValue;
+        //Check: SQL executed with 1=0 (scripts and SQL validated, no data read); Measure: real execution (duration, rows)
+        var measure = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Mode")).FirstStringValue == "Measure";
+        var saveResults = rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Save results")).FirstStringValue == "Yes";
+        //Values of the required restrictions, e.g. 'Country = France; Order Year = 2026'
+        var requiredValues = new Dictionary&lt;string, string&gt;(StringComparer.OrdinalIgnoreCase);
+        foreach (var item in (rootReport.InputValues.First(i =&gt; i.DisplayNameEl.StartsWith("Required restriction values")).FirstStringValue ?? "").Split(';'))
+        {
+            var index = item.IndexOf('=');
+            if (index &gt; 0) requiredValues[item.Substring(0, index).Trim()] = item.Substring(index + 1).Trim();
+        }
+        var results = (Dictionary&lt;ReportExecution, object[]&gt;) rootReport.Tag3;
 
         foreach (string reportPath in Directory.GetFiles(folder, "*.srex"))
         {
@@ -506,8 +664,20 @@
                         RazorHelper.Compile(RazorHelper.GetFullScript(output.PostScript), output.GetType(), Guid.NewGuid().ToString());
                     }
                     
-                    report.CheckingExecution = true;
-                    
+                    report.CheckingExecution = !measure;
+                    //The execution is audited as a check (Save results), not as a report execution
+                    report.AuditExecution = false;
+
+                    //Set the values of the required restrictions without value
+                    foreach (var restriction in report.AllRestrictions.Where(i =&gt; i.Prompt != PromptType.None &amp;&amp; i.Required &amp;&amp; !i.HasValue))
+                    {
+                        string value;
+                        if (!requiredValues.TryGetValue(restriction.DisplayNameEl, out value)) continue;
+                        if (restriction.IsEnum) restriction.EnumValues = new List&lt;string&gt;() { value };
+                        else restriction.Value1 = value;
+                    }
+                    var missing = report.AllRestrictions.Where(i =&gt; i.Prompt != PromptType.None &amp;&amp; i.Required &amp;&amp; !i.HasValue).Select(i =&gt; i.DisplayNameEl).Distinct().ToList();
+
                     //Disable task
                     if (execTasks.FirstStringValue == "No") {
                         foreach (ReportTask task in report.Tasks) task.Enabled = false;
@@ -522,7 +692,17 @@
                         ((List&lt;ReportExecution&gt;) rootReport.Tag).Add(reportExecution);
                         reportExecution.Tag = view;
                         if (rootReport.Cancel) return;
+                        if (missing.Count &gt; 0)
+                        {
+                            var reason = "Required restriction without value: " + string.Join(", ", missing);
+                            rootReport.LogMessage("Skipping view '{0}': {1}", view.Name, reason);
+                            results[reportExecution] = new object[] { "Skipped", null, null, null, reason };
+                            if (saveResults) Audit.LogReportCheckAudit(report, "Skipped", reason, rootReport.ExecutionContext, 0, null);
+                            continue;
+                        }
                         rootReport.LogMessage("Running report with view '{0}'", view.Name);
+                        var watch = System.Diagnostics.Stopwatch.StartNew();
+                        var timeout = false;
                         try
                         {
                             report.CurrentViewGUID = view.GUID;
@@ -536,7 +716,11 @@
 
                             if (report.IsExecuting)
                             {
-                                if (cnt &lt;= 0) rootReport.LogMessage("Warning: Execution has reached the timeout. Cancelling the execution...");
+                                if (cnt &lt;= 0)
+                                {
+                                    timeout = true;
+                                    rootReport.LogMessage("Warning: Execution has reached the timeout. Cancelling the execution...");
+                                }
                                 report.CancelExecution();
                             }
                             report.RenderOnly = true;
@@ -547,6 +731,20 @@
                             rootReport.LogMessage("Unexpected Execution Error:\r\n");
                             rootReport.LogMessage(ex.Message);
                         }
+                        watch.Stop();
+
+                        //Result of the check
+                        int? rows = null;
+                        if (measure)
+                        {
+                            foreach (var model in report.ExecutionModels.Where(i =&gt; i.ResultTable != null)) rows = (rows ?? 0) + model.ResultTable.Rows.Count;
+                        }
+                        long? htmlSize = null;
+                        if (!string.IsNullOrEmpty(report.ResultFilePath) &amp;&amp; File.Exists(report.ResultFilePath)) htmlSize = new FileInfo(report.ResultFilePath).Length;
+                        var error = (timeout ? "Execution timeout reached.\r\n" : "") + report.ExecutionErrors + Helper.AddNotEmpty("\r\n", view.Error);
+                        var status = timeout || report.HasErrors || !string.IsNullOrWhiteSpace(error) ? "Error" : (rows == 0 ? "Empty" : "OK");
+                        results[reportExecution] = new object[] { status, (int)watch.ElapsedMilliseconds, rows, htmlSize, string.IsNullOrWhiteSpace(error) ? null : error };
+                        if (saveResults) Audit.LogReportCheckAudit(report, status, string.IsNullOrWhiteSpace(error) ? null : error.Trim(), rootReport.ExecutionContext, (int)Math.Round(watch.Elapsed.TotalSeconds), htmlSize);
                     }
                 }
                 else {

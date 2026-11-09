@@ -1,6 +1,14 @@
 <?xml version="1.0"?>
 <Report xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance" xmlns:xsd="http://www.w3.org/2001/XMLSchema">
   <GUID>b1080710-8775-4233-b083-54657628a00d</GUID>
+  <Guide>&lt;p&gt;Usage and health of the reports, read from the audit database (table &lt;code&gt;sr_audit&lt;/code&gt;).&lt;/p&gt;
+&lt;ul&gt;
+&lt;li&gt;&lt;strong&gt;Last executions&lt;/strong&gt;, &lt;strong&gt;Schedule executions&lt;/strong&gt;, &lt;strong&gt;Long executions&lt;/strong&gt;: the report executions of the period.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Usage by report&lt;/strong&gt;: per report, executions, distinct users, exports, navigations (sub-report or drill), empty results, errors, average and maximum duration, last event. The scheduled executions are excluded by default.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Checks&lt;/strong&gt;: the checks of the System report &lt;em&gt;310 Reports - Check Executions&lt;/em&gt; (option &lt;em&gt;Save results in the audit&lt;/em&gt;) not OK or longer than the threshold.&lt;/li&gt;
+&lt;li&gt;&lt;strong&gt;Never executed&lt;/strong&gt;: the reports checked during the period that were never executed, exported or opened by a navigation during the same period (scheduled executions excluded).&lt;/li&gt;
+&lt;/ul&gt;
+&lt;p&gt;Who executed a report: tab &lt;strong&gt;Last executions&lt;/strong&gt; filtered on the path, or the tab &lt;strong&gt;Reports per user&lt;/strong&gt; of the report &lt;em&gt;250 Audit - Users Activity&lt;/em&gt;.&lt;/p&gt;</Guide>
   <ViewGUID>9fcedc74-c7c0-4e79-9d09-5bcc17c3c2a4</ViewGUID>
   <Sources>
     <ReportSource>
@@ -443,102 +451,370 @@ AND [917ca226-b404-4579-817b-be6f26f1eb43]</Restriction>
     </ReportModel>
     <ReportModel>
       <GUID>2a6ca888-6e86-4630-8d78-798f6dfa345e</GUID>
-      <Name>Executions count</Name>
+      <Name>Usage by report</Name>
       <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
       <Elements>
         <ReportElement>
-          <GUID>73e283d7-ffb4-46c7-8d5b-8e7a2f5c5e3a</GUID>
-          <Name>sr_audit.user_name</Name>
-          <DisplayName />
-          <PivotPosition>Column</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
-        </ReportElement>
-        <ReportElement>
-          <GUID>d2eb631c-954c-4b19-8bb7-1031ea89881a</GUID>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0001</GUID>
           <Name>sr_audit.event_path</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>21edcd5b-d309-452d-9969-77d0f10a6018</GUID>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0002</GUID>
           <Name>sr_audit.execution_name</Name>
           <DisplayName />
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>bece7385-d310-4b9b-931b-6cb1ffe67c0e</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
-          <GUID>91e644da-baa9-4cd3-9af7-52e0283a8415</GUID>
-          <Name>sr_audit.event_date</Name>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0003</GUID>
+          <Name>case when sr_audit.event_type in ('ReportExecution','ReportExecutionError') then 1 else 0 end</Name>
           <DisplayName>Executions</DisplayName>
           <Format>N0</Format>
           <PivotPosition>Data</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
-          <ShowTotal>RowColumn</ShowTotal>
-          <TotalAggregateFunction>Max</TotalAggregateFunction>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a11</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0004</GUID>
+          <Name>sr_audit.user_name</Name>
+          <DisplayName>Users</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>CountDistinct</AggregateFunction>
+          <MetaColumnGUID>2e05ad38-4028-4c66-858f-396d466443cf</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0005</GUID>
+          <Name>case when sr_audit.event_type = 'ReportExport' then 1 else 0 end</Name>
+          <DisplayName>Exports</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a13</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0006</GUID>
+          <Name>case when sr_audit.event_type = 'ReportExecution' and sr_audit.execution_kind = 'Navigation' then 1 else 0 end</Name>
+          <DisplayName>Navigations</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a14</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0007</GUID>
+          <Name>case when sr_audit.event_type = 'ReportExecution' and sr_audit.execution_rows = 0 then 1 else 0 end</Name>
+          <DisplayName>Empty results</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a15</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0008</GUID>
+          <Name>case when sr_audit.event_type = 'ReportExecutionError' then 1 else 0 end</Name>
+          <DisplayName>Errors</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Sum</AggregateFunction>
+          <ShowTotal>Column</ShowTotal>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a12</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0009</GUID>
+          <Name>case when sr_audit.event_type in ('ReportExecution','ReportExecutionError') then sr_audit.execution_duration end</Name>
+          <DisplayName>Average duration (s)</DisplayName>
+          <Format>N1</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Avg</AggregateFunction>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a16</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0010</GUID>
+          <Name>case when sr_audit.event_type in ('ReportExecution','ReportExecutionError') then sr_audit.execution_duration end</Name>
+          <DisplayName>Maximum duration (s)</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a16</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0011</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName>Last event</DisplayName>
+          <Format>G</Format>
+          <PivotPosition>Data</PivotPosition>
+          <AggregateFunction>Max</AggregateFunction>
           <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
         </ReportElement>
       </Elements>
-      <Restriction>[cac83e2d-d641-47e4-95a8-43793ab3acae]
-AND [e656e1e4-6050-4f58-bc13-38813c72adc0]
-AND [32d64b8e-e7b6-4005-95f7-733e6d55eab9]
-AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
+      <Restriction>[4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0021]
+AND [4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0022]
+AND [4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0023]
+AND [4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0024]</Restriction>
       <Restrictions>
         <ReportRestriction>
-          <GUID>cac83e2d-d641-47e4-95a8-43793ab3acae</GUID>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0021</GUID>
           <Name>sr_audit.event_type</Name>
           <DisplayName />
-          <DisplayOrder>4</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
-          <DisplayOrderRE>4</DisplayOrderRE>
           <EnumValues>
             <string>ReportExecution</string>
             <string>ReportExecutionError</string>
+            <string>ReportExport</string>
           </EnumValues>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>e656e1e4-6050-4f58-bc13-38813c72adc0</GUID>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0022</GUID>
           <Name>sr_audit.event_date</Name>
           <DisplayName />
-          <Format>G</Format>
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Max</AggregateFunction>
-          <TotalAggregateFunction>Max</TotalAggregateFunction>
           <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Greater</Operator>
-          <Date1Keyword>Today-1D</Date1Keyword>
-          <FormatRe>G</FormatRe>
+          <Date1Keyword>Today-90D</Date1Keyword>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>32d64b8e-e7b6-4005-95f7-733e6d55eab9</GUID>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0023</GUID>
           <Name>sr_audit.execution_context</Name>
           <DisplayName />
           <DisplayOrder>2</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>eb4e5baf-5748-4384-a9b1-a32882e7d783</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
+          <Operator>NotEqual</Operator>
           <DisplayOrderRE>2</DisplayOrderRE>
+          <EnumValues>
+            <string>TaskScheduler</string>
+          </EnumValues>
         </ReportRestriction>
         <ReportRestriction>
-          <GUID>6c82fa59-7ac6-4901-abd8-c7054110f191</GUID>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0024</GUID>
           <Name>sr_audit.event_path</Name>
           <DisplayName />
           <DisplayOrder>4</DisplayOrder>
           <PivotPosition>Row</PivotPosition>
-          <AggregateFunction>Count</AggregateFunction>
           <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
           <Prompt>Prompt</Prompt>
           <Operator>Contains</Operator>
           <DisplayOrderRE>4</DisplayOrderRE>
         </ReportRestriction>
       </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0100</GUID>
+      <Name>Checks</Name>
+      <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
+      <Elements>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0101</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0102</GUID>
+          <Name>sr_audit.event_path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5dd082ef-d54c-4b8f-ac1c-044786ce6b69</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0103</GUID>
+          <Name>sr_audit.execution_view</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>a390f265-6761-41ac-b323-56f3ceb45b83</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0104</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName>Status</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0105</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName>Duration (s)</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0106</GUID>
+          <Name>sr_audit.execution_rows</Name>
+          <DisplayName>Rows</DisplayName>
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a01</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0107</GUID>
+          <Name>sr_audit.output_information</Name>
+          <DisplayName>HTML size (bytes)</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>db93240e-46a2-43a2-8b0a-079915daee93</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0108</GUID>
+          <Name>sr_audit.event_error</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b7995c78-1815-4985-9df9-399438ce4f68</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Restriction>[4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0121]
+AND [4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0122]
+AND ([4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0123] OR [4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0124])</Restriction>
+      <Restrictions>
+        <ReportRestriction>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0121</GUID>
+          <Name>sr_audit.event_type</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>b6ee0220-283e-4a81-9b7a-9b96438f2e79</MetaColumnGUID>
+          <EnumValues>
+            <string>ReportCheck</string>
+          </EnumValues>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0122</GUID>
+          <Name>sr_audit.event_date</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>5dd58e57-2737-42a7-820d-47373b21984a</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>Greater</Operator>
+          <Date1Keyword>Today-7D</Date1Keyword>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0123</GUID>
+          <Name>sr_audit.event_detail</Name>
+          <DisplayName />
+          <DisplayOrder>3</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>54acc367-0703-48c9-ad29-f1914dbfa994</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>NotEqual</Operator>
+          <DisplayOrderRE>3</DisplayOrderRE>
+          <Value1>OK</Value1>
+        </ReportRestriction>
+        <ReportRestriction>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0124</GUID>
+          <Name>sr_audit.execution_duration</Name>
+          <DisplayName />
+          <DisplayOrder>4</DisplayOrder>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>9ea38caf-e124-4b8a-8e75-f34bd91e5069</MetaColumnGUID>
+          <Prompt>Prompt</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <DisplayOrderRE>4</DisplayOrderRE>
+          <Value1>10</Value1>
+        </ReportRestriction>
+      </Restrictions>
+    </ReportModel>
+    <ReportModel>
+      <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0200</GUID>
+      <Name>Never executed</Name>
+      <SourceGUID>9a05a916-9500-4113-8dc5-100679b0f4db</SourceGUID>
+      <CommonRestrictions>
+        <ReportRestriction>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0221</GUID>
+          <Name>event_date</Name>
+          <Type>DateTime</Type>
+          <DisplayName>Period (checked and not executed since)</DisplayName>
+          <PivotPosition>Row</PivotPosition>
+          <TypeEd>DateTime</TypeEd>
+          <Prompt>PromptOneValue</Prompt>
+          <Operator>GreaterEqual</Operator>
+          <OperatorStyle>NotModifiable</OperatorStyle>
+          <DisplayOrderRE>0</DisplayOrderRE>
+          <Value1 />
+          <Date1Keyword>Today-90D</Date1Keyword>
+          <TypeRe>DateTime</TypeRe>
+        </ReportRestriction>
+      </CommonRestrictions>
+      <Alias>Master</Alias>
+      <Elements>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0201</GUID>
+          <Name>report_path</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0211</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0202</GUID>
+          <Name>report_name</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0212</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0203</GUID>
+          <Name>last_check</Name>
+          <DisplayName />
+          <Format>G</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0213</MetaColumnGUID>
+        </ReportElement>
+      </Elements>
+      <Table>
+        <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0210</GUID>
+        <Sql>SELECT
+  c.event_path AS report_path,
+  MAX(c.execution_name) AS report_name,
+  MAX(c.event_date) AS last_check
+FROM sr_audit c
+WHERE c.event_type = 'ReportCheck'
+AND {CommonRestriction_event_date}
+AND NOT EXISTS (
+  SELECT 1 FROM sr_audit e
+  WHERE e.event_path = c.event_path
+  AND e.event_type IN ('ReportExecution', 'ReportExecutionError', 'ReportExport')
+  AND e.execution_context &lt;&gt; 'TaskScheduler'
+  AND {CommonRestriction_event_date}
+)
+GROUP BY c.event_path</Sql>
+        <Alias>Master</Alias>
+        <DynamicColumns>true</DynamicColumns>
+        <Columns>
+          <MetaColumn>
+            <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0211</GUID>
+            <Name>report_path</Name>
+            <Type>Text</Type>
+            <Category>Never executed</Category>
+            <DisplayName>Report path</DisplayName>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0212</GUID>
+            <Name>report_name</Name>
+            <Type>Text</Type>
+            <Category>Never executed</Category>
+            <DisplayName>Report name</DisplayName>
+            <DisplayOrder>2</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0213</GUID>
+            <Name>last_check</Name>
+            <Type>DateTime</Type>
+            <Category>Never executed</Category>
+            <DisplayName>Last check</DisplayName>
+            <DisplayOrder>3</DisplayOrder>
+          </MetaColumn>
+        </Columns>
+      </Table>
     </ReportModel>
   </Models>
   <Views>
@@ -703,11 +979,11 @@ AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
             </ReportView>
             <ReportView>
               <GUID>5bc00cb2-2e98-401f-af21-e8e99b8cc40d</GUID>
-              <Name>Executions count</Name>
+              <Name>Usage by report</Name>
               <Views>
                 <ReportView>
                   <GUID>5562711f-7f92-4309-bfe1-b61e5f1fa4e0</GUID>
-                  <Name>Executions count</Name>
+                  <Name>Usage by report</Name>
                   <Views>
                     <ReportView>
                       <GUID>4c1fc873-c790-4993-a2ae-ce2dc80d26cb</GUID>
@@ -767,6 +1043,92 @@ AND [6c82fa59-7ac6-4901-abd8-c7054110f191]</Restriction>
                 </Parameter>
               </Parameters>
               <SortOrder>4</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0300</GUID>
+              <Name>Checks</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0301</GUID>
+                  <Name>Checks</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0302</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0304</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_sort_configuration</Name>
+                              <Value>[0,'desc']</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0100</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>5</SortOrder>
+            </ReportView>
+            <ReportView>
+              <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0310</GUID>
+              <Name>Never executed</Name>
+              <Views>
+                <ReportView>
+                  <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0311</GUID>
+                  <Name>Never executed</Name>
+                  <Views>
+                    <ReportView>
+                      <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0312</GUID>
+                      <Name>Container</Name>
+                      <Views>
+                        <ReportView>
+                          <GUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0314</GUID>
+                          <Name>Data Table</Name>
+                          <TemplateName>Data Table</TemplateName>
+                          <Parameters>
+                            <Parameter>
+                              <Name>data_tables_sort_configuration</Name>
+                              <Value>[2,'asc']</Value>
+                            </Parameter>
+                          </Parameters>
+                          <SortOrder>1</SortOrder>
+                        </ReportView>
+                      </Views>
+                      <TemplateName>Container</TemplateName>
+                      <SortOrder>1</SortOrder>
+                    </ReportView>
+                  </Views>
+                  <TemplateName>Model</TemplateName>
+                  <ModelGUID>4c0e9b1d-6a2f-4e8b-b7d3-1f5a9c2e0200</ModelGUID>
+                  <SortOrder>1</SortOrder>
+                </ReportView>
+              </Views>
+              <TemplateName>Tab Page</TemplateName>
+              <Parameters>
+                <Parameter>
+                  <Name>tab_show_count</Name>
+                  <Value>True</Value>
+                </Parameter>
+              </Parameters>
+              <SortOrder>6</SortOrder>
             </ReportView>
           </Views>
           <TemplateName>Tab Control</TemplateName>

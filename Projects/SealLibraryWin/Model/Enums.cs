@@ -1396,6 +1396,10 @@ namespace Seal.Model
         /// Export of a report result from the Web Report Server (e.g. Excel, CSV, PDF, HTML Print)
         /// </summary>
         ReportExport,
+        /// <summary>
+        /// Check of a report execution by the System report '310 Reports - Check Executions' (status, duration, rows)
+        /// </summary>
+        ReportCheck,
     }
 
     /// <summary>

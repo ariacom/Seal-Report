@@ -131,6 +131,15 @@ namespace Seal.Model
         public string ExecutionKind;
 
         /// <summary>
+        /// If set, logged in the column 'execution_context' instead of the execution context of the report (e.g. context of the check of a report)
+        /// </summary>
+        public string ExecutionContext;
+        /// <summary>
+        /// If set, logged in the column 'output_information' instead of the information of the report output (e.g. size of the HTML result of a check)
+        /// </summary>
+        public string OutputInformation;
+
+        /// <summary>
         /// Columns of the table 'sr_audit' for the report events, added when upgrading an existing audit database
         /// </summary>
         static readonly string[] ExecutionColumns = new string[] { "execution_rows int null", "execution_restrictions varchar(255)", "execution_kind varchar(255)" };
@@ -227,6 +236,41 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Audit the check of a report execution by the System report '310 Reports - Check Executions':
+        /// status in the detail (OK, Error, Empty, Skipped), duration, rows and restrictions of the execution, size of the HTML result in the output information, kind 'Check'.
+        /// </summary>
+        /// <param name="report">Report checked</param>
+        /// <param name="status">Status of the check: OK, Error, Empty or Skipped</param>
+        /// <param name="error">Error of the execution or reason of the skip</param>
+        /// <param name="context">Execution context of the check (context of the report executing the checks)</param>
+        /// <param name="durationSeconds">Duration of the execution, null to take the execution duration of the report</param>
+        /// <param name="htmlSize">Size in bytes of the HTML result, null if not rendered</param>
+        public static void LogReportCheckAudit(Report report, string status, string error, ReportExecutionContext context, int? durationSeconds = null, long? htmlSize = null)
+        {
+            try
+            {
+                if (report == null || !Repository.Instance.Configuration.AuditEnabled) return;
+                var audit = new Audit()
+                {
+                    Type = AuditType.ReportCheck,
+                    Path = report.Repository.GetAuditPath(report.FilePath),
+                    Detail = status,
+                    Error = error,
+                    Report = report,
+                    Duration = durationSeconds,
+                    ExecutionKind = "Check",
+                    ExecutionContext = context.ToString(),
+                    OutputInformation = htmlSize?.ToString()
+                };
+                ExecuteAuditScript(audit);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Set the execution properties not set by the caller (rows, restrictions, kind) from the report of the event
         /// </summary>
         void SetExecutionProperties()
@@ -234,7 +278,8 @@ namespace Seal.Model
             if (Report == null) return;
             try
             {
-                if (ExecutionRows == null)
+                //No rows when the report is checked without reading data (SQL with 1=0)
+                if (ExecutionRows == null && !Report.CheckingExecution)
                 {
                     foreach (var model in Report.ExecutionModels.Where(i => i.ResultTable != null))
                     {
@@ -435,12 +480,12 @@ namespace Seal.Model
                     Tuple.Create("user_groups", DbType.AnsiString, (object)User?.SecurityGroupsDisplay),
                     Tuple.Create("user_session", DbType.AnsiString, (object)(ClientAddress ?? User?.SessionID)),
                     Tuple.Create("execution_name", DbType.AnsiString, (object)(Report?.ExecutionName ?? ClientApplication)),
-                    Tuple.Create("execution_context", DbType.AnsiString, (object)Report?.ExecutionContext.ToString()),
+                    Tuple.Create("execution_context", DbType.AnsiString, (object)(ExecutionContext ?? Report?.ExecutionContext.ToString())),
                     Tuple.Create("execution_view", DbType.AnsiString, (object)Report?.ExecutionView.Name),
                     Tuple.Create("execution_duration", DbType.Int32, Duration != null || Report == null ? (object)Duration : (object)Convert.ToInt32(Report.ExecutionFullDuration.TotalSeconds)),
                     Tuple.Create("output_type", DbType.AnsiString, (object)Report?.OutputToExecute?.DeviceName),
                     Tuple.Create("output_name", DbType.AnsiString, (object)Report?.OutputToExecute?.Name),
-                    Tuple.Create("output_information", DbType.AnsiString, (object)Report?.OutputToExecute?.Information),
+                    Tuple.Create("output_information", DbType.AnsiString, (object)(OutputInformation ?? Report?.OutputToExecute?.Information)),
                     Tuple.Create("schedule_name", DbType.AnsiString, (object)Schedule?.Name),
                     Tuple.Create("ai_agent", DbType.AnsiString, (object)AIAgentName),
                     Tuple.Create("ai_provider", DbType.AnsiString, (object)AIProvider),

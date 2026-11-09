@@ -1019,6 +1019,12 @@ namespace Seal.Model
         public bool CheckingExecution = false;
 
         /// <summary>
+        /// If false, the execution of the report is not audited as a report execution (e.g. a report executed by the System report '310 Reports - Check Executions', which audits its own check events)
+        /// </summary>
+        [XmlIgnore]
+        public bool AuditExecution = true;
+
+        /// <summary>
         /// True if the schedules have been modified
         /// </summary>
         [XmlIgnore]

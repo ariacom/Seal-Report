@@ -337,6 +337,66 @@
             <DisplayName>Execution kind</DisplayName>
             <DisplayOrder>35</DisplayOrder>
           </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a11</GUID>
+            <Name>case when sr_audit.event_type in ('ReportExecution','ReportExecutionError') then 1 else 0 end</Name>
+            <Type>Numeric</Type>
+            <Description>1 for a report execution (in error or not), 0 otherwise: sum it to count the executions.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Executions</DisplayName>
+            <DisplayOrder>36</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a12</GUID>
+            <Name>case when sr_audit.event_type = 'ReportExecutionError' then 1 else 0 end</Name>
+            <Type>Numeric</Type>
+            <Description>1 for a report execution in error, 0 otherwise: sum it to count the errors.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Execution errors</DisplayName>
+            <DisplayOrder>37</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a13</GUID>
+            <Name>case when sr_audit.event_type = 'ReportExport' then 1 else 0 end</Name>
+            <Type>Numeric</Type>
+            <Description>1 for an export of a report result from the Web Report Server, 0 otherwise: sum it to count the exports.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Exports</DisplayName>
+            <DisplayOrder>38</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a14</GUID>
+            <Name>case when sr_audit.event_type = 'ReportExecution' and sr_audit.execution_kind = 'Navigation' then 1 else 0 end</Name>
+            <Type>Numeric</Type>
+            <Description>1 for a report executed by a navigation link (sub-report or drill), 0 otherwise: sum it to count the navigations.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Navigations</DisplayName>
+            <DisplayOrder>39</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a15</GUID>
+            <Name>case when sr_audit.event_type = 'ReportExecution' and sr_audit.execution_rows = 0 then 1 else 0 end</Name>
+            <Type>Numeric</Type>
+            <Description>1 for a report execution without any row in its result, 0 otherwise: sum it to count the empty results.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Empty results</DisplayName>
+            <DisplayOrder>40</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a16</GUID>
+            <Name>case when sr_audit.event_type in ('ReportExecution','ReportExecutionError') then sr_audit.execution_duration end</Name>
+            <Type>Numeric</Type>
+            <Description>Duration in seconds of a report execution, empty for the other events: use Average or Maximum.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Execution duration</DisplayName>
+            <DisplayOrder>41</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
@@ -524,6 +584,10 @@ ORDER BY 1</Sql>
           <MetaEV>
             <Id>ReportExecutionError</Id>
             <Val>Report Execution Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportCheck</Id>
+            <Val>Report Check</Val>
           </MetaEV>
           <MetaEV>
             <Id>ReportExport</Id>

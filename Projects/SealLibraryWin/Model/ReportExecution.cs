@@ -292,7 +292,7 @@ namespace Seal.Model
             {
                 Report.Cancel = true;
                 //Audit
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report, null);
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && Report.AuditExecution) Audit.LogReportAudit(Report, null);
                 //Log files
                 Report.LogExecution();
             }
@@ -417,7 +417,7 @@ namespace Seal.Model
                 if (!Report.HasValidationErrors)
                 {
                     //Audit
-                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler) Audit.LogReportAudit(Report, null);
+                    if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && Report.AuditExecution) Audit.LogReportAudit(Report, null);
                     //Log files
                     Report.LogExecution();
                 }
