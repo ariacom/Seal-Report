@@ -325,16 +325,18 @@ namespace Seal.Model
             try
             {
                 var command = new TaskDatabaseHelper().GetDbCommand(connection);
-                CheckAuditTable(command);
+                CheckAuditTable(command, auditSource.Connection.ConnectionType);
 
                 var date = DateTime.Now;
                 //Keep the Local kind: with a DateTimeKind=Utc connection (Audit SQLite source), an Unspecified
                 //kind gets stored with a 'Z' suffix, shifting values read back from SQL aggregates (e.g. max) by the UTC offset
                 date = new DateTime(date.Year, date.Month, date.Day, date.Hour, date.Minute, date.Second, date.Kind);
 
+                //PostgreSQL (Npgsql): DbType.DateTime is 'timestamp with time zone', refused for a local date; DateTime2 is 'timestamp' (the type of the column)
+                var dateType = auditSource.Connection.ConnectionType == ConnectionType.PostgreSQL ? DbType.DateTime2 : DbType.DateTime;
                 var values = new List<Tuple<string, DbType, object>>
                 {
-                    Tuple.Create("event_date", DbType.DateTime, (object)date),
+                    Tuple.Create("event_date", dateType, (object)date),
                     Tuple.Create("event_type", DbType.AnsiString, (object)Type.ToString()),
                     Tuple.Create("event_path", DbType.AnsiString, (object)Path),
                     Tuple.Create("event_detail", DbType.AnsiString, (object)Detail),
@@ -391,10 +393,20 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// SQL type of a date and time column for the audit tables: 'timestamp' for PostgreSQL and Oracle (no 'datetime' type), 'datetime' otherwise (SQLite, SQL Server, MySQL).
+        /// Also used by the System report '900 Tests - Run Tests and Audit' to create the sr_test_results table.
+        /// </summary>
+        public static string GetDateTimeSqlType(ConnectionType connectionType)
+        {
+            return connectionType == ConnectionType.PostgreSQL || connectionType == ConnectionType.Oracle ? "timestamp" : "datetime";
+        }
+
+        /// <summary>
         /// Creates the sr_audit table on first use, or adds the AI Chat columns when upgrading an
         /// existing audit database. Executed once per process (see <see cref="CheckTableCreation"/>).
+        /// The column types are standard SQL; the date type depends on the database (see <see cref="GetDateTimeSqlType"/>).
         /// </summary>
-        static void CheckAuditTable(DbCommand command)
+        static void CheckAuditTable(DbCommand command, ConnectionType connectionType)
         {
             if (!CheckTableCreation) return;
             CheckTableCreation = false;
@@ -434,7 +446,7 @@ namespace Seal.Model
             {
                 //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
                 command.CommandText = @"create table sr_audit (
-                        event_date datetime,event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255),ai_agent varchar(255),ai_provider varchar(255),ai_model varchar(255),ai_input_tokens int null,ai_output_tokens int null,ai_calls int null,ai_tool_calls int null,ai_message_count int null,ai_cost float null
+                        event_date " + GetDateTimeSqlType(connectionType) + @",event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255),ai_agent varchar(255),ai_provider varchar(255),ai_model varchar(255),ai_input_tokens int null,ai_output_tokens int null,ai_calls int null,ai_tool_calls int null,ai_message_count int null,ai_cost float null
                     )";
                 command.ExecuteNonQuery();
             }

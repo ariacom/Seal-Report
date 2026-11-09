@@ -245,10 +245,10 @@
             command.ExecuteNonQuery();
         }
         catch {
-            //ANSI standard types (SQL Server / MySQL / Oracle compatible)
+            //ANSI standard types (SQL Server / MySQL / Oracle / PostgreSQL compatible); the date type depends on the database ('timestamp' for PostgreSQL and Oracle)
             command.CommandText = @"create table sr_test_results (
                 run_id varchar(40),
-                run_date datetime,
+                run_date " + Audit.GetDateTimeSqlType(auditSource.Connection.ConnectionType) + @",
                 report_path varchar(500),
                 report_name varchar(255),
                 status varchar(20),
@@ -484,7 +484,8 @@
 
                 int index = 1;
                 AddParameter(command, index++, DbType.AnsiString, row[0]); //run_id
-                AddParameter(command, index++, DbType.DateTime, row[1]);   //run_date
+                //PostgreSQL (Npgsql): DbType.DateTime is 'timestamp with time zone', refused for a local date; DateTime2 is 'timestamp'
+                AddParameter(command, index++, auditSource.Connection.ConnectionType == ConnectionType.PostgreSQL ? DbType.DateTime2 : DbType.DateTime, row[1]);   //run_date
                 AddParameter(command, index++, DbType.AnsiString, row[2]); //report_path
                 AddParameter(command, index++, DbType.AnsiString, row[3]); //report_name
                 AddParameter(command, index++, DbType.AnsiString, row[4]); //status
