@@ -125,6 +125,31 @@ class SWIGateway {
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
+    /** Schedule defined in the report file (e.g. Schedule for Tasks) */
+    GetReportSchedule(path, guid, callback, errorcb) {
+        $.post(_server + "SWIGetReportSchedule", {
+            path: path,
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    SaveReportSchedule(path, schedule, callback, errorcb) {
+        $.post(_server + "SWISaveReportSchedule", {
+            path: path,
+            schedule: JSON.stringify(schedule)
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+    DeleteReportSchedule(path, guid, callback, errorcb) {
+        $.post(_server + "SWIDeleteReportSchedule", {
+            path: path,
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
     ExecuteWebSchedule(path, guid) {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, scheduleGUID: guid });
     }

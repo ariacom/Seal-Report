@@ -116,17 +116,33 @@ var SWISchedule;
         if (!data.authenticated)
             location.reload();
     }
-    /** Opens the schedule dialog: a new schedule of the report 'path' if guid is empty */
-    function Edit(path, guid, onSaved) {
+    /** Opens the schedule dialog: a new schedule of the report 'path' if guid is empty.
+     *  If isReport is true, the schedule is defined in the report file (e.g. Schedule for Tasks): only its name, state and recurrence are edited */
+    function Edit(path, guid, onSaved, isReport) {
         $outputPanel.hide();
         _onSaved = onSaved || null;
         SWIUtil.ShowModal($waitDialog);
-        _gateway.GetWebSchedule(path, guid, function (data) {
+        var getSchedule = isReport ? _gateway.GetReportSchedule : _gateway.GetWebSchedule;
+        getSchedule.call(_gateway, path, guid, function (data) {
             SWIUtil.HideModal($waitDialog);
+            data.devices = data.devices || [];
+            data.folders = data.folders || [];
+            data.formats = data.formats || [];
             _edit = data;
             var s = data.schedule;
             $("#webschedule-error").addClass("d-none").text("");
-            $("#webschedule-title").text((s.guid ? SWIUtil.tr2("Schedule") : SWIUtil.tr2("New schedule")) + ": " + s.reportname);
+            $("#webschedule-title").text((s.isreport ? SWIUtil.tr2("Schedule of the report") : s.guid ? SWIUtil.tr2("Schedule") : SWIUtil.tr2("New schedule")) + ": " + s.reportname);
+            //Schedule of the report file: no output to edit, no recurrence if it is triggered by the sequencer report
+            SWIUtil.ShowHideControl($("#webschedule-result-block"), !s.isreport);
+            SWIUtil.ShowHideControl($("#webschedule-recurrence-block"), !s.sequencer);
+            var info = "";
+            if (s.isreport) {
+                info = s.istasks ? SWIUtil.tr2("Schedule for the tasks of the report (no output).") : SWIUtil.tr2("Schedule of the output") + " '" + s.outputname + "'. " + SWIUtil.tr2("The output is edited with the Report Designer.");
+                if (s.sequencer)
+                    info += " " + s.recurrence + ".";
+            }
+            $("#webschedule-report-info").text(info);
+            SWIUtil.ShowHideControl($("#webschedule-report-info"), !!info);
             $("#webschedule-name").val(s.name);
             $("#webschedule-enabled").prop("checked", s.enabled);
             fillSelect($("#webschedule-device"), data.devices.map(function (d) { return { id: d.guid, val: d.name }; }), s.deviceguid);
@@ -222,7 +238,8 @@ var SWISchedule;
                     name: $("#webschedule-name").val(),
                     enabled: $("#webschedule-enabled").is(":checked"),
                     deviceguid: $("#webschedule-device").val(),
-                    format: parseInt($("#webschedule-format").val()),
+                    //no format for a schedule of the report file (output not edited)
+                    format: parseInt($("#webschedule-format").val()) || 0,
                     folder: $("#webschedule-folder").val(),
                     file: $("#webschedule-file").val(),
                     to: $("#webschedule-to").val(),
@@ -260,7 +277,8 @@ var SWISchedule;
                 var schedule = readSchedule();
                 if (!checkSchedule(schedule))
                     return;
-                _gateway.SaveWebSchedule(s.path, schedule, function (result) {
+                var saveSchedule = s.isreport ? _gateway.SaveReportSchedule : _gateway.SaveWebSchedule;
+                saveSchedule.call(_gateway, s.path, schedule, function (result) {
                     SWIUtil.HideModal($("#webschedule-dialog"));
                     var message = SWIUtil.tr("The schedule has been saved");
                     if (result.nextexecution)
@@ -286,14 +304,18 @@ var SWISchedule;
         $("#message-ok-button").html(SWIUtil.tr("OK"));
         $("#message-ok-button").unbind("click").on("click", function () {
             SWIUtil.HideModal($("#message-dialog"));
-            _gateway.DeleteWebSchedule(schedule.guid, function (data) {
+            var onDelete = function (data) {
                 SWIUtil.ShowMessage("alert-success", data.Message, 5000);
                 if (onDeleted)
                     onDeleted();
                 if (_onSaved)
                     _onSaved();
                 refreshReports();
-            });
+            };
+            if (schedule.isreport)
+                _gateway.DeleteReportSchedule(schedule.path, schedule.guid, onDelete);
+            else
+                _gateway.DeleteWebSchedule(schedule.guid, onDelete);
         });
         SWIUtil.ShowModal($("#message-dialog"));
     }
@@ -358,6 +380,17 @@ var SWISchedule;
     SWISchedule.ShowList = ShowList;
     /** Adds the web schedules of a report and the 'Schedule...' item in the panel of the views and outputs */
     function AddToOutputPanel($panel, path, data) {
+        //Schedules defined in the report file (e.g. Schedule for Tasks), listed for a user having the right Edit on the report
+        (data.reportschedules || []).forEach(function (s) {
+            var $item = $("<div>").addClass("output-item");
+            var $name = $("<a href='#'>").addClass("webschedule-link").text(s.name).attr("title", s.recurrence + (s.enabled ? "" : " - " + SWIUtil.tr2("Disabled")));
+            if (!s.enabled)
+                $name.addClass("text-muted");
+            $name.on("click", function (e) { e.preventDefault(); Edit(path, s.guid, undefined, true); });
+            $item.append($name);
+            $item.append($("<span>").addClass("output-type-badge output-type-schedule").text(s.istasks ? SWIUtil.tr2("Tasks") : s.outputname).attr("title", SWIUtil.tr2("Schedule of the report")));
+            $panel.append($item);
+        });
         if (!data.canschedule)
             return;
         (data.webschedules || []).forEach(function (s) {

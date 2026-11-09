@@ -106,6 +106,13 @@ namespace Seal.Model
         public string status;
         //True if the executions of the report can be displayed (audit enabled)
         public bool hasexecutions;
+        //Schedule defined in the report file (ReportSchedule) instead of a web schedule: only its name, state and recurrence are edited
+        public bool isreport;
+        //Schedule for the tasks of the report (no output), name of the output otherwise
+        public bool istasks;
+        public string outputname;
+        //Name of the schedule of the sequencer report triggering the schedule (its own recurrence is not used)
+        public string sequencer;
     }
 
     /// <summary>
@@ -397,6 +404,10 @@ namespace Seal.Model
         /// </summary>
         public string schedulelabel;
         public List<SWIWebSchedule> webschedules = new List<SWIWebSchedule>();
+        /// <summary>
+        /// Schedules defined in the report file, for a user having the right Edit on the report (Seal Report Scheduler only)
+        /// </summary>
+        public List<SWIWebSchedule> reportschedules = new List<SWIWebSchedule>();
     }
 
     /// <summary>

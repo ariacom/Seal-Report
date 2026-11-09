@@ -468,7 +468,10 @@
                         </div>
                     </div>
                 </div>
+                <!-- Schedule defined in the report file: its output is edited with the Report Designer only -->
+                <div id="webschedule-report-info" class="alert alert-secondary p-2 small d-none"></div>
 
+                <div id="webschedule-result-block">
                 <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Result")</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-sm-6">
@@ -544,6 +547,7 @@
                     <input id="webschedule-cancel" class="form-check-input" type="checkbox" />
                     <label class="form-check-label" for="webschedule-cancel">@repository.TranslateWeb("Cancel the generation if there is no record")</label>
                 </div>
+                </div>
 
                 <div id="webschedule-restrictions-block">
                 <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Restrictions")</h6>
@@ -554,6 +558,7 @@
                 </div>
                 </div>
 
+                <div id="webschedule-recurrence-block">
                 <h6 class="border-bottom pb-1 mt-3">@repository.TranslateWeb("Recurrence")</h6>
                 <div class="row g-2 mb-2">
                     <div class="col-sm-4">
@@ -613,6 +618,7 @@
                             </div>
                         </div>
                     </div>
+                </div>
                 </div>
             </div>
             <div class="modal-footer">

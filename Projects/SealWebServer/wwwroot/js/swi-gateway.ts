@@ -141,6 +141,34 @@ class SWIGateway {
             .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
     }
 
+    /** Schedule defined in the report file (e.g. Schedule for Tasks) */
+    public GetReportSchedule(path: string, guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIGetReportSchedule", {
+            path: path,
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public SaveReportSchedule(path: string, schedule: any, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWISaveReportSchedule", {
+            path: path,
+            schedule: JSON.stringify(schedule)
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
+    public DeleteReportSchedule(path: string, guid: string, callback: (data: any) => void, errorcb?: (data: any) => void) {
+        $.post(_server + "SWIDeleteReportSchedule", {
+            path: path,
+            guid: guid
+        })
+            .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+    }
+
     public ExecuteWebSchedule(path: string, guid: string) {
         postForm(_server + "SWExecuteReport", "_blank", { path: path, scheduleGUID: guid });
     }

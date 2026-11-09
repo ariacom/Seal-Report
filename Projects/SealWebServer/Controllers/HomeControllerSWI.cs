@@ -778,6 +778,8 @@ namespace SealWebServer.Controllers
                     //Label of the link creating a schedule, set by the Schedule Check Script (e.g. 'Create an alert...')
                     if (!string.IsNullOrEmpty(repository.Security.ScheduleCheckScript)) result.schedulelabel = prepareNewWebSchedule(report, execPath, null).LinkLabel;
                 }
+                //Schedules defined in the report file (e.g. Schedule for Tasks), edited by a user having the right Edit on the report
+                if (canEditReportSchedules(folder, effRight)) result.reportschedules = getSWIReportSchedules(report, path);
 
                 return Json(result);
 

@@ -78,9 +78,7 @@ namespace SealWebServer.Controllers
                 {
                     result.formats.Add(new SWIItem() { id = ((int)format).ToString(), val = getFormatName(format) });
                 }
-                var culture = Repository.CultureInfo;
-                for (int i = 0; i < 7; i++) result.weekdays.Add(new SWIItem() { id = i.ToString(), val = culture.DateTimeFormat.DayNames[i] });
-                for (int i = 1; i <= 12; i++) result.months.Add(new SWIItem() { id = i.ToString(), val = culture.DateTimeFormat.MonthNames[i - 1] });
+                fillScheduleChoices(result);
 
                 if (schedule != null)
                 {
@@ -469,15 +467,7 @@ namespace SealWebServer.Controllers
             result.zip = output.ZipResult;
             result.haszippassword = !string.IsNullOrEmpty(output.ZipPassword);
             result.cancel = output.CancelIfNoRecords;
-            result.type = schedule.Type;
-            result.start = toDateString(schedule.Start);
-            result.end = toDateString(schedule.End);
-            result.interval = schedule.Type == TriggerType.Weekly ? schedule.WeeksInterval : schedule.DaysInterval;
-            result.weekdays = schedule.Weekdays;
-            result.months = schedule.Months;
-            result.days = schedule.Days;
-            result.repeatinterval = (int)schedule.RepeatInterval.TotalMinutes;
-            result.repeatduration = (int)schedule.RepeatDuration.TotalMinutes;
+            setSWIRecurrence(result, schedule);
             return result;
         }
 
@@ -574,6 +564,17 @@ namespace SealWebServer.Controllers
             }
 
             //Schedule
+            setScheduleRecurrence(schedule, swi);
+
+            //Owner and report
+            schedule.SetWebOwner(WebUser, report, execPath);
+        }
+
+        /// <summary>
+        /// Checks and sets the recurrence of a schedule (web schedule or schedule of a report) from the Web Report Server
+        /// </summary>
+        void setScheduleRecurrence(SealSchedule schedule, SWIWebSchedule swi)
+        {
             if (!DateTime.TryParseExact(swi.start, WebScheduleDateFormat, CultureInfo.InvariantCulture, DateTimeStyles.None, out DateTime start)) throw new ValidationException(Translate("The start date is invalid"));
             var end = DateTime.MinValue;
             if (!string.IsNullOrEmpty(swi.end))
@@ -601,9 +602,188 @@ namespace SealWebServer.Controllers
             schedule.RepeatInterval = TimeSpan.FromMinutes(swi.repeatinterval);
             schedule.RepeatDuration = swi.repeatinterval > 0 ? TimeSpan.FromMinutes(swi.repeatduration) : TimeSpan.Zero;
             schedule.CalculateNextExecution();
-
-            //Owner and report
-            schedule.SetWebOwner(WebUser, report, execPath);
         }
+
+        /// <summary>
+        /// Days of the week and months proposed to edit a schedule
+        /// </summary>
+        void fillScheduleChoices(SWIWebScheduleEdit result)
+        {
+            var culture = Repository.CultureInfo;
+            for (int i = 0; i < 7; i++) result.weekdays.Add(new SWIItem() { id = i.ToString(), val = culture.DateTimeFormat.DayNames[i] });
+            for (int i = 1; i <= 12; i++) result.months.Add(new SWIItem() { id = i.ToString(), val = culture.DateTimeFormat.MonthNames[i - 1] });
+        }
+
+        /// <summary>
+        /// Recurrence of a schedule to edit
+        /// </summary>
+        static void setSWIRecurrence(SWIWebSchedule result, SealSchedule schedule)
+        {
+            result.type = schedule.Type;
+            result.start = toDateString(schedule.Start);
+            result.end = toDateString(schedule.End);
+            result.interval = schedule.Type == TriggerType.Weekly ? schedule.WeeksInterval : schedule.DaysInterval;
+            result.weekdays = schedule.Weekdays;
+            result.months = schedule.Months;
+            result.days = schedule.Days;
+            result.repeatinterval = (int)schedule.RepeatInterval.TotalMinutes;
+            result.repeatduration = (int)schedule.RepeatDuration.TotalMinutes;
+        }
+
+        #region Schedules of the report file
+
+        /*
+         * Schedules defined in the report file (ReportSchedule, e.g. a 'Schedule for Tasks' without output): a user having the right Edit on the report
+         * can change their name, state and recurrence, or delete them, from the panel of the report. The report file is saved (its schedules are
+         * synchronized with the Seal Report Scheduler). The output of a schedule is edited with the Report Designer only.
+         */
+
+        /// <summary>
+        /// True if the user can edit the schedules defined in the report file: right Edit on the report, Seal Report Scheduler
+        /// </summary>
+        bool canEditReportSchedules(SWIFolder folder, int effRight)
+        {
+            return Repository.UseSealScheduler && !WebUser.IsGuest && !folder.IsRepository && (FolderRight)effRight >= FolderRight.Edit;
+        }
+
+        /// <summary>
+        /// Returns the report of a schedule defined in a report file after checking the right Edit of the user on the report (the target of a shortcut is edited)
+        /// </summary>
+        Report getReportScheduleReport(string path, out string execPath)
+        {
+            checkSWIAuthentication();
+            SWIFolder folder = getParentFolder(path);
+            if (folder.right == 0) throw new Exception("Error: no right on this folder");
+            if (!System.IO.File.Exists(getFullPath(path))) throw new ValidationException(Translate("The report does not exist"));
+            var file = getFileDetail(path);
+            if (file.right == 0) throw new Exception("Error: no right on this report or file");
+            int effRight = file.right;
+            execPath = file.isshortcut ? resolveShortcut(path, out effRight) : path;
+            if (!canEditReportSchedules(folder, effRight)) throw new ValidationException(Translate("You have no right to edit the schedules of this report"));
+
+            var filePath = getFullPath(execPath);
+            if (!FileHelper.IsReportFile(filePath) || !System.IO.File.Exists(filePath)) throw new ValidationException(Translate("The report does not exist"));
+            return Report.LoadFromFile(filePath, Repository, false);
+        }
+
+        ReportSchedule getReportSchedule(Report report, string guid)
+        {
+            var result = report.Schedules.FirstOrDefault(i => i.GUID == guid);
+            if (result == null) throw new ValidationException(Translate("The schedule has not been found"));
+            return result;
+        }
+
+        /// <summary>
+        /// Schedules of the report file displayed in the panel of the report
+        /// </summary>
+        List<SWIWebSchedule> getSWIReportSchedules(Report report, string path)
+        {
+            return report.Schedules.Where(i => !i.IsWebSchedule).OrderBy(i => i.Name).Select(i => toSWIReportSchedule(report, i, path, false)).ToList();
+        }
+
+        SWIWebSchedule toSWIReportSchedule(Report report, ReportSchedule reportSchedule, string path, bool forEdit)
+        {
+            var schedule = reportSchedule.SealSchedule;
+            var output = reportSchedule.Output;
+            var sequencer = string.IsNullOrEmpty(reportSchedule.ScheduleSequencerGUID) ? null : Repository.Configuration.GetSequencerReportSchedules().FirstOrDefault(i => i.GUID == reportSchedule.ScheduleSequencerGUID);
+            var result = new SWIWebSchedule()
+            {
+                guid = reportSchedule.GUID,
+                name = reportSchedule.Name,
+                enabled = schedule.Enabled,
+                path = path,
+                reportname = Repository.TranslateFileName(report.FilePath),
+                isreport = true,
+                istasks = reportSchedule.IsTasksSchedule,
+                outputname = output != null ? report.TranslateOutputName(output.Name) : "",
+                sequencer = sequencer?.Name,
+                recurrence = sequencer != null ? string.Format(Translate("Triggered by the sequencer schedule '{0}'"), sequencer.Name) : getRecurrence(schedule),
+                nextexecution = schedule.Enabled && sequencer == null ? toDisplayDate(schedule.NextExecution) : "",
+                lastexecution = toDisplayDate(schedule.LastExecution),
+                lasterror = schedule.LastError,
+                status = !schedule.Enabled ? "disabled" : schedule.LastExecution == DateTime.MinValue ? "never" : !string.IsNullOrEmpty(schedule.LastError) ? "error" : "ok",
+            };
+            if (forEdit) setSWIRecurrence(result, schedule);
+            return result;
+        }
+
+        /// <summary>
+        /// Returns a schedule defined in a report file to edit
+        /// </summary>
+        public ActionResult SWIGetReportSchedule(string path, string guid, string sessionId)
+        {
+            writeDebug("SWIGetReportSchedule");
+            try
+            {
+                SetSessionId(sessionId);
+                var report = getReportScheduleReport(path, out _);
+                var result = new SWIWebScheduleEdit();
+                fillScheduleChoices(result);
+                result.schedule = toSWIReportSchedule(report, getReportSchedule(report, guid), path, true);
+                return Json(result);
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Saves the name, state and recurrence of a schedule defined in a report file, then the report file
+        /// </summary>
+        public ActionResult SWISaveReportSchedule(string path, string schedule, string sessionId)
+        {
+            writeDebug("SWISaveReportSchedule");
+            try
+            {
+                SetSessionId(sessionId);
+                var swiSchedule = JsonConvert.DeserializeObject<SWIWebSchedule>(schedule);
+                var report = getReportScheduleReport(path, out string execPath);
+                var reportSchedule = getReportSchedule(report, swiSchedule.guid);
+                if (string.IsNullOrWhiteSpace(swiSchedule.name)) throw new ValidationException(Translate("Please define a name"));
+
+                reportSchedule.Name = swiSchedule.name.Trim();
+                var sealSchedule = reportSchedule.SealSchedule;
+                sealSchedule.Enabled = swiSchedule.enabled;
+                //The recurrence of a schedule triggered by the sequencer report is not used
+                if (string.IsNullOrEmpty(reportSchedule.ScheduleSequencerGUID)) setScheduleRecurrence(sealSchedule, swiSchedule);
+                report.SchedulesModified = true;
+                report.SaveToFile();
+
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Schedule '{reportSchedule.Name}' of the report '{execPath}' updated by '{WebUser.WebUserName}'");
+                Audit.LogAudit(AuditType.EventServer, WebUser, execPath, $"Schedule '{reportSchedule.Name}' of the report updated");
+                return Json(toSWIReportSchedule(report, reportSchedule, path, false));
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        /// <summary>
+        /// Deletes a schedule defined in a report file, then saves the report file
+        /// </summary>
+        public ActionResult SWIDeleteReportSchedule(string path, string guid, string sessionId)
+        {
+            writeDebug("SWIDeleteReportSchedule");
+            try
+            {
+                SetSessionId(sessionId);
+                var report = getReportScheduleReport(path, out string execPath);
+                var reportSchedule = getReportSchedule(report, guid);
+                report.RemoveSchedule(reportSchedule);
+                report.SaveToFile();
+
+                WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, $"Schedule '{reportSchedule.Name}' of the report '{execPath}' deleted by '{WebUser.WebUserName}'");
+                Audit.LogAudit(AuditType.EventServer, WebUser, execPath, $"Schedule '{reportSchedule.Name}' of the report deleted");
+                return Json(new { Message = Translate("The schedule has been deleted") });
+            }
+            catch (Exception ex)
+            {
+                return HandleSWIException(ex);
+            }
+        }
+
+        #endregion
     }
 }
