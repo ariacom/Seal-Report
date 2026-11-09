@@ -213,7 +213,8 @@ namespace Seal.Model
         /// </summary>
         public ReportSchedule InjectWebSchedule(Report report)
         {
-            var output = Output.CreateReportOutput(report, GUID, Name);
+            //Schedule for the tasks only: no output, the tasks are executed with the default view of the report
+            var output = Output.IsTasksOnly ? null : Output.CreateReportOutput(report, GUID, Name);
             Output.ApplyRestrictions(report);
             var schedule = report.AddSchedule(output);
             schedule.GUID = GUID;
@@ -239,6 +240,11 @@ namespace Seal.Model
             }
             user.SetFolders();
             if (!user.HasFolderRight(Path.GetDirectoryName(report.FilePath), (int)FolderRight.Schedule)) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' has no right to schedule the report '{report.FilePath}'");
+            if (Output.IsTasksOnly)
+            {
+                if (!WebScheduleOutput.CanScheduleTasksOnly(report)) throw new Exception($"The web schedule '{Name}' has no output device and the report '{report.FilePath}' has no task");
+                return user;
+            }
             var device = repository.Devices.FirstOrDefault(i => i.GUID == Output.DeviceGUID);
             if (device == null || !user.CanAccessDevice(device)) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' cannot use the output device");
             if (device is OutputFolderDevice && !user.HasFolderRight(repository.ReplaceRepositoryKeyword(Output.FolderPath), (int)FolderRight.Edit)) throw new Exception($"The owner '{UserName}' of the web schedule '{Name}' has no right to write in the folder '{Output.FolderPath}'");

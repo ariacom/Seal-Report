@@ -1118,7 +1118,8 @@ namespace SealWebServer.Controllers
                         var refusal = WebUser.Security.CheckSchedule(report, webSchedule, ScheduleCheckMoment.ExecuteNow, WebUser);
                         if (refusal != null) throw new ValidationException(refusal);
                         webSchedule.InjectWebSchedule(report);
-                        outputGUID = webSchedule.GUID;
+                        //Schedule for the tasks only: the report is executed with its default view
+                        outputGUID = webSchedule.Output.IsTasksOnly ? null : webSchedule.GUID;
                     }
                 }
 

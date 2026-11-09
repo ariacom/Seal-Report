@@ -84,7 +84,8 @@
                     reportSchedule = item.Schedules.First(i =&gt; i.GUID == webSchedule.GUID);
                     reports.Add(item);
                 }
-                reportSchedule.Output.Name = string.Format("Web schedule of '{0}'", webSchedule.UserName);
+                //no output for a web schedule of the tasks only
+                if (reportSchedule.Output != null) reportSchedule.Output.Name = string.Format("Web schedule of '{0}'", webSchedule.UserName);
             }
             catch (Exception ex) {
                 log.LogMessage("Error loading the web schedule '{0}': {1}", file, ex.Message);

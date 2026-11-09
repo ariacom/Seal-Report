@@ -22,6 +22,10 @@ namespace SealWebServer.Controllers
     public partial class HomeController
     {
         const string WebScheduleDateFormat = "yyyy-MM-ddTHH:mm";
+        /// <summary>
+        /// Destination of a web schedule executing only the tasks of the report (no output device)
+        /// </summary>
+        const string TasksOnlyLabel = "None (tasks only)";
 
         /// <summary>
         /// Returns the web schedules of the logged user
@@ -69,6 +73,8 @@ namespace SealWebServer.Controllers
                     else if (device is OutputSharePointDevice sharePoint && !string.IsNullOrEmpty(sharePoint.Directories)) swiDevice.directories = sharePoint.DirectoriesArray.ToList();
                     result.devices.Add(swiDevice);
                 }
+                //A report having tasks can be scheduled without output: only its tasks are executed
+                if (WebScheduleOutput.CanScheduleTasksOnly(report)) result.devices.Insert(0, new SWIWebScheduleDevice() { guid = "", name = Translate(TasksOnlyLabel), type = "none" });
                 //Folders where the user can write the result
                 foreach (var folder in WebUser.AllFolders.Where(i => (FolderRight)i.right == FolderRight.Edit && !i.IsRepository && i.type != "bin").OrderBy(i => i.IsPersonal ? 0 : 1).ThenBy(i => i.fullname))
                 {
@@ -88,7 +94,8 @@ namespace SealWebServer.Controllers
                 else
                 {
                     //New schedule with default values, that the Schedule Check Script can change (moment New)
-                    var device = result.devices.FirstOrDefault(i => i.type == "email") ?? result.devices.FirstOrDefault();
+                    //A report without model (e.g. a report having only tasks) is scheduled for its tasks by default
+                    var device = (WebScheduleOutput.CanScheduleTasksOnly(report) && report.Models.Count == 0) ? result.devices.First() : result.devices.FirstOrDefault(i => i.type == "email") ?? result.devices.FirstOrDefault(i => i.type != "none");
                     var newSchedule = prepareNewWebSchedule(report, execPath, device?.guid).Schedule;
                     result.schedule = toSWIWebSchedule(newSchedule, true);
                     result.schedule.guid = null;
@@ -442,10 +449,10 @@ namespace SealWebServer.Controllers
                 path = schedule.WebPath,
                 reportname = Repository.TranslateFileName(getFullPath(schedule.WebPath)),
                 deviceguid = output.DeviceGUID,
-                devicename = device != null ? Repository.TranslateDevice(device.Name, device.Name) : Translate("Unknown device"),
-                devicetype = device != null ? getDeviceType(device) : "",
+                devicename = output.IsTasksOnly ? Translate(TasksOnlyLabel) : device != null ? Repository.TranslateDevice(device.Name, device.Name) : Translate("Unknown device"),
+                devicetype = output.IsTasksOnly ? "none" : device != null ? getDeviceType(device) : "",
                 format = output.Format,
-                formatname = getFormatName(output.Format),
+                formatname = output.IsTasksOnly ? "" : getFormatName(output.Format),
                 recurrence = getRecurrence(schedule),
                 nextexecution = schedule.Enabled ? toDisplayDate(schedule.NextExecution) : "",
                 lastexecution = toDisplayDate(schedule.LastExecution),
@@ -511,6 +518,21 @@ namespace SealWebServer.Controllers
             schedule.Enabled = swi.enabled;
 
             //Output
+            output.FolderPath = null;
+            output.FileName = null;
+            output.EmailTo = output.EmailCC = output.EmailBCC = output.EmailSubject = output.EmailBody = null;
+            output.EmailHtmlBody = false;
+            if (string.IsNullOrEmpty(swi.deviceguid) && WebScheduleOutput.CanScheduleTasksOnly(report))
+            {
+                //Schedule for the tasks of the report only: no output
+                output.DeviceGUID = null;
+                output.CancelIfNoRecords = false;
+                output.ZipResult = false;
+                output.ZipPassword = null;
+                setScheduleRecurrence(schedule, swi);
+                schedule.SetWebOwner(WebUser, report, execPath);
+                return;
+            }
             var device = Repository.Devices.FirstOrDefault(i => i.GUID == swi.deviceguid);
             if (device == null || !WebUser.CanAccessDevice(device)) throw new ValidationException(Translate("Please select an output device"));
             if (!Repository.ResultAllowedFormats.Contains(swi.format)) throw new ValidationException(Translate("The format is not allowed"));
@@ -521,10 +543,6 @@ namespace SealWebServer.Controllers
             if (!swi.zip || swi.removezippassword) output.ZipPassword = null;
             else if (!string.IsNullOrEmpty(swi.zippassword)) output.ZipPassword = swi.zippassword;
 
-            output.FolderPath = null;
-            output.FileName = null;
-            output.EmailTo = output.EmailCC = output.EmailBCC = output.EmailSubject = output.EmailBody = null;
-            output.EmailHtmlBody = false;
             if (device is OutputEmailDevice)
             {
                 if (string.IsNullOrWhiteSpace(swi.to)) throw new ValidationException(Translate("Please define the email destination"));

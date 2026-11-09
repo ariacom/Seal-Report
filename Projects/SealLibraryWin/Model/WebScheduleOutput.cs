@@ -21,6 +21,17 @@ namespace Seal.Model
         public string DeviceGUID { get; set; }
 
         /// <summary>
+        /// True if the schedule executes only the tasks of the report, without output (no device)
+        /// </summary>
+        [System.Xml.Serialization.XmlIgnore]
+        public bool IsTasksOnly => string.IsNullOrEmpty(DeviceGUID);
+
+        /// <summary>
+        /// True if a web schedule of the report can execute only its tasks (the report has tasks)
+        /// </summary>
+        public static bool CanScheduleTasksOnly(Report report) => report.Tasks.Count > 0;
+
+        /// <summary>
         /// Format of the result
         /// </summary>
         public ReportFormat Format { get; set; } = ReportFormat.html;

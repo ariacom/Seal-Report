@@ -99,8 +99,11 @@ var SWISchedule;
     function refreshControls() {
         var device = currentDevice();
         var isEmail = device && device.type == "email";
+        //'none': schedule for the tasks of the report only, no output
+        var hasOutput = device && device.type != "none";
+        SWIUtil.ShowHideControl($(".webschedule-output"), hasOutput);
         SWIUtil.ShowHideControl($(".webschedule-email"), isEmail);
-        SWIUtil.ShowHideControl($(".webschedule-file"), device && !isEmail);
+        SWIUtil.ShowHideControl($(".webschedule-file"), hasOutput && !isEmail);
         SWIUtil.ShowHideControl($(".webschedule-zip"), $("#webschedule-zip").is(":checked"));
         SWIUtil.ShowHideControl($("#webschedule-removezippassword-div"), _edit.schedule.haszippassword);
         var type = parseInt($("#webschedule-type").val());
@@ -362,7 +365,7 @@ var SWISchedule;
                 $actions.append($delete);
                 $body.append($("<tr>")
                     .append($name)
-                    .append($("<td>").text(s.devicename + " (" + s.formatname + ")"))
+                    .append($("<td>").text(s.devicename + (s.formatname ? " (" + s.formatname + ")" : "")))
                     .append($("<td>").text(s.recurrence))
                     .append($next)
                     .append($last)
