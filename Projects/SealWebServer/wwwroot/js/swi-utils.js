@@ -107,6 +107,14 @@ var SWIUtil;
         return !(control.attr('disabled') || control.prop('disabled'));
     }
     SWIUtil.IsEnabled = IsEnabled;
+    //Returns the text of an HTML encoded string (e.g. an error message of the server) without interpreting it as HTML:
+    //the document of DOMParser is inert (no script executed, no image loaded), unlike $("<div/>").html(text) that runs the 'onerror' of an image
+    function HtmlDecode(text) {
+        if (!text)
+            return "";
+        return new DOMParser().parseFromString(text, "text/html").documentElement.textContent || "";
+    }
+    SWIUtil.HtmlDecode = HtmlDecode;
     function ShowHideControl(control, show) {
         //d-none is required to override display utility classes (d-flex, d-block...) that use !important and defeat the inline style set by toggle()
         //force a real boolean: with undefined/null (e.g. '_main._folder && ...'), jQuery toggle() flips the current state instead of hiding,
@@ -448,7 +456,7 @@ var SWIUtil;
         });
     }
     function showMcpError(data) {
-        $("#mcp-token-error").removeClass("d-none").text($("<div/>").html(data.error).text());
+        $("#mcp-token-error").removeClass("d-none").text(SWIUtil.HtmlDecode(data.error));
         if (!data.authenticated)
             location.reload();
     }

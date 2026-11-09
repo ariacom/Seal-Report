@@ -254,6 +254,15 @@ namespace Seal.Helpers
         }
 
         /// <summary>
+        /// Returns the input as a SQL string literal enclosed in single quotes for the database type (see <see cref="EscapeSQLStringLiteral"/>):
+        /// to use instead of <see cref="QuoteSingle"/> for a value inserted in a SQL statement, as a backslash ending a value would escape the closing quote on MySQL and MariaDB.
+        /// </summary>
+        static public string QuoteSQLStringLiteral(string input, DatabaseType databaseType)
+        {
+            return "'" + EscapeSQLStringLiteral(input, databaseType) + "'";
+        }
+
+        /// <summary>
         /// Returns the input as a C# verbatim string literal (@"..."), safe to insert in a script compiled by Razor:
         /// only the double quote is special in a verbatim string and it is doubled (a backslash stays a plain character).
         /// </summary>

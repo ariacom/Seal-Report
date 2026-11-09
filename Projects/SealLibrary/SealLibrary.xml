@@ -3246,6 +3246,12 @@
             and for MySQL, whose default mode treats the backslash as an escape character, backslashes are doubled too.
             </summary>
         </member>
+        <member name="M:Seal.Helpers.Helper.QuoteSQLStringLiteral(System.String,Seal.Model.DatabaseType)">
+            <summary>
+            Returns the input as a SQL string literal enclosed in single quotes for the database type (see <see cref="M:Seal.Helpers.Helper.EscapeSQLStringLiteral(System.String,Seal.Model.DatabaseType)"/>):
+            to use instead of <see cref="M:Seal.Helpers.Helper.QuoteSingle(System.String)"/> for a value inserted in a SQL statement, as a backslash ending a value would escape the closing quote on MySQL and MariaDB.
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.Helper.ToCSharpVerbatimLiteral(System.String)">
             <summary>
             Returns the input as a C# verbatim string literal (@"..."), safe to insert in a script compiled by Razor:
@@ -13792,6 +13798,11 @@
         <member name="P:Seal.Model.ReportRestriction.EnumLINQValue">
             <summary>
             String containing the LINQ values of the enum values
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportRestriction.SQLDatabaseType">
+            <summary>
+            Database type of the model connection, used to escape the string literals of the SQL
             </summary>
         </member>
         <member name="P:Seal.Model.ReportRestriction.DisplayRestriction">

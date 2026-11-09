@@ -110,7 +110,7 @@ var SWISchedule;
         $("#webschedule-interval-label").text(SWIUtil.tr2(type == 3 ? "Recur every (weeks)" : "Recur every (days)"));
     }
     function showError(data) {
-        $("#webschedule-error").removeClass("d-none").text($("<div/>").html(data.error).text());
+        $("#webschedule-error").removeClass("d-none").text(SWIUtil.HtmlDecode(data.error));
         //the error is displayed at the top of the dialog body, which may be scrolled down to the Save button
         $("#webschedule-dialog .modal-body").scrollTop(0);
         if (!data.authenticated)

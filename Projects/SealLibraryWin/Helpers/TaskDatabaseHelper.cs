@@ -1116,7 +1116,7 @@ namespace Seal.Helpers
                 string res = row[col].ToString();
                 if (TrimText) res = res.Trim();
                 if (RemoveCrLf) res = res.Replace("\r", " ").Replace("\n", " ");
-                result = Helper.QuoteSingle(res);
+                result = Helper.QuoteSQLStringLiteral(res, DatabaseType);
             }
 
             return result.ToString();

@@ -1515,7 +1515,8 @@ namespace Seal.Model
                     if (EnumValues.Count == 0) result = (type == ColumnType.Numeric ? "0" : "''");
                     foreach (string enumValue in EnumValues)
                     {
-                        Helper.AddValue(ref result, ",", type == ColumnType.Numeric ? enumValue : Helper.QuoteSingle(enumValue));
+                        //A numeric enum value is inserted as is only if it is a number, otherwise it is quoted as a string literal
+                        Helper.AddValue(ref result, ",", type == ColumnType.Numeric && Helper.ValidateNumeric(enumValue, out _) ? enumValue : Helper.QuoteSQLStringLiteral(enumValue, SQLDatabaseType));
                     }
                 }
                 return result;
@@ -1542,6 +1543,14 @@ namespace Seal.Model
                 }
                 return result;
             }
+        }
+
+        /// <summary>
+        /// Database type of the model connection, used to escape the string literals of the SQL
+        /// </summary>
+        DatabaseType SQLDatabaseType
+        {
+            get { return Model?.Connection?.DatabaseType ?? DatabaseType.Standard; }
         }
 
         string GetSQLValue(string value, DateTime date, Operator op)
@@ -1579,7 +1588,7 @@ namespace Seal.Model
                 else
                 {
                     //Ansi Format
-                    result = Helper.QuoteSingle(date.ToString(Model.Connection.DateTimeFormat));
+                    result = Helper.QuoteSQLStringLiteral(date.ToString(Model.Connection.DateTimeFormat), SQLDatabaseType);
                 }
             }
             else
@@ -1608,12 +1617,17 @@ namespace Seal.Model
                     }
                     else if (Model.Connection.DatabaseType == DatabaseType.MSSQLServer)
                     {
-                        result = "N" + Helper.QuoteSingle(value2); ;
+                        result = "N" + Helper.QuoteSingle(value2);
+                    }
+                    else
+                    {
+                        result = Helper.QuoteSQLStringLiteral(value2, SQLDatabaseType);
                     }
                 }
                 else
                 {
-                    result = Helper.QuoteSingle(value2);
+                    //The value is escaped for the database type: on MySQL and MariaDB, a backslash ending the value would escape the closing quote
+                    result = Helper.QuoteSQLStringLiteral(value2, SQLDatabaseType);
                 }
             }
             return result;
