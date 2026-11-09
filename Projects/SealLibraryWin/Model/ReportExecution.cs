@@ -2371,8 +2371,8 @@ namespace Seal.Model
                         Thread.Sleep(100);
                     }
 
-                    //Audit
-                    Audit.LogReportAudit(report, schedule);
+                    //Audit (a successful execution is not audited if the schedule says so)
+                    if (schedule.AuditExecutions || report.HasErrors) Audit.LogReportAudit(report, schedule);
                     lastDuration = Convert.ToInt32(report.ExecutionFullDuration.TotalSeconds);
 
                     if (report.HasErrors)

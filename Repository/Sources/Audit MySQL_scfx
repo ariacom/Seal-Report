@@ -309,6 +309,34 @@
             <NumericStandardFormat>Numeric4</NumericStandardFormat>
             <Format>N4</Format>
           </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a01</GUID>
+            <Name>sr_audit.execution_rows</Name>
+            <Type>Numeric</Type>
+            <Description>For a report event, number of rows of the result: sum of the rows of the models executed (empty if no model was executed). 0 means an empty result.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Execution rows</DisplayName>
+            <DisplayOrder>33</DisplayOrder>
+            <Format>N0</Format>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a02</GUID>
+            <Name>sr_audit.execution_restrictions</Name>
+            <Type>Text</Type>
+            <Description>For a report event, restrictions prompted having a value at the execution (254 characters at most). It may contain values typed by the user.</Description>
+            <Category>Audit</Category>
+            <DisplayName>Execution restrictions</DisplayName>
+            <DisplayOrder>34</DisplayOrder>
+          </MetaColumn>
+          <MetaColumn>
+            <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a03</GUID>
+            <Name>sr_audit.execution_kind</Name>
+            <Type>Text</Type>
+            <Description>For a report event, kind of the action: Execution, Navigation (report executed or opened by a navigation link: sub-report or drill) or Export (result exported from the Web Report Server).</Description>
+            <Category>Audit</Category>
+            <DisplayName>Execution kind</DisplayName>
+            <DisplayOrder>35</DisplayOrder>
+          </MetaColumn>
         </Columns>
       </MetaTable>
       <MetaTable>
@@ -496,6 +524,10 @@ ORDER BY 1</Sql>
           <MetaEV>
             <Id>ReportExecutionError</Id>
             <Val>Report Execution Error</Val>
+          </MetaEV>
+          <MetaEV>
+            <Id>ReportExport</Id>
+            <Val>Report Export</Val>
           </MetaEV>
           <MetaEV>
             <Id>ReportSave</Id>

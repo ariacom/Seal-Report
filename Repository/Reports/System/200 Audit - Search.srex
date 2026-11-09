@@ -147,6 +147,28 @@
           <MetaColumnGUID>8457637b-d72b-48bf-8fb1-118adfeef0be</MetaColumnGUID>
         </ReportElement>
         <ReportElement>
+          <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f2a01</GUID>
+          <Name>sr_audit.execution_kind</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a03</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f2a02</GUID>
+          <Name>sr_audit.execution_rows</Name>
+          <DisplayName />
+          <Format>N0</Format>
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a01</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
+          <GUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f2a03</GUID>
+          <Name>sr_audit.execution_restrictions</Name>
+          <DisplayName />
+          <PivotPosition>Row</PivotPosition>
+          <MetaColumnGUID>3b1c7e52-4a8d-4f0e-9c61-2d5a8e7f1a02</MetaColumnGUID>
+        </ReportElement>
+        <ReportElement>
           <GUID>85bc2dca-3616-4988-b882-139927c98fc5</GUID>
           <Name>sr_audit.ai_agent</Name>
           <DisplayName />

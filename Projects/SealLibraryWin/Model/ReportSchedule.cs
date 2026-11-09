@@ -65,6 +65,7 @@ namespace Seal.Model
                 GetProperty("SealRepeatDuration").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
                 GetProperty("SealNextExecution").SetIsReadOnly(!string.IsNullOrEmpty(ScheduleSequencerGUID));
 
+                GetProperty("AuditExecutions").SetIsBrowsable(true);
                 GetProperty("IsEnabled").SetIsBrowsable(!Report.Repository.UseSealScheduler);
                 GetProperty("LastRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
                 GetProperty("NextRunTime").SetIsBrowsable(!Report.Repository.UseSealScheduler);
@@ -647,6 +648,20 @@ namespace Seal.Model
         [Category("Email notification in case of success"), DisplayName("Sender address"), Description("The sender (From) email address used to send the email in case of success. If empty the default address configured in the device is used. Make sure that the SMTP or SendGrid server allows the new address."), Id(5, 3)]
 #endif
         public string NotificationEmailFrom { get; set; }
+
+        /// <summary>
+        /// If false, the successful executions of the schedule are not audited (the executions in error are always audited). It may be used for a technical schedule executed very often.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(true)]
+        [Category("Definition"), DisplayName("Audit executions"), Description("If false, the successful executions of the schedule are not audited (the executions in error are always audited). It may be used for a technical schedule executed very often."), Id(16, 1)]
+#endif
+        public bool AuditExecutions { get; set; } = true;
+        /// <summary>
+        /// Serialize AuditExecutions only if false
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeAuditExecutions() { return !AuditExecutions; }
 
         int _errorNumberOfRetries = 0;
         /// <summary>

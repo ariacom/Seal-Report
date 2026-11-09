@@ -108,10 +108,38 @@ namespace Seal.Model
         public ReportSchedule Schedule;
 
         /// <summary>
-        /// Duration in seconds for events without a Report (e.g. AI Chat exchanges).
-        /// When Report is set, the report execution duration is used instead.
+        /// Duration in seconds of the event (e.g. AI Chat exchange, export of a report result).
+        /// If not set and Report is set, the report execution duration is used.
         /// </summary>
         public int? Duration;
+
+        //Report events
+        /// <summary>
+        /// For report events, number of rows of the result: sum of the rows of the models executed, null if no model was executed. 0 means an empty result.
+        /// Set from the report if not set by the caller (logged in the column 'execution_rows').
+        /// </summary>
+        public int? ExecutionRows;
+        /// <summary>
+        /// For report events, restrictions prompted having a value at the execution, e.g. 'Country In France ; Order Date >= 01/01/2026'.
+        /// Set from the report if not set by the caller (logged in the column 'execution_restrictions', 254 characters at most). It may contain values typed by the user.
+        /// </summary>
+        public string ExecutionRestrictions;
+        /// <summary>
+        /// For report events, kind of the action: 'Execution', 'Navigation' (report executed or opened by a navigation link: sub-report or drill) or 'Export' (result exported from the Web Report Server).
+        /// Set from the report if not set by the caller (logged in the column 'execution_kind').
+        /// </summary>
+        public string ExecutionKind;
+
+        /// <summary>
+        /// Columns of the table 'sr_audit' for the report events, added when upgrading an existing audit database
+        /// </summary>
+        static readonly string[] ExecutionColumns = new string[] { "execution_rows int null", "execution_restrictions varchar(255)", "execution_kind varchar(255)" };
+
+        /// <summary>
+        /// False if the columns execution_rows, execution_restrictions and execution_kind are not in the table 'sr_audit' and could not be added
+        /// (e.g. the account of the audit source cannot alter the table): the events are then audited without them.
+        /// </summary>
+        public static bool HasExecutionColumns = true;
 
         //AI Chat events
         /// <summary>
@@ -169,6 +197,67 @@ namespace Seal.Model
         public static void LogReportAudit(Report report, ReportSchedule schedule)
         {
             Audit.LogAudit(report.HasErrors ? AuditType.ReportExecutionError : AuditType.ReportExecution, report.SecurityContext, report.Repository.GetAuditPath(report.FilePath), null, report.ExecutionErrors, report, schedule);
+        }
+
+        /// <summary>
+        /// Audit the export of a report result from the Web Report Server (e.g. Excel, CSV, PDF, HTML Print).
+        /// The detail is the format, the duration is the time to generate the result.
+        /// </summary>
+        public static void LogReportExportAudit(Report report, ReportFormat format, int durationSeconds)
+        {
+            try
+            {
+                if (report == null || !Repository.Instance.Configuration.AuditEnabled) return;
+                var audit = new Audit()
+                {
+                    Type = AuditType.ReportExport,
+                    User = report.SecurityContext,
+                    Path = report.Repository.GetAuditPath(report.FilePath),
+                    Detail = format.ToString(),
+                    Report = report,
+                    Duration = durationSeconds,
+                    ExecutionKind = "Export"
+                };
+                ExecuteAuditScript(audit);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        /// <summary>
+        /// Set the execution properties not set by the caller (rows, restrictions, kind) from the report of the event
+        /// </summary>
+        void SetExecutionProperties()
+        {
+            if (Report == null) return;
+            try
+            {
+                if (ExecutionRows == null)
+                {
+                    foreach (var model in Report.ExecutionModels.Where(i => i.ResultTable != null))
+                    {
+                        ExecutionRows = (ExecutionRows ?? 0) + model.ResultTable.Rows.Count;
+                    }
+                }
+            }
+            catch { }
+            try
+            {
+                if (ExecutionRestrictions == null)
+                {
+                    var texts = Report.ExecutionPromptedRestrictions.Union(Report.ExecutionViewRestrictions)
+                        .Where(i => i.Prompt != PromptType.None && i.HasValue)
+                        .Select(i => i.DisplayText)
+                        .Where(i => !string.IsNullOrEmpty(i))
+                        .Distinct()
+                        .ToList();
+                    if (texts.Count > 0) ExecutionRestrictions = string.Join(" ; ", texts);
+                }
+            }
+            catch { }
+            if (ExecutionKind == null) ExecutionKind = Report.IsNavigating || Report.FromNavigation ? "Navigation" : "Execution";
         }
 
         /// <summary>
@@ -288,6 +377,7 @@ namespace Seal.Model
         /// </summary>
         static void ExecuteAuditScript(Audit audit)
         {
+            audit.SetExecutionProperties();
             var script = Repository.Instance.Configuration.AuditScript;
             Action executeAudit = string.IsNullOrEmpty(script)
                 ? audit.LogToDatabase
@@ -347,7 +437,7 @@ namespace Seal.Model
                     Tuple.Create("execution_name", DbType.AnsiString, (object)(Report?.ExecutionName ?? ClientApplication)),
                     Tuple.Create("execution_context", DbType.AnsiString, (object)Report?.ExecutionContext.ToString()),
                     Tuple.Create("execution_view", DbType.AnsiString, (object)Report?.ExecutionView.Name),
-                    Tuple.Create("execution_duration", DbType.Int32, Report != null ? (object)Convert.ToInt32(Report.ExecutionFullDuration.TotalSeconds) : (object)Duration),
+                    Tuple.Create("execution_duration", DbType.Int32, Duration != null || Report == null ? (object)Duration : (object)Convert.ToInt32(Report.ExecutionFullDuration.TotalSeconds)),
                     Tuple.Create("output_type", DbType.AnsiString, (object)Report?.OutputToExecute?.DeviceName),
                     Tuple.Create("output_name", DbType.AnsiString, (object)Report?.OutputToExecute?.Name),
                     Tuple.Create("output_information", DbType.AnsiString, (object)Report?.OutputToExecute?.Information),
@@ -362,6 +452,12 @@ namespace Seal.Model
                     Tuple.Create("ai_message_count", DbType.Int32, (object)AIMessageCount),
                     Tuple.Create("ai_cost", DbType.Double, (object)AICost)
                 };
+                if (HasExecutionColumns)
+                {
+                    values.Add(Tuple.Create("execution_rows", DbType.Int32, (object)ExecutionRows));
+                    values.Add(Tuple.Create("execution_restrictions", DbType.AnsiString, (object)ExecutionRestrictions));
+                    values.Add(Tuple.Create("execution_kind", DbType.AnsiString, (object)ExecutionKind));
+                }
 
                 // OleDb/Odbc are positional ('?'), Oracle uses ':pN', others '@pN'
                 bool positional = command is OleDbCommand || command is OdbcCommand;
@@ -402,7 +498,7 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Creates the sr_audit table on first use, or adds the AI Chat columns when upgrading an
+        /// Creates the sr_audit table on first use, or adds the AI Chat columns and the columns of the report events when upgrading an
         /// existing audit database. Executed once per process (see <see cref="CheckTableCreation"/>).
         /// The column types are standard SQL; the date type depends on the database (see <see cref="GetDateTimeSqlType"/>).
         /// </summary>
@@ -441,12 +537,37 @@ namespace Seal.Model
                     command.CommandText = "alter table sr_audit add ai_cost float null";
                     command.ExecuteNonQuery();
                 }
+
+                //Add the columns of the report events (rows, restrictions, kind) when upgrading from a version without them.
+                //If a column cannot be added (e.g. the account of the audit source may not alter the table), the events are audited without these columns.
+                foreach (var columnDef in ExecutionColumns)
+                {
+                    try
+                    {
+                        command.CommandText = "select " + columnDef.Split(' ')[0] + " from sr_audit where 1=0";
+                        command.ExecuteNonQuery();
+                    }
+                    catch
+                    {
+                        try
+                        {
+                            command.CommandText = "alter table sr_audit add " + columnDef;
+                            command.ExecuteNonQuery();
+                        }
+                        catch (Exception ex)
+                        {
+                            HasExecutionColumns = false;
+                            Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Warning, $"The columns execution_rows, execution_restrictions and execution_kind could not be added to the table sr_audit: the events are audited without them.\r\n{ex.Message}");
+                            break;
+                        }
+                    }
+                }
             }
             catch
             {
                 //Create the table (to be adapted for your database type, e.g. ident identity(1,1), execution_error varchar(max) for SQLServer)
                 command.CommandText = @"create table sr_audit (
-                        event_date " + GetDateTimeSqlType(connectionType) + @",event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255),ai_agent varchar(255),ai_provider varchar(255),ai_model varchar(255),ai_input_tokens int null,ai_output_tokens int null,ai_calls int null,ai_tool_calls int null,ai_message_count int null,ai_cost float null
+                        event_date " + GetDateTimeSqlType(connectionType) + @",event_type varchar(255),event_path varchar(255),event_detail varchar(255),event_error varchar(255),user_name varchar(255),user_groups varchar(255),user_session varchar(255),execution_name varchar(255),execution_context varchar(255),execution_view varchar(255),execution_status varchar(255),execution_duration int null,execution_locale varchar(255),execution_error varchar(255),output_type varchar(255),output_name varchar(255),output_information varchar(255),schedule_name varchar(255),ai_agent varchar(255),ai_provider varchar(255),ai_model varchar(255),ai_input_tokens int null,ai_output_tokens int null,ai_calls int null,ai_tool_calls int null,ai_message_count int null,ai_cost float null,execution_rows int null,execution_restrictions varchar(255),execution_kind varchar(255)
                     )";
                 command.ExecuteNonQuery();
             }

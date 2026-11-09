@@ -616,7 +616,9 @@ namespace SealWebServer.Controllers
                     if (!execution.Report.ExecutionView.GetBoolValue(Parameter.EnableResultsMenuParameter)) throw new Exception("Invalid operation");
                     ReportFormat f;
                     if (!Enum.TryParse(format, out f)) f = ReportFormat.html;
+                    var start = DateTime.Now;
                     var fileResult = execution.GenerateResult(f);
+                    Audit.LogReportExportAudit(execution.Report, f, Convert.ToInt32((DateTime.Now - start).TotalSeconds));
                     return getFileResult(fileResult, execution.Report);
                 }
             }

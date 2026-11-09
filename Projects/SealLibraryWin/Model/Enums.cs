@@ -1392,6 +1392,10 @@ namespace Seal.Model
         /// AI chat message refused by the limits of the user (SecurityUser.CheckAIChat, SecurityUser.GetAICostLimit)
         /// </summary>
         AIChatRefused,
+        /// <summary>
+        /// Export of a report result from the Web Report Server (e.g. Excel, CSV, PDF, HTML Print)
+        /// </summary>
+        ReportExport,
     }
 
     /// <summary>
