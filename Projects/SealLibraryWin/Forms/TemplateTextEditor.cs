@@ -1961,20 +1961,6 @@ $('<div>', {{
                         frm.Text = "Edit the Change Password script";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
-                    else if (context.PropertyDescriptor.Name == "ScheduleCheckScript")
-                    {
-                        template = razorScheduleCheckScriptTemplate;
-                        frm.ObjectForCheckSyntax = new ScheduleCheck();
-                        frm.Text = "Edit the script that checks the schedules";
-                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    }
-                    else if (context.PropertyDescriptor.Name == "FeedbackScript")
-                    {
-                        template = razorFeedbackScriptTemplate;
-                        frm.ObjectForCheckSyntax = new ReportFeedback() { Security = new SealSecurity() { Repository = Repository.Instance } };
-                        frm.Text = "Edit the script that receives the feedbacks on the reports";
-                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
-                    }
                 }
                 else if (context.Instance is MetaTable)
                 {
@@ -2137,6 +2123,20 @@ $('<div>', {{
                         template = Audit.AuditScriptTemplate;
                         frm.ObjectForCheckSyntax = new Audit();
                         frm.Text = "Edit the script executed when a an audit event occurs";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "ScheduleCheckScript")
+                    {
+                        template = razorScheduleCheckScriptTemplate;
+                        frm.ObjectForCheckSyntax = new ScheduleCheck();
+                        frm.Text = "Edit the script that checks the schedules";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "FeedbackScript")
+                    {
+                        template = razorFeedbackScriptTemplate;
+                        frm.ObjectForCheckSyntax = new ReportFeedback() { Security = Repository.Instance.Security };
+                        frm.Text = "Edit the script that receives the feedbacks on the reports";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "RazorForbiddenTokens")
