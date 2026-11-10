@@ -112,6 +112,43 @@
             infoCells.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
             rowStart += 1;
         }
+        //Guide of the report, as plain text below the title
+        var guide = report.GuideHtml;
+        if (!string.IsNullOrWhiteSpace(guide))
+        {
+            rowStart += 2;
+            var guideCells = sheet.Range(rowStart, 1, rowStart, 6);
+            guideCells.Merge();
+            guideCells.Style.Alignment.WrapText = true;
+            guideCells.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+            guideCells.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+            result.SetHtmlValue(guideCells, guide);
+            //Excel does not fit the height of merged cells: estimate it from the text (about 110 characters per line)
+            setTextHeight(sheet, rowStart);
+        }
+
+        //Model summaries (e.g. the sources of the data), shown here instead of the data sheets
+        var summaryViews = new List<ReportView>();
+        fillSummaryViews(report.ExecutionView, summaryViews);
+        if (summaryViews.Count > 0)
+        {
+            rowStart += 2;
+            sheet.Cell(rowStart, 1).Value = report.Translate("Notes");
+            result.ApplyStyle(sheet.Cell(rowStart, 1), ExcelResult.CellTitleStyle);
+            foreach (var summaryView in summaryViews)
+            {
+                rowStart++;
+                var noteCells = sheet.Range(rowStart, 1, rowStart, 6);
+                noteCells.Merge();
+                noteCells.Style.Alignment.WrapText = true;
+                noteCells.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
+                noteCells.Style.Alignment.Horizontal = XLAlignmentHorizontalValues.Left;
+                result.SetHtmlValue(noteCells, summaryView.GetValue("model_summary"));
+                var text = sheet.Cell(rowStart, 1).GetString();
+                if (summaryViews.Count > 1) sheet.Cell(rowStart, 1).Value = summaryView.ViewName + ": " + text;
+                setTextHeight(sheet, rowStart);
+            }
+        }
         rowStart += 2;
 
         sheet.Cell(rowStart, 1).Value = report.Translate("Execution date");
@@ -148,6 +185,24 @@
         var usedRange = sheet.RangeUsed();
         if (usedRange != null) usedRange.Style.Alignment.Vertical = XLAlignmentVerticalValues.Top;
         sheet.Column(5).Width = 60;
+    }
+
+    /// Excel does not fit the height of merged cells: estimate it from the text of the first cell (about 110 characters per line on 6 columns)
+    void setTextHeight(IXLWorksheet sheet, int row)
+    {
+        var text = sheet.Cell(row, 1).GetString();
+        int lines = text.Split('\n').Sum(i => Math.Max(1, (int)Math.Ceiling(i.Trim().Length / 110.0)));
+        sheet.Row(row).Height = Math.Min(409, 15 * lines + 3);
+    }
+
+    /// Model views of the execution having a model summary, in the display order
+    void fillSummaryViews(ReportView parent, List<ReportView> result)
+    {
+        foreach (var child in parent.Views.Where(i => i.Enabled).OrderBy(i => i.SortOrder))
+        {
+            if (child.TemplateName == ReportViewTemplate.ModelName && child.HasValue("model_summary")) result.Add(child);
+            fillSummaryViews(child, result);
+        }
     }
 
     void showMessages(ExcelResult result)
