@@ -141,11 +141,17 @@
 
     //Colors: 'value=color' entries for fixed values, 'color' entries for the palette
     var fixedColors = new Dictionary<string, string>();
+    var fixedOrder = new List<string>();
     var palette = new List<string>();
     foreach (var entry in view.GetValue("map_colors").Replace("\r", "").Split(new char[] { '\n', ';' }, StringSplitOptions.RemoveEmptyEntries))
     {
         var index = entry.LastIndexOf('=');
-        if (index > 0) { fixedColors[entry.Substring(0, index).Trim()] = entry.Substring(index + 1).Trim(); }
+        if (index > 0)
+        {
+            var fixedName = entry.Substring(0, index).Trim();
+            if (!fixedColors.ContainsKey(fixedName)) { fixedOrder.Add(fixedName); }
+            fixedColors[fixedName] = entry.Substring(index + 1).Trim();
+        }
         else if (!string.IsNullOrWhiteSpace(entry)) { palette.Add(entry.Trim()); }
     }
     if (palette.Count == 0) { palette = ReportViewTemplate.GoogleColors.Trim('[', ']').Replace("'", "").Split(',').ToList(); }
@@ -208,6 +214,8 @@
         label = labelIndex,
         categories = categories.Select(i => HttpUtility.HtmlEncode(i)).ToList(),
         colors = categoryColors,
+        //Legend rank: position of the value in the 'value=color' entries, -1 for the other values (shown after, most frequent first)
+        ranks = categories.Select(i => fixedOrder.IndexOf(i)).ToList(),
         defaultColor = palette[0],
         points = points,
         colorTitle = colorCol != -1 ? table[titleRow, colorCol].HTMLValue : "",
@@ -349,11 +357,16 @@ $(document).ready(function () {
                         div.innerHTML += '<div class="map_legend_size" style="display:flex;align-items:center;white-space:nowrap;margin-bottom:2px;"><span style="flex:0 0 ' + (2 * maxRadius + 2) + 'px;display:flex;justify-content:center;"><span style="display:inline-block;width:' + (2 * r) + 'px;height:' + (2 * r) + 'px;border-radius:50%;border:1px solid ' + sizeColor + ';background:' + sizeColor + ';opacity:@opacity.ToString(CultureInfo.InvariantCulture);"></span></span><span style="margin-left:6px;">' + s[1] + '</span></div>';
                     });
                 }
-                //Colors: name of the column and its values, most frequent values first
+                //Colors: name of the column and its values, in the order of the 'value=color' entries, then the most frequent values first
                 if (data.categories.length > 0) {
                     div.innerHTML += '<div class="map_legend_title" style="' + titleStyle + (data.sizeLegend.length > 0 ? 'margin-top:6px;' : '') + '">' + data.colorTitle + '</div>';
                 }
-                var order = data.categories.map(function (v, i) { return i; }).sort(function (a, b) { return counts[b] - counts[a]; });
+                var order = data.categories.map(function (v, i) { return i; }).sort(function (a, b) {
+                    var ra = data.ranks[a], rb = data.ranks[b];
+                    if (ra >= 0 && rb >= 0) return ra - rb;
+                    if (ra >= 0 || rb >= 0) return ra >= 0 ? -1 : 1;
+                    return counts[b] - counts[a];
+                });
                 order.forEach(function (c) {
                     var name = data.categories[c] === '' ? '-' : data.categories[c];
                     div.innerHTML += '<div class="map_legend_item" category="' + c + '" title="' + name.replace(/"/g, '&quot;') + '" style="cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:' + data.colors[c] + ';"></span><span class="text-muted">' + counts[c] + '</span> ' + name + '</div>';
