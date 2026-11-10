@@ -367,9 +367,11 @@ $(document).ready(function () {
                     if (ra >= 0 || rb >= 0) return ra >= 0 ? -1 : 1;
                     return counts[b] - counts[a];
                 });
+                //Counts in a right-aligned column as wide as the largest one, so they never run into the names
+                var countDigits = order.reduce(function (m, c) { return Math.max(m, String(counts[c]).length); }, 1);
                 order.forEach(function (c) {
                     var name = data.categories[c] === '' ? '-' : data.categories[c];
-                    div.innerHTML += '<div class="map_legend_item" category="' + c + '" title="' + name.replace(/"/g, '&quot;') + '" style="cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:' + data.colors[c] + ';"></span><span class="text-muted">' + counts[c] + '</span> ' + name + '</div>';
+                    div.innerHTML += '<div class="map_legend_item" category="' + c + '" title="' + name.replace(/"/g, '&quot;') + '" style="cursor:pointer;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;"><span style="display:inline-block;width:10px;height:10px;border-radius:50%;margin-right:6px;background:' + data.colors[c] + ';"></span><span class="text-muted" style="display:inline-block;min-width:' + countDigits + 'ch;text-align:right;margin-right:8px;font-variant-numeric:tabular-nums;">' + counts[c] + '</span>' + name + '</div>';
                 });
                 L.DomEvent.disableClickPropagation(div);
                 L.DomEvent.disableScrollPropagation(div);
