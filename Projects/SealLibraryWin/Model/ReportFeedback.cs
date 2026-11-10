@@ -33,7 +33,30 @@ namespace Seal.Model
         /// <summary>
         /// Other feedback
         /// </summary>
-        Other
+        Other,
+        /// <summary>
+        /// Proposal of a new report, of a new presentation or of missing data: the report is optional
+        /// </summary>
+        Proposal
+    }
+
+    /// <summary>
+    /// Origin of a feedback
+    /// </summary>
+    public enum ReportFeedbackOrigin
+    {
+        /// <summary>
+        /// Feedback button of a report result in the Web Report Server
+        /// </summary>
+        Web,
+        /// <summary>
+        /// AI tool 'feedback_send' called by an agent of the chat of the Web Report Server
+        /// </summary>
+        AI,
+        /// <summary>
+        /// AI tool 'feedback_send' called by a client of the MCP server
+        /// </summary>
+        MCP
     }
 
     /// <summary>
@@ -70,6 +93,10 @@ namespace Seal.Model
         /// Kind of the feedback
         /// </summary>
         public ReportFeedbackKind Kind = ReportFeedbackKind.Other;
+        /// <summary>
+        /// Origin of the feedback: button of the report result, or tool 'feedback_send' of an AI agent (chat or MCP client)
+        /// </summary>
+        public ReportFeedbackOrigin Origin = ReportFeedbackOrigin.Web;
         /// <summary>
         /// Text of the feedback (MaxTextLength characters at most)
         /// </summary>
@@ -187,6 +214,7 @@ namespace Seal.Model
             ExpectedValue = Truncate(ExpectedValue, MaxValueLength);
             SourceUrl = Truncate(SourceUrl, MaxValueLength);
             Email = Truncate(Email, MaxValueLength);
+            Restrictions = Truncate(Restrictions, MaxTextLength);
             ViewId = Truncate(ViewId, MaxValueLength);
             TargetLabel = Truncate(TargetLabel, MaxValueLength);
             TargetValue = Truncate(TargetValue, MaxValueLength);
@@ -218,10 +246,29 @@ namespace Seal.Model
             get
             {
                 var result = Kind.ToString();
+                if (Origin != ReportFeedbackOrigin.Web) result += " (" + Origin + ")";
                 if (Rating != 0) result += Rating > 0 ? " +1" : " -1";
                 var target = string.Join(" | ", new string[] { ViewName, TargetLabel, RowLabel }.Where(i => !string.IsNullOrEmpty(i)));
                 if (!string.IsNullOrEmpty(target)) result += ": " + target;
                 return result;
+            }
+        }
+
+        static readonly System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<DateTime>> _senderDates = new System.Collections.Generic.Dictionary<string, System.Collections.Generic.List<DateTime>>();
+
+        /// <summary>
+        /// Limit of the feedbacks sent without a web session (tool 'feedback_send'): returns false if the sender (e.g. the login of the user) has already sent maxPerHour feedbacks during the last hour, else counts a new feedback
+        /// </summary>
+        public static bool CheckSenderLimit(string sender, int maxPerHour = 10)
+        {
+            if (string.IsNullOrEmpty(sender)) sender = "?";
+            lock (_senderDates)
+            {
+                if (!_senderDates.TryGetValue(sender, out var dates)) _senderDates[sender] = dates = new System.Collections.Generic.List<DateTime>();
+                dates.RemoveAll(i => i < DateTime.Now.AddHours(-1));
+                if (dates.Count >= maxPerHour) return false;
+                dates.Add(DateTime.Now);
+                return true;
             }
         }
 
@@ -254,7 +301,8 @@ namespace Seal.Model
             Security = report.Repository.Security;
             ReportPath = report.Repository.GetAuditPath(report.FilePath);
             ReportName = report.ExecutionName;
-            Restrictions = Audit.GetExecutionRestrictions(report);
+            //A report loaded by the tool 'feedback_send' is not executed: the restrictions given by the agent are kept
+            if (report.ExecutionStartDate != DateTime.MinValue || string.IsNullOrEmpty(Restrictions)) Restrictions = Audit.GetExecutionRestrictions(report);
             RowCount = Audit.GetExecutionRows(report);
             if (report.ExecutionStartDate != DateTime.MinValue) ExecutionDate = report.ExecutionStartDate;
             ApplicationVersion = Repository.ProductVersionWithBuild;

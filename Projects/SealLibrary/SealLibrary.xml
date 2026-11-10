@@ -650,6 +650,21 @@
             Configuration of the agent executing the tool call (null if the tool is not called by an agent)
             </summary>
         </member>
+        <member name="F:Seal.AI.AIToolCall.FromMcp">
+            <summary>
+            True if the tool is called by a client of the MCP server, false for the chat of the Web Report Server
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolCall.ClientAddress">
+            <summary>
+            IP address of the MCP client (null for the chat of the Web Report Server)
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIToolCall.ClientApplication">
+            <summary>
+            Name of the MCP client application (null for the chat of the Web Report Server)
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIToolCall.ExecutionLog">
             <summary>
             Current log for the tool execution
@@ -4708,6 +4723,31 @@
             Other feedback
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportFeedbackKind.Proposal">
+            <summary>
+            Proposal of a new report, of a new presentation or of missing data: the report is optional
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ReportFeedbackOrigin">
+            <summary>
+            Origin of a feedback
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackOrigin.Web">
+            <summary>
+            Feedback button of a report result in the Web Report Server
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackOrigin.AI">
+            <summary>
+            AI tool 'feedback_send' called by an agent of the chat of the Web Report Server
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackOrigin.MCP">
+            <summary>
+            AI tool 'feedback_send' called by a client of the MCP server
+            </summary>
+        </member>
         <member name="T:Seal.Model.ReportFeedback">
             <summary>
             Model of the 'Report Feedback Script' of the server configuration: a feedback sent by a user (or a guest) on a report result from the Web Report Server.
@@ -4743,6 +4783,11 @@
         <member name="F:Seal.Model.ReportFeedback.Kind">
             <summary>
             Kind of the feedback
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Origin">
+            <summary>
+            Origin of the feedback: button of the report result, or tool 'feedback_send' of an AI agent (chat or MCP client)
             </summary>
         </member>
         <member name="F:Seal.Model.ReportFeedback.Text">
@@ -4884,6 +4929,11 @@
         <member name="P:Seal.Model.ReportFeedback.AuditDetail">
             <summary>
             Short description of the feedback for the audit (event_detail): kind, rating and element commented, without the text typed
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportFeedback.CheckSenderLimit(System.String,System.Int32)">
+            <summary>
+            Limit of the feedbacks sent without a web session (tool 'feedback_send'): returns false if the sender (e.g. the login of the user) has already sent maxPerHour feedbacks during the last hour, else counts a new feedback
             </summary>
         </member>
         <member name="M:Seal.Model.ReportFeedback.GetReportHash(Seal.Model.Report)">

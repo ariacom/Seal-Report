@@ -470,6 +470,17 @@ Call report_get_xml first to see the current XML.</Description>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative path of the existing report (e.g. Reports\\Sales\\monthly.srex or Personal\\my_report.srex)"},"operations":{"type":"array","description":"Operations applied in order","items":{"type":"object","properties":{"op":{"type":"string","enum":["set","insert","remove"]},"xpath":{"type":"string","description":"XPath of the target nodes, e.g. /Report/Models/ReportModel[Name='Orders']/Elements or //ReportView[Name='Chart JS']/Parameters"},"value":{"type":"string","description":"set: the new text"},"xml":{"type":"string","description":"insert: the XML fragment to insert (one or several elements); set: the fragment replacing the selected elements"},"position":{"type":"string","enum":["append","prepend","before","after"],"description":"insert: append (last child, default), prepend (first child), before or after (sibling of the target)"}},"required":["op","xpath"]}},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default. Set true ONLY if the user explicitly asks for no record limit. Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false: use it only to check a layout (tabs, containers, charts), not for every save."}},"required":["path","operations"]}</ParametersSchema>
       <ExecutionScriptFile>report_patch_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
+    <AIToolConfiguration>
+      <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a7</GUID>
+      <Name>feedback_send</Name>
+      <Access>Write</Access>
+      <Description>Sends a feedback of the user to the team in charge of the reports: a value that seems wrong in a report (kind Data, with the value shown, the value expected and its source), a missing presentation (Presentation: table, chart, map...), something hard to understand (Understanding), a proposal of a new report or of missing data (Proposal, report_path optional) or anything else (Other).
+Call it ONLY when the user asks to report something, or after the user accepted your offer to do it: show the text first, never send a feedback on your own initiative, never twice for the same remark.
+The user and the versions are added by the server. Give the result message to the user.</Description>
+      <ProgressLabel>Sending the feedback</ProgressLabel>
+      <ParametersSchema>{"type":"object","properties":{"kind":{"type":"string","enum":["Data","Presentation","Understanding","Proposal","Other"]},"text":{"type":"string","description":"The feedback, in the words and the language of the user (2000 characters at most)"},"report_path":{"type":"string","description":"Relative path of the report commented as returned by report_list (e.g. Reports\\Sales\\monthly.srex). Required except for Proposal and Other."},"criteria":{"type":"string","description":"Criteria of the execution commented, e.g. 'Country = France ; Year = 2026'"},"target_label":{"type":"string","description":"Data: name of the column or of the measure commented"},"target_value":{"type":"string","description":"Data: value shown by the report"},"row_label":{"type":"string","description":"Data: row of the value, e.g. the name of the city"},"expected_value":{"type":"string","description":"Data: value expected by the user"},"source_url":{"type":"string","description":"Data: source of the expected value given by the user (e.g. an address of a web site)"}},"required":["kind","text"]}</ParametersSchema>
+      <ExecutionScriptFile>feedback_send.cshtml</ExecutionScriptFile>
+    </AIToolConfiguration>
   </AITools>
   <AISkills>
     <AISkillConfiguration>
@@ -692,6 +703,7 @@ Settings\AI\Skills</KnowledgeFolders>
         <GUID>3f576977-b633-4b1c-80ee-a2e2d015c13d</GUID>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a7</GUID>
         <GUID>174f7dee-ff46-4053-bce3-85355f55f9df</GUID>
         <GUID>40051ada-ebee-4e40-8264-472186877f64</GUID>
         <GUID>d4e5f6a7-b8c9-4d0e-1f2a-3b4c5d6e7f80</GUID>
@@ -733,6 +745,7 @@ Settings\AI\Skills</KnowledgeFolders>
       <ToolGUIDs>
         <GUID>89394f6c-c895-4d8b-8ced-a0864cdec1d7</GUID>
         <GUID>b3c7f2a1-4d8e-4f9b-a2c5-e6d1f0b3a8c4</GUID>
+        <GUID>7c1a5e01-0d1e-4b5a-9f00-5ea1000000a7</GUID>
       </ToolGUIDs>
       <SkillGUIDs>
         <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6076</GUID>

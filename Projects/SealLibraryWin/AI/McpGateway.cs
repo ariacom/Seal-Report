@@ -321,7 +321,7 @@ namespace Seal.AI
             }
 
             var host = GetToolHost(context);
-            var toolCall = new AIToolCall() { Id = Guid.NewGuid().ToString("N"), Name = toolName, Arguments = string.IsNullOrWhiteSpace(arguments) ? "{}" : arguments };
+            var toolCall = new AIToolCall() { Id = Guid.NewGuid().ToString("N"), Name = toolName, Arguments = string.IsNullOrWhiteSpace(arguments) ? "{}" : arguments, FromMcp = true, ClientAddress = context.ClientAddress, ClientApplication = context.ClientApplication };
             var result = host.Execute(toolCall, cancelOperation);
             var isError = IsError(result);
             Audit.LogMcpAudit(isError ? AuditType.AIMcpCallError : AuditType.AIMcpCall, context.User, context.Agent.Name, toolName, isError ? Truncate(result.Text, 250) : null, (int)Math.Round((DateTime.Now - now).TotalSeconds), context.ClientAddress, context.ClientApplication);

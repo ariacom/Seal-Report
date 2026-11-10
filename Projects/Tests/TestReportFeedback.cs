@@ -45,6 +45,75 @@ namespace Test
         }
 
         [TestMethod]
+        public void FeedbackProposalWithoutReport()
+        {
+            //Tool 'feedback_send': a proposal has no report, the feedback is processed by the script and audited with its origin
+            var configuration = _repository.Configuration;
+            var script = configuration.FeedbackScript;
+            var auditEnabled = configuration.AuditEnabled;
+            try
+            {
+                configuration.AuditEnabled = false;
+                configuration.FeedbackScript = "@{ ReportFeedback feedback = Model; feedback.FeedbackId = feedback.Kind + \"/\" + feedback.Origin + \"/\" + (feedback.Report == null); }";
+                var feedback = new ReportFeedback() { User = new SecurityUser(_repository.Security) { Name = "TestReportFeedback" }, Kind = ReportFeedbackKind.Proposal, Origin = ReportFeedbackOrigin.MCP, Text = " A report on the sales by region " };
+                feedback.Normalize();
+                feedback.SetReportContext(null);
+                Assert.IsNull(configuration.ProcessFeedback(feedback));
+                Assert.AreEqual("Proposal/MCP/True", feedback.FeedbackId);
+                Assert.AreEqual("Proposal (MCP)", feedback.AuditDetail);
+                Assert.AreEqual("A report on the sales by region", feedback.Text);
+            }
+            finally
+            {
+                configuration.FeedbackScript = script;
+                configuration.AuditEnabled = auditEnabled;
+            }
+
+            //Limit per sender of the tool
+            var sender = "TestReportFeedback " + Guid.NewGuid();
+            for (int i = 0; i < 3; i++) Assert.IsTrue(ReportFeedback.CheckSenderLimit(sender, 3));
+            Assert.IsFalse(ReportFeedback.CheckSenderLimit(sender, 3), "4th feedback of the hour refused");
+        }
+
+        [TestMethod]
+        public void FeedbackSendTool()
+        {
+            //AI tool 'feedback_send' of the repository: report loaded with the rights of the user, context without execution, refusals
+            var configuration = _repository.Configuration;
+            var script = configuration.FeedbackScript;
+            var auditEnabled = configuration.AuditEnabled;
+            var tool = _repository.AIConfiguration.AITools.First(i => i.Name == "feedback_send");
+            var user = new SecurityUser(_repository.Security) { Name = "TestFeedbackTool " + Guid.NewGuid() };
+            user.SecurityGroups.Add(_repository.Security.Groups.First(g => g.Name == "Developers"));
+            user.SetFolders();
+            string send(string arguments, bool mcp = false) { return tool.Execute(new Seal.AI.AIToolCall() { Name = "feedback_send", Arguments = arguments, SecurityContext = user, FromMcp = mcp }); }
+            try
+            {
+                configuration.AuditEnabled = false;
+                configuration.FeedbackScript = "";
+                StringAssert.StartsWith(send("{\"kind\":\"Other\",\"text\":\"x\"}"), "Error: the feedbacks are not enabled");
+
+                configuration.FeedbackScript = "@{ ReportFeedback feedback = Model; if (feedback.Text == \"refuse\") { feedback.Refusal = \"No.\"; return; } feedback.FeedbackId = \"7\"; feedback.Reply = string.Join(\"|\", feedback.Kind, feedback.Origin, feedback.ReportPath, feedback.ReportHash?.Length, feedback.Restrictions, feedback.TargetLabel, feedback.ExpectedValue, feedback.RowCount == null); }";
+                var result = send("{\"kind\":\"Data\",\"text\":\"Wrong price\",\"report_path\":\"Reports\\\\Samples\\\\01-Simple list (Products).srex\",\"criteria\":\"Category = Beverages\",\"target_label\":\"Unit Price\",\"expected_value\":\"19\"}", true);
+                Assert.AreEqual(@"Feedback sent (number 7). Message for the user: Data|MCP|\Samples\01-Simple list (Products).srex|12|Category = Beverages|Unit Price|19|True", result);
+
+                result = send("{\"kind\":\"Proposal\",\"text\":\"A report on the sales by region\"}");
+                StringAssert.Contains(result, "Proposal|AI||");
+
+                StringAssert.StartsWith(send("{\"kind\":\"Data\",\"text\":\"x\"}"), "Error: report_path is required");
+                StringAssert.StartsWith(send("{\"kind\":\"Usefulness\",\"text\":\"x\"}"), "Error: kind must be");
+                StringAssert.StartsWith(send("{\"kind\":\"Other\",\"text\":\" \"}"), "Error: text is required");
+                StringAssert.StartsWith(send("{\"kind\":\"Data\",\"text\":\"x\",\"report_path\":\"Reports\\\\Nothing.srex\"}"), "Error: report 'Reports");
+                Assert.AreEqual("Error: the feedback was refused: No.", send("{\"kind\":\"Other\",\"text\":\"refuse\"}"));
+            }
+            finally
+            {
+                configuration.FeedbackScript = script;
+                configuration.AuditEnabled = auditEnabled;
+            }
+        }
+
+        [TestMethod]
         public void FeedbackContextAndNormalization()
         {
             var report = executeReport("TestReportFeedback " + Guid.NewGuid());

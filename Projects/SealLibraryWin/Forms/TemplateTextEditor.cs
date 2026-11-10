@@ -379,7 +379,7 @@ namespace Seal.Forms
         const string razorFeedbackScriptTemplate = @"@using System.IO
 @{
     ReportFeedback feedback = Model;
-    //Values typed: feedback.Kind (Data, Presentation, Understanding, Usefulness, Other), feedback.Text, feedback.ExpectedValue, feedback.SourceUrl, feedback.Email, feedback.Rating
+    //Values typed: feedback.Kind (Data, Presentation, Understanding, Usefulness, Other, Proposal), feedback.Origin (Web, or AI / MCP for the AI tool feedback_send: no execution, feedback.Report is null for a proposal), feedback.Text, feedback.ExpectedValue, feedback.SourceUrl, feedback.Email, feedback.Rating
     //Element commented (optional): feedback.ViewId, feedback.ViewName, feedback.TargetLabel, feedback.TargetValue, feedback.RowLabel
     //Context: feedback.Report, feedback.ReportPath, feedback.ReportName, feedback.Restrictions, feedback.RowCount, feedback.ExecutionDate, feedback.User (User.IsGuest), feedback.Culture, feedback.ClientAddress, feedback.ClientApplication
     //Versions: feedback.ReportModification (date of the report file), feedback.ReportHash (hash of its content), feedback.ApplicationVersion (Seal Report)

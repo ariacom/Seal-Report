@@ -54,6 +54,21 @@ namespace Seal.AI
         public AIAgentConfiguration AgentConfiguration = null;
 
         /// <summary>
+        /// True if the tool is called by a client of the MCP server, false for the chat of the Web Report Server
+        /// </summary>
+        public bool FromMcp = false;
+
+        /// <summary>
+        /// IP address of the MCP client (null for the chat of the Web Report Server)
+        /// </summary>
+        public string ClientAddress = null;
+
+        /// <summary>
+        /// Name of the MCP client application (null for the chat of the Web Report Server)
+        /// </summary>
+        public string ClientApplication = null;
+
+        /// <summary>
         /// Current log for the tool execution
         /// </summary>
         public ReportExecutionLog ExecutionLog = null;

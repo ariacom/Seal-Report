@@ -278,11 +278,11 @@ namespace Seal.Model
         {
             try
             {
-                if (feedback?.Report == null || !Repository.Instance.Configuration.AuditEnabled) return;
+                if (feedback == null || !Repository.Instance.Configuration.AuditEnabled) return;
                 var audit = new Audit()
                 {
                     Type = AuditType.ReportFeedback,
-                    User = feedback.User ?? feedback.Report.SecurityContext,
+                    User = feedback.User ?? feedback.Report?.SecurityContext,
                     Path = feedback.ReportPath,
                     Detail = feedback.AuditDetail,
                     Error = feedback.Refusal,

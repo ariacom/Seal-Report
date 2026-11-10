@@ -1,0 +1,85 @@
+@using System.IO
+@using System.Linq
+@using System.Text.Json
+@using Seal.Model
+@using Seal.AI
+@{
+    //Sends a feedback of the user on a report (wrong value, missing presentation, something hard to understand) or a proposal (new report, missing data)
+    //to the 'Report Feedback Script' of the server configuration, as the Feedback button of a report result (see ReportFeedback).
+    //The user always comes from the tool call, never from the arguments. 10 feedbacks per user and per hour.
+    AIToolConfiguration tool = Model;
+    var call            = tool.CurrentToolCall;
+    var repo            = tool.GetRepository();
+    var securityContext = call.SecurityContext;
+    if (securityContext == null) { tool.ExecResult = "Error: no security context available."; return; }
+    if (!repo.Configuration.FeedbackEnabled) { tool.ExecResult = "Error: the feedbacks are not enabled on this server. Tell the user that the feedback could not be sent, do not retry."; return; }
+
+    var args = JsonDocument.Parse(call.Arguments).RootElement;
+    string arg(string name) { return args.TryGetProperty(name, out var p) && p.ValueKind == JsonValueKind.String ? p.GetString() : null; }
+
+    var feedback = new ReportFeedback()
+    {
+        User = securityContext,
+        Origin = call.FromMcp ? ReportFeedbackOrigin.MCP : ReportFeedbackOrigin.AI,
+        Text = arg("text"),
+        ExpectedValue = arg("expected_value"),
+        SourceUrl = arg("source_url"),
+        TargetLabel = arg("target_label"),
+        TargetValue = arg("target_value"),
+        RowLabel = arg("row_label"),
+        Restrictions = arg("criteria"),
+        Culture = securityContext.Profile?.Culture ?? repo.CultureInfo?.Name,
+        ClientAddress = call.ClientAddress,
+        ClientApplication = call.ClientApplication ?? (call.AgentConfiguration != null ? "AI agent " + call.AgentConfiguration.Name : null),
+        ApplicationVersion = Repository.ProductVersionWithBuild
+    };
+    var kind = arg("kind");
+    if (!Enum.TryParse(kind, true, out ReportFeedbackKind feedbackKind) || !Enum.IsDefined(typeof(ReportFeedbackKind), feedbackKind) || feedbackKind == ReportFeedbackKind.Usefulness)
+        { tool.ExecResult = "Error: kind must be Data, Presentation, Understanding, Proposal or Other."; return; }
+    feedback.Kind = feedbackKind;
+    feedback.Normalize();
+    if (string.IsNullOrEmpty(feedback.Text)) { tool.ExecResult = "Error: text is required: the feedback in the words of the user."; return; }
+
+    //Report commented: required unless the feedback is a proposal
+    var relativePath = arg("report_path");
+    if (!string.IsNullOrWhiteSpace(relativePath))
+    {
+        relativePath = Seal.Helpers.FileHelper.ConvertOSFilePath(relativePath.Trim());
+        var roots = new System.Collections.Generic.Dictionary<string, string>
+        {
+            ["Reports"]  = repo.ReportsFolder,
+            ["Personal"] = repo.GetPersonalFolder(securityContext),
+        };
+        string fullPath = null;
+        foreach (var kv in roots)
+        {
+            var candidate = relativePath.StartsWith(kv.Key + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)
+                ? Path.Combine(kv.Value, relativePath.Substring(kv.Key.Length + 1))
+                : Path.Combine(kv.Value, relativePath.TrimStart(Path.DirectorySeparatorChar));
+            if (File.Exists(candidate)) { fullPath = candidate; break; }
+        }
+        if (fullPath == null) { tool.ExecResult = $"Error: report '{relativePath}' not found: give the path returned by report_list."; return; }
+        if (!securityContext.HasFolderRight(Path.GetDirectoryName(fullPath), 1)) { tool.ExecResult = $"Error: access denied to '{relativePath}'."; return; }
+        Report report;
+        try { report = Report.LoadFromFile(fullPath, repo, refreshEnums: false); }
+        catch (Exception ex) { tool.ExecResult = $"Error loading report: {ex.Message}"; return; }
+        report.SecurityContext = securityContext;
+        feedback.SetReportContext(report);
+        feedback.ReportName = !string.IsNullOrEmpty(report.DisplayName) && !report.DisplayName.StartsWith("@") ? report.DisplayName : Path.GetFileNameWithoutExtension(fullPath);
+    }
+    else if (feedback.Kind != ReportFeedbackKind.Proposal && feedback.Kind != ReportFeedbackKind.Other)
+        { tool.ExecResult = "Error: report_path is required for this kind of feedback (only Proposal and Other can be sent without a report)."; return; }
+
+    var sender = !string.IsNullOrEmpty(securityContext.WebUserName) ? securityContext.WebUserName : securityContext.Name;
+    if (!ReportFeedback.CheckSenderLimit(sender)) { tool.ExecResult = "Error: too many feedbacks sent by this user during the last hour. Tell the user to try again later, do not retry."; return; }
+
+    call.LogMessage($"Starting tool '{call.Name}' (kind: {feedback.Kind}, report: {feedback.ReportPath})..");
+    var refusal = repo.Configuration.ProcessFeedback(feedback);
+    if (refusal != null) { tool.ExecResult = "Error: the feedback was refused: " + refusal; return; }
+
+    var result = "Feedback sent";
+    if (!string.IsNullOrEmpty(feedback.FeedbackId)) result += " (number " + feedback.FeedbackId + ")";
+    result += ".";
+    if (!string.IsNullOrEmpty(feedback.Reply)) result += " Message for the user: " + feedback.Reply;
+    tool.ExecResult = result;
+}
