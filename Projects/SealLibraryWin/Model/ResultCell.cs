@@ -8,6 +8,7 @@ using System.Linq;
 using Seal.Helpers;
 using System.Web;
 using System.Globalization;
+using System.IO;
 
 namespace Seal.Model
 {
@@ -599,6 +600,23 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// True if the sub-report path is the file of the given report
+        /// </summary>
+        static bool IsCurrentReport(Report report, string subReportPath)
+        {
+            if (string.IsNullOrEmpty(report.FilePath) || string.IsNullOrEmpty(subReportPath)) return false;
+            try
+            {
+                var path = NavigationContext.GetSubReportPath(subReportPath, report.Repository);
+                return string.Equals(path, Path.GetFullPath(report.FilePath), StringComparison.OrdinalIgnoreCase);
+            }
+            catch
+            {
+                return false;
+            }
+        }
+
         void initNavigationLinks()
         {
             //exe : execution guid of the source report
@@ -665,6 +683,7 @@ namespace Seal.Model
                         {
                             string subReportRestrictions = "";
                             int index = 1;
+                            var isSameReport = IsCurrentReport(report, subreport.Path);
                             foreach (var guid in subreport.Restrictions)
                             {
                                 var cellValue = SubReportValues.FirstOrDefault(i => i.Element.MetaColumnGUID == guid);
@@ -672,8 +691,16 @@ namespace Seal.Model
                                 {
                                     subReportRestrictions += string.Format("&res{0}={1}&val{0}={2}", index, guid, HttpUtility.UrlEncode(cellValue.NavigationValue));
                                     index++;
+                                    //Same report: the link is useful only if a value differs from the current restrictions
+                                    if (isSameReport)
+                                    {
+                                        var restrictions = report.Models.SelectMany(i => i.Restrictions).Where(i => i.MetaColumnGUID == guid).ToList();
+                                        if (restrictions.Count == 0 || restrictions.Exists(i => !i.HasOnlyNavigationValue(cellValue.NavigationValue))) isSameReport = false;
+                                    }
                                 }
                             }
+                            //A sub-report on the current report with the same restriction values would execute the same report again
+                            if (isSameReport) continue;
                             if (!string.IsNullOrEmpty(subReportRestrictions))
                             {
                                 NavigationLink link = new NavigationLink();

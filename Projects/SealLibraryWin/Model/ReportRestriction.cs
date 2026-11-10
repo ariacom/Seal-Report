@@ -466,6 +466,23 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// True if the restriction already selects only the given navigation value (operator Equal and a single value): a sub-report navigation with this value would not change it
+        /// </summary>
+        public bool HasOnlyNavigationValue(string val)
+        {
+            if (Operator != Operator.Equal || string.IsNullOrEmpty(val)) return false;
+            if (IsEnum) return EnumValues.Count == 1 && EnumValues[0] == val;
+            if (IsDateTime)
+            {
+                if (!string.IsNullOrEmpty(Date1Keyword) || !double.TryParse(val, NumberStyles.Float, CultureInfo.InvariantCulture, out double oaDate)) return false;
+                return Date1 == DateTime.FromOADate(oaDate)
+                    && Date2 == DateTime.MinValue && Date3 == DateTime.MinValue && Date4 == DateTime.MinValue
+                    && string.IsNullOrEmpty(Date2Keyword) && string.IsNullOrEmpty(Date3Keyword) && string.IsNullOrEmpty(Date4Keyword);
+            }
+            return Value1 == val && string.IsNullOrEmpty(Value2) && string.IsNullOrEmpty(Value3) && string.IsNullOrEmpty(Value4);
+        }
+
+        /// <summary>
         /// List of allowed operators for this restriction
         /// </summary>
         [XmlIgnore]

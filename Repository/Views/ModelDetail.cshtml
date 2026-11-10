@@ -4,6 +4,8 @@
     Report report = Model;
     ReportView view = report.CurrentView;
     ReportModel reportModel = view.Model;
+    bool showNavigation = view.GetBoolValue("modeldetail_show_navigation");
+    string navigationIcon = "<span class='navigation_icon fa-solid fa-up-right-from-square'></span>";
 }
 
 @if (report.Format == ReportFormat.csv)
@@ -24,7 +26,8 @@ else
                         @for (int i = 0; i < page.PageTable.ColumnCount; i++)
                         {
                             ResultCell value = page.PageTable[1, i];
-                            <th @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(reportModel.GetNavigation(view, value))>@Raw(value.HTMLValue)</th>
+                            string navigation = reportModel.GetNavigation(view, value);
+                            <th @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(navigation)>@Raw(value.HTMLValue) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
                         }
                     </tr>
                 </table>
@@ -40,9 +43,10 @@ else
                     {
                         ResultCell title = page.DataTable[0, i];
                         ResultCell value = page.DataTable[1, i];
+                        string navigation = reportModel.GetNavigation(view, value);
                         <tr>
-                                <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.GetBoolValue("modeldetail_show_header_information") ? Helper.AddAttribute("title", title.TitleTooltip) : "")>@Raw(title.HTMLValue)</th>
-                                <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(reportModel.GetNavigation(view, value))>@Raw(value.HTMLValue)</td>
+                                <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.GetBoolValue("modeldetail_show_header_information") ? Helper.AddAttribute("title", title.TitleTooltip) : "")>@Raw(title.HTMLValue) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
+                                <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(navigation)>@Raw(value.HTMLValue)</td>
                         </tr>
                     }
                 </table>

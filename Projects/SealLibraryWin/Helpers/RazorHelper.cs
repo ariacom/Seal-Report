@@ -63,9 +63,10 @@ namespace Seal.Helpers
         public static string RazorCacheDirectory = "";
 
         /// <summary>Logical cache key used by the RazorEngineCore backend.</summary>
-        static string GetCoreKey(string script, object model, string key)
+        static string GetCoreKey(string script, object model, string key, DateTime? lastModification = null)
         {
-            if (!string.IsNullOrEmpty(key)) return key;
+            //The last modification is part of the key: a view template or configuration modified while the server runs is recompiled
+            if (!string.IsNullOrEmpty(key)) return lastModification != null ? $"{key}_{lastModification.Value.Ticks}" : key;
             return model != null ? model.GetType().ToString() + "_" + GetFullScript(script) : script;
         }
         /// <summary>
@@ -217,7 +218,7 @@ namespace Seal.Helpers
                 //Validate on every call, not only on (re)compilation: a script already in the
                 //in-memory or on-disk cache must not be able to skip validation.
                 if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
-                var coreKey = GetCoreKey(script, model, key);
+                var coreKey = GetCoreKey(script, model, key, lastModification);
                 if (!RazorCoreEngine.IsTemplateCached(coreKey))
                 {
                     RazorCoreEngine.Compile(GetFullScript(script), coreKey, RazorCacheDirectory, lastModification);
@@ -254,7 +255,7 @@ namespace Seal.Helpers
             {
                 //Validate on every call (see CompileExecute): a cached script must not bypass validation.
                 if (Validator != null && !Validator.CheckScript(script)) throw InvalidScript();
-                var coreKey = GetCoreKey(script, model, key);
+                var coreKey = GetCoreKey(script, model, key, lastModification);
                 if (!RazorCoreEngine.IsTemplateCached(coreKey))
                 {
                     RazorCoreEngine.Compile(script, coreKey, RazorCacheDirectory, lastModification);

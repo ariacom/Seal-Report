@@ -3729,7 +3729,7 @@
             Directory where the compiled script assemblies are cached
             </summary>
         </member>
-        <member name="M:Seal.Helpers.RazorHelper.GetCoreKey(System.String,System.Object,System.String)">
+        <member name="M:Seal.Helpers.RazorHelper.GetCoreKey(System.String,System.Object,System.String,System.Nullable{System.DateTime})">
             <summary>Logical cache key used by the RazorEngineCore backend.</summary>
         </member>
         <member name="F:Seal.Helpers.RazorHelper._01">
@@ -13533,6 +13533,11 @@
             Set a restriction value for navigation
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportRestriction.HasOnlyNavigationValue(System.String)">
+            <summary>
+            True if the restriction already selects only the given navigation value (operator Equal and a single value): a sub-report navigation with this value would not change it
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportRestriction.AllowedOperators">
             <summary>
             List of allowed operators for this restriction
@@ -16824,6 +16829,11 @@
         <member name="P:Seal.Model.ResultCell.Links">
             <summary>
             Navigation links of the cell, the links are initialized at the first access
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ResultCell.IsCurrentReport(Seal.Model.Report,System.String)">
+            <summary>
+            True if the sub-report path is the file of the given report
             </summary>
         </member>
         <member name="M:Seal.Model.ResultCell.GetNavigationLinks(Seal.Model.ReportView)">
