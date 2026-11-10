@@ -24,7 +24,7 @@ else
                         @for (int i = 0; i < page.PageTable.ColumnCount; i++)
                         {
                             ResultCell value = page.PageTable[1, i];
-                            <th @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) >@Raw(value.HTMLValue)</th>
+                            <th @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(reportModel.GetNavigation(view, value))>@Raw(value.HTMLValue)</th>
                         }
                     </tr>
                 </table>
@@ -42,7 +42,7 @@ else
                         ResultCell value = page.DataTable[1, i];
                         <tr>
                                 <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.GetBoolValue("modeldetail_show_header_information") ? Helper.AddAttribute("title", title.TitleTooltip) : "")>@Raw(title.HTMLValue)</th>
-                                <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle))>@Raw(value.HTMLValue)</td>
+                                <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(reportModel.GetNavigation(view, value))>@Raw(value.HTMLValue)</td>
                         </tr>
                     }
                 </table>

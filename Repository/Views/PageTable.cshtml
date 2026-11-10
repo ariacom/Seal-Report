@@ -31,7 +31,7 @@
                     @Raw(header.HTMLValue)
                 </th>
 
-                <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle))>
+                <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle)) @Raw(reportModel.GetNavigation(view, value))>
                     @Raw(value.HTMLValue)
                 </td>
 

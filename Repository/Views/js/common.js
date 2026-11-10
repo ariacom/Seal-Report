@@ -284,8 +284,9 @@ function showPopupNavMenu(source, content, forChart) {
 
 //navigation initialization 
 function initNavCells(parentSelector) {
-    var selector = "td:not([navigation=''])";
-    if (parentSelector) selector = parentSelector + " " + selector;
+    //th: page values of the Model Detail view
+    var selector = "td:not([navigation='']),th[navigation]:not([navigation=''])";
+    if (parentSelector) selector = parentSelector + " td:not([navigation=''])," + parentSelector + " th[navigation]:not([navigation=''])";
     $(selector)
         .mouseenter(function (e) {
             var nav = $(this).attr("navigation");
