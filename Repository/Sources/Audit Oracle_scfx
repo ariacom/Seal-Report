@@ -594,6 +594,10 @@ ORDER BY 1</Sql>
             <Val>Report Export</Val>
           </MetaEV>
           <MetaEV>
+            <Id>ReportFeedback</Id>
+            <Val>Report Feedback</Val>
+          </MetaEV>
+          <MetaEV>
             <Id>ReportSave</Id>
             <Val>Report Save</Val>
           </MetaEV>

@@ -835,7 +835,7 @@ model.ResultTable = query2.CopyToDataTable2();
                             </div>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Limit the schedules</h4>
-                                The optional <code>Schedule Check Script</code> of the security limits the schedules (<eg>e.g. number of schedules, size of the folders, free disk space</eg>). It receives a <code>ScheduleCheck</code> when a schedule is saved from the Web Report Server or by an AI tool, before each scheduled execution and when a user executes his web schedule, and sets <code>check.Refusal</code> to refuse.<br />
+                                The optional <code>Schedule Check Script</code> of the server configuration (category <i>Scripts</i>) limits the schedules (<eg>e.g. number of schedules, size of the folders, free disk space</eg>). It receives a <code>ScheduleCheck</code> when a schedule is saved from the Web Report Server or by an AI tool, before each scheduled execution and when a user executes his web schedule, and sets <code>check.Refusal</code> to refuse.<br />
                                 A refused schedule is not saved. A refused execution is skipped and the schedule stays enabled: the reason is shown as the last error of the web schedule and written in the log. An error of the script refuses the schedule.
                             </div>
                         </div>

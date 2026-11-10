@@ -67,6 +67,7 @@
         @Include(view.GetPartialTemplateKey("Report.iHeader", view), view)
         @Include(view.GetPartialTemplateKey("Report.iResultOptions", view), view)
         @Include(view.GetPartialTemplateKey("Report.iBody", view), view)
+        @Include(view.GetPartialTemplateKey("Report.iFeedback", view), view)
     </body>
     </html>
 }
@@ -75,4 +76,5 @@ else
     //Just body from the Web Menu
     @Include(view.GetPartialTemplateKey("Report.iResultOptions", view), view)
     @Include(view.GetPartialTemplateKey("Report.iBody", view), view)
+    @Include(view.GetPartialTemplateKey("Report.iFeedback", view), view)
 }

@@ -4678,6 +4678,224 @@
             Moment New: label of the link creating a web schedule of the report in the outputs panel of the Web Report Server (e.g. 'Create an alert...'), the default label if empty
             </summary>
         </member>
+        <member name="T:Seal.Model.ReportFeedbackKind">
+            <summary>
+            Kind of a feedback sent on a report result
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackKind.Data">
+            <summary>
+            A value or a measure seems wrong
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackKind.Presentation">
+            <summary>
+            A presentation is missing or could be better (table, chart, map...)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackKind.Understanding">
+            <summary>
+            The report or a value is hard to understand
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackKind.Usefulness">
+            <summary>
+            Opinion on the usefulness of the report (see Rating)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedbackKind.Other">
+            <summary>
+            Other feedback
+            </summary>
+        </member>
+        <member name="T:Seal.Model.ReportFeedback">
+            <summary>
+            Model of the 'Report Feedback Script' of the server configuration: a feedback sent by a user (or a guest) on a report result from the Web Report Server.
+            The context (report, restrictions, rows, user) is set by the server from the report execution, the other values are typed by the user.
+            The script stores or forwards the feedback, it may set Refusal to refuse it and Reply to change the message shown to the user.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.MaxTextLength">
+            <summary>
+            Maximum length of the text of a feedback, longer texts are truncated
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.MaxValueLength">
+            <summary>
+            Maximum length of the other values typed by the user (expected value, source, e-mail, target), longer values are truncated
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Security">
+            <summary>
+            Current security, gives access to the repository
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Report">
+            <summary>
+            Report executed, its current result is the one commented
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.User">
+            <summary>
+            User sending the feedback, User.IsGuest is true for a guest
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Kind">
+            <summary>
+            Kind of the feedback
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Text">
+            <summary>
+            Text of the feedback (MaxTextLength characters at most)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ExpectedValue">
+            <summary>
+            Value expected by the user for a Data feedback
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.SourceUrl">
+            <summary>
+            Source of the expected value given by the user (e.g. an address of a web site)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Email">
+            <summary>
+            E-mail given by the user to be informed, optional
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Rating">
+            <summary>
+            Rating of a Usefulness feedback: 1 (useful), -1 (not useful) or 0 (no rating)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ViewId">
+            <summary>
+            Identifier of the view commented (attribute 'viewid' of the result)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ViewName">
+            <summary>
+            Name of the view commented, set by the server from ViewId
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.TargetLabel">
+            <summary>
+            Label of the element commented, e.g. the header of a column or the title of a chart
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.TargetValue">
+            <summary>
+            Value displayed in the element commented, e.g. the text of a cell
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.RowLabel">
+            <summary>
+            Label of the row of the element commented, e.g. the text of the first cell of the row
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ReportPath">
+            <summary>
+            Path of the report without the location of the repository (see Repository.GetAuditPath)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ReportName">
+            <summary>
+            Name of the report as executed
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Restrictions">
+            <summary>
+            Restrictions prompted having a value at the execution, e.g. 'Country In France ; Order Date >= 01/01/2026'
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ReportModification">
+            <summary>
+            Version of the report commented: last modification date of the report file when it was loaded for the execution
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ReportHash">
+            <summary>
+            Version of the report commented: start of the SHA-256 hash of the content of the report file (12 hexadecimal characters), null if the file was modified since the execution.
+            Unlike the date, it does not change when the file is copied without modification (e.g. deployment).
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ApplicationVersion">
+            <summary>
+            Version of Seal Report running the server with its build (git commit of the sources), e.g. '10.3.0+ca3e9862' (see Repository.ProductVersionWithBuild)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.RowCount">
+            <summary>
+            Number of rows of the result (sum of the rows of the models executed), null if the report was not executed
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ExecutionDate">
+            <summary>
+            Start date of the last execution of the report, null if the report was not executed
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Date">
+            <summary>
+            Date of the feedback
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Culture">
+            <summary>
+            Culture of the user, e.g. 'fr-FR'
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ClientAddress">
+            <summary>
+            IP address of the client
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.ClientApplication">
+            <summary>
+            Browser of the client: HTTP header 'User-Agent'
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Refusal">
+            <summary>
+            Set by the script to refuse the feedback: message shown to the user
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.Reply">
+            <summary>
+            Set by the script to replace the default message shown to the user when the feedback is accepted
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportFeedback.FeedbackId">
+            <summary>
+            Optional identifier of the feedback set by the script (e.g. the key of the row inserted)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportFeedback.Normalize">
+            <summary>
+            Truncates the values typed by the user to their maximum length (MaxTextLength, MaxValueLength) and trims them
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportFeedback.HasContent">
+            <summary>
+            True if the feedback has something to process: a text, an expected value or a rating
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportFeedback.AuditDetail">
+            <summary>
+            Short description of the feedback for the audit (event_detail): kind, rating and element commented, without the text typed
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportFeedback.GetReportHash(Seal.Model.Report)">
+            <summary>
+            Start of the SHA-256 hash of the report file (12 hexadecimal characters), null if the file does not exist or was modified since the report was loaded
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportFeedback.SetReportContext(Seal.Model.Report)">
+            <summary>
+            Sets the context of the feedback from the report execution: path, name, restrictions, rows, date, view name
+            </summary>
+        </member>
         <member name="T:Seal.Model.ValidationException">
             <summary>
             Exception that should not be logged or audited
@@ -4881,9 +5099,25 @@
             <param name="durationSeconds">Duration of the execution, null to take the execution duration of the report</param>
             <param name="htmlSize">Size in bytes of the HTML result, null if not rendered</param>
         </member>
+        <member name="M:Seal.Model.Audit.LogReportFeedbackAudit(Seal.Model.ReportFeedback)">
+            <summary>
+            Audit a feedback sent on a report result from the Web Report Server: kind, rating and element commented in the detail (never the text typed),
+            refusal of the 'Feedback Script' as error, kind 'Feedback', rows and restrictions of the result commented.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.SetExecutionProperties">
             <summary>
             Set the execution properties not set by the caller (rows, restrictions, kind) from the report of the event
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.GetExecutionRows(Seal.Model.Report)">
+            <summary>
+            Number of rows of the result of a report: sum of the rows of the models executed, null if no model was executed or if the report is checked without reading data
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Audit.GetExecutionRestrictions(Seal.Model.Report)">
+            <summary>
+            Restrictions prompted having a value at the execution of a report, e.g. 'Country In France ; Order Date >= 01/01/2026', null if none
             </summary>
         </member>
         <member name="M:Seal.Model.Audit.LogEventAudit(Seal.Model.AuditType,System.String)">
@@ -6428,6 +6662,11 @@
         <member name="F:Seal.Model.AuditType.ReportCheck">
             <summary>
             Check of a report execution by the System report '310 Reports - Check Executions' (status, duration, rows)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.AuditType.ReportFeedback">
+            <summary>
+            Feedback sent on a report result from the Web Report Server (see SealServerConfiguration.FeedbackScript): kind, rating and element commented in the detail
             </summary>
         </member>
         <member name="T:Seal.Model.TriggerType">
@@ -15779,6 +16018,17 @@
             Product version: only the 3 first numbers are used (e.g. 10.1.0), the revision is always 0
             </summary>
         </member>
+        <member name="P:Seal.Model.Repository.ProductBuild">
+            <summary>
+            Build of the product: start of the git commit of the sources (8 characters) written by the .NET SDK in the informational version of the assembly, null if unknown.
+            Local changes not committed at the build time are not reflected.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Repository.ProductVersionWithBuild">
+            <summary>
+            Product version with its build if known, e.g. '10.3.0+ca3e9862'
+            </summary>
+        </member>
         <member name="F:Seal.Model.Repository.ProductAdditionalInfo">
             <summary>
             Product2 version
@@ -18148,11 +18398,6 @@
             If true, the Security Provider script is executed for the scheduled outputs having a 'User name': the user is authenticated without password (user.ForSchedule is true) to get his groups, properties and data sources. If the authentication fails, the output is generated with the 'User name' and 'User groups' of the output.
             </summary>
         </member>
-        <member name="P:Seal.Model.SealSecurity.ScheduleCheckScript">
-            <summary>
-            Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel.
-            </summary>
-        </member>
         <member name="P:Seal.Model.SealSecurity.AccountLinks">
             <summary>
             Links to an application that manages the accounts (sign-up, account, team...), one per line: 'label|url|location' or 'label|url|location|groups'. The location is 'login' (below the login form) or 'profile' (in the profile dialog, for the members of the groups separated by ';' if any).
@@ -18205,17 +18450,6 @@
         <member name="M:Seal.Model.SealSecurity.GetAccountTicket(System.String,System.String,System.DateTime)">
             <summary>
             Ticket of an account link: base64url("v1\n" + user name + "\n" + expiry in Unix seconds + "\n" + nonce) + "." + base64url(HMAC-SHA256 of the payload with the secret)
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealSecurity.CheckSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.ScheduleCheckMoment,Seal.Model.SecurityUser,System.Boolean)">
-            <summary>
-            Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).
-            </summary>
-        </member>
-        <member name="M:Seal.Model.SealSecurity.PrepareNewSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.SecurityUser)">
-            <summary>
-            Execute the 'Schedule Check Script' at the moment New: the script can change the default values of the new web schedule and set the label of the link.
-            Returns the check (its Refusal is ignored); an error of the script keeps the default values (logged).
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.TwoFAActive">
@@ -18728,6 +18962,38 @@
         <member name="P:Seal.Model.SealServerConfiguration.ReportCreationScript">
             <summary>
             If set, the script is executed when a new report is created. Default values for report creation can be set here.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.ScheduleCheckScript">
+            <summary>
+            Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.FeedbackScript">
+            <summary>
+            Optional script that receives the feedbacks sent by the users (guests included) on a report result from the Web Report Server: executed with a ReportFeedback holding the values typed (kind, text, expected value...) and the context of the result (report, restrictions, rows, user). The script stores or forwards the feedback, it may set feedback.Refusal to refuse it and feedback.Reply to change the message shown. If the script is empty, the feedback button is not shown.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.FeedbackEnabled">
+            <summary>
+            True if the feedbacks are enabled: the 'Report Feedback Script' is not empty
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ProcessFeedback(Seal.Model.ReportFeedback)">
+            <summary>
+            Execute the 'Report Feedback Script' for a feedback and audit it. Returns the reason of the refusal, null if the feedback is accepted.
+            An error of the script is logged and refuses the feedback with a generic message.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.CheckSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.ScheduleCheckMoment,Seal.Model.SecurityUser,System.Boolean)">
+            <summary>
+            Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.PrepareNewSchedule(Seal.Model.Report,Seal.Model.SealSchedule,Seal.Model.SecurityUser)">
+            <summary>
+            Execute the 'Schedule Check Script' at the moment New: the script can change the default values of the new web schedule and set the label of the link.
+            Returns the check (its Refusal is ignored); an error of the script keeps the default values (logged).
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.RepositoryTranslationsScript">

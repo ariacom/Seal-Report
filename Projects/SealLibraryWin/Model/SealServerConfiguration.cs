@@ -107,6 +107,8 @@ namespace Seal.Model
                 GetProperty("WebSessionInitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
+                GetProperty("ScheduleCheckScript").SetIsBrowsable(!ForPublication);
+                GetProperty("FeedbackScript").SetIsBrowsable(!ForPublication);
                 GetProperty("RepositoryTranslationsScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);
@@ -545,6 +547,97 @@ namespace Seal.Model
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
         public string ReportCreationScript { get; set; } = null;
+
+        /// <summary>
+        /// Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel.
+        /// </summary>
+#if WINDOWS
+        [Category("Scripts"), DisplayName("Schedule Check Script"), Description("Optional script that limits the schedules: executed with a ScheduleCheck when a schedule is saved (web or AI tool), before each scheduled execution and when a web schedule is executed by its owner. The script sets check.Refusal to refuse: the schedule is not saved, or the execution is skipped and the schedule stays enabled. When a new web schedule is prepared in the Web Report Server (moment New), the script can change its default values and set check.LinkLabel, the label of the link of the outputs panel."), Id(7, 5)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        [SealCode(ReportCodeLevel.Scripts)]
+        public string ScheduleCheckScript { get; set; } = null;
+
+        /// <summary>
+        /// Optional script that receives the feedbacks sent by the users (guests included) on a report result from the Web Report Server: executed with a ReportFeedback holding the values typed (kind, text, expected value...) and the context of the result (report, restrictions, rows, user). The script stores or forwards the feedback, it may set feedback.Refusal to refuse it and feedback.Reply to change the message shown. If the script is empty, the feedback button is not shown.
+        /// </summary>
+#if WINDOWS
+        [Category("Scripts"), DisplayName("Report Feedback Script"), Description("Optional script that receives the feedbacks sent by the users (guests included) on a report result from the Web Report Server: executed with a ReportFeedback holding the values typed (kind, text, expected value...) and the context of the result (report, restrictions, rows, user). The script stores or forwards the feedback, it may set feedback.Refusal to refuse it and feedback.Reply to change the message shown. If the script is empty, the feedback button is not shown."), Id(9, 5)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        [SealCode(ReportCodeLevel.Scripts)]
+        public string FeedbackScript { get; set; } = null;
+
+        /// <summary>
+        /// True if the feedbacks are enabled: the 'Report Feedback Script' is not empty
+        /// </summary>
+        [XmlIgnore]
+        public bool FeedbackEnabled
+        {
+            get { return !string.IsNullOrWhiteSpace(FeedbackScript); }
+        }
+
+        /// <summary>
+        /// Execute the 'Report Feedback Script' for a feedback and audit it. Returns the reason of the refusal, null if the feedback is accepted.
+        /// An error of the script is logged and refuses the feedback with a generic message.
+        /// </summary>
+        public string ProcessFeedback(ReportFeedback feedback)
+        {
+            if (!FeedbackEnabled) return "Feedbacks are not enabled.";
+            if (Repository != null) feedback.Security = Repository.Security;
+            try
+            {
+                RazorHelper.CompileExecute(FeedbackScript, feedback);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException($"Error in the Report Feedback Script for the report '{feedback.ReportPath}'", ex);
+                feedback.Refusal = Repository?.TranslateWeb("Sorry, your feedback could not be sent.") ?? "Sorry, your feedback could not be sent.";
+            }
+            Audit.LogReportFeedbackAudit(feedback);
+            return string.IsNullOrEmpty(feedback.Refusal) ? null : feedback.Refusal;
+        }
+
+        /// <summary>
+        /// Execute the 'Schedule Check Script' and returns the reason of the refusal, null if the schedule is accepted. An error of the script refuses the schedule (logged).
+        /// </summary>
+        public string CheckSchedule(Report report, SealSchedule schedule, ScheduleCheckMoment moment, SecurityUser user = null, bool isNew = false)
+        {
+            if (string.IsNullOrEmpty(ScheduleCheckScript)) return null;
+            var check = new ScheduleCheck() { Security = Repository?.Security, Report = report, Schedule = schedule, Moment = moment, User = user, IsNew = isNew };
+            try
+            {
+                RazorHelper.CompileExecute(ScheduleCheckScript, check);
+                return string.IsNullOrEmpty(check.Refusal) ? null : check.Refusal;
+            }
+            catch (Exception ex)
+            {
+                var message = $"Error in the Schedule Check Script for the report '{report?.FilePath}': {ex.Message}";
+                Helper.WriteLogEntryScheduler(System.Diagnostics.EventLogEntryType.Error, message);
+                return message;
+            }
+        }
+
+        /// <summary>
+        /// Execute the 'Schedule Check Script' at the moment New: the script can change the default values of the new web schedule and set the label of the link.
+        /// Returns the check (its Refusal is ignored); an error of the script keeps the default values (logged).
+        /// </summary>
+        public ScheduleCheck PrepareNewSchedule(Report report, SealSchedule schedule, SecurityUser user)
+        {
+            var check = new ScheduleCheck() { Security = Repository?.Security, Report = report, Schedule = schedule, Moment = ScheduleCheckMoment.New, User = user, IsNew = true };
+            if (string.IsNullOrEmpty(ScheduleCheckScript)) return check;
+            try
+            {
+                RazorHelper.CompileExecute(ScheduleCheckScript, check);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntryScheduler(System.Diagnostics.EventLogEntryType.Error, $"Error in the Schedule Check Script (new schedule) for the report '{report?.FilePath}': {ex.Message}");
+                check.LinkLabel = null;
+            }
+            check.Refusal = null;
+            return check;
+        }
 
         /// <summary>
         /// If set, the script is executed when the repository translations are loaded. This allows to load dynamically translations from a database or any source.

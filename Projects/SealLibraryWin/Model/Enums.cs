@@ -1400,6 +1400,10 @@ namespace Seal.Model
         /// Check of a report execution by the System report '310 Reports - Check Executions' (status, duration, rows)
         /// </summary>
         ReportCheck,
+        /// <summary>
+        /// Feedback sent on a report result from the Web Report Server (see SealServerConfiguration.FeedbackScript): kind, rating and element commented in the detail
+        /// </summary>
+        ReportFeedback,
     }
 
     /// <summary>

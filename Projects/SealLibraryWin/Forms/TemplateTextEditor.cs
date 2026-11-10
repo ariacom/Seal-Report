@@ -376,6 +376,27 @@ namespace Seal.Forms
     //if (check.Moment == ScheduleCheckMoment.New) { check.Schedule.Output.CancelIfNoRecords = true; check.LinkLabel = ""Create an alert...""; return; }
 }
 ";
+        const string razorFeedbackScriptTemplate = @"@using System.IO
+@{
+    ReportFeedback feedback = Model;
+    //Values typed: feedback.Kind (Data, Presentation, Understanding, Usefulness, Other), feedback.Text, feedback.ExpectedValue, feedback.SourceUrl, feedback.Email, feedback.Rating
+    //Element commented (optional): feedback.ViewId, feedback.ViewName, feedback.TargetLabel, feedback.TargetValue, feedback.RowLabel
+    //Context: feedback.Report, feedback.ReportPath, feedback.ReportName, feedback.Restrictions, feedback.RowCount, feedback.ExecutionDate, feedback.User (User.IsGuest), feedback.Culture, feedback.ClientAddress, feedback.ClientApplication
+    //Versions: feedback.ReportModification (date of the report file), feedback.ReportHash (hash of its content), feedback.ApplicationVersion (Seal Report)
+    //Set feedback.Refusal to refuse the feedback (message shown), feedback.Reply to change the message shown when accepted, feedback.FeedbackId to keep an identifier
+    //The feedback is audited (event type ReportFeedback) without the text typed
+
+    //Sample: append the feedback to a monthly file in the Logs folder of the repository
+    var line = string.Join(""\t"", new string[] { feedback.Date.ToString(""s""), feedback.Kind.ToString(), feedback.ReportPath, feedback.ReportHash, feedback.ApplicationVersion, feedback.Restrictions, feedback.ViewName, feedback.TargetLabel, feedback.RowLabel, feedback.TargetValue, feedback.ExpectedValue, feedback.SourceUrl, feedback.User?.Name, feedback.Email, feedback.Text }.Select(i => (i ?? """").Replace(""\t"", "" "").Replace(""\r"", "" "").Replace(""\n"", "" "")));
+    var path = Path.Combine(feedback.Security.Repository.LogsFolder, $""feedback_{DateTime.Now:yyyy_MM}.txt"");
+    lock (typeof(ReportFeedback)) { File.AppendAllText(path, line + ""\r\n""); }
+
+    //Sample: insert the feedback in a table of a data source
+    //var connection = feedback.Security.Repository.Sources.First(i => i.Name == ""My Source"").Connection;
+    //var helper = new TaskDatabaseHelper();
+    //helper.ExecuteNonQuery(connection, $""insert into feedback(kind, report_path, text) values({Helper.QuoteSingle(feedback.Kind.ToString())}, {Helper.QuoteSingle(feedback.ReportPath)}, {Helper.QuoteSingle(feedback.Text)})"");
+}
+";
         const string razorChangePasswordScriptTemplate = @"@{
     SecurityUser user = Model;
     var repository = user.Security.Repository;
@@ -1945,6 +1966,13 @@ $('<div>', {{
                         template = razorScheduleCheckScriptTemplate;
                         frm.ObjectForCheckSyntax = new ScheduleCheck();
                         frm.Text = "Edit the script that checks the schedules";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "FeedbackScript")
+                    {
+                        template = razorFeedbackScriptTemplate;
+                        frm.ObjectForCheckSyntax = new ReportFeedback() { Security = new SealSecurity() { Repository = Repository.Instance } };
+                        frm.Text = "Edit the script that receives the feedbacks on the reports";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                 }

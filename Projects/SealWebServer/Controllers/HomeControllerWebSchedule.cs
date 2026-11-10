@@ -136,7 +136,7 @@ namespace SealWebServer.Controllers
                 if (isNew) sealSchedule = new SealSchedule() { GUID = Guid.NewGuid().ToString(), Output = new WebScheduleOutput() };
 
                 setWebSchedule(sealSchedule, swiSchedule, report, execPath);
-                var refusal = WebUser.Security.CheckSchedule(report, sealSchedule, ScheduleCheckMoment.Save, WebUser, isNew);
+                var refusal = Repository.Configuration.CheckSchedule(report, sealSchedule, ScheduleCheckMoment.Save, WebUser, isNew);
                 if (refusal != null) throw new ValidationException(refusal);
 
                 sealSchedule.SaveWebSchedule(WebUser);
@@ -378,7 +378,7 @@ namespace SealWebServer.Controllers
                     EmailTo = WebUser.Email
                 }
             };
-            return WebUser.Security.PrepareNewSchedule(report, schedule, WebUser);
+            return Repository.Configuration.PrepareNewSchedule(report, schedule, WebUser);
         }
 
         /// <summary>

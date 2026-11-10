@@ -1718,7 +1718,7 @@ namespace Seal.AI
             var webPath = report.FilePath.StartsWith(personalFolder, StringComparison.OrdinalIgnoreCase) ? SWIFolder.GetPersonalRoot() + report.FilePath.Substring(personalFolder.Length) : report.FilePath.Substring(repository.ReportsFolder.Length);
             schedule.SetWebOwner(user, report, webPath);
 
-            var refusal = repository.Security.CheckSchedule(report, schedule, ScheduleCheckMoment.Save, user, isNew);
+            var refusal = repository.Configuration.CheckSchedule(report, schedule, ScheduleCheckMoment.Save, user, isNew);
             if (refusal != null) return $"Error: {refusal}";
 
             schedule.SaveWebSchedule(user);

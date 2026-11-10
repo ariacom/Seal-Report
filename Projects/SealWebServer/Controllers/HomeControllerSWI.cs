@@ -776,7 +776,7 @@ namespace SealWebServer.Controllers
                 {
                     result.webschedules = getUserWebSchedules().Where(i => i.ReportGUID == report.GUID).OrderBy(i => i.Name).Select(i => toSWIWebSchedule(i, false)).ToList();
                     //Label of the link creating a schedule, set by the Schedule Check Script (e.g. 'Create an alert...')
-                    if (!string.IsNullOrEmpty(repository.Security.ScheduleCheckScript)) result.schedulelabel = prepareNewWebSchedule(report, execPath, null).LinkLabel;
+                    if (!string.IsNullOrEmpty(repository.Configuration.ScheduleCheckScript)) result.schedulelabel = prepareNewWebSchedule(report, execPath, null).LinkLabel;
                 }
                 //Schedules defined in the report file (e.g. Schedule for Tasks), edited by a user having the right Edit on the report
                 if (canEditReportSchedules(folder, effRight)) result.reportschedules = getSWIReportSchedules(report, path);
@@ -1115,7 +1115,7 @@ namespace SealWebServer.Controllers
                     }
                     else
                     {
-                        var refusal = WebUser.Security.CheckSchedule(report, webSchedule, ScheduleCheckMoment.ExecuteNow, WebUser);
+                        var refusal = Repository.Configuration.CheckSchedule(report, webSchedule, ScheduleCheckMoment.ExecuteNow, WebUser);
                         if (refusal != null) throw new ValidationException(refusal);
                         webSchedule.InjectWebSchedule(report);
                         //Schedule for the tasks only: the report is executed with its default view

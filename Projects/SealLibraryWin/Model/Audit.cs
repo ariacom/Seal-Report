@@ -271,38 +271,85 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Audit a feedback sent on a report result from the Web Report Server: kind, rating and element commented in the detail (never the text typed),
+        /// refusal of the 'Feedback Script' as error, kind 'Feedback', rows and restrictions of the result commented.
+        /// </summary>
+        public static void LogReportFeedbackAudit(ReportFeedback feedback)
+        {
+            try
+            {
+                if (feedback?.Report == null || !Repository.Instance.Configuration.AuditEnabled) return;
+                var audit = new Audit()
+                {
+                    Type = AuditType.ReportFeedback,
+                    User = feedback.User ?? feedback.Report.SecurityContext,
+                    Path = feedback.ReportPath,
+                    Detail = feedback.AuditDetail,
+                    Error = feedback.Refusal,
+                    Report = feedback.Report,
+                    Duration = 0,
+                    ExecutionRows = feedback.RowCount,
+                    ExecutionRestrictions = feedback.Restrictions,
+                    ExecutionKind = "Feedback"
+                };
+                ExecuteAuditScript(audit);
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Error, $"Error executing the Audit Script:\r\n{ex.Message}");
+            }
+        }
+
+        /// <summary>
         /// Set the execution properties not set by the caller (rows, restrictions, kind) from the report of the event
         /// </summary>
         void SetExecutionProperties()
         {
             if (Report == null) return;
+            if (ExecutionRows == null) ExecutionRows = GetExecutionRows(Report);
+            if (ExecutionRestrictions == null) ExecutionRestrictions = GetExecutionRestrictions(Report);
+            if (ExecutionKind == null) ExecutionKind = Report.IsNavigating || Report.FromNavigation ? "Navigation" : "Execution";
+        }
+
+        /// <summary>
+        /// Number of rows of the result of a report: sum of the rows of the models executed, null if no model was executed or if the report is checked without reading data
+        /// </summary>
+        public static int? GetExecutionRows(Report report)
+        {
+            int? result = null;
             try
             {
                 //No rows when the report is checked without reading data (SQL with 1=0)
-                if (ExecutionRows == null && !Report.CheckingExecution)
+                if (report != null && !report.CheckingExecution)
                 {
-                    foreach (var model in Report.ExecutionModels.Where(i => i.ResultTable != null))
+                    foreach (var model in report.ExecutionModels.Where(i => i.ResultTable != null))
                     {
-                        ExecutionRows = (ExecutionRows ?? 0) + model.ResultTable.Rows.Count;
+                        result = (result ?? 0) + model.ResultTable.Rows.Count;
                     }
                 }
             }
             catch { }
+            return result;
+        }
+
+        /// <summary>
+        /// Restrictions prompted having a value at the execution of a report, e.g. 'Country In France ; Order Date >= 01/01/2026', null if none
+        /// </summary>
+        public static string GetExecutionRestrictions(Report report)
+        {
             try
             {
-                if (ExecutionRestrictions == null)
-                {
-                    var texts = Report.ExecutionPromptedRestrictions.Union(Report.ExecutionViewRestrictions)
-                        .Where(i => i.Prompt != PromptType.None && i.HasValue)
-                        .Select(i => i.DisplayText)
-                        .Where(i => !string.IsNullOrEmpty(i))
-                        .Distinct()
-                        .ToList();
-                    if (texts.Count > 0) ExecutionRestrictions = string.Join(" ; ", texts);
-                }
+                if (report == null) return null;
+                var texts = report.ExecutionPromptedRestrictions.Union(report.ExecutionViewRestrictions)
+                    .Where(i => i.Prompt != PromptType.None && i.HasValue)
+                    .Select(i => i.DisplayText)
+                    .Where(i => !string.IsNullOrEmpty(i))
+                    .Distinct()
+                    .ToList();
+                if (texts.Count > 0) return string.Join(" ; ", texts);
             }
             catch { }
-            if (ExecutionKind == null) ExecutionKind = Report.IsNavigating || Report.FromNavigation ? "Navigation" : "Execution";
+            return null;
         }
 
         /// <summary>

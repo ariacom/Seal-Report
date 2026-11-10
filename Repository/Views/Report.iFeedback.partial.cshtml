@@ -1,0 +1,147 @@
+@using Seal.Model
+@using Seal.Helpers
+@{
+    ReportView view = Model;
+    Report report = view.Report;
+    Repository repository = report.Repository;
+    //Feedback button: Web Report Server only, if the 'Report Feedback Script' of the server configuration is defined (see SealServerConfiguration.FeedbackScript)
+    var showFeedback = report.GenerateHTMLDisplay && !report.PrintLayout && !string.IsNullOrEmpty(report.WebUrl)
+        && report.ExecutionContext == ReportExecutionContext.WebReport
+        && repository.Configuration.FeedbackEnabled && view.GetBoolValue("feedback_button");
+    var isGuest = report.SecurityContext != null && report.SecurityContext.IsGuest;
+}
+@if (showFeedback)
+{
+    <style>
+        #feedback_open_button {
+            position: fixed;
+            bottom: 20px;
+            left: 20px;
+            z-index: 100;
+            border-radius: 20px;
+            box-shadow: 0 2px 6px rgba(0,0,0,.25);
+        }
+        #feedback_modal .feedback-website {
+            position: absolute;
+            left: -10000px;
+            width: 1px;
+            height: 1px;
+            overflow: hidden;
+        }
+    </style>
+
+    <button id="feedback_open_button" type="button" class="btn btn-sm btn-secondary" title="@report.Translate("Send a feedback on this report")">
+        <span class="fa-regular fa-comment me-1"></span>@report.Translate("Feedback")
+    </button>
+
+    <div id="feedback_modal" class="modal fade" tabindex="-1" role="dialog" aria-labelledby="feedback_modal_title">
+        <div class="modal-dialog" style="max-width: 600px;">
+            <div class="modal-content" style="top:60px;">
+                <div class="modal-header">
+                    <h4 id="feedback_modal_title" class="modal-title">@report.Translate("Your feedback on this report")</h4>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="@report.Translate("Close")"></button>
+                </div>
+                <div class="modal-body">
+                    <div class="mb-3">
+                        <label class="form-label" for="feedback_kind">@report.Translate("Subject")</label>
+                        <select id="feedback_kind" class="form-select">
+                            <option value="Data">@report.Translate("A value seems wrong")</option>
+                            <option value="Presentation">@report.Translate("A presentation is missing (table, chart, map...)")</option>
+                            <option value="Understanding">@report.Translate("Something is hard to understand")</option>
+                            <option value="Other" selected>@report.Translate("Other")</option>
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label" for="feedback_text">@report.Translate("Your message")</label>
+                        <textarea id="feedback_text" class="form-control" rows="4" maxlength="@ReportFeedback.MaxTextLength"></textarea>
+                    </div>
+                    <div id="feedback_data_div" class="d-none">
+                        <div class="mb-3">
+                            <label class="form-label" for="feedback_expected">@report.Translate("Expected value (optional)")</label>
+                            <input id="feedback_expected" type="text" class="form-control" maxlength="@ReportFeedback.MaxValueLength" />
+                        </div>
+                        <div class="mb-3">
+                            <label class="form-label" for="feedback_source">@report.Translate("Source of the expected value (optional)")</label>
+                            <input id="feedback_source" type="text" class="form-control" maxlength="@ReportFeedback.MaxValueLength" placeholder="https://..." />
+                        </div>
+                    </div>
+                    @if (isGuest)
+                    {
+                        <div class="mb-3">
+                            <label class="form-label" for="feedback_email">@report.Translate("Your e-mail to be informed (optional)")</label>
+                            <input id="feedback_email" type="email" class="form-control" maxlength="@ReportFeedback.MaxValueLength" />
+                        </div>
+                    }
+                    <div class="feedback-website" aria-hidden="true">
+                        <label for="feedback_website">Website</label>
+                        <input id="feedback_website" type="text" tabindex="-1" autocomplete="off" />
+                    </div>
+                    <div class="form-text">@report.Translate("The report, its restrictions and its result are sent with your message.")</div>
+                    <div id="feedback_status" class="alert d-none mt-3 mb-0" role="alert"></div>
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">@report.Translate("Close")</button>
+                    <button id="feedback_send_button" type="button" class="btn btn-primary">@report.Translate("Send")</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script type="text/javascript">
+        $(document).ready(function () {
+            function feedbackStatus(ok, message) {
+                $("#feedback_status").removeClass("d-none alert-success alert-danger").addClass(ok ? "alert-success" : "alert-danger").text(message);
+            }
+
+            $("#feedback_open_button").unbind("click").on("click", function () {
+                $("#feedback_status").addClass("d-none").text("");
+                $("#feedback_send_button").prop("disabled", false);
+                bootstrap.Modal.getOrCreateInstance(document.getElementById("feedback_modal")).show();
+            });
+
+            $("#feedback_kind").unbind("change").on("change", function () {
+                $("#feedback_data_div").toggleClass("d-none", $(this).val() != "Data");
+            });
+
+            $("#feedback_send_button").unbind("click").on("click", function () {
+                var text = $("#feedback_text").val().trim();
+                var expected = $("#feedback_expected").val().trim();
+                if (!text && !expected) {
+                    feedbackStatus(false, '@Raw(Helper.ToJS(report.Translate("Please describe your feedback.")))');
+                    return;
+                }
+                var $button = $(this);
+                $button.prop("disabled", true);
+                $.post(_urlPrefix + "ActionSendFeedback", {
+                    execution_guid: _executionGUID,
+                    kind: $("#feedback_kind").val(),
+                    text: text,
+                    expected_value: expected,
+                    source_url: $("#feedback_source").val().trim(),
+                    email: ($("#feedback_email").val() || "").trim(),
+                    rating: 0,
+                    website: $("#feedback_website").val()
+                })
+                    .done(function (data) {
+                        var result = (typeof data === "string") ? null : data;
+                        if (!result) {
+                            //HTML of an error or of the login page
+                            feedbackStatus(false, '@Raw(Helper.ToJS(report.Translate("Sorry, your feedback could not be sent.")))');
+                            $button.prop("disabled", false);
+                            return;
+                        }
+                        feedbackStatus(result.ok, result.message);
+                        if (result.ok) {
+                            $("#feedback_text,#feedback_expected,#feedback_source").val("");
+                            setTimeout(function () { bootstrap.Modal.getOrCreateInstance(document.getElementById("feedback_modal")).hide(); }, 2500);
+                        }
+                        else $button.prop("disabled", false);
+                    })
+                    .fail(function () {
+                        feedbackStatus(false, '@Raw(Helper.ToJS(report.Translate("Sorry, your feedback could not be sent.")))');
+                        $button.prop("disabled", false);
+                    });
+            });
+        });
+    </script>
+}

@@ -652,6 +652,75 @@ namespace SealWebServer.Controllers
             return Content(_noReportFoundMessage);
         }
 
+        const string SessionFeedbackDates = "SessionFeedbackDates";
+        /// <summary>
+        /// Maximum number of feedbacks sent per session and per hour
+        /// </summary>
+        public const int MaxFeedbacksPerHour = 10;
+
+        /// <summary>
+        /// Send a feedback on the result of a report execution (guests included): the context is taken from the execution, the 'Feedback Script' of the security processes it.
+        /// The field 'website' is a trap for robots (hidden in the form): if it has a value, the feedback is ignored and accepted.
+        /// Returns { ok, message }.
+        /// </summary>
+        public ActionResult ActionSendFeedback(string execution_guid, string kind, string text, string expected_value, string source_url, string email, int rating,
+            string viewid, string target_label, string target_value, string row_label, string website, string sessionId)
+        {
+            writeDebug("ActionSendFeedback");
+            try
+            {
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                var configuration = Repository.Configuration;
+                if (!configuration.FeedbackEnabled) throw new Exception("Invalid operation");
+
+                var execution = getReportExecution(execution_guid);
+                if (execution == null) return Json(new { ok = false, message = _noReportFoundMessage });
+
+                var thanks = Translate("Thank you for your feedback.");
+                if (!string.IsNullOrEmpty(website)) return Json(new { ok = true, message = thanks }); //robot
+
+                //Limit per session
+                var dates = getSessionValue(SessionFeedbackDates) as List<DateTime> ?? new List<DateTime>();
+                dates.RemoveAll(i => i < DateTime.Now.AddHours(-1));
+                if (dates.Count >= MaxFeedbacksPerHour) return Json(new { ok = false, message = Translate("You have sent too many feedbacks, please try again later.") });
+
+                var feedback = new ReportFeedback()
+                {
+                    User = WebUser,
+                    Text = text,
+                    ExpectedValue = expected_value,
+                    SourceUrl = source_url,
+                    Email = email,
+                    Rating = rating,
+                    ViewId = viewid,
+                    TargetLabel = target_label,
+                    TargetValue = target_value,
+                    RowLabel = row_label,
+                    Culture = Repository.CultureInfo?.Name,
+                    ClientAddress = Request.HttpContext.Connection.RemoteIpAddress?.ToString(),
+                    ClientApplication = Request.Headers.UserAgent.ToString()
+                };
+                if (Enum.TryParse(kind, out ReportFeedbackKind feedbackKind) && Enum.IsDefined(typeof(ReportFeedbackKind), feedbackKind)) feedback.Kind = feedbackKind;
+                feedback.Normalize();
+                if (!feedback.HasContent) return Json(new { ok = false, message = Translate("Please describe your feedback.") });
+
+                lock (execution)
+                {
+                    feedback.SetReportContext(execution.Report);
+                }
+                var refusal = configuration.ProcessFeedback(feedback);
+                if (refusal != null) return Json(new { ok = false, message = refusal });
+
+                dates.Add(DateTime.Now);
+                setSessionValue(SessionFeedbackDates, dates);
+                return Json(new { ok = true, message = string.IsNullOrEmpty(feedback.Reply) ? thanks : feedback.Reply });
+            }
+            catch (Exception ex)
+            {
+                return HandleException(ex);
+            }
+        }
+
         /// <summary>
         /// Return the Html result of a report execution as a file
         /// </summary>

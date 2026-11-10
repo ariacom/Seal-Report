@@ -94,23 +94,23 @@ namespace Test
         [TestMethod]
         public void ScheduleCheckScript()
         {
-            var security = _repository.Security;
+            var configuration = _repository.Configuration;
             var report = Report.LoadFromFile(_repository.ReportsFolder + ReportWebPath, _repository, false);
-            Assert.IsNull(security.CheckSchedule(report, null, ScheduleCheckMoment.Save), "no script: every schedule is accepted");
+            Assert.IsNull(configuration.CheckSchedule(report, null, ScheduleCheckMoment.Save), "no script: every schedule is accepted");
             try
             {
                 //The script receives the moment, the user and the new flag
-                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Save && check.IsNew && check.User != null) { check.Refusal = \"refused \" + check.Report.GUID; } }";
-                Assert.AreEqual("refused " + report.GUID, security.CheckSchedule(report, null, ScheduleCheckMoment.Save, getOwner(), true));
-                Assert.IsNull(security.CheckSchedule(report, null, ScheduleCheckMoment.Save, getOwner(), false), "update of a schedule");
-                Assert.IsNull(security.CheckSchedule(report, null, ScheduleCheckMoment.Execution), "execution");
+                configuration.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Save && check.IsNew && check.User != null) { check.Refusal = \"refused \" + check.Report.GUID; } }";
+                Assert.AreEqual("refused " + report.GUID, configuration.CheckSchedule(report, null, ScheduleCheckMoment.Save, getOwner(), true));
+                Assert.IsNull(configuration.CheckSchedule(report, null, ScheduleCheckMoment.Save, getOwner(), false), "update of a schedule");
+                Assert.IsNull(configuration.CheckSchedule(report, null, ScheduleCheckMoment.Execution), "execution");
 
                 //A script in error refuses the schedule
-                security.ScheduleCheckScript = "@{ throw new Exception(\"script error\"); }";
-                StringAssert.Contains(security.CheckSchedule(report, null, ScheduleCheckMoment.Execution), "script error");
+                configuration.ScheduleCheckScript = "@{ throw new Exception(\"script error\"); }";
+                StringAssert.Contains(configuration.CheckSchedule(report, null, ScheduleCheckMoment.Execution), "script error");
 
                 //Refused execution: no result, the error is stored and the schedule stays enabled
-                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Execution) { check.Refusal = \"no more space\"; } }";
+                configuration.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Execution) { check.Refusal = \"no more space\"; } }";
                 var schedule = createWebSchedule("refused schedule result");
                 ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
                 var saved = SealReportScheduler.LoadSealSchedule(schedule.GUID);
@@ -121,7 +121,7 @@ namespace Test
             }
             finally
             {
-                security.ScheduleCheckScript = null;
+                configuration.ScheduleCheckScript = null;
             }
         }
 
@@ -131,39 +131,39 @@ namespace Test
         [TestMethod]
         public void ScheduleCheckScriptNewSchedule()
         {
-            var security = _repository.Security;
+            var configuration = _repository.Configuration;
             var report = Report.LoadFromFile(_repository.ReportsFolder + ReportWebPath, _repository, false);
             SealSchedule newSchedule() { return new SealSchedule() { Name = "New", Type = TriggerType.Daily, Output = new WebScheduleOutput() }; }
             try
             {
                 //No script: default values kept, no label
-                security.ScheduleCheckScript = null;
-                var check = security.PrepareNewSchedule(report, newSchedule(), getOwner());
+                configuration.ScheduleCheckScript = null;
+                var check = configuration.PrepareNewSchedule(report, newSchedule(), getOwner());
                 Assert.AreEqual(ScheduleCheckMoment.New, check.Moment);
                 Assert.IsTrue(check.IsNew);
                 Assert.IsNull(check.LinkLabel);
                 Assert.AreEqual(TriggerType.Daily, check.Schedule.Type);
 
                 //The script changes the values and the label, its refusal is ignored; the other moments are not concerned
-                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.New) { check.Schedule.Type = TriggerType.Weekly; check.Schedule.Weekdays = new int[] { 1 }; check.Schedule.Output.CancelIfNoRecords = true; check.Schedule.Name = \"Alert \" + check.Report.ExecutionName; check.LinkLabel = \"Create an alert...\"; check.Refusal = \"ignored\"; } }";
-                check = security.PrepareNewSchedule(report, newSchedule(), getOwner());
+                configuration.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.New) { check.Schedule.Type = TriggerType.Weekly; check.Schedule.Weekdays = new int[] { 1 }; check.Schedule.Output.CancelIfNoRecords = true; check.Schedule.Name = \"Alert \" + check.Report.ExecutionName; check.LinkLabel = \"Create an alert...\"; check.Refusal = \"ignored\"; } }";
+                check = configuration.PrepareNewSchedule(report, newSchedule(), getOwner());
                 Assert.AreEqual(TriggerType.Weekly, check.Schedule.Type);
                 CollectionAssert.AreEqual(new int[] { 1 }, check.Schedule.Weekdays);
                 Assert.IsTrue(check.Schedule.Output.CancelIfNoRecords);
                 Assert.AreEqual("Alert " + report.ExecutionName, check.Schedule.Name);
                 Assert.AreEqual("Create an alert...", check.LinkLabel);
                 Assert.IsNull(check.Refusal, "the refusal is ignored at the moment New");
-                Assert.IsNull(security.CheckSchedule(report, newSchedule(), ScheduleCheckMoment.Save, getOwner(), true), "moment Save not concerned");
+                Assert.IsNull(configuration.CheckSchedule(report, newSchedule(), ScheduleCheckMoment.Save, getOwner(), true), "moment Save not concerned");
 
                 //A script in error keeps the default values
-                security.ScheduleCheckScript = "@{ throw new Exception(\"script error\"); }";
-                check = security.PrepareNewSchedule(report, newSchedule(), getOwner());
+                configuration.ScheduleCheckScript = "@{ throw new Exception(\"script error\"); }";
+                check = configuration.PrepareNewSchedule(report, newSchedule(), getOwner());
                 Assert.AreEqual(TriggerType.Daily, check.Schedule.Type);
                 Assert.IsNull(check.LinkLabel);
             }
             finally
             {
-                security.ScheduleCheckScript = null;
+                configuration.ScheduleCheckScript = null;
             }
         }
 
@@ -329,15 +329,15 @@ namespace Test
             Assert.AreEqual(executed.LastSuccessfulExecution.AddHours(-2), restriction.FinalDate1);
 
             //Refused execution: the last successful execution is kept, no record is lost at the next execution
-            var security = _repository.Security;
+            var configuration = _repository.Configuration;
             try
             {
-                security.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Execution) { check.Refusal = \"refused\"; } }";
+                configuration.ScheduleCheckScript = "@using Seal.Model\r\n@{ ScheduleCheck check = Model; if (check.Moment == ScheduleCheckMoment.Execution) { check.Refusal = \"refused\"; } }";
                 ReportExecution.ExecuteReportSchedule(schedule.GUID, null);
             }
             finally
             {
-                security.ScheduleCheckScript = null;
+                configuration.ScheduleCheckScript = null;
             }
             var refused = SealSchedule.LoadFromFile(schedule.FilePath);
             Assert.AreEqual("refused", refused.LastError);

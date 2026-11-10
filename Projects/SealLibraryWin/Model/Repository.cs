@@ -165,6 +165,34 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Build of the product: start of the git commit of the sources (8 characters) written by the .NET SDK in the informational version of the assembly, null if unknown.
+        /// Local changes not committed at the build time are not reflected.
+        /// </summary>
+        public static string ProductBuild
+        {
+            get
+            {
+                var informational = Assembly.GetExecutingAssembly().GetCustomAttribute<AssemblyInformationalVersionAttribute>()?.InformationalVersion;
+                var index = informational?.IndexOf('+') ?? -1;
+                if (index < 0 || index == informational.Length - 1) return null;
+                var build = informational.Substring(index + 1);
+                return build.Length > 8 ? build.Substring(0, 8) : build;
+            }
+        }
+
+        /// <summary>
+        /// Product version with its build if known, e.g. '10.3.0+ca3e9862'
+        /// </summary>
+        public static string ProductVersionWithBuild
+        {
+            get
+            {
+                var build = ProductBuild;
+                return string.IsNullOrEmpty(build) ? ProductVersion : ProductVersion + "+" + build;
+            }
+        }
+
+        /// <summary>
         /// Product2 version
         /// </summary>
         public static string ProductAdditionalInfo = "";

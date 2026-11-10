@@ -84,6 +84,16 @@
                                 Dedicated audit Data Sources and reports are provided and may be adapted to query your audit database.<br />
                                 <br />
                                 Use the <code>Report Creation Script</code> to change the default report object when it is created (<eg>e.g. adding a specific view or changing a default view parameter</eg>), or <code>Report Execution Init Script</code> to modify the report before the execution (<eg>e.g. changing a default format</eg>).<br />
+                                The <code>Schedule Check Script</code> limits the schedules (<eg>e.g. number of schedules, free disk space</eg>), see the Web Schedules in the Reports page.<br />
+                            </div>
+                            <div id="lineConfiguration_feedback" class="bs-callout bs-callout-info">
+                                <h4>Feedbacks on the reports</h4>
+                                If the optional <code>Report Feedback Script</code> of the server configuration (category <i>Scripts</i>) is defined, the Web Report Server shows a <b>Feedback</b> button at the bottom left of the reports: any user, guests included, may tell that a value seems wrong (with the expected value and its source), that a presentation is missing or that something is hard to understand.
+                                The script receives a <code>ReportFeedback</code> holding the values typed and the context set by the server from the execution: report path and name, restrictions having a value, number of rows, user (<code>User.IsGuest</code>), culture, IP address and browser.
+                                It also holds the versions of what was commented: <code>ReportModification</code> (date of the report file), <code>ReportHash</code> (hash of its content, unchanged by a copy or a deployment) and <code>ApplicationVersion</code> (version of Seal Report with its build, the git commit of the sources, <eg>e.g. '10.3.0+ca3e9862'</eg>), so a feedback can be compared with the current state of the report.
+                                It stores or forwards the feedback (<eg>e.g. a table of a database, an e-mail</eg>), may set <code>feedback.Refusal</code> to refuse it (<eg>e.g. a limit per IP address</eg>) and <code>feedback.Reply</code> to change the message shown.<br />
+                                The server limits the feedbacks to 10 per session and per hour, truncates the texts and ignores the forms filled by robots. Each feedback is audited (event type <code>ReportFeedback</code>, kind and element commented in the detail) without the text typed.
+                                The button can be hidden for a report with the parameter <code>Display: Show Feedback button</code> of its root view.
                             </div>
                             <div class="bs-callout bs-callout-demo">
                                 <h4>Server source code and dynamic assemblies</h4>

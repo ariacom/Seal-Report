@@ -2303,7 +2303,7 @@ namespace Seal.Model
                 }
 
                 //Limits of the schedules: this execution is skipped, the schedule stays enabled for its next date
-                var refusal = report.Repository.Security.CheckSchedule(report, useSealScheduler ? schedule.SealSchedule : null, ScheduleCheckMoment.Execution, webScheduleOwner);
+                var refusal = report.Repository.Configuration.CheckSchedule(report, useSealScheduler ? schedule.SealSchedule : null, ScheduleCheckMoment.Execution, webScheduleOwner);
                 if (refusal != null)
                 {
                     Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, string.Format("Execution of schedule '{0}' skipped:\r\n{1}", schedule.Name, refusal));
