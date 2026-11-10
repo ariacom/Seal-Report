@@ -760,6 +760,15 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Moves the authorization requests waiting for the consent of a web session to its new identifier (the identifier of the session changes at the login of the user)
+        /// </summary>
+        public static void ChangeSessionId(string oldSessionId, string newSessionId)
+        {
+            if (string.IsNullOrEmpty(oldSessionId)) return;
+            foreach (var request in _requests.Values.Where(i => i.SessionId == oldSessionId)) request.SessionId = newSessionId;
+        }
+
+        /// <summary>
         /// Returns the URL redirecting to the client with the result of an authorization request (code or error), with the state and the issuer (RFC 9207)
         /// </summary>
         public static string GetRedirectUrl(string redirectUri, string state, string publicBaseUrl, string code = null, string error = null, string errorDescription = null)

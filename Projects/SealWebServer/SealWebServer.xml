@@ -23,9 +23,10 @@
             Translate text using the current Repository Locale
             </summary>
         </member>
-        <member name="M:SealWebServer.Controllers.HomeController.Main(System.String)">
+        <member name="M:SealWebServer.Controllers.HomeController.Main">
             <summary>
-            Main entry of the Controller
+            Main entry of the Controller.
+            No session id is taken from the address: a link could attach the browser to a session chosen by someone else (session fixation).
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.AccountLink(System.Int32,System.String,System.String)">
@@ -91,6 +92,18 @@
             Return the result of a report execution for a given format
             </summary>
         </member>
+        <member name="F:SealWebServer.Controllers.HomeController.MaxFeedbacksPerHour">
+            <summary>
+            Maximum number of feedbacks sent per session and per hour
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.ActionSendFeedback(System.String,System.String,System.String,System.String,System.String,System.String,System.Int32,System.String,System.String,System.String,System.String,System.String,System.String)">
+            <summary>
+            Send a feedback on the result of a report execution (guests included): the context is taken from the execution, the 'Feedback Script' of the security processes it.
+            The field 'website' is a trap for robots (hidden in the form): if it has a value, the feedback is ignored and accepted.
+            Returns { ok, message }.
+            </summary>
+        </member>
         <member name="M:SealWebServer.Controllers.HomeController.HtmlResultFile(System.String,System.String)">
             <summary>
             Return the Html result of a report execution as a file
@@ -147,6 +160,18 @@
         <member name="M:SealWebServer.Controllers.HomeController.SWIRevokeMcpAuthorization(System.String,System.String)">
             <summary>
             Revokes an OAuth authorization of the user (profile)
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.SetSessionId(System.String)">
+            <summary>
+            Uses the session given by the client (sessionId returned by SWILogin, e.g. for an application calling the Web Interface).
+            Only a key issued by the server and still alive is accepted: a value chosen by the client never creates a session (session fixation).
+            </summary>
+        </member>
+        <member name="M:SealWebServer.Controllers.HomeController.renewSessionKey">
+            <summary>
+            Issues a new session key after a successful authentication and drops the previous one: a key known before the login cannot be used afterwards (session fixation).
+            The values of the session (repository, user, navigation) are kept.
             </summary>
         </member>
         <member name="M:SealWebServer.Controllers.HomeController.SWILogin(System.String,System.String,System.String)">

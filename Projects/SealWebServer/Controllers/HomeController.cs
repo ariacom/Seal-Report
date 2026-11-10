@@ -154,6 +154,8 @@ namespace SealWebServer.Controllers
                 Authenticate();
                 if (WebUser.IsAuthenticated)
                 {
+                    //New session key after the authentication (session fixation)
+                    renewSessionKey();
                     //Load profile (a guest keeps the profile of his session)
                     if (!WebUser.IsGuest && System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
                     WebUser.Profile.Path = WebUser.ProfilePath;
@@ -183,16 +185,16 @@ namespace SealWebServer.Controllers
         }
 
         /// <summary>
-        /// Main entry of the Controller
+        /// Main entry of the Controller.
+        /// No session id is taken from the address: a link could attach the browser to a session chosen by someone else (session fixation).
         /// </summary>
-        public ActionResult Main(string sessionId)
+        public ActionResult Main()
         {
             ActionResult result;
             try
             {
                 if (Repository == null) CreateRepository();
                 var model = new WebMainModel() { Repository = Repository };
-                SetSessionId(sessionId);
 
                 model.ServerPath = WebRootPath;
                 model.BaseURL = Request.PathBase.Value;

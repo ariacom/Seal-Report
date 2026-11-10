@@ -82,6 +82,8 @@ namespace SealWebServer.Controllers
             Authenticate();
 
             if (WebUser.SecurityGroups.Count == 0) throw new LoginException(string.IsNullOrEmpty(WebUser.Error) ? Translate("Invalid user name or password") : WebUser.Error);
+            //New session key after the authentication: a key known before the login cannot be used afterwards (session fixation)
+            renewSessionKey();
             //Load profile (a guest keeps the profile of his session)
             if (!WebUser.IsGuest && System.IO.File.Exists(WebUser.ProfilePath)) WebUser.Profile = SecurityUserProfile.LoadFromFile(WebUser.ProfilePath);
             checkRecentFiles();
@@ -274,6 +276,8 @@ namespace SealWebServer.Controllers
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode)) throw new ValidationException(Translate("Invalid code"));
                 WebUser.StrongAuthentication = true;
+                //New session key once the login is complete (session fixation)
+                renewSessionKey();
 
                 //Trust the browser: signed cookie, the next logins of the user from this browser skip the security code until its expiration
                 var security = WebUser.Security;

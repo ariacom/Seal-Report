@@ -13,6 +13,7 @@ using System.Text;
 using System.Diagnostics;
 using Microsoft.Extensions.Options;
 using SealWebServer.Models.Configuration;
+using Seal.AI;
 
 namespace SealWebServer.Controllers
 {
@@ -49,13 +50,48 @@ namespace SealWebServer.Controllers
         }
 
 
+        /// <summary>
+        /// Uses the session given by the client (sessionId returned by SWILogin, e.g. for an application calling the Web Interface).
+        /// Only a key issued by the server and still alive is accepted: a value chosen by the client never creates a session (session fixation).
+        /// </summary>
         void SetSessionId(string sessionId)
         {
             if (!string.IsNullOrEmpty(sessionId))
             {
                 ClearSessions();
-                HttpContext.Session.SetString(SessionIdKey, sessionId);
+                bool exists;
+                lock (_sessions)
+                {
+                    exists = _sessions.ContainsKey(sessionId);
+                }
+                if (exists) HttpContext.Session.SetString(SessionIdKey, sessionId);
             }
+        }
+
+        /// <summary>
+        /// Issues a new session key after a successful authentication and drops the previous one: a key known before the login cannot be used afterwards (session fixation).
+        /// The values of the session (repository, user, navigation) are kept.
+        /// </summary>
+        void renewSessionKey()
+        {
+            var oldKey = HttpContext.Session.GetString(SessionIdKey);
+            var newKey = Guid.NewGuid().ToString();
+            lock (_sessions)
+            {
+                Dictionary<string, object> values = null;
+                if (oldKey != null && _sessions.TryGetValue(oldKey, out values)) _sessions.Remove(oldKey);
+                _sessions[newKey] = values ?? new Dictionary<string, object>();
+            }
+            lock (_sessionLastRequest)
+            {
+                if (oldKey != null) _sessionLastRequest.Remove(oldKey);
+                _sessionLastRequest[newKey] = DateTime.Now;
+            }
+            HttpContext.Session.SetString(SessionIdKey, newKey);
+            var user = WebUser;
+            if (user != null) user.SessionID = newKey;
+            //Pending OAuth authorizations of the MCP server are bound to the session
+            McpOAuth.ChangeSessionId(oldKey, newKey);
         }
 
 
