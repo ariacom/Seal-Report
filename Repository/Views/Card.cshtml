@@ -32,7 +32,7 @@
     }
 }
 
-<div @Raw(view.AddAttribute("class", "container_class")) @Raw(view.AddAttribute("style", "container_css"))>
+<div viewid='@view.ViewId' @Raw(view.AddAttribute("class", "container_class")) @Raw(view.AddAttribute("style", "container_css"))>
     @foreach (var card in cards)
     {
         <div @Raw(view.AddAttribute("class", "card_class")) @Raw(view.AddAttribute("style", "card_css"))>

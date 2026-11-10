@@ -89,6 +89,30 @@ namespace Test
         }
 
         [TestMethod]
+        public void FeedbackPointedElement()
+        {
+            //Pointing mode of the dialog: the 'viewid' attribute of the element clicked gives the name of the view commented
+            var report = executeReport("TestReportFeedback " + Guid.NewGuid());
+            ReportView find(ReportView view, string templateName)
+            {
+                if (view.TemplateName == templateName) return view;
+                return view.Views.Select(i => find(i, templateName)).FirstOrDefault(i => i != null);
+            }
+            var dataTable = find(report.ExecutionView, ReportViewTemplate.DataTableName);
+            Assert.IsNotNull(dataTable, "Data Table view of the sample");
+
+            var feedback = new ReportFeedback() { Kind = ReportFeedbackKind.Data, Text = "Wrong price", ViewId = dataTable.ViewId, TargetLabel = "Unit Price", TargetValue = "18.00", RowLabel = "Chai" };
+            feedback.Normalize();
+            feedback.SetReportContext(report);
+            Assert.AreEqual(dataTable.Name, feedback.ViewName);
+            Assert.AreEqual($"Data: {dataTable.Name} | Unit Price | Chai", feedback.AuditDetail);
+
+            var unknown = new ReportFeedback() { Kind = ReportFeedbackKind.Data, Text = "x", ViewId = "unknown_view" };
+            unknown.SetReportContext(report);
+            Assert.IsNull(unknown.ViewName, "unknown view id");
+        }
+
+        [TestMethod]
         public void FeedbackScript()
         {
             var configuration = _repository.Configuration;

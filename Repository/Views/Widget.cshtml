@@ -19,7 +19,7 @@
     var widgetIcon = Parameter.GetFontAwesomeIcon(view.GetValue("widget_icon"));
 }
 
-<div class='card panel-widget@(borderClass)' @Raw(view.AddAttribute("style", "widget_css")) >
+<div viewid='@view.ViewId' class='card panel-widget@(borderClass)' @Raw(view.AddAttribute("style", "widget_css")) >
     @if (!string.IsNullOrEmpty(title))
     {
         <div class='card-header text-start@(headerBgClass)' @Raw(view.AddAttribute("style", "widget_heading_css")) >

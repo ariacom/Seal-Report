@@ -59,7 +59,7 @@
     }
 }
 
-<div id="@gaugeId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("gauge_css"), ";"))margin-left:auto;margin-right:auto;width:@(width)px;max-width:100%;height:@(height)px;"></div>
+<div id="@gaugeId" viewid="@view.ViewId" class="@Raw(view.GetValue("gauge_class"))" style="@Raw(Helper.AddIfNotEmpty("", view.GetValue("gauge_css"), ";"))margin-left:auto;margin-right:auto;width:@(width)px;max-width:100%;height:@(height)px;"></div>
 
 <script>
 $(document).ready(function () {

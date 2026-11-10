@@ -21,6 +21,21 @@
             border-radius: 20px;
             box-shadow: 0 2px 6px rgba(0,0,0,.25);
         }
+        #feedback_point_banner {
+            position: fixed;
+            top: 10px;
+            left: 50%;
+            transform: translateX(-50%);
+            z-index: 2000;
+            box-shadow: 0 2px 8px rgba(0,0,0,.3);
+        }
+        body.feedback-pointing [viewid], body.feedback-pointing [viewid] * {
+            cursor: crosshair !important;
+        }
+        .feedback-hover {
+            outline: 2px solid #dc3545 !important;
+            outline-offset: -2px;
+        }
         #feedback_modal .feedback-website {
             position: absolute;
             left: -10000px;
@@ -57,6 +72,16 @@
                     </div>
                     <div id="feedback_data_div" class="d-none">
                         <div class="mb-3">
+                            <div id="feedback_target_div" class="alert alert-secondary py-2 mb-0 d-none">
+                                <span class="fa-solid fa-crosshairs me-1"></span><span id="feedback_target_text"></span>
+                                <a href="#" id="feedback_target_change" class="ms-2">@report.Translate("Change")</a>
+                                <a href="#" id="feedback_target_remove" class="ms-2">@report.Translate("Remove")</a>
+                            </div>
+                            <button id="feedback_point_button" type="button" class="btn btn-outline-secondary btn-sm">
+                                <span class="fa-solid fa-crosshairs me-1"></span>@report.Translate("Point the value in the result")
+                            </button>
+                        </div>
+                        <div class="mb-3">
                             <label class="form-label" for="feedback_expected">@report.Translate("Expected value (optional)")</label>
                             <input id="feedback_expected" type="text" class="form-control" maxlength="@ReportFeedback.MaxValueLength" />
                         </div>
@@ -87,16 +112,132 @@
         </div>
     </div>
 
+    <div id="feedback_point_banner" class="alert alert-warning py-2 d-none" role="status">
+        <span class="fa-solid fa-crosshairs me-1"></span>@report.Translate("Click on the wrong value in the result (Esc to cancel)")
+        <button id="feedback_point_cancel" type="button" class="btn btn-sm btn-outline-secondary ms-2">@report.Translate("Cancel")</button>
+    </div>
+
     <script type="text/javascript">
         $(document).ready(function () {
+            function feedbackModal() { return bootstrap.Modal.getOrCreateInstance(document.getElementById("feedback_modal")); }
             function feedbackStatus(ok, message) {
                 $("#feedback_status").removeClass("d-none alert-success alert-danger").addClass(ok ? "alert-success" : "alert-danger").text(message);
             }
 
+            //Pointing mode: the user clicks on the element of the result commented (cell of a table, chart, card...), sent as viewid, target_label, target_value and row_label
+            var feedbackTarget = null, feedbackHover = null;
+            function feedbackText($e) {
+                return $e.clone().find(".navigation_icon,.dropdown-menu,script,style").remove().end().text().replace(/\s+/g, " ").trim().substring(0, @ReportFeedback.MaxValueLength);
+            }
+            function feedbackPointed(element) {
+                if ($(element).closest("#feedback_modal,#feedback_point_banner,#feedback_open_button").length) return null;
+                var $view = $(element).closest("[viewid]");
+                if (!$view.length) return null;
+                var $cell = $(element).closest("td,th");
+                if ($cell.length && $view[0].contains($cell[0])) return $cell[0];
+                return element;
+            }
+            function feedbackDescribe(element) {
+                var $view = $(element).closest("[viewid]");
+                var result = { viewid: $view.attr("viewid"), label: "", value: "", row: "" };
+                var $cell = $(element);
+                if ($cell.is("td,th")) {
+                    var $row = $cell.closest("tr"), $table = $cell.closest("table");
+                    var $cells = $row.children("td,th"), index = $cells.index($cell);
+                    result.value = feedbackText($cell);
+                    if ($.fn.dataTable && $.fn.dataTable.isDataTable($table) && $cell.is("td")) {
+                        //Data Table: header of the column from DataTables (scrolling, hidden columns)
+                        var position = $table.DataTable().cell($cell).index();
+                        if (position) result.label = feedbackText($($table.DataTable().column(position.column).header()));
+                    }
+                    if (!result.label && $cell.is("td") && index > 0 && $cells.eq(0).is("th")) {
+                        //Page Table, Model Detail: header in the row
+                        result.label = feedbackText($cells.eq(0));
+                    }
+                    else {
+                        if (!result.label && !$row.parent().is("thead")) {
+                            var $header = $table.find("thead tr").last().children("td,th").eq(index);
+                            if ($header.length) result.label = feedbackText($header);
+                        }
+                        if (index > 0) result.row = feedbackText($cells.eq(0));
+                    }
+                }
+                else if (element != $view[0]) {
+                    var text = feedbackText($cell);
+                    if (text.length <= 100) result.value = text;
+                }
+                return result;
+            }
+            function feedbackShowTarget() {
+                var target = feedbackTarget;
+                if (target) {
+                    var text = target.label && target.value ? target.label + " = " + target.value : (target.value || target.label || '@Raw(Helper.ToJS(report.Translate("Element of the result")))');
+                    if (target.row) text += " (" + target.row + ")";
+                    $("#feedback_target_text").text('@Raw(Helper.ToJS(report.Translate("Value pointed:")))' + " " + text);
+                }
+                $("#feedback_target_div").toggleClass("d-none", !target);
+                $("#feedback_point_button").toggleClass("d-none", !!target);
+            }
+            function feedbackOver(e) {
+                var element = feedbackPointed(e.target);
+                if (feedbackHover && feedbackHover != element) $(feedbackHover).removeClass("feedback-hover");
+                feedbackHover = element;
+                if (element) $(element).addClass("feedback-hover");
+            }
+            function feedbackClick(e) {
+                if ($(e.target).closest("#feedback_point_banner").length) return;
+                //captured before the handlers of the result (navigation menus, drill, sort)
+                e.preventDefault();
+                e.stopPropagation();
+                e.stopImmediatePropagation();
+                var element = feedbackPointed(e.target);
+                if (!element) return;
+                feedbackTarget = feedbackDescribe(element);
+                feedbackStopPointing();
+            }
+            function feedbackKey(e) {
+                if (e.key == "Escape") { e.preventDefault(); e.stopPropagation(); feedbackStopPointing(); }
+            }
+            function feedbackStartPointing() {
+                $(document.getElementById("feedback_modal")).one("hidden.bs.modal", function () {
+                    $("body").addClass("feedback-pointing");
+                    $("#feedback_point_banner").removeClass("d-none");
+                    document.addEventListener("click", feedbackClick, true);
+                    document.addEventListener("mouseover", feedbackOver, true);
+                    document.addEventListener("keydown", feedbackKey, true);
+                });
+                feedbackModal().hide();
+            }
+            function feedbackStopPointing() {
+                document.removeEventListener("click", feedbackClick, true);
+                document.removeEventListener("mouseover", feedbackOver, true);
+                document.removeEventListener("keydown", feedbackKey, true);
+                if (feedbackHover) $(feedbackHover).removeClass("feedback-hover");
+                feedbackHover = null;
+                $("body").removeClass("feedback-pointing");
+                $("#feedback_point_banner").addClass("d-none");
+                feedbackShowTarget();
+                feedbackModal().show();
+                setTimeout(function () { $(feedbackTarget ? "#feedback_expected" : "#feedback_text").trigger("focus"); }, 500);
+            }
+            $("#feedback_point_button,#feedback_target_change").unbind("click").on("click", function (e) {
+                e.preventDefault();
+                feedbackStartPointing();
+            });
+            $("#feedback_target_remove").unbind("click").on("click", function (e) {
+                e.preventDefault();
+                feedbackTarget = null;
+                feedbackShowTarget();
+            });
+            $("#feedback_point_cancel").unbind("click").on("click", function () {
+                feedbackStopPointing();
+            });
+
             $("#feedback_open_button").unbind("click").on("click", function () {
                 $("#feedback_status").addClass("d-none").text("");
                 $("#feedback_send_button").prop("disabled", false);
-                bootstrap.Modal.getOrCreateInstance(document.getElementById("feedback_modal")).show();
+                feedbackShowTarget();
+                feedbackModal().show();
             });
 
             $("#feedback_kind").unbind("change").on("change", function () {
@@ -112,6 +253,7 @@
                 }
                 var $button = $(this);
                 $button.prop("disabled", true);
+                var target = $("#feedback_kind").val() == "Data" ? feedbackTarget : null;
                 $.post(_urlPrefix + "ActionSendFeedback", {
                     execution_guid: _executionGUID,
                     kind: $("#feedback_kind").val(),
@@ -120,6 +262,10 @@
                     source_url: $("#feedback_source").val().trim(),
                     email: ($("#feedback_email").val() || "").trim(),
                     rating: 0,
+                    viewid: target ? target.viewid : "",
+                    target_label: target ? target.label : "",
+                    target_value: target ? target.value : "",
+                    row_label: target ? target.row : "",
                     website: $("#feedback_website").val()
                 })
                     .done(function (data) {
@@ -133,6 +279,7 @@
                         feedbackStatus(result.ok, result.message);
                         if (result.ok) {
                             $("#feedback_text,#feedback_expected,#feedback_source").val("");
+                            feedbackTarget = null;
                             setTimeout(function () { bootstrap.Modal.getOrCreateInstance(document.getElementById("feedback_modal")).hide(); }, 2500);
                         }
                         else $button.prop("disabled", false);

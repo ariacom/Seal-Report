@@ -26,7 +26,7 @@
         var height = view.GetValue("echarts_height");
         if (string.IsNullOrEmpty(height)) { height = "400px"; }
 
-        <div id="@chartId" style="page-break-inside:avoid;@Helper.AddIfNotEmpty("width:", view.GetValue("echarts_width"), ";")height:@height;"></div>
+        <div id="@chartId" viewid="@view.ViewId" style="page-break-inside:avoid;@Helper.AddIfNotEmpty("width:", view.GetValue("echarts_width"), ";")height:@height;"></div>
 
         <script>
             $(document).ready(function () {

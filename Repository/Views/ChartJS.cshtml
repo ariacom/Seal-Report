@@ -41,7 +41,7 @@
         }
 
         <div class="chart-container" style="page-break-inside:avoid; @(view.GetBoolValue("chartjs_responsive") ? "position:relative;" : "") @Helper.AddIfNotEmpty("width:", view.GetValue("chartjs_contwidth"), ";")@Helper.AddIfNotEmpty("height:", view.GetValue("chartjs_contheight"), ";")">
-            <canvas id="@chartId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
+            <canvas id="@chartId" viewid="@view.ViewId" @Raw(Helper.AddIfNotEmpty("width='", view.GetValue("chartjs_width"), "'")) @Raw(Helper.AddIfNotEmpty("height='", view.GetValue("chartjs_height"), "'"))></canvas>
         </div>
         <script>
             $(document).ready(function () {
