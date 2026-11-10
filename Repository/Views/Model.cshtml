@@ -10,6 +10,13 @@
 <div id='@("model_" + view.IdSuffix)' @Raw(view.AddAttribute("class", "model_class")) @Raw(view.AddAttribute("style", "model_css"))>
     <div class="container@(report.ExecutionView.GetBoolValue("container_fluid") ? "-fluid" : "")">
 		@Raw(view.GetValue("model_summary"))
+        @if (viewModel.MaxRowsReached)
+        {
+            //The query reached the 'Maximum rows loaded' of the connection: the result is partial
+            <div class="alert alert-warning py-1 px-2 mb-2 small model_max_rows" role="alert">
+                <span class="fa-solid fa-triangle-exclamation me-1" aria-hidden="true"></span>@Raw(report.Translate("Only the first {0} rows are displayed (limit of your access). Refine the criteria to get the complete result: the totals, the charts and the map only cover the rows displayed.", viewModel.MaxRowsLimit.ToString("N0", view.CultureInfo)))
+            </div>
+        }
     </div>
 	
     @if (viewModel.Pages.Count > 1 && !report.PrintLayout && view.GetValue("model_menu_type") == "right")

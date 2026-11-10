@@ -1134,6 +1134,18 @@ model.ResultTable = query2.CopyToDataTable2();
         public DataTable ResultTable;
 
         /// <summary>
+        /// True if the query of the model (or of one of its LINQ sub-models) reached the 'Maximum rows loaded' of its connection: the result is partial
+        /// </summary>
+        [XmlIgnore]
+        public bool MaxRowsReached;
+
+        /// <summary>
+        /// Maximum rows loaded by the connection when MaxRowsReached is true
+        /// </summary>
+        [XmlIgnore]
+        public int MaxRowsLimit;
+
+        /// <summary>
         /// Result DataTable got from the SQL query with the original column names and without hidden columns
         /// </summary>
         [XmlIgnore]
@@ -2589,6 +2601,8 @@ model.ResultTable = query2.CopyToDataTable2();
                             {
                                 //Set the result table in the model
                                 ResultTable = runningModel.ResultTable;
+                                MaxRowsReached = runningModel.MaxRowsReached;
+                                MaxRowsLimit = runningModel.MaxRowsLimit;
                             }
                         }
                     }
@@ -2939,6 +2953,8 @@ model.ResultTable = query2.CopyToDataTable2();
             {
                 ResultTable = null;
                 _resultTableAvailable = false;
+                MaxRowsReached = false;
+                MaxRowsLimit = 0;
                 var source = Source;
                 BuildQuery();
                 if (FromTables != null)
@@ -3064,7 +3080,12 @@ model.ResultTable = query2.CopyToDataTable2();
                         if (Connection.MaxRows > 0)
                         {
                             TaskDatabaseHelper.FillMaxRows(adapter, ResultTable, Connection.MaxRows);
-                            if (ResultTable.Rows.Count >= Connection.MaxRows) Report.LogMessage("Model '{0}': Maximum number of rows of the connection reached ({1}), the other rows are not loaded.", Name, Connection.MaxRows);
+                            if (ResultTable.Rows.Count >= Connection.MaxRows)
+                            {
+                                MaxRowsReached = true;
+                                MaxRowsLimit = Connection.MaxRows;
+                                Report.LogMessage("Model '{0}': Maximum number of rows of the connection reached ({1}), the other rows are not loaded.", Name, Connection.MaxRows);
+                            }
                         }
                         else adapter.Fill(ResultTable);
                         handleDateOnlyColumns();
@@ -3097,6 +3118,8 @@ model.ResultTable = query2.CopyToDataTable2();
             Progression = 0;
             ExecutionDuration = 0;
             ExecutionDate = DateTime.Now;
+            MaxRowsReached = false;
+            MaxRowsLimit = 0;
             Pages.Clear();
 
             //Pre-load script
@@ -3139,6 +3162,11 @@ model.ResultTable = query2.CopyToDataTable2();
                         foreach (var subModel in LINQSubModels)
                         {
                             ExecResultTables.Add(subModel.ResultTable.TableName, subModel.ResultTable);
+                            if (subModel.MaxRowsReached)
+                            {
+                                MaxRowsReached = true;
+                                MaxRowsLimit = Math.Max(MaxRowsLimit, subModel.MaxRowsLimit);
+                            }
                         }
 
                         foreach (var subTable in LINQSubTables)

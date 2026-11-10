@@ -13162,6 +13162,16 @@
             Result DataTable got from the SQL query
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportModel.MaxRowsReached">
+            <summary>
+            True if the query of the model (or of one of its LINQ sub-models) reached the 'Maximum rows loaded' of its connection: the result is partial
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportModel.MaxRowsLimit">
+            <summary>
+            Maximum rows loaded by the connection when MaxRowsReached is true
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportModel.ResultTableTranslated">
             <summary>
             Result DataTable got from the SQL query with the original column names and without hidden columns
