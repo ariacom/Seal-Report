@@ -115,7 +115,7 @@ namespace Seal.AI
             }
 
             if (choice.FinishReason == "content_filter")
-                throw new Exception("OpenAI: the reply was blocked by the content filter. Rephrase the request.");
+                throw new AIContentFilterException("OpenAI: the reply was blocked by the content filter. Rephrase the request.");
 
             var result = choice.Message?.Content
                 ?? throw new Exception(choice.FinishReason == "length"
@@ -143,6 +143,8 @@ namespace Seal.AI
                 return Send(body);
             if (!body.ContainsKey("reasoning_effort") && HandleReasoningRefused((int)response.StatusCode, errorBody))
                 return Send(body);
+            if (IsContentFilterRefusal((int)response.StatusCode, errorBody))
+                throw new AIContentFilterException($"OpenAI: HTTP {(int)response.StatusCode} {GetErrorMessage(errorBody)}");
             throw new HttpRequestException($"OpenAI: HTTP {(int)response.StatusCode} {GetErrorMessage(errorBody) ?? response.ReasonPhrase}", null, response.StatusCode);
         }
 

@@ -43,6 +43,15 @@
             Zeroes when the API did not report usage information.
             </summary>
         </member>
+        <member name="T:Seal.AI.AIContentFilterException">
+            <summary>
+            Exception of a provider when the request or the reply is blocked by the content filter of the AI service
+            (e.g. Azure content filter, OpenAI 'flagged' request): the agent answers with a clean refusal instead of an error.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIContentFilterException.#ctor(System.String,System.Exception)">
+            <summary>Creates the exception with the message of the provider</summary>
+        </member>
         <member name="T:Seal.AI.AIProvider">
             <summary>
             Base class for AI chat providers: holds the common connection and generation parameters
@@ -125,6 +134,12 @@
             <summary>
             If the error body of an HTTP 400 says that the model accepts the function tools only with reasoning_effort 'none',
             remembers it for the model and returns true: the caller retries the request with reasoning_effort 'none'.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIProvider.IsContentFilterRefusal(System.Int32,System.String)">
+            <summary>
+            True if an HTTP error is a refusal of the content filter of the AI service: Azure 'content_filter' / 'ResponsibleAIPolicyViolation'
+            (prompt triggering the content management policy), or a request 'flagged' (e.g. 'flagged for possible cybersecurity risk').
             </summary>
         </member>
         <member name="M:Seal.AI.AIProvider.GetErrorMessage(System.String)">
@@ -1192,6 +1207,16 @@
         <member name="F:Seal.AI.AIAgent.CostLimitReply">
             <summary>
             Reply of a <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> stopped by the AI budget of the user (e.g. translated by the caller)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIAgent.LastChatContentFiltered">
+            <summary>
+            True if the last <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> was blocked by the content filter of the AI service (<see cref="T:Seal.AI.AIContentFilterException"/>): the turn was removed from the conversation.
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIAgent.ContentFilterReply">
+            <summary>
+            Reply of a <see cref="M:Seal.AI.AIAgent.Chat(System.String,Seal.AI.ICancelOperation,Seal.Model.ReportExecutionLog,Seal.Model.ReportExecutionLog,System.Int32,System.Action{System.String})"/> blocked by the content filter of the AI service (e.g. translated by the caller)
             </summary>
         </member>
         <member name="F:Seal.AI.AIAgent.NoCostConfiguredRefusal">

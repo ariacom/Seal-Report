@@ -62,6 +62,16 @@ namespace Seal.AI
         /// </summary>
         public string CostLimitReply = "The AI budget is reached: the answer was interrupted.";
 
+        /// <summary>
+        /// True if the last <see cref="Chat"/> was blocked by the content filter of the AI service (<see cref="AIContentFilterException"/>): the turn was removed from the conversation.
+        /// </summary>
+        public bool LastChatContentFiltered { get; private set; }
+
+        /// <summary>
+        /// Reply of a <see cref="Chat"/> blocked by the content filter of the AI service (e.g. translated by the caller)
+        /// </summary>
+        public string ContentFilterReply = "This request was blocked by the content filter of the AI service, it cannot be answered. Rephrase it or ask another question.";
+
         /// <summary>Refusal when the user has an AI budget and the AI provider has no cost configured</summary>
         public const string NoCostConfiguredRefusal = "The costs of the AI provider are not configured: the AI budget of the user cannot be checked.";
 
@@ -323,6 +333,7 @@ namespace Seal.AI
 
             LastChatUsage = new AIUsage();
             LastChatCostLimitReached = false;
+            LastChatContentFiltered = false;
             //Limits of the user set by the Security Provider: the message is not added to the conversation if refused
             var providerConfiguration = Configuration.GetProviderConfiguration();
             double? costLimit = null;
@@ -335,9 +346,20 @@ namespace Seal.AI
             }
             if (LastChatRefusal != null) return LastChatRefusal;
 
+            var messageCountBefore = Messages.Count;
             try
             {
                 return chat(userMessage, providerConfiguration, costLimit, cancelOperation, log, toolsLog, maxIterations, progress);
+            }
+            catch (AIContentFilterException ex)
+            {
+                //Request or reply blocked by the content filter of the AI service: the turn is removed from the conversation
+                //(sent again, the blocked message would block every next request) and the user gets a clean refusal
+                if (log != null) log.LogMessage($"****** Content filter: {ex.Message}");
+                Helper.WriteLogEntry("Seal AI", System.Diagnostics.EventLogEntryType.Warning, $"AI agent '{Configuration.Name}', user '{SecurityContext?.WebUserName}': {ex.Message}");
+                if (Messages.Count > messageCountBefore) Messages.RemoveRange(messageCountBefore, Messages.Count - messageCountBefore);
+                LastChatContentFiltered = true;
+                return ContentFilterReply;
             }
             finally
             {

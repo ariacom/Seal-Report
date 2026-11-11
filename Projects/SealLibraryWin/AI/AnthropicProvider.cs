@@ -156,7 +156,7 @@ namespace Seal.AI
         private static string GetText(AnthropicResponse response)
         {
             if (response?.StopReason == "refusal")
-                throw new Exception("Anthropic: the model declined to answer this request (refusal).");
+                throw new AIContentFilterException("Anthropic: the model declined to answer this request (refusal).");
             var texts = response?.Content?.Where(b => b.Type == "text").Select(b => b.Text).ToList();
             return texts == null || texts.Count == 0 ? null : string.Concat(texts);
         }

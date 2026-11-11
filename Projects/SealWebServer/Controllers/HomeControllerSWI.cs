@@ -2049,6 +2049,7 @@ namespace SealWebServer.Controllers
                 // so the progress ("thinking") labels are translated in the current locale.
                 agent.Culture = Repository?.CultureInfo?.TwoLetterISOLanguageName;
                 agent.CostLimitReply = Translate("The AI budget is reached: the answer was interrupted.");
+                agent.ContentFilterReply = Translate("This request was blocked by the content filter of the AI service, it cannot be answered. Rephrase it or ask another question.");
                 string reply;
                 try
                 {

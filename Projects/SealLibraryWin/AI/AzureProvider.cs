@@ -74,6 +74,7 @@ namespace Seal.AI
                 if (HandleReasoningRefused(ex.Status, body))
                     return Complete(messages, options); //sent with reasoning_effort 'none' by the ReasoningNonePolicy
                 var message = GetErrorMessage(body);
+                if (IsContentFilterRefusal(ex.Status, body)) throw new AIContentFilterException($"Azure OpenAI: HTTP {ex.Status} {message}", ex);
                 if (string.IsNullOrEmpty(message)) throw;
                 throw new Exception($"Azure OpenAI: HTTP {ex.Status} {message}", ex);
             }
@@ -143,7 +144,7 @@ namespace Seal.AI
         private static Exception IncompleteReplyException(ChatCompletion completion)
         {
             if (completion.FinishReason == ChatFinishReason.ContentFilter)
-                return new Exception($"Azure OpenAI: the reply was blocked by the Azure content filter{FilteredCategories(completion)}. Rephrase the request or review the content filter settings of the deployment.");
+                return new AIContentFilterException($"Azure OpenAI: the reply was blocked by the Azure content filter{FilteredCategories(completion)}. Rephrase the request or review the content filter settings of the deployment.");
             if (completion.FinishReason == ChatFinishReason.Length)
                 return new Exception("Azure OpenAI: the reply was truncated because the maximum number of output tokens was reached. Increase the Max Tokens of the provider.");
             return new Exception($"Azure OpenAI: the model returned no reply (finish reason: {completion.FinishReason}).");

@@ -34,6 +34,16 @@ namespace Seal.AI
     }
 
     /// <summary>
+    /// Exception of a provider when the request or the reply is blocked by the content filter of the AI service
+    /// (e.g. Azure content filter, OpenAI 'flagged' request): the agent answers with a clean refusal instead of an error.
+    /// </summary>
+    public class AIContentFilterException : Exception
+    {
+        /// <summary>Creates the exception with the message of the provider</summary>
+        public AIContentFilterException(string message, Exception innerException = null) : base(message, innerException) { }
+    }
+
+    /// <summary>
     /// Base class for AI chat providers: holds the common connection and generation parameters
     /// and the factory methods to create a provider from a configuration.
     /// </summary>
@@ -122,6 +132,17 @@ namespace Seal.AI
             if (!errorBody.Contains("reasoning_effort") || !errorBody.Contains("'none'")) return false;
             _noReasoningModels[_endpoint + "|" + _model] = true;
             return true;
+        }
+
+        /// <summary>
+        /// True if an HTTP error is a refusal of the content filter of the AI service: Azure 'content_filter' / 'ResponsibleAIPolicyViolation'
+        /// (prompt triggering the content management policy), or a request 'flagged' (e.g. 'flagged for possible cybersecurity risk').
+        /// </summary>
+        public static bool IsContentFilterRefusal(int status, string errorBody)
+        {
+            if (status != 400 || string.IsNullOrEmpty(errorBody)) return false;
+            return errorBody.Contains("content_filter") || errorBody.Contains("ResponsibleAIPolicyViolation")
+                || errorBody.Contains("content management policy") || errorBody.Contains("was flagged");
         }
 
         /// <summary>

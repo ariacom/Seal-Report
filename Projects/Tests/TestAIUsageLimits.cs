@@ -25,6 +25,8 @@ namespace Test
         {
             public int Calls = 0;
             public int ToolCallReplies = int.MaxValue;
+            /// <summary>Call blocked by the content filter of the AI service (0 = none)</summary>
+            public int FilteredCall = 0;
             /// <summary>Optional tool calls of the replies (name, arguments), one per reply; by default a different call each time</summary>
             public List<(string Name, string Arguments)> Script = null;
             public AIUsage LastUsage { get; private set; } = new AIUsage();
@@ -41,6 +43,7 @@ namespace Test
                 Calls++;
                 LastUsage = new AIUsage() { InputTokens = 1000000, Calls = 1 };
                 toolCalls = null;
+                if (Calls == FilteredCall) throw new AIContentFilterException("HTTP 400 This content was flagged");
                 if (Calls > ToolCallReplies || (Script != null && Calls > Script.Count)) return "answer";
                 (string Name, string Arguments) call = Script != null ? Script[Calls - 1] : ("no_such_tool", "{\"n\":" + Calls + "}");
                 toolCalls = new List<AIToolCall>() { new AIToolCall() { Id = "call" + Calls, Name = call.Name, Arguments = call.Arguments } };
@@ -110,6 +113,25 @@ namespace Test
             agent.Chat("the question", null, log);
             StringAssert.StartsWith(log.Messages[0], "[AIAgent] User: someone, Provider: ");
             Assert.AreEqual("****** User Message:\r\nthe question", log.Messages[1]);
+        }
+
+        [TestMethod]
+        public void ContentFilterGivesCleanReplyAndRemovesTheTurn()
+        {
+            //Blocked after a tool call: the turn (question, tool call, tool result) is removed, the next question is sent normally
+            var provider = new TestProvider() { ToolCallReplies = 1, FilteredCall = 2 };
+            var agent = new AIAgent(_agent, provider);
+            Assert.AreEqual(agent.ContentFilterReply, agent.Chat("blocked question"));
+            Assert.IsTrue(agent.LastChatContentFiltered);
+            Assert.IsFalse(agent.Messages.Any(m => m is UserChatMessage || m is ToolChatMessage || m is AssistantChatMessage));
+            Assert.AreEqual("answer", agent.Chat("next question"));
+            Assert.IsFalse(agent.LastChatContentFiltered);
+            Assert.IsFalse(agent.Messages.OfType<UserChatMessage>().Any(m => m.Content[0].Text == "blocked question"));
+
+            Assert.IsTrue(AIProvider.IsContentFilterRefusal(400, "{\"error\":{\"message\":\"This content was flagged for possible cybersecurity risk.\"}}"));
+            Assert.IsTrue(AIProvider.IsContentFilterRefusal(400, "{\"error\":{\"code\":\"content_filter\",\"innererror\":{\"code\":\"ResponsibleAIPolicyViolation\"}}}"));
+            Assert.IsFalse(AIProvider.IsContentFilterRefusal(400, "{\"error\":{\"message\":\"'temperature' does not support 0\"}}"));
+            Assert.IsFalse(AIProvider.IsContentFilterRefusal(429, "content_filter"));
         }
 
         [TestMethod]
