@@ -463,6 +463,36 @@ namespace Seal.Model
             }
         }
 
+        static string _auditSourceMissingGUID = null;
+
+        /// <summary>
+        /// Data source of the audit: the source chosen in the server configuration (Audit Data Source), else the first source
+        /// whose name starts with 'Audit', in the alphabetical order of the names (e.g. 'Audit PostgreSQL' before 'Audit SQLite'),
+        /// so that the choice is the same on Windows and Linux. A configured source that does not exist anymore is logged once
+        /// and the default rule applies.
+        /// </summary>
+        public static MetaSource AuditSource
+        {
+            get
+            {
+                var guid = Repository.Instance.Configuration.AuditSourceGUID;
+                if (!string.IsNullOrEmpty(guid))
+                {
+                    var source = Repository.Instance.Sources.FirstOrDefault(i => i.GUID == guid);
+                    if (source != null) return source;
+                    if (_auditSourceMissingGUID != guid)
+                    {
+                        _auditSourceMissingGUID = guid;
+                        Helper.WriteLogEntry("Seal Audit", EventLogEntryType.Warning, $"The Audit Data Source of the server configuration ({guid}) does not exist: the first source named 'Audit...' is used.");
+                    }
+                }
+                return Repository.Instance.Sources
+                    .Where(i => i.Name != null && i.Name.StartsWith("Audit"))
+                    .OrderBy(i => i.Name, StringComparer.OrdinalIgnoreCase)
+                    .FirstOrDefault();
+            }
+        }
+
         /// <summary>
         /// Execute the audit for a record: the default database insertion when no custom script is
         /// configured (no Razor compilation involved), otherwise the custom Audit Script.
@@ -475,7 +505,7 @@ namespace Seal.Model
                 ? audit.LogToDatabase
                 : () => RazorHelper.CompileExecute(script, audit, Key);
 
-            var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
+            var auditSource = AuditSource;
             bool lockDatabase = (auditSource != null && auditSource.Connection.ConnectionType == ConnectionType.SQLite);
 
             if (lockDatabase)
@@ -500,7 +530,7 @@ namespace Seal.Model
         /// </summary>
         public void LogToDatabase()
         {
-            var auditSource = Repository.Instance.Sources.FirstOrDefault(i => i.Name.StartsWith("Audit"));
+            var auditSource = AuditSource;
             if (auditSource == null) return;
 
             var connection = auditSource.Connection.GetOpenConnection();

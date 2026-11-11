@@ -806,7 +806,7 @@ namespace Seal.Model
         /// If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)
         /// </summary>
 #if WINDOWS
-        [Category("Advanced"), DisplayName("Used for notification"), Description("If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule)"), Id(1, 6)]
+        [Category("Advanced"), DisplayName("Used for notification"), Description("If true, this email device will be chosen first to be used for notifications. (e.g. sending an email in case of error in a schedule). The Notification Email Device of the server configuration, when set, takes precedence."), Id(1, 6)]
         [DefaultValue(false)]
 #endif
         public bool UsedForNotification { get; set; } = false;

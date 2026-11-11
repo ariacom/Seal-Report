@@ -100,6 +100,8 @@ namespace Seal.Model
                 GetProperty("NumericFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("DateTimeFormat").SetIsBrowsable(!ForPublication);
                 GetProperty("AuditEnabled").SetIsBrowsable(!ForPublication);
+                GetProperty("AuditSourceGUID").SetIsBrowsable(!ForPublication);
+                GetProperty("AuditSourceGUID").SetIsReadOnly(!AuditEnabled);
                 GetProperty("AuditScript").SetIsBrowsable(!ForPublication);
                 GetProperty("AuditScript").SetIsReadOnly(!AuditEnabled);
 
@@ -112,6 +114,7 @@ namespace Seal.Model
                 GetProperty("RepositoryTranslationsScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
                 GetProperty("HostForPersonalFolder").SetIsBrowsable(!ForPublication);
+                GetProperty("NotificationDeviceGUID").SetIsBrowsable(!ForPublication);
                 GetProperty("CssFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("ScriptFiles").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCssFiles").SetIsBrowsable(!ForPublication);
@@ -244,6 +247,19 @@ namespace Seal.Model
         [DefaultValue(false)]
 #endif
         public bool HostForPersonalFolder { get; set; } = false;
+
+        /// <summary>
+        /// GUID of the email device used to send the notifications (e.g. error of a schedule, 2FA codes, password reset). If empty,
+        /// the first email device having 'Used for notification' set is used, else the first email device, in the alphabetical
+        /// order of the file names.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Notification Email Device"), Description("The email device used to send the notifications (e.g. error of a schedule, two-factor authentication codes, password reset). If not set, the first email device having 'Used for notification' set is used, else the first email device, in the alphabetical order of the file names."), Id(11, 1)]
+        [TypeConverter(typeof(NotificationDeviceConverter))]
+        [DefaultValue("")]
+#endif
+        public string NotificationDeviceGUID { get; set; } = "";
+        public bool ShouldSerializeNotificationDeviceGUID() { return !string.IsNullOrEmpty(NotificationDeviceGUID); }
 
         /// <summary>
         /// Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
@@ -499,10 +515,22 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// GUID of the data source where the default audit implementation inserts its records (table sr_audit). If empty, the
+        /// first data source whose name starts with 'Audit' is used, in the alphabetical order of the names.
+        /// </summary>
+#if WINDOWS
+        [Category("Audit Settings"), DisplayName("Audit Data Source"), Description("The data source where the default audit implementation inserts its records (table 'sr_audit'). If not set, the first data source whose name starts with 'Audit' is used, in the alphabetical order of the names."), Id(3, 4)]
+        [TypeConverter(typeof(AuditSourceConverter))]
+        [DefaultValue("")]
+#endif
+        public string AuditSourceGUID { get; set; } = "";
+        public bool ShouldSerializeAuditSourceGUID() { return !string.IsNullOrEmpty(AuditSourceGUID); }
+
+        /// <summary>
         /// If set, the script is executed to log events. The default implementation is to insert a record into a database table.
         /// </summary>
 #if WINDOWS
-        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(3, 4)]
+        [Category("Audit Settings"), DisplayName("Audit Script"), Description("If set, the script is executed to log events. The default implementation is to insert a record into a database table."), Id(4, 4)]
         [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
 #endif
         [SealCode(ReportCodeLevel.Scripts)]

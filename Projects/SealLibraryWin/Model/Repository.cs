@@ -700,7 +700,7 @@ namespace Seal.Model
             //Data sources
             if (Sources.Count == 0)
             {
-                foreach (var file in Directory.GetFiles(SourcesFolder, "*." + SealConfigurationFileExtension))
+                foreach (var file in GetConfigurationFiles(SourcesFolder))
                 {
                     try
                     {
@@ -723,7 +723,7 @@ namespace Seal.Model
             {
                 //Devices, add a default folder device, then the other devices
                 Devices.Add(OutputFolderDevice.Create());
-                foreach (var file in Directory.GetFiles(DevicesEmailFolder, "*." + SealConfigurationFileExtension))
+                foreach (var file in GetConfigurationFiles(DevicesEmailFolder))
                 {
                     try
                     {
@@ -734,7 +734,7 @@ namespace Seal.Model
                         Helper.WriteLogException("Repository.Init: OutputEmailDevice", ex);
                     }
                 }
-                foreach (var file in Directory.GetFiles(DevicesFileServerFolder, "*." + SealConfigurationFileExtension))
+                foreach (var file in GetConfigurationFiles(DevicesFileServerFolder))
                 {
                     try
                     {
@@ -745,7 +745,7 @@ namespace Seal.Model
                         Helper.WriteLogException("Repository.Init: OutputFileServerDevice", ex);
                     }
                 }
-                foreach (var file in Directory.GetFiles(DevicesSharePointFolder, "*." + SealConfigurationFileExtension))
+                foreach (var file in GetConfigurationFiles(DevicesSharePointFolder))
                 {
                     try
                     {
@@ -1023,6 +1023,16 @@ namespace Seal.Model
             catch { }
         }
 
+        /// <summary>
+        /// Configuration files (*.scfx) of a folder in the alphabetical order of their names, whatever the operating system:
+        /// Windows lists the files alphabetically, Linux in no defined order. The first matching source or device found in
+        /// the lists (e.g. the audit source, the first source named 'Audit*') is then the same on every server.
+        /// </summary>
+        static string[] GetConfigurationFiles(string folder)
+        {
+            return Directory.GetFiles(folder, "*." + SealConfigurationFileExtension)
+                .OrderBy(i => Path.GetFileName(i), StringComparer.OrdinalIgnoreCase).ToArray();
+        }
 
         /// <summary>
         /// True if the configuration or security file has been modified
@@ -1640,17 +1650,30 @@ namespace Seal.Model
             return TranslateWeb("Personal") + string.Format(" ({0})", user.GetPersonalFolderName()); ;
         }
 
+        string _notificationDeviceMissingGUID = null;
+
         /// <summary>
-        /// Get the first email device used for notification
+        /// Email device used for the notifications: the device chosen in the server configuration (Notification Email Device), else
+        /// the first email device having 'Used for notification' set, else the first email device (devices loaded in the alphabetical
+        /// order of their file names). A configured device that does not exist anymore is logged once and the default rule applies.
         /// </summary>
         public OutputEmailDevice NotificationEmailDevice
         {
             get
             {
-                //Get the first email device used for notification
-                var device = Devices.OfType<OutputEmailDevice>().FirstOrDefault(i => i.UsedForNotification);
-                if (device == null) device = Devices.OfType<OutputEmailDevice>().FirstOrDefault();
-                return device;
+                var devices = Devices.OfType<OutputEmailDevice>();
+                var guid = Configuration.NotificationDeviceGUID;
+                if (!string.IsNullOrEmpty(guid))
+                {
+                    var configured = devices.FirstOrDefault(i => i.GUID == guid);
+                    if (configured != null) return configured;
+                    if (_notificationDeviceMissingGUID != guid)
+                    {
+                        _notificationDeviceMissingGUID = guid;
+                        Helper.WriteLogEntry("Seal Notification", EventLogEntryType.Warning, $"The Notification Email Device of the server configuration ({guid}) does not exist: the device having 'Used for notification' is used.");
+                    }
+                }
+                return devices.FirstOrDefault(i => i.UsedForNotification) ?? devices.FirstOrDefault();
             }
         }
 

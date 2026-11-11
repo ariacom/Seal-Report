@@ -5206,6 +5206,14 @@
             Execute the audit script for a given event
             </summary>
         </member>
+        <member name="P:Seal.Model.Audit.AuditSource">
+            <summary>
+            Data source of the audit: the source chosen in the server configuration (Audit Data Source), else the first source
+            whose name starts with 'Audit', in the alphabetical order of the names (e.g. 'Audit PostgreSQL' before 'Audit SQLite'),
+            so that the choice is the same on Windows and Linux. A configured source that does not exist anymore is logged once
+            and the default rule applies.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Audit.ExecuteAuditScript(Seal.Model.Audit)">
             <summary>
             Execute the audit for a record: the default database insertion when no custom script is
@@ -16297,6 +16305,13 @@
             Delete the shadow copies of the previous versions of the extension assemblies (the ones still loaded by a running process are locked and kept)
             </summary>
         </member>
+        <member name="M:Seal.Model.Repository.GetConfigurationFiles(System.String)">
+            <summary>
+            Configuration files (*.scfx) of a folder in the alphabetical order of their names, whatever the operating system:
+            Windows lists the files alphabetically, Linux in no defined order. The first matching source or device found in
+            the lists (e.g. the audit source, the first source named 'Audit*') is then the same on every server.
+            </summary>
+        </member>
         <member name="M:Seal.Model.Repository.MustReload">
             <summary>
             True if the configuration or security file has been modified
@@ -16567,7 +16582,9 @@
         </member>
         <member name="P:Seal.Model.Repository.NotificationEmailDevice">
             <summary>
-            Get the first email device used for notification
+            Email device used for the notifications: the device chosen in the server configuration (Notification Email Device), else
+            the first email device having 'Used for notification' set, else the first email device (devices loaded in the alphabetical
+            order of their file names). A configured device that does not exist anymore is logged once and the default rule applies.
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.SendNotificationEmail(System.String,System.String,System.String,System.Boolean,System.String)">
@@ -18879,6 +18896,13 @@
             If true, the User Personal Folder (located in the 'SpecialFolders\\Personal' repository sub-folder) containing the profile and personal files is built with the host name. This allows multiple Web sites on the same installation.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.NotificationDeviceGUID">
+            <summary>
+            GUID of the email device used to send the notifications (e.g. error of a schedule, 2FA codes, password reset). If empty,
+            the first email device having 'Used for notification' set is used, else the first email device, in the alphabetical
+            order of the file names.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.CssFiles">
             <summary>
             Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
@@ -19002,6 +19026,12 @@
         <member name="P:Seal.Model.SealServerConfiguration.AuditEnabled">
             <summary>
             If true, the Audit script is executed for the following events: login, logout, report execution and management, folder management, file management.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.AuditSourceGUID">
+            <summary>
+            GUID of the data source where the default audit implementation inserts its records (table sr_audit). If empty, the
+            first data source whose name starts with 'Audit' is used, in the alphabetical order of the names.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.AuditScript">
