@@ -29,6 +29,8 @@
     }
 </style>
 
+<!-- The controls of the bar are rendered hidden (d-none): swi-main shows them with SWIUtil.ShowHideControl
+     once the user is connected, so they never appear before the login -->
 <nav id="bar_top" class="navbar navbar-expand-md navbar-dark bg-dark fixed-top" style="transition:top 0.3s;">
     <div class="container-fluid">
         <!-- LEFT (always visible, also in mobile mode): brand, reports menu + contextual breadcrumb.
@@ -38,7 +40,7 @@
             <a id="brand-id" class="navbar-brand d-none d-sm-block" href="#">@repository.Configuration.WebProductName</a>
             <ul class="navbar-nav flex-row align-items-center" style="min-width:0;">
                 <li class="nav-item dropdown">
-                    <a id="menu-main-button" href="#" class="nav-link p-0" data-bs-toggle="dropdown" title="@repository.TranslateWeb("Reports menu")">
+                    <a id="menu-main-button" href="#" class="nav-link p-0 d-none" data-bs-toggle="dropdown" title="@repository.TranslateWeb("Reports menu")">
                         <span class="btn btn-sm btn-primary"><span class="fa-solid fa-bars" aria-hidden="true"></span></span>
                     </a>
                     <ul id="menu-main" class="dropdown-menu position-absolute">
@@ -53,7 +55,7 @@
         <div id="navbar" class="collapse navbar-collapse order-last order-md-1 justify-content-md-end">
             <!-- CONTEXT (folder view): refresh / manage folders, then search -->
             <ul class="navbar-nav navbar-right align-items-center">
-                <li class="nav-item folderview"><a id="refresh-nav-item" style="font-size:20px" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
+                <li class="nav-item folderview d-none"><a id="refresh-nav-item" style="font-size:20px" class="nav-link navbar-white" title="@repository.TranslateWeb("Refresh")"><i class="fa-solid fa-arrows-rotate"></i></a></li>
                 <li class="nav-item folderview" style="display:none;" title="@repository.TranslateWeb("Manage Folders")"><a id="folders-nav-item" style="font-size:20px" class="nav-link navbar-white"><i class="fa-solid fa-folder-open"></i></a></li>
             </ul>
             <!-- NOTE: no "d-flex" here — it is display:flex !important and would override the
@@ -67,10 +69,10 @@
             </form>
             <!-- CONTEXT: report tabs (report view) -->
             <ul class="navbar-nav navbar-right align-items-center" role="tablist">
-                <li class="nav-item"><a id="report_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#report_div">@repository.TranslateReport("Report")</a></li>
-                <li class="nav-item"><a id="information_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#information_div">@repository.TranslateReport("Information")</a></li>
-                <li class="nav-item"><a id="message_button" class="nav-link sr_tab reportview" data-bs-toggle="tab" href="#message_div">@repository.TranslateReport("Messages")</a></li>
-                <li id="results_menu" class="nav-item dropdown reportview">
+                <li class="nav-item"><a id="report_button" class="nav-link sr_tab reportview d-none" data-bs-toggle="tab" href="#report_div">@repository.TranslateReport("Report")</a></li>
+                <li class="nav-item"><a id="information_button" class="nav-link sr_tab reportview d-none" data-bs-toggle="tab" href="#information_div">@repository.TranslateReport("Information")</a></li>
+                <li class="nav-item"><a id="message_button" class="nav-link sr_tab reportview d-none" data-bs-toggle="tab" href="#message_div">@repository.TranslateReport("Messages")</a></li>
+                <li id="results_menu" class="nav-item dropdown reportview d-none">
                     <a class="nav-link dropdown-toggle" data-bs-toggle="dropdown" href="#">
                         @repository.TranslateReport("Results")
                     </a>
@@ -87,25 +89,25 @@
             <!-- Account / utility cluster -->
             <ul id="navbar-right-menu" class="navbar-nav navbar-right align-items-center">
                 <li class="nav-item"><a id="webschedules-nav-item" class="nav-link navbar-white d-none" style="font-size:20px" title="@repository.TranslateWeb("My schedules")"><i class="fa-solid fa-calendar-days"></i></a></li>
-                <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
+                <li class="nav-item"><a id="profile-nav-item" class="nav-link navbar-white d-none" style="font-size:20px" title="@repository.TranslateWeb("Profile")"><i class="fa-solid fa-user"></i></a></li>
                 @if (!string.IsNullOrEmpty(repository.Configuration.WebHelpLink))
                 {
                         <li class="nav-item"><a href="@(repository.WebHelpFilePath != null ? Url.Action("SWIViewHelpFile", "Home") : repository.Configuration.WebHelpLink)" target="_blank" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Information")"><i class="fa-solid fa-circle-info"></i></a></li>
                 }
-                <li class="nav-item"><a id="login-nav-item" class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Login")"><i class="fa-solid fa-right-to-bracket"></i></a></li>
-                <li class="nav-item"><a id="disconnect-nav-item"class="nav-link navbar-white" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
+                <li class="nav-item"><a id="login-nav-item" class="nav-link navbar-white d-none" style="font-size:20px" title="@repository.TranslateWeb("Login")"><i class="fa-solid fa-right-to-bracket"></i></a></li>
+                <li class="nav-item"><a id="disconnect-nav-item" class="nav-link navbar-white d-none" style="font-size:20px" title="@repository.TranslateWeb("Disconnect")"><i class="fa-solid fa-right-from-bracket"></i></a></li>
             </ul>
         </div><!--/.nav-collapse -->
         <!-- RIGHT (always visible, also in mobile mode): report actions (report view) + menu toggler -->
         <div class="d-flex flex-nowrap align-items-center order-md-2">
-            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Show Restrictions")" data-show-title="@repository.TranslateReport("Show Restrictions")" data-hide-title="@repository.TranslateReport("Hide Restrictions")">
+            <button id="restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2 d-none" title="@repository.TranslateReport("Show Restrictions")" data-show-title="@repository.TranslateReport("Show Restrictions")" data-hide-title="@repository.TranslateReport("Hide Restrictions")">
                 <span class="fa-solid fa-filter"></span>
             </button>
-            <button id="reset_restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2" title="@repository.TranslateReport("Reset restrictions")">
+            <button id="reset_restrictions_button" type="button" class="btn btn-info reportview navbar-right me-2 d-none" title="@repository.TranslateReport("Reset restrictions")">
                 <span class="fa-solid fa-rotate-left"></span>
             </button>
-            <button id="execute_button" class="btn btn-success reportview navbar-right me-2">@repository.TranslateReport("Execute")</button>
-            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-2" title="@repository.TranslateWeb("Reload and execute")">
+            <button id="execute_button" class="btn btn-success reportview navbar-right me-2 d-none">@repository.TranslateReport("Execute")</button>
+            <button id="reload-nav-item" class="btn btn-primary reportview navbar-right me-2 d-none" title="@repository.TranslateWeb("Reload and execute")">
                 <span class="fa-solid fa-play"></span>
             </button>
             <!-- Toggler for the collapsible menu (mobile mode only) -->
