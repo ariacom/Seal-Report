@@ -191,7 +191,7 @@
 		<!-- No Microsoft.AspNetCore.Http.Features reference: the standalone 5.0.x package is deprecated.
 		     The 2.3.x Http packages above bring the features types transitively, and the web server gets
 		     them from the ASP.NET Core shared framework. -->
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.15" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.1.0" />
 		<!-- Graph 6.x pulls Graph.Core 4.x -> Kiota 2.x, which is already above the GHSA-7j59-v9qr-6fq9 fix (1.22.0); no Kiota pin needed -->
@@ -217,7 +217,7 @@
 		<PackageReference Include="Twilio" Version="8.0.2" />
 		<PackageReference Include="Microsoft.AspNetCore.Cryptography.KeyDerivation" Version="10.0.12" />
 		<PackageReference Include="Microsoft.Extensions.DependencyInjection.Abstractions" Version="10.0.12" />
-		<PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.12" />
+		<PackageReference Include="Microsoft.Extensions.Primitives" Version="10.0.15" />
 		<PackageReference Include="Newtonsoft.Json" Version="13.0.4" />
 		<PackageReference Include="System.Data.Odbc" Version="10.0.12" />
 		<PackageReference Include="System.Data.OleDb" Version="10.0.12" />

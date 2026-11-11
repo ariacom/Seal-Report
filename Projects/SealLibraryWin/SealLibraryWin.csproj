@@ -57,7 +57,7 @@
 		<!-- No Microsoft.AspNetCore.Http.Features reference: the standalone 5.0.x package is deprecated.
 		     The 2.3.x Http packages above bring the features types transitively, and the web server gets
 		     them from the ASP.NET Core shared framework. -->
-		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.12" />
+		<PackageReference Include="Microsoft.AspNetCore.WebUtilities" Version="10.0.15" />
 		<PackageReference Include="Microsoft.Data.SqlClient" Version="7.1.0" />
 		<PackageReference Include="Microsoft.Data.SqlClient.AlwaysEncrypted.AzureKeyVaultProvider" Version="7.1.0" />
 		<PackageReference Include="ClosedXML">
