@@ -71,8 +71,11 @@
         if (!Directory.Exists(physPath)) continue;
 
         // Apply optional name filter
+        // A filter matches whole folder names: "Culture" selects Reports\Culture and Reports\Scrapers\Culture, not Reports\Agriculture
         if (filterFolders.Count > 0 && !filterFolders.Any(f =>
-                displayPath.IndexOf(Seal.Helpers.FileHelper.ConvertOSFilePath(f), StringComparison.OrdinalIgnoreCase) >= 0))
+                (Path.DirectorySeparatorChar + displayPath.Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar).IndexOf(
+                    Path.DirectorySeparatorChar + Seal.Helpers.FileHelper.ConvertOSFilePath(f).Trim(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar,
+                    StringComparison.OrdinalIgnoreCase) >= 0))
             continue;
 
         // Scan this folder only (TopDirectoryOnly – every sub-folder is its own entry
