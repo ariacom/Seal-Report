@@ -116,6 +116,29 @@
         points.Add(new object[] { Math.Round(lat.Value, 6), Math.Round(lon.Value, 6), category, size, values, navigation, sizeDisplay });
     }
 
+    //Main group of points: the map is fitted to the points inside the box of the 5%-95% quantiles widened by half its size on each side,
+    //if they are at least 90% of the points (e.g. a map of France ignores the overseas points). The other points stay on the map.
+    double[][] mainBounds = null;
+    int outside = 0;
+    if (view.GetBoolValue("map_fit_bounds") && view.GetBoolValue("map_fit_main_group") && points.Count >= 20)
+    {
+        var lats = points.Select(i => (double)i[0]).OrderBy(i => i).ToList();
+        var lons = points.Select(i => (double)i[1]).OrderBy(i => i).ToList();
+        Func<List<double>, double, double> quantile = (list, q) => list[(int)Math.Round(q * (list.Count - 1))];
+        double latLow = quantile(lats, 0.05), latHigh = quantile(lats, 0.95), lonLow = quantile(lons, 0.05), lonHigh = quantile(lons, 0.95);
+        //Margin: half the size of the box, at least 0.5 degree so that a very dense group keeps its close neighbors
+        double latMargin = Math.Max(0.5, (latHigh - latLow) / 2), lonMargin = Math.Max(0.5, (lonHigh - lonLow) / 2);
+        var inside = points.Where(i => (double)i[0] >= latLow - latMargin && (double)i[0] <= latHigh + latMargin && (double)i[1] >= lonLow - lonMargin && (double)i[1] <= lonHigh + lonMargin).ToList();
+        if (inside.Count < points.Count && inside.Count >= 0.9 * points.Count)
+        {
+            outside = points.Count - inside.Count;
+            mainBounds = new double[][] {
+                new double[] { inside.Min(i => (double)i[0]), inside.Min(i => (double)i[1]) },
+                new double[] { inside.Max(i => (double)i[0]), inside.Max(i => (double)i[1]) }
+            };
+        }
+    }
+
     //Size legend: the minimum, the maximum and the value closest to the middle of the scale (square root, so a quarter of the range)
     var sizeLegend = new List<object[]>();
     if (sizeCells.Count > 0)
@@ -220,7 +243,10 @@
         points = points,
         colorTitle = colorCol != -1 ? table[titleRow, colorCol].HTMLValue : "",
         sizeTitle = sizeCol != -1 ? table[titleRow, sizeCol].HTMLValue : "",
-        sizeLegend = sizeLegend
+        sizeLegend = sizeLegend,
+        mainBounds = mainBounds,
+        showAllText = report.Translate("Show all"),
+        mainViewText = report.Translate("Main view")
     };
 }
 
@@ -229,7 +255,9 @@
 {
     <div class="text-muted small">
         @Raw(report.Translate("{0} point(s) displayed", points.Count.ToString("N0", view.CultureInfo)))@if (missing > 0)
-        {<text>, @Raw(report.Translate("{0} row(s) without coordinates", missing.ToString("N0", view.CultureInfo)))</text>}
+        {<text>, @Raw(report.Translate("{0} row(s) without coordinates", missing.ToString("N0", view.CultureInfo)))</text>}@if (outside > 0)
+        {<text>, @Raw(report.Translate("{0} point(s) outside the frame", outside.ToString("N0", view.CultureInfo)))@if (!report.PrintLayout)
+            {<text> (<a href="#" class="map_fit_toggle" mapid="@mapId">@Raw(report.Translate("Show all"))</a>)</text>}</text>}
     </div>
 }
 
@@ -389,16 +417,46 @@ $(document).ready(function () {
 
     //Initial position, done when the container is visible (e.g. the map may be in a hidden tab page)
     //The position is set again when the container is resized, until the first user interaction
-    var positionSize = '', interacted = false;
+    var positionSize = '', interacted = false, showAll = false;
     $(container).one('mousedown wheel touchstart keydown', function () { interacted = true; });
+    function fitMap() {
+        if (@view.GetBoolValueJS("map_fit_bounds") && bounds.length > 0) map.fitBounds(data.mainBounds && !showAll ? data.mainBounds : bounds, { padding: [20, 20], maxZoom: Math.min(16, @maxZoom) });
+        else map.setView([@centerLat.ToString(CultureInfo.InvariantCulture), @centerLon.ToString(CultureInfo.InvariantCulture)], @zoom);
+    }
     function refreshMap() {
         if (container.offsetWidth == 0 || container.offsetHeight == 0) return;
         map.invalidateSize();
         var size = container.offsetWidth + 'x' + container.offsetHeight;
         if (interacted || positionSize == size) return;
         positionSize = size;
-        if (@view.GetBoolValueJS("map_fit_bounds") && bounds.length > 0) map.fitBounds(bounds, { padding: [20, 20], maxZoom: Math.min(16, @maxZoom) });
-        else map.setView([@centerLat.ToString(CultureInfo.InvariantCulture), @centerLon.ToString(CultureInfo.InvariantCulture)], @zoom);
+        fitMap();
+    }
+
+    //Points outside the main group: a button (and the link of the information) switches between the main group and all the points
+    @if (!report.PrintLayout)
+    {
+        <text>
+        if (data.mainBounds) {
+            var toggles = $('.map_fit_toggle[mapid="@mapId"]');
+            var fitControl = L.control({ position: 'topleft' });
+            fitControl.onAdd = function () {
+                var div = L.DomUtil.create('div', 'leaflet-bar');
+                div.innerHTML = '<a href="#" class="map_fit_toggle" role="button" style="width:auto;padding:0 8px;font-size:12px;white-space:nowrap;"></a>';
+                L.DomEvent.disableClickPropagation(div);
+                return div;
+            };
+            fitControl.addTo(map);
+            toggles = toggles.add($(container).find('.map_fit_toggle'));
+            toggles.text(data.showAllText);
+            toggles.on('click', function (e) {
+                e.preventDefault();
+                showAll = !showAll;
+                interacted = true;
+                toggles.text(showAll ? data.mainViewText : data.showAllText);
+                fitMap();
+            });
+        }
+        </text>
     }
     refreshMap();
     if (window.ResizeObserver) new ResizeObserver(refreshMap).observe(container);
