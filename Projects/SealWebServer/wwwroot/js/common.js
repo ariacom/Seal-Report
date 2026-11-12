@@ -610,6 +610,24 @@ function mainInit() {
         }
     }
 
+    //Guest: the profile is not saved, the state of the guide chosen with the Guide button is kept in the browser
+    var $guideDiv = $("#guide_div");
+    var guideStorageKey = $guideDiv.length && $guideDiv.attr("data-guest") === "true" && $guideDiv.attr("data-report-guid") ? "seal_guide_" + $guideDiv.attr("data-report-guid") : null;
+    if (guideStorageKey && !$guideDiv.data("stateApplied")) {
+        $guideDiv.data("stateApplied", true);
+        var storedGuide = null;
+        try { storedGuide = localStorage.getItem(guideStorageKey); } catch (e) { }
+        if (storedGuide === "true" || storedGuide === "false") {
+            var storedShow = storedGuide === "true";
+            if (storedShow != $guideDiv.hasClass("show")) {
+                //no animation: the report is just displayed
+                $guideDiv.toggleClass("show", storedShow);
+                $("#guide_button").toggleClass("active");
+                if (_generateHTMLDisplay) processSubmitViewParameter("show_guide", storedShow);
+            }
+        }
+    }
+
     //initial titles reflect the current visibility of the related panels
     setToggleTitle("#restrictions_button", $("#restrictions_div").hasClass("show"));
     setToggleTitle("#guide_button", $("#guide_div").hasClass("show"));
@@ -647,6 +665,9 @@ function mainInit() {
     $("#guide_button").unbind("click").on("click", function () {
         var showGuide = !$("#guide_div").hasClass("show");
         if (_generateHTMLDisplay) processSubmitViewParameter("show_guide", showGuide);
+        if (guideStorageKey) {
+            try { localStorage.setItem(guideStorageKey, showGuide ? "true" : "false"); } catch (e) { }
+        }
         bootstrap.Collapse.getOrCreateInstance(document.getElementById('guide_div')).toggle();
         $("#guide_button").toggleClass("active");
         setToggleTitle("#guide_button", showGuide);

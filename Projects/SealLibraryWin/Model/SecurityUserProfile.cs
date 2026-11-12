@@ -55,6 +55,22 @@ namespace Seal.Model
 
 
     /// <summary>
+    /// Store the state (shown/hidden) of the guide of a report chosen by the user
+    /// </summary>
+    public class GuideStateItem
+    {
+        /// <summary>
+        /// GUID of the report
+        /// </summary>
+        public string ReportGUID { get; set; }
+
+        /// <summary>
+        /// True if the guide is shown
+        /// </summary>
+        public bool Shown { get; set; }
+    }
+
+    /// <summary>
     /// Object to store the culture and the recent reports of the user
     /// </summary>
     public class SecurityUserProfile
@@ -133,6 +149,40 @@ namespace Seal.Model
             path = FileHelper.ConvertOSFilePath(path);
             if (Favorites.Exists(i => i.Path == path)) Favorites.RemoveAll(i => i.Path == path);
             else Favorites.Insert(0, new RecentFileItem() { Path = path, Name = System.IO.Path.GetFileNameWithoutExtension(path) });
+        }
+
+        /// <summary>
+        /// Maximum number of guide states kept in the profile
+        /// </summary>
+        public const int MaxGuideStates = 200;
+
+        /// <summary>
+        /// State of the report guides (shown/hidden) chosen by the user with the Guide button, the most recent first.
+        /// Only the reports where the user has used the button are stored: otherwise the view parameter 'show_guide' applies.
+        /// </summary>
+        public List<GuideStateItem> GuideStates { get; set; } = new List<GuideStateItem>();
+
+        /// <summary>
+        /// Return the state of the guide chosen by the user for a report, null if the user has not chosen
+        /// </summary>
+        public bool? GetGuideState(string reportGUID)
+        {
+            if (string.IsNullOrEmpty(reportGUID)) return null;
+            var item = GuideStates.Find(i => i != null && i.ReportGUID == reportGUID);
+            return item?.Shown;
+        }
+
+        /// <summary>
+        /// Set the state of the guide chosen by the user for a report. Return true if the state has changed.
+        /// </summary>
+        public bool SetGuideState(string reportGUID, bool shown)
+        {
+            if (string.IsNullOrEmpty(reportGUID)) return false;
+            if (GuideStates.Count > 0 && GuideStates[0] != null && GuideStates[0].ReportGUID == reportGUID && GuideStates[0].Shown == shown) return false;
+            GuideStates.RemoveAll(i => i == null || i.ReportGUID == reportGUID);
+            GuideStates.Insert(0, new GuideStateItem() { ReportGUID = reportGUID, Shown = shown });
+            if (GuideStates.Count > MaxGuideStates) GuideStates.RemoveRange(MaxGuideStates, GuideStates.Count - MaxGuideStates);
+            return true;
         }
 
         /// <summary>

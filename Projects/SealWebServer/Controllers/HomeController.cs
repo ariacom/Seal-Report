@@ -623,6 +623,12 @@ namespace SealWebServer.Controllers
 
                     Report report = execution.Report;
                     report.UpdateViewParameter(parameter_view_id, parameter_view_name, parameter_view_value, result_options);
+
+                    //Guide button: remember the state of the guide of this report in the user profile (not saved for a Guest, kept for the session)
+                    if (parameter_view_name == "show_guide" && WebUser != null && bool.TryParse(parameter_view_value, out bool showGuide))
+                    {
+                        if (WebUser.Profile.SetGuideState(report.GUID, showGuide)) WebUser.SaveProfile();
+                    }
                     return new EmptyResult();
                 }
             }

@@ -10,11 +10,17 @@
         ? report.GuideHtml : "";
     //Optional maximum height (0 = no limit): set on the card body so the collapse animation of #guide_div is unchanged.
     var maxHeight = view.GetNumericValue("guide_max_height");
+    //Initial state: the one chosen by the user with the Guide button (user profile) if any, otherwise the view parameter.
+    //For a Guest (profile not saved), common.js also applies the state stored in the browser (localStorage).
+    var showGuide = view.GetBoolValue("show_guide");
+    var userState = report.SecurityContext?.Profile?.GetGuideState(report.GUID);
+    if (userState != null) showGuide = userState.Value;
+    var isGuest = report.SecurityContext != null && report.SecurityContext.IsGuest;
 }
 
 @if (!string.IsNullOrEmpty(content))
 {
-    <div id="guide_div" class="collapse @(view.GetBoolValue("show_guide") ? "show" : "")">
+    <div id="guide_div" class="collapse @(showGuide ? "show" : "")" data-report-guid="@report.GUID" data-guest="@Helper.ToJS(isGuest)">
         <div class="card guide mb-3">
             <div class="card-body" @Raw(maxHeight > 0 ? $"style=\"max-height:{maxHeight}px;overflow-y:auto\"" : "")>
                 @Raw(content)
