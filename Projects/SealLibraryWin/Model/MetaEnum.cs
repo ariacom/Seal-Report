@@ -732,10 +732,67 @@ namespace Seal.Model
         /// </summary>
         public string GetDisplayValue(string id, MetaConnection connection, bool forRestriction = false)
         {
-            var values = ValuesPerConnection ? GetValues(connection) : Values;
-            MetaEV value = values.FirstOrDefault(i => i.Id == id);
+            MetaEV value = FindValue(id, connection, out _);
             return value == null ? id : (forRestriction ? value.DisplayRestriction : value.DisplayValue);
         }
+
+        /// <summary>
+        /// Return the value of an identifier (the first one if several have the same identifier) and its position in the values of the connection (see GetValues()), null and -1 if not found.
+        /// Uses an index by identifier: a result of thousands of rows checked against a list of thousands of values (e.g. the communes of a country) took seconds with a linear search per row.
+        /// </summary>
+        public MetaEV FindValue(string id, MetaConnection connection, out int position)
+        {
+            position = -1;
+            if (id == null) return null;
+            var source = Values;
+            var key = ValuesPerConnection && connection != null ? connection.GUID : "";
+            Dictionary<string, KeyValuePair<MetaEV, int>> index;
+            lock (_indexLock)
+            {
+                //The lists are replaced, not modified, when they are refreshed or completed (AddValues): a new list or a new count rebuilds the index
+                if (_indexes == null || _indexSource != source || _indexCount != source.Count)
+                {
+                    _indexes = new Dictionary<string, Dictionary<string, KeyValuePair<MetaEV, int>>>();
+                    _indexSource = source;
+                    _indexCount = source.Count;
+                }
+                if (!_indexes.TryGetValue(key, out index))
+                {
+                    index = new Dictionary<string, KeyValuePair<MetaEV, int>>();
+                    int i = 0;
+                    foreach (var ev in source)
+                    {
+                        if (key != "" && ev.ConnectionGUID != key) continue;
+                        if (ev.Id != null) index.TryAdd(ev.Id, new KeyValuePair<MetaEV, int>(ev, i));
+                        i++;
+                    }
+                    _indexes[key] = index;
+                }
+            }
+
+            if (index.TryGetValue(id, out var found) && found.Key.Id == id)
+            {
+                position = found.Value;
+                return found.Key;
+            }
+
+            //Not found, or a value changed in place (e.g. edited in the Designer): linear search as before, the index is rebuilt at the next call
+            var values = GetValues(connection);
+            for (int i = 0; i < values.Count; i++)
+            {
+                if (values[i].Id == id)
+                {
+                    lock (_indexLock) _indexes = null;
+                    position = i;
+                    return values[i];
+                }
+            }
+            return null;
+        }
+        Dictionary<string, Dictionary<string, KeyValuePair<MetaEV, int>>> _indexes = null;
+        List<MetaEV> _indexSource = null;
+        int _indexCount = -1;
+        readonly object _indexLock = new object();
 
         /// <summary>
         /// List loaded on demand: add the values not yet in the list. They are appended so the positional html ids already given stay valid.
@@ -748,9 +805,10 @@ namespace Seal.Model
                 var current = Values;
                 //New list published at the end: the list is shared by the reports executed at the same time, a report may be reading the current one
                 var newValues = new List<MetaEV>(current);
+                var ids = new HashSet<string>(current.Where(i => i.Id != null).Select(i => i.Id));
                 foreach (var value in values)
                 {
-                    if (!newValues.Exists(i => i.Id == value.Id)) newValues.Add(value);
+                    if (value.Id == null ? !newValues.Exists(i => i.Id == null) : ids.Add(value.Id)) newValues.Add(value);
                 }
                 if (newValues.Count == current.Count) return;
                 SetValuesHtmlIds(newValues);
@@ -764,7 +822,8 @@ namespace Seal.Model
         public void EnsureValues(IEnumerable<string> ids)
         {
             if (!IsLoadOnDemand || ids == null) return;
-            var missing = ids.Where(i => !string.IsNullOrEmpty(i) && !Values.Exists(j => j.Id == i)).Distinct().ToList();
+            var known = new HashSet<string>(Values.Where(i => i.Id != null).Select(i => i.Id));
+            var missing = ids.Where(i => !string.IsNullOrEmpty(i) && !known.Contains(i)).Distinct().ToList();
             if (missing.Count == 0) return;
 
             try

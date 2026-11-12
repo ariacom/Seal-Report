@@ -435,13 +435,18 @@ namespace Seal.Model
 
             bool elementSortPosition = (IsSorted && en.UsePosition);
             MetaEV value = null;
-            var values = en.GetValues(Model.Connection);
-            if (useDisplayValue) value = values.FirstOrDefault(i => i.DisplayValue == enumValue);
-            else value = values.FirstOrDefault(i => i.Id == enumValue);
+            int position = -1;
+            if (useDisplayValue)
+            {
+                var values = en.GetValues(Model.Connection);
+                value = values.FirstOrDefault(i => i.DisplayValue == enumValue);
+                if (value != null) position = values.LastIndexOf(value);
+            }
+            else value = en.FindValue(enumValue, Model.Connection, out position);
 
             if (value != null)
             {
-                string sortPrefix = elementSortPosition ? string.Format("{0:000000}", values.LastIndexOf(value)) : "";
+                string sortPrefix = elementSortPosition ? string.Format("{0:000000}", position) : "";
                 result = sortPrefix + Model.EnumDisplayValue(en, value.Id);
             }
             else

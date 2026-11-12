@@ -8180,6 +8180,12 @@
             Return the display value from the identifier
             </summary>
         </member>
+        <member name="M:Seal.Model.MetaEnum.FindValue(System.String,Seal.Model.MetaConnection,System.Int32@)">
+            <summary>
+            Return the value of an identifier (the first one if several have the same identifier) and its position in the values of the connection (see GetValues()), null and -1 if not found.
+            Uses an index by identifier: a result of thousands of rows checked against a list of thousands of values (e.g. the communes of a country) took seconds with a linear search per row.
+            </summary>
+        </member>
         <member name="M:Seal.Model.MetaEnum.AddValues(System.Collections.Generic.IEnumerable{Seal.Model.MetaEV})">
             <summary>
             List loaded on demand: add the values not yet in the list. They are appended so the positional html ids already given stay valid.
