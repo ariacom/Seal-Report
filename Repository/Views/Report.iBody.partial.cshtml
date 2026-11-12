@@ -340,6 +340,9 @@
     @Raw(report.AttachScriptPath("lib/leaflet/leaflet.js", "https://cdnjs.cloudflare.com/ajax/libs/leaflet/1.9.4/leaflet.min.js"))
 }
 
+<!--space at the bottom of the result: the last rows can be scrolled above the floating buttons (back to top, feedback)-->
+<div class="sr-bottom-spacer no-print" style="height:72px;"></div>
+
 <!--back to top-->
 <a id="back-to-top" href="#" class="back-to-top" role="button" aria-label="@Raw(Helper.ToJS(report.Translate("Back to top")))" title="@Raw(Helper.ToJS(report.Translate("Back to top")))" data-bs-toggle="tooltip" data-bs-placement="left">
     <span class="fa-solid fa-arrow-up"></span>
