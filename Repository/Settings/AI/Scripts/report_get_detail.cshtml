@@ -49,6 +49,15 @@
     sb.AppendLine($"# {displayName}");
     sb.AppendLine($"Path: {relativePath}");
     if (!string.IsNullOrEmpty(description)) sb.AppendLine($"Description: {description}");
+    // Guide shown to the user above the result (HTML): what the report answers, its scope, the period and the limits of the data
+    if (!string.IsNullOrWhiteSpace(report.Guide))
+    {
+        var guide = System.Text.RegularExpressions.Regex.Replace(report.Guide, @"<\s*(br|/p|/li|/div|/h[1-6]|/tr)\b[^>]*>", "\n", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+        guide = System.Net.WebUtility.HtmlDecode(System.Text.RegularExpressions.Regex.Replace(guide, "<[^>]+>", ""));
+        guide = System.Text.RegularExpressions.Regex.Replace(guide, @"[ \t]+", " ");
+        guide = System.Text.RegularExpressions.Regex.Replace(guide, @"\s*\n\s*", "\n").Trim();
+        if (guide.Length > 0) sb.AppendLine($"Guide: {guide}");
+    }
     sb.AppendLine();
 
     // Input values (prompted restrictions at report level)

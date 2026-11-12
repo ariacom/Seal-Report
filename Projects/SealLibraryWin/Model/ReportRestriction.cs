@@ -1037,6 +1037,20 @@ namespace Seal.Model
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAllowAPI() { return AllowAPI; }
 
+        /// <summary>
+        /// Message if the restriction is on an enumerated list and has a value typed (Value 1) but no value of the list selected: the engine ignores the value,
+        /// the restriction filters nothing (e.g. a report written by hand with Value1 instead of EnumValues). Null otherwise.
+        /// </summary>
+        [XmlIgnore]
+        public string IgnoredEnumValueMessage
+        {
+            get
+            {
+                if (!IsEnum || EnumValues.Count > 0 || string.IsNullOrEmpty(Value1)) return null;
+                if (Operator == Operator.IsNull || Operator == Operator.IsNotNull || Operator == Operator.IsEmpty || Operator == Operator.IsNotEmpty) return null;
+                return $"Restriction '{DisplayNameEl}' is on the enumerated list '{EnumRE?.Name}': its value '{Value1}' is ignored and the restriction filters nothing. Select the value in the list (Enum Values).";
+            }
+        }
 
         /// <summary>
         /// True if the restriction has a value

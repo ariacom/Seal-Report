@@ -7,6 +7,7 @@ using Seal.AI;
 using Seal.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Xml.Linq;
 
@@ -149,6 +150,30 @@ namespace Test
             //With a value: executed
             result = new AIReportWriter(tool).ExecuteFromXml(xml.Replace("<Operator>Contains</Operator>", "<Operator>Contains</Operator><Value1>Ernst</Value1>"), null);
             StringAssert.Contains(result, "=== Model: Orders ===");
+        }
+
+        [TestMethod]
+        public void IgnoredEnumValueIsReported()
+        {
+            //A report written by hand with Value1 on an enumerated list: the engine ignores the value, the execution messages say it
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var xml = ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Value1>Germany</Value1>");
+            var path = Path.Combine(Path.GetTempPath(), $"ignored_enum_{Guid.NewGuid():N}.srex");
+            File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository);
+                var restriction = report.Models[0].Restrictions[0];
+                StringAssert.Contains(restriction.IgnoredEnumValueMessage, "its value 'Germany' is ignored");
+                report.SkipExternalViewer = true;
+                new ReportExecution() { Report = report }.Execute();
+                while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+                StringAssert.Contains(report.ExecutionMessages, "its value 'Germany' is ignored");
+                //With the value selected in the list: no message
+                restriction.EnumValues.Add("Germany");
+                Assert.IsNull(restriction.IgnoredEnumValueMessage);
+            }
+            finally { File.Delete(path); }
         }
 
         [TestMethod]

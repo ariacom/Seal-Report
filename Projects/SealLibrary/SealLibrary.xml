@@ -14171,6 +14171,12 @@
             Xml serialization helper: serialize AllowAPI only if not the default value
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportRestriction.IgnoredEnumValueMessage">
+            <summary>
+            Message if the restriction is on an enumerated list and has a value typed (Value 1) but no value of the list selected: the engine ignores the value,
+            the restriction filters nothing (e.g. a report written by hand with Value1 instead of EnumValues). Null otherwise.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportRestriction.HasValue">
             <summary>
             True if the restriction has a value

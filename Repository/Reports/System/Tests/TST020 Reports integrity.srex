@@ -134,6 +134,9 @@
             {
                 if (!r.IsCommonRestrictionValue &amp;&amp; !string.IsNullOrEmpty(r.MetaColumnGUID) &amp;&amp; r.MetaColumn == null)
                     errors.Add($"[{rel}] model '{model.Name}': restriction '{r.DisplayNameEl}' is not in the data source.");
+                //A value typed on an enumerated list (Value1 without EnumValues) is ignored by the engine: the restriction filters nothing
+                else if (r.MetaColumn != null &amp;&amp; r.IgnoredEnumValueMessage != null)
+                    errors.Add($"[{rel}] model '{model.Name}': {r.IgnoredEnumValueMessage}");
             }
         }
     }

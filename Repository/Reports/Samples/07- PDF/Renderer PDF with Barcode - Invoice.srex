@@ -2538,7 +2538,7 @@ ORDER BY 1</Sql>
           <MetaColumnGUID>12ce241a-1f80-4b69-a023-66df46152046</MetaColumnGUID>
           <EnumGUIDEL>067c824f-a58c-44d7-b0dd-365be290818a</EnumGUIDEL>
           <Prompt>PromptOneValue</Prompt>
-          <Value1>10400</Value1>
+          <EnumValues><string>10400</string></EnumValues>
           <FormatRe>N0</FormatRe>
           <EnumGUIDRE>067c824f-a58c-44d7-b0dd-365be290818a</EnumGUIDRE>
         </ReportRestriction>
