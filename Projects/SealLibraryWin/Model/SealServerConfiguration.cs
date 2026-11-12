@@ -92,6 +92,8 @@ namespace Seal.Model
                 GetProperty("TimeSeparator").SetIsBrowsable(!ForPublication);
                 GetProperty("LogoName").SetIsBrowsable(!ForPublication);
                 GetProperty("WebProductName").SetIsBrowsable(!ForPublication);
+                GetProperty("WebProductInformation").SetIsBrowsable(!ForPublication);
+                GetProperty("WebCopyright").SetIsBrowsable(!ForPublication);
                 GetProperty("WebHelpLink").SetIsBrowsable(!ForPublication);
                 GetProperty("WebCultures").SetIsBrowsable(!ForPublication);
                 GetProperty("LogDays").SetIsBrowsable(!ForPublication);
@@ -207,6 +209,23 @@ namespace Seal.Model
         [Category("Server Settings"), DisplayName("Web Product Name"), Description("The name of the product displayed on the Web site."), Id(7, 1)]
 #endif
         public string WebProductName { get; set; } = "Seal Report";
+
+        /// <summary>
+        /// Optional text shown in the tooltip of the product name on the Web site, after the version. If empty, the license information is shown.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Web Product Information"), Description("Optional text shown in the tooltip of the product name on the Web site, after the version. If empty, the license information is shown."), Id(7, 1)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+#endif
+        public string WebProductInformation { get; set; }
+
+        /// <summary>
+        /// Optional name of the copyright holder shown in the footer of the Web site ('Copyright © year name. All Rights Reserved'). If empty, 'Seal Report' is used.
+        /// </summary>
+#if WINDOWS
+        [Category("Server Settings"), DisplayName("Web Copyright"), Description("Optional name of the copyright holder shown in the footer of the Web site ('Copyright © year name. All Rights Reserved'). If empty, 'Seal Report' is used."), Id(7, 1)]
+#endif
+        public string WebCopyright { get; set; }
 
         /// <summary>
         /// Optional Help link for the Web Report Server: a URL, or the path of a file relative to the repository folder (e.g. 'Settings\Help.pdf') served to the authenticated users

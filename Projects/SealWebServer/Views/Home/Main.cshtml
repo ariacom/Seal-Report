@@ -183,7 +183,7 @@
 
     <div id="footer-div" style="position:fixed; bottom:10px; text-align:center; width:100%">
         <div>
-            <p>Copyright &copy; @DateTime.Now.Year Seal Report. All Rights Reserved (version <span id="footer-version">@Repository.ProductVersion</span>)</p>
+            <p>Copyright &copy; @DateTime.Now.Year @(string.IsNullOrWhiteSpace(repository.Configuration.WebCopyright) ? "Seal Report" : repository.Configuration.WebCopyright). All Rights Reserved (version <span id="footer-version">@Repository.ProductVersion</span>)</p>
         </div>
     </div>
 

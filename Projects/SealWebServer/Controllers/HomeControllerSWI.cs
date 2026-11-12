@@ -2207,11 +2207,14 @@ namespace SealWebServer.Controllers
             writeDebug("SWIGetVersions");
             try
             {
+                //Product information of the configuration (e.g. a rebranded site), otherwise the license information
+                var info = (Repository ?? Repository.Instance).Configuration.WebProductInformation;
+                if (string.IsNullOrWhiteSpace(info)) info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "MIT License\r\nhttps://github.com/ariacom/Seal-Report" : Repository.Instance.LicenseText;
                 return Json(new
                 {
                     SRVersion = Repository.ProductVersion,
                     SRAdditionalVersion = Repository.ProductAdditionalInfo,
-                    Info = string.IsNullOrEmpty(Repository.Instance.LicenseText) ? "MIT License\r\nhttps://github.com/ariacom/Seal-Report" : Repository.Instance.LicenseText
+                    Info = info.TrimEnd()
                 });
             }
             catch (Exception ex)
