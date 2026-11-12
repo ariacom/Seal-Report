@@ -652,6 +652,28 @@ class SWIMain {
             }, 500);
         });
     }
+    //Rebuild the folder tree from the server, keeping the expanded nodes and the selected folder (or its nearest existing parent),
+    //then reload the files of the selected folder.
+    refreshFolderTree() {
+        if (!_main._tree)
+            return;
+        const expanded = _main._tree.getExpandedPaths();
+        let selected = _main._tree.getSelected();
+        _gateway.GetRootFolders(function (data) {
+            _main._canEdit = _main._tree.load(data);
+            _main._tree.expandPaths(expanded);
+            while (selected && !_main._tree.getNode(selected))
+                selected = SWIUtil.GetDirectoryName(selected);
+            if (selected)
+                _main._tree.select(selected, false);
+            _main._folderpath = _main._tree.getSelected() || "";
+            if (_main._folderpath)
+                _main.LoadReports(_main._folderpath);
+            else
+                _main.clearFilesTable();
+            _main.enableControls();
+        });
+    }
     ReloadReportsTable() {
         _main.LoadReports(_main._tree.getSelected());
     }
@@ -1032,7 +1054,11 @@ class SWIMain {
         }
     }
     toggleFoldersReport(viewreport, foldertoselect = "") {
+        const fromReport = _main._currentView == "report";
         _main._currentView = (viewreport || !_main._profile.showfolders ? "report" : "folders");
+        //Back to the folders: the folders may have been created or deleted meanwhile (by a report, a task, another user)
+        if (fromReport && _main._currentView == "folders" && !foldertoselect)
+            _main.refreshFolderTree();
         if (foldertoselect) { //Select a folder in the treeview
             _main._folderpath = foldertoselect;
             _main._tree.deselectAll();
@@ -1191,6 +1217,21 @@ class SWIFolderTree {
         this._selected = null;
         if (had)
             this.fireChanged();
+    }
+    //Paths of the expanded nodes, to restore them after the tree is rebuilt
+    getExpandedPaths() {
+        var result = [];
+        for (var p in this._nodes)
+            if (this._nodes[p].expand)
+                result.push(p);
+        return result;
+    }
+    expandPaths(paths) {
+        for (var i = 0; i < paths.length; i++) {
+            var n = this._nodes[paths[i]];
+            if (n && n.childUl && !n.expand)
+                this.toggleNode(paths[i]);
+        }
     }
     getSelected() { return this._selected; }
     getSelectedNode() { return this._selected ? this._nodes[this._selected] : null; }

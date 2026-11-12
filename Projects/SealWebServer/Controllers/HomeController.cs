@@ -1086,7 +1086,9 @@ namespace SealWebServer.Controllers
             {
                 //Reports scheduled by the user with a web schedule (not defined in the report file)
                 var webScheduledPaths = WebUser.CanUseWebSchedules ? new HashSet<string>(getUserWebSchedules().Select(i => i.WebPath), StringComparer.OrdinalIgnoreCase) : new HashSet<string>();
-                foreach (string newPath in Directory.GetFiles(folder.GetFullPath(), "*.*"))
+                //The folder may have been deleted since the tree was built (e.g. by a task or a script): no file instead of an exception
+                var fullPath = folder.GetFullPath();
+                foreach (string newPath in Directory.Exists(fullPath) ? Directory.GetFiles(fullPath, "*.*") : Array.Empty<string>())
                 {
                     //Repository folders list report and shortcut files as plain files (download/manage only, no execution through a repository path)
                     bool isReport = !folder.IsRepository && FileHelper.IsReportFile(newPath);
