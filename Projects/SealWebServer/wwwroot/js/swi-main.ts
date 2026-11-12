@@ -299,7 +299,9 @@ class SWIMain {
         //Reset init state (ShowHideControl: a plain .show() cannot override the d-none set at init)
         SWIUtil.ShowHideControl($("#menu-main-button"), true);
         $("#nav_button,#brand-id").css("pointer-events", "");
-        $("#brand-id").unbind("click").on("click", function () {
+        //Click on the product name: reload the page
+        $("#brand-id").unbind("click").on("click", function (e) {
+            e.preventDefault();
             window.location.href = WebApplicationName;
         });
 
@@ -571,10 +573,6 @@ class SWIMain {
         //Start last report
         if (_main._profile.report) {
             _main.executeReportFromMenu(_main._profile.report, "", "", _main._profile.reportname);
-            $("#brand-id").unbind("click").on("click", function () {
-                if (_main._reportPath == _main._profile.report) _main.toggleFoldersReport(true);
-                else _main.executeReportFromMenu(_main._profile.report, "", "", _main._profile.reportname);
-            });
         }
         else {
             _main.toggleFoldersReport(false);
