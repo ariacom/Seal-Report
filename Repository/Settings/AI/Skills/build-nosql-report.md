@@ -57,6 +57,13 @@ correctly.
    `<AggregateFunction>`), then call `report_create_from_xml`. Keep the template's
    internal references consistent: every `<ModelGUID>` must be the `<GUID>` of a
    `<ReportModel>` of the same XML (all real GUIDs or all short placeholders, never a mix).
+   **Reference the source's own table, never a copy of it**: do not keep a
+   `<MetaData><Tables>` block of the template (a report-local table with a
+   `<TemplateName>` or a `<MongoStagesScript>`) — it requires the Scripts code level
+   and is refused. The source table already exists: its columns' `<MetaColumnGUID>`
+   from `datasource_get_detail` are enough. If `report_create_from_xml` refuses some
+   content above your authorization level, remove that content and call it again;
+   tell the user only if the request really needs it.
 7. Read the test execution appended to the success message: `TEST FAILED` or a
    timeout → fix and call again with `overwrite: true`; give the row count in your answer.
 8. Propose execution with the `[EXECUTE_REPORT:...]` tag.
