@@ -176,7 +176,7 @@ Use when the user wants automated execution:
       <Description>Executes a report and returns its result tables as structured JSON data, followed by the execution messages.
 Use it to fetch the actual data produced by an existing report for analysis, answering data questions, generating a summary, or diagnosing execution issues.
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex).
-Optionally pass model_name to restrict the output to a single model.
+Optionally pass model_name to restrict the output to a single model: only this model is executed, much faster for a report having many models (e.g. a Fiche). If its result depends on another model of the report, execute again without model_name.
 Pass criteria to set the values of its prompted criteria for this execution only (nothing is saved): the answer to a question on a filter (a city, a type, a period) comes from the existing report with these criteria, without creating a new report.
 The result starts with the criteria applied, with the display values of the enumerated lists: check them before giving the figures.</Description>
       <ProgressLabel>Executing report {path}</ProgressLabel>

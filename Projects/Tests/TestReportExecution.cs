@@ -26,6 +26,65 @@ namespace Test
             checkResult(report, result);
         }
 
+        [TestMethod]
+        public void DataOnlySingleModel()
+        {
+            //Data request of the AI agent: only the model asked is executed, no view is rendered, same result as the complete execution
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            var full = Report.LoadFromFile(path, repository);
+            full.SkipExternalViewer = true;
+            new ReportExecution() { Report = full }.Execute();
+            while (full.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(full.HasErrors, full.ExecutionErrors);
+
+            var report = Report.LoadFromFile(path, repository);
+            report.SkipExternalViewer = true;
+            report.DataOnly = true;
+            report.ExecutionModelsFilter = report.Models.Where(i => i.Name == "Sales per category").ToList();
+            new ReportExecution() { Report = report }.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            Assert.AreEqual(1, report.ExecutionModels.Count);
+            Assert.IsFalse(report.ExecutionMessages.Contains("Rendering report"), "no view rendered");
+            var model = report.Models.First(i => i.Name == "Sales per category");
+            Assert.IsNotNull(model.ResultTable);
+            Assert.AreEqual(full.Models.First(i => i.Name == "Sales per category").ResultTable.Rows.Count, model.ResultTable.Rows.Count);
+            Assert.IsTrue(report.Models.Where(i => i != model).All(i => i.ResultTable == null), "the other models are not executed");
+        }
+
+        [TestMethod]
+        public void SharedEnumConcurrentReadsAndAdds()
+        {
+            //The enumerated lists are shared by the reports executed at the same time: values added (list loaded on demand) while other threads enumerate the list
+            var metaEnum = MetaEnum.Create();
+            var stop = DateTime.Now.AddSeconds(2);
+            int errors = 0, adds = 0;
+            var tasks = Enumerable.Range(0, 8).Select(t => System.Threading.Tasks.Task.Run(() =>
+            {
+                while (DateTime.Now < stop)
+                {
+                    try
+                    {
+                        if (t < 2)
+                        {
+                            metaEnum.AddValues(new[] { new MetaEV() { Id = Guid.NewGuid().ToString(), Val = "v" } });
+                            System.Threading.Interlocked.Increment(ref adds);
+                        }
+                        else
+                        {
+                            foreach (var value in metaEnum.Values) { }
+                            metaEnum.Values.ToList();
+                        }
+                    }
+                    catch { System.Threading.Interlocked.Increment(ref errors); }
+                }
+            })).ToArray();
+            System.Threading.Tasks.Task.WaitAll(tasks);
+            Assert.AreEqual(0, errors, "errors while reading the list");
+            Assert.AreEqual(adds, metaEnum.Values.Count);
+        }
+
         /// <summary>
         /// Check the HTML result file without opening it (no browser launched by the tests)
         /// </summary>

@@ -8169,7 +8169,7 @@
             </summary>
             <param name="checkOnly"></param>
         </member>
-        <member name="M:Seal.Model.MetaEnum.SetValuesHtmlIds">
+        <member name="M:Seal.Model.MetaEnum.SetValuesHtmlIds(System.Collections.Generic.List{Seal.Model.MetaEV})">
             <summary>
             Assign positional html ids to the enum values (per connection when ValuesPerConnection), so the values
             stay renderable after a refresh that replaced the MetaEV objects. Consistent with ReportRestriction.SetEnumHtmlIds().
@@ -11066,6 +11066,16 @@
         <member name="P:Seal.Model.Report.ExecutionModels">
             <summary>
             List of model to process during the report execution. By default, only models involved in displayed views are executed, unless they have the ForceModelsLoad flag set to true.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.ExecutionModelsFilter">
+            <summary>
+            If set, only these models are executed, whether a view displays them or not (e.g. the AI agent asks for one model of a report having many): the other models are not loaded
+            </summary>
+        </member>
+        <member name="P:Seal.Model.Report.DataOnly">
+            <summary>
+            If true, the execution builds the models and runs the tasks but renders no view and generates no result file (data request of the AI agent, which reads the result tables only)
             </summary>
         </member>
         <member name="P:Seal.Model.Report.ExecutionViews">

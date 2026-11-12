@@ -353,7 +353,7 @@ namespace Seal.Model
                 //Render report
                 Report.ExecutionRenderingDate = DateTime.Now;
                 //Render first to get the result file, necessary if new extension or for output
-                if (!Report.Cancel && !Report.IsBasicHTMLWithNoOutput)
+                if (!Report.Cancel && !Report.IsBasicHTMLWithNoOutput && !Report.DataOnly)
                 {
                     bool originalOnlyBody = Report.OnlyBody;
                     try
@@ -386,7 +386,7 @@ namespace Seal.Model
                 }
 
                 //Manage the display 
-                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler)
+                if (Report.ExecutionContext != ReportExecutionContext.TaskScheduler && !Report.DataOnly)
                 {
                     //Generate Display HTML
                     RenderHTMLDisplay();

@@ -399,6 +399,9 @@ namespace Seal.Model
         {
             get
             {
+                //The list is shared by the reports executed at the same time: a refresh builds a new list (the Script of the list works on it)
+                //and publishes it at the end, the other threads keep reading the previous list, never a list being modified.
+                if (_refreshingThread == Environment.CurrentManagedThreadId) return _building;
                 //Deferred refresh: the list is loaded from the database the first time its values are used
                 if (RefreshPending)
                 {
@@ -409,10 +412,17 @@ namespace Seal.Model
                 }
                 return _values;
             }
-            set { _values = value; }
+            set
+            {
+                if (_refreshingThread == Environment.CurrentManagedThreadId) _building = value;
+                else _values = value;
+            }
         }
         List<MetaEV> _values = new List<MetaEV>();
+        List<MetaEV> _building = null;
         readonly object _refreshLock = new object();
+        readonly object _scriptDisplayLock = new object();
+        int _refreshingThread = -1;
 
         /// <summary>
         /// If True, the values are refreshed from the database the first time they are used (set when a report is loaded for execution, an unused list is never loaded)
@@ -558,16 +568,20 @@ namespace Seal.Model
                     }
                 }
                 finalScript = Helper.ClearAllLINQKeywords(finalScript);
-                try
+                //NewValues is a field of the shared list: one script at a time
+                lock (_scriptDisplayLock)
                 {
-                    RazorHelper.CompileExecute(finalScript, this);
+                    try
+                    {
+                        RazorHelper.CompileExecute(finalScript, this);
+                    }
+                    catch (Exception ex)
+                    {
+                        Helper.WriteLogException("GetSubSetValues", ex);
+                        throw;
+                    }
+                    result = NewValues.ToList();
                 }
-                catch (Exception ex)
-                {
-                    Helper.WriteLogException("GetSubSetValues", ex);
-                    throw;
-                }
-                result = NewValues.ToList();
             }
 
             return result;
@@ -579,41 +593,68 @@ namespace Seal.Model
         /// <param name="checkOnly"></param>
         public void RefreshEnum(bool checkOnly = false)
         {
-            RefreshPending = false;
-            if (_source == null || !IsDynamic) return;
+            if (_source == null || !IsDynamic)
+            {
+                RefreshPending = false;
+                return;
+            }
 
             if (IsLoadOnDemand)
             {
-                //Never loaded as a whole: values are added by the prompted restriction (filter typed or selected values)
-                if (!checkOnly) _values = new List<MetaEV>();
+                //Never loaded as a whole: values are added by the prompted restriction (filter typed or selected values).
+                //The values already added are kept: the list is a cache identifier -> display shared by the reports executed at the same time,
+                //emptying it at each report load removed the values another execution had just loaded.
+                RefreshPending = false;
                 Error = "";
                 Information = Helper.FormatMessage("The values are loaded on demand: the list is built from the filter typed by the user and the values selected.");
                 UpdateEditorAttributes();
                 return;
             }
 
-            if (string.IsNullOrEmpty(Sql) && string.IsNullOrEmpty(Script)) return;
-
-            DbConnection connection = null;
-            var initialValues = Values.ToList();
-            try
+            if (string.IsNullOrEmpty(Sql) && string.IsNullOrEmpty(Script))
             {
-                Error = "";
-                Information = "";
+                RefreshPending = false;
+                return;
+            }
 
-                if (!string.IsNullOrEmpty(Sql))
+            lock (_refreshLock)
+            {
+                //The new values are built in a new list (Values returns it to this thread only), then published at the end:
+                //the reports reading the list at the same time keep the previous one
+                DbConnection connection = null;
+                _building = new List<MetaEV>(_values);
+                _refreshingThread = Environment.CurrentManagedThreadId;
+                try
                 {
-                    if (ValuesPerConnection)
+                    Error = "";
+                    Information = "";
+
+                    if (!string.IsNullOrEmpty(Sql))
                     {
-                        Values.Clear();
-                        foreach (var metaConnection in _source.Connections)
+                        if (ValuesPerConnection)
                         {
-                            connection = metaConnection.GetOpenConnection();
+                            Values = new List<MetaEV>();
+                            foreach (var metaConnection in _source.Connections)
+                            {
+                                connection = metaConnection.GetOpenConnection();
+                                try
+                                {
+                                    var vals = getValues(connection, RazorHelper.CompileExecute(Sql, this));
+                                    foreach (var ev in vals) ev.ConnectionGUID = metaConnection.GUID;
+                                    Values.AddRange(vals);
+                                }
+                                finally
+                                {
+                                    connection.Close();
+                                }
+                            }
+                        }
+                        else
+                        {
+                            connection = _source.GetOpenConnection();
                             try
                             {
-                                var vals = getValues(connection, RazorHelper.CompileExecute(Sql, this));
-                                foreach (var ev in vals) ev.ConnectionGUID = metaConnection.GUID;
-                                Values.AddRange(vals);
+                                Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
                             }
                             finally
                             {
@@ -621,51 +662,44 @@ namespace Seal.Model
                             }
                         }
                     }
-                    else
+
+                    if (!string.IsNullOrEmpty(Script))
                     {
-                        connection = _source.GetOpenConnection();
-                        try
-                        {
-                            Values = getValues(connection, RazorHelper.CompileExecute(Sql, this));
-                        }
-                        finally
-                        {
-                            connection.Close();
-                        }
+                        RazorHelper.CompileExecute(Script, this);
                     }
-                }
+                    if (Values.Count == 0)
+                    {
+                        //force at least a value
+                        Values.Add(new MetaEV() { Id = "", Val = "" });
+                    }
 
-                if (!string.IsNullOrEmpty(Script))
+
+                    Information = string.Format("List refreshed with {0} value(s).", Values.Count);
+                }
+                catch (Exception ex)
                 {
-                    RazorHelper.CompileExecute(Script, this);
+                    Error = ex.Message;
+                    Information = "Error got when refreshing the values.";
                 }
-                if (Values.Count == 0)
+                finally
                 {
-                    //force at least a value
-                    Values.Add(new MetaEV() { Id = "", Val = "" });
+                    if (connection != null && connection.State == ConnectionState.Open) connection.Close();
+
+                    //RefreshEnum() rebuilds Values with brand new MetaEV objects whose HtmlId is null. The html ids are
+                    //normally assigned by ReportRestriction.SetEnumHtmlIds() during Report.InitForExecution(), but a report
+                    //task can refresh an enum AFTER that, leaving the values without ids: every rendered prompt option then
+                    //gets the same (empty) id and selecting another value silently falls back to the first/previous one.
+                    //Re-stamp the positional ids here so a refreshed enum stays renderable. Mirror SetEnumHtmlIds: positional
+                    //index, per connection when ValuesPerConnection (each restriction view only shows its connection subset).
+                    if (!checkOnly) SetValuesHtmlIds();
+
+                    _refreshingThread = -1;
+                    //Check only: the values are not changed
+                    if (!checkOnly) _values = _building;
+                    _building = null;
+                    RefreshPending = false;
                 }
-
-
-                Information = string.Format("List refreshed with {0} value(s).", Values.Count);
             }
-            catch (Exception ex)
-            {
-                Error = ex.Message;
-                Information = "Error got when refreshing the values.";
-            }
-            finally
-            {
-                if (connection != null && connection.State == ConnectionState.Open) connection.Close();
-                if (checkOnly) Values = initialValues;
-            }
-
-            //RefreshEnum() rebuilds Values with brand new MetaEV objects whose HtmlId is null. The html ids are
-            //normally assigned by ReportRestriction.SetEnumHtmlIds() during Report.InitForExecution(), but a report
-            //task can refresh an enum AFTER that, leaving the values without ids: every rendered prompt option then
-            //gets the same (empty) id and selecting another value silently falls back to the first/previous one.
-            //Re-stamp the positional ids here so a refreshed enum stays renderable. Mirror SetEnumHtmlIds: positional
-            //index, per connection when ValuesPerConnection (each restriction view only shows its connection subset).
-            SetValuesHtmlIds();
 
             Information = Helper.FormatMessage(Information);
             UpdateEditorAttributes();
@@ -675,11 +709,12 @@ namespace Seal.Model
         /// Assign positional html ids to the enum values (per connection when ValuesPerConnection), so the values
         /// stay renderable after a refresh that replaced the MetaEV objects. Consistent with ReportRestriction.SetEnumHtmlIds().
         /// </summary>
-        private void SetValuesHtmlIds()
+        private void SetValuesHtmlIds(List<MetaEV> values = null)
         {
+            values ??= Values;
             if (ValuesPerConnection)
             {
-                foreach (var grp in Values.GroupBy(v => v.ConnectionGUID))
+                foreach (var grp in values.GroupBy(v => v.ConnectionGUID))
                 {
                     int i = 0;
                     foreach (var ev in grp) ev.HtmlId = (i++).ToString();
@@ -688,7 +723,7 @@ namespace Seal.Model
             else
             {
                 int i = 0;
-                foreach (var ev in Values) ev.HtmlId = (i++).ToString();
+                foreach (var ev in values) ev.HtmlId = (i++).ToString();
             }
         }
 
@@ -711,11 +746,15 @@ namespace Seal.Model
             {
                 //Process a pending refresh first: it would reset the list after the values are added
                 var current = Values;
+                //New list published at the end: the list is shared by the reports executed at the same time, a report may be reading the current one
+                var newValues = new List<MetaEV>(current);
                 foreach (var value in values)
                 {
-                    if (!current.Exists(i => i.Id == value.Id)) current.Add(value);
+                    if (!newValues.Exists(i => i.Id == value.Id)) newValues.Add(value);
                 }
-                SetValuesHtmlIds();
+                if (newValues.Count == current.Count) return;
+                SetValuesHtmlIds(newValues);
+                _values = newValues;
             }
         }
 

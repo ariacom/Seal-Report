@@ -1472,10 +1472,22 @@ namespace Seal.AI
         /// </summary>
         string ExecuteForAgent(Report report, string label, string modelName)
         {
+            //Model name: exact match, else case-insensitive (e.g. 'Chiffres clés Finances' for 'Chiffres clés finances')
+            modelName = modelName?.Trim();
+            var models = report.Models.Where(m => string.IsNullOrEmpty(modelName) || m.Name == modelName).ToList();
+            if (models.Count == 0 && !string.IsNullOrEmpty(modelName)) models = report.Models.Where(m => string.Equals(m.Name?.Trim(), modelName, StringComparison.OrdinalIgnoreCase)).ToList();
+            if (models.Count == 0)
+            {
+                return string.IsNullOrEmpty(modelName) ? "No models found in report." : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m => m.Name))}.";
+            }
+
             try
             {
                 //Data-fetch only: never launch the OS external result viewer (PDF, Excel, ...).
                 report.SkipExternalViewer = true;
+                //The agent reads the result tables only: no view is rendered, and only the model asked is executed (a Fiche may have dozens of models)
+                report.DataOnly = true;
+                if (!string.IsNullOrEmpty(modelName)) report.ExecutionModelsFilter = models;
                 //The user of the tool call: Pre SQL and scripts of the sources depend on it
                 report.SecurityContext = SecurityContext;
                 var watch = System.Diagnostics.Stopwatch.StartNew();
@@ -1496,15 +1508,6 @@ namespace Seal.AI
 
             if (report.HasErrors) return $"Error executing {label}:\r\n{report.ExecutionErrors}";
 
-            //Model name: exact match, else case-insensitive (e.g. 'Chiffres clés Finances' for 'Chiffres clés finances')
-            modelName = modelName?.Trim();
-            var models = report.Models.Where(m => string.IsNullOrEmpty(modelName) || m.Name == modelName).ToList();
-            if (models.Count == 0 && !string.IsNullOrEmpty(modelName)) models = report.Models.Where(m => string.Equals(m.Name?.Trim(), modelName, StringComparison.OrdinalIgnoreCase)).ToList();
-            if (models.Count == 0)
-            {
-                return string.IsNullOrEmpty(modelName) ? "No models found in report." : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m => m.Name))}.";
-            }
-
             var sb = new StringBuilder();
             var criteria = CriteriaApplied(report);
             sb.AppendLine("=== CRITERIA APPLIED ===");
@@ -1516,7 +1519,7 @@ namespace Seal.AI
                 sb.AppendLine($"=== Model: {model.Name} ===");
                 if (model.ResultTable == null)
                 {
-                    sb.AppendLine("Not executed: the model is displayed by no view.");
+                    sb.AppendLine(model.Elements.Count == 0 ? "Not executed: the model has no element." : "Not executed: the model is displayed by no view (pass its name in model_name to execute it).");
                     sb.AppendLine();
                     continue;
                 }

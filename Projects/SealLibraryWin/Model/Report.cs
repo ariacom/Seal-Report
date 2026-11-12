@@ -905,7 +905,12 @@ namespace Seal.Model
                 if (_executionModels == null)
                 {
                     _executionModels = new List<ReportModel>();
-                    if (ExecutionView.GetBoolValue(Parameter.ForceModelsLoad))
+                    if (_executionModelsFilter != null)
+                    {
+                        //Only the models requested (data request of the AI agent): the views are not used to choose them
+                        _executionModels = _executionModelsFilter.Where(i => i.Elements.Count > 0).ToList();
+                    }
+                    else if (ExecutionView.GetBoolValue(Parameter.ForceModelsLoad))
                     {
                         _executionModels = Models.Where(i => i.Elements.Count > 0).ToList();
                     }
@@ -917,6 +922,27 @@ namespace Seal.Model
                 return _executionModels;
             }
         }
+
+        List<ReportModel> _executionModelsFilter = null;
+        /// <summary>
+        /// If set, only these models are executed, whether a view displays them or not (e.g. the AI agent asks for one model of a report having many): the other models are not loaded
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportModel> ExecutionModelsFilter
+        {
+            get { return _executionModelsFilter; }
+            set
+            {
+                _executionModelsFilter = value;
+                _executionModels = null;
+            }
+        }
+
+        /// <summary>
+        /// If true, the execution builds the models and runs the tasks but renders no view and generates no result file (data request of the AI agent, which reads the result tables only)
+        /// </summary>
+        [XmlIgnore]
+        public bool DataOnly { get; set; } = false;
 
         /// <summary>
         /// List of all views to parse during the report execution.
