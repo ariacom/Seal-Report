@@ -817,6 +817,12 @@ class SWIMain {
         _main._lastReport.viewGUID = viewGUID;
         _main._lastReport.outputGUID = outputGUID;
         _main._lastReport.name = name;
+        //The tabs and buttons of the report are hidden until its view is rendered: Report.iBody.partial gives back
+        //the 'reportview' class to the ones the report uses (no flash of Execute/Restrictions for a report without restrictions)
+        const $reportControls = $("#report_button,#information_button,#message_button,#results_menu,#restrictions_button,#reset_restrictions_button,#execute_button,#reload-nav-item");
+        SWIUtil.ShowHideControl($reportControls, false);
+        //opacity 1: without the class, the folders/report transition of toggleFoldersReport() would leave them faded
+        $reportControls.removeClass("reportview").css("opacity", "1");
         _main.toggleFoldersReport(true);
 
         //clear all timers
