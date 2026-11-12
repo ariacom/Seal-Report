@@ -54,6 +54,27 @@ namespace Test
         }
 
         [TestMethod]
+        public void ModelMaximumOfRecordsShownAsPartialResult()
+        {
+            //The 'Maximum number of records' of the model is reached: flagged and the Model view warns the user (as for the limit of the connection)
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            var report = Report.LoadFromFile(path, repository);
+            report.SkipExternalViewer = true;
+            var model = report.Models.First(i => i.Name == "Employees");
+            model.MaxNumberOfRecords = 2;
+            var execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            Assert.AreEqual(2, model.ResultTable.Rows.Count);
+            Assert.IsTrue(model.MaxRowsReached && model.MaxRowsOfModel && model.MaxRowsLimit == 2, "partial result flagged");
+            Assert.IsFalse(report.Models.First(i => i.Name == "Sales per year").MaxRowsReached, "model under its limit not flagged");
+            var html = File.ReadAllText(execution.GenerateResult(ReportFormat.html));
+            StringAssert.Contains(html, "(maximum of the report)");
+        }
+
+        [TestMethod]
         public void SharedEnumConcurrentReadsAndAdds()
         {
             //The enumerated lists are shared by the reports executed at the same time: values added (list loaded on demand) while other threads enumerate the list

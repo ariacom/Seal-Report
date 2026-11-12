@@ -13215,6 +13215,11 @@
             Maximum rows loaded by the connection when MaxRowsReached is true
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportModel.MaxRowsOfModel">
+            <summary>
+            True if MaxRowsReached comes from the 'Maximum number of records' of the model (and not from the 'Maximum rows loaded' of the connection)
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportModel.ResultTableTranslated">
             <summary>
             Result DataTable got from the SQL query with the original column names and without hidden columns

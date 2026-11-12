@@ -1146,6 +1146,12 @@ model.ResultTable = query2.CopyToDataTable2();
         public int MaxRowsLimit;
 
         /// <summary>
+        /// True if MaxRowsReached comes from the 'Maximum number of records' of the model (and not from the 'Maximum rows loaded' of the connection)
+        /// </summary>
+        [XmlIgnore]
+        public bool MaxRowsOfModel;
+
+        /// <summary>
         /// Result DataTable got from the SQL query with the original column names and without hidden columns
         /// </summary>
         [XmlIgnore]
@@ -2603,6 +2609,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 ResultTable = runningModel.ResultTable;
                                 MaxRowsReached = runningModel.MaxRowsReached;
                                 MaxRowsLimit = runningModel.MaxRowsLimit;
+                                MaxRowsOfModel = runningModel.MaxRowsOfModel;
                             }
                         }
                     }
@@ -2955,6 +2962,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 _resultTableAvailable = false;
                 MaxRowsReached = false;
                 MaxRowsLimit = 0;
+                MaxRowsOfModel = false;
                 var source = Source;
                 BuildQuery();
                 if (FromTables != null)
@@ -3120,6 +3128,7 @@ model.ResultTable = query2.CopyToDataTable2();
             ExecutionDate = DateTime.Now;
             MaxRowsReached = false;
             MaxRowsLimit = 0;
+            MaxRowsOfModel = false;
             Pages.Clear();
 
             //Pre-load script
@@ -3204,6 +3213,14 @@ model.ResultTable = query2.CopyToDataTable2();
                 if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count > MaxNumberOfRecords)
                 {
                     while (ResultTable.Rows.Count > MaxNumberOfRecords) ResultTable.Rows.RemoveAt(MaxNumberOfRecords);
+                }
+                //The 'Maximum number of records' of the model is reached (LIMIT in the SQL): the result is partial, as for the limit of the connection
+                if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count >= MaxNumberOfRecords && (!MaxRowsReached || MaxNumberOfRecords < MaxRowsLimit))
+                {
+                    MaxRowsReached = true;
+                    MaxRowsLimit = MaxNumberOfRecords;
+                    MaxRowsOfModel = true;
+                    if (!IsSubModel) Report.LogMessage("Model '{0}': Maximum number of records of the model reached ({1}), the other rows are not loaded.", Name, MaxNumberOfRecords);
                 }
 
                 //If enum, set enum values directly in the table, only for master model

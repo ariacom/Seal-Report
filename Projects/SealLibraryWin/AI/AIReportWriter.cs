@@ -1481,6 +1481,17 @@ namespace Seal.AI
                 return string.IsNullOrEmpty(modelName) ? "No models found in report." : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m => m.Name))}.";
             }
 
+            //Required criteria: refused without value, as the Web Report Server does (the result would cover the whole data, e.g. every commune of France)
+            var candidates = !string.IsNullOrEmpty(modelName) ? models : report.Models.Where(m => m.Elements.Count > 0).ToList();
+            var missing = candidates.SelectMany(m => m.Restrictions.Concat(m.AggregateRestrictions)).Concat(report.InputValues)
+                .Where(r => r.Prompt != PromptType.None && r.Required && !r.HasValue)
+                .Select(r => r.DisplayNameEl).Distinct().ToList();
+            if (missing.Count > 0)
+            {
+                return $"Error: {label} requires a value for the criteria {string.Join(", ", missing.Select(i => $"'{i}'"))}. Execute it again with these criteria " +
+                    $"(e.g. criteria [{{\"name\":\"{missing[0]}\",\"values\":[\"...\"]}}]); report_get_detail lists the criteria and their values.";
+            }
+
             try
             {
                 //Data-fetch only: never launch the OS external result viewer (PDF, Excel, ...).
@@ -1525,6 +1536,11 @@ namespace Seal.AI
                 }
                 //Cap the rows sent to the AI: a full result table can exceed the model's context window.
                 var (tableJson, aggJson) = model.GetResultTableTranslatedJson(MaxRowsForAgent);
+                if (model.MaxRowsReached)
+                {
+                    sb.AppendLine($"WARNING: only the first {model.MaxRowsLimit} rows were loaded ({(model.MaxRowsOfModel ? "maximum number of records of the report" : "maximum rows of the user's access")}): the metrics, totals and rows below cover these rows only, " +
+                        "which are an arbitrary part of the data. Execute again with criteria (e.g. a territory or a year) before giving figures, or tell the user the result is partial.");
+                }
                 sb.AppendLine("PRE-AGGREGATED METRICS:");
                 sb.AppendLine(aggJson);
                 sb.AppendLine("DATA:");

@@ -136,6 +136,37 @@ namespace Test
         }
 
         [TestMethod]
+        public void RequiredCriterionIsEnforced()
+        {
+            //As the Web Report Server: a required criterion without value is refused (the result would cover the whole data)
+            var user = new SecurityUser(_repository.Security) { Name = "ai_user" };
+            user.AddSecurityGroup(_repository.Security.Groups.First().Name);
+            var tool = new AIToolConfiguration() { CurrentToolCall = new AIToolCall() { Name = "report_execute_from_xml", Arguments = "{}", SecurityContext = user } };
+            var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Required>true</Required><Operator>Contains</Operator>");
+            var result = new AIReportWriter(tool).ExecuteFromXml(xml, null);
+            StringAssert.Contains(result, "requires a value for the criteria");
+            Assert.IsFalse(result.Contains("=== Model:"), result);
+            //With a value: executed
+            result = new AIReportWriter(tool).ExecuteFromXml(xml.Replace("<Operator>Contains</Operator>", "<Operator>Contains</Operator><Value1>Ernst</Value1>"), null);
+            StringAssert.Contains(result, "=== Model: Orders ===");
+        }
+
+        [TestMethod]
+        public void PartialResultIsFlagged()
+        {
+            //The 'Maximum number of records' of the model is reached: the agent is told the result is partial
+            var user = new SecurityUser(_repository.Security) { Name = "ai_user" };
+            user.AddSecurityGroup(_repository.Security.Groups.First().Name);
+            var tool = new AIToolConfiguration() { CurrentToolCall = new AIToolCall() { Name = "report_execute_from_xml", Arguments = "{}", SecurityContext = user } };
+            var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Value1>Ernst</Value1>", "<Value1>a</Value1>").Replace("<SourceGUID>c</SourceGUID>", "<SourceGUID>c</SourceGUID><MaxNumberOfRecords>3</MaxNumberOfRecords>");
+            var result = new AIReportWriter(tool).ExecuteFromXml(xml, null);
+            StringAssert.Contains(result, "WARNING: only the first 3 rows were loaded (maximum number of records of the report)");
+            //Under the limit: no warning
+            result = new AIReportWriter(tool).ExecuteFromXml(xml.Replace("<MaxNumberOfRecords>3</MaxNumberOfRecords>", "<MaxNumberOfRecords>5000</MaxNumberOfRecords>"), null);
+            Assert.IsFalse(result.Contains("WARNING: only the first"), result);
+        }
+
+        [TestMethod]
         public void MedianOfTheResultValues()
         {
             Assert.AreEqual(3m, ReportModel.GetMedian(new List<decimal> { 5, 1, 3 }));
