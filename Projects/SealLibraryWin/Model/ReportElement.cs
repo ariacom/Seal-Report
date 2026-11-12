@@ -94,6 +94,7 @@ namespace Seal.Model
                     GetProperty("SetNullToZero").SetIsBrowsable(PivotPosition == PivotPosition.Data);
                     GetProperty("ShowAllEnums").SetIsBrowsable(IsEnum && PivotPosition != PivotPosition.Data);
                     GetProperty("ContainsHtml").SetIsBrowsable(true);
+                    GetProperty("MaxDisplayLength").SetIsBrowsable(!IsNumeric && !IsDateTime);
                     GetProperty("InsertPosition").SetIsBrowsable(true);
 
                     GetProperty("Format").SetIsBrowsable(!IsEnum && (TypeEd == ColumnType.DateTime || TypeEd == ColumnType.Numeric || Type == ColumnType.Default));
@@ -973,6 +974,20 @@ namespace Seal.Model
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeContainsHtml() { return ContainsHtml; }
+
+        /// <summary>
+        /// Maximum number of characters of a value displayed in the report result (HTML views). A longer value is cut on a word and ended by '…'. 0 means no limit. The exports (Excel, CSV) and the scripts keep the full value.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(0)]
+        [Category("Options"), DisplayName("Max display length"), Description("Maximum number of characters of a value displayed in the report result (HTML views): a longer value is cut on a word and ended by '…'. 0 means no limit. The exports (Excel, CSV) keep the full value. Not applied if the value contains HTML or is set by a cell script."), Id(4, 3)]
+#endif
+        public int MaxDisplayLength { get; set; } = 0;
+        /// <summary>
+        /// Serialize MaxDisplayLength only if not the default value
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeMaxDisplayLength() { return MaxDisplayLength > 0; }
 
 
         /// <summary>

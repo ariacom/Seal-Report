@@ -166,9 +166,30 @@ namespace Seal.Model
         {
             get
             {
-                var value = (Element != null && !Element.ContainsHtml) ? HttpUtility.HtmlEncode(DisplayValue) : DisplayValue;
-                return !string.IsNullOrEmpty(FinalValue) ? FinalValue : value.Replace("\r", "").Replace("\n", "<br>");
+                if (!string.IsNullOrEmpty(FinalValue)) return FinalValue;
+                var value = DisplayValue;
+                if (Element != null && !Element.ContainsHtml)
+                {
+                    //Long texts: cut for the display only (Max display length of the element), not the titles and totals
+                    if (Element.MaxDisplayLength > 0 && !IsTitle && !IsTotal) value = TruncateText(value, Element.MaxDisplayLength);
+                    value = HttpUtility.HtmlEncode(value);
+                }
+                return value.Replace("\r", "").Replace("\n", "<br>");
             }
+        }
+
+        /// <summary>
+        /// Cut a text longer than maxLength characters, on a word if possible, and end it by ' …'
+        /// </summary>
+        public static string TruncateText(string text, int maxLength)
+        {
+            if (string.IsNullOrEmpty(text) || maxLength <= 0 || text.Length <= maxLength) return text;
+            var result = text.Substring(0, maxLength);
+            if (char.IsHighSurrogate(result[result.Length - 1])) result = result.Substring(0, result.Length - 1);
+            //Cut on the last space if it does not lose more than a third of the text
+            var index = result.LastIndexOfAny(new[] { ' ', '\t', '\r', '\n' });
+            if (index > maxLength * 2 / 3) result = result.Substring(0, index);
+            return result.TrimEnd() + " …";
         }
 
         /// <summary>
