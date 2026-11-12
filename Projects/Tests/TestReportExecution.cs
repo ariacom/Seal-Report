@@ -109,8 +109,61 @@ namespace Test
             Assert.IsTrue(model.MaxRowsReached && model.MaxRowsOfModel && model.MaxRowsLimit == 2, "partial result flagged");
             Assert.IsTrue(sorted.Sql.Contains("ORDER BY") && !sorted.MaxRowsReached, "sorted top N not flagged");
             Assert.IsFalse(report.Models.First(i => i.Name == "Sales per year").MaxRowsReached, "model under its limit not flagged");
+            Assert.IsNull(model.MaxRowsOrderBy, "unsorted: no order");
+            StringAssert.Contains(model.MaxRowsMessage, "arbitrary part");
             var html = File.ReadAllText(execution.GenerateResult(ReportFormat.html));
             StringAssert.Contains(html, "(maximum of the report)");
+        }
+
+        [TestMethod]
+        public void AgentJsonRoundedAndAggregatesByRole()
+        {
+            Assert.AreEqual(2, ReportModel.GetFormatDecimals("N2"));
+            Assert.AreEqual(0, ReportModel.GetFormatDecimals("N0"));
+            Assert.AreEqual(3, ReportModel.GetFormatDecimals("P1"));
+            Assert.AreEqual(1, ReportModel.GetFormatDecimals("#,##0.0"));
+            Assert.AreEqual(4, ReportModel.GetFormatDecimals("0.00 %"));
+            Assert.IsNull(ReportModel.GetFormatDecimals("text"));
+
+            var model = ReportModel.Create();
+            var table = new System.Data.DataTable();
+            table.Columns.Add("count", typeof(double));
+            table.Columns.Add("ratio", typeof(decimal));
+            table.Rows.Add(41.0, 120.1915032679738562m);
+            table.Rows.Add(10.0, 3.5m);
+            model.ResultTable = table;
+            var (tableJson, aggJson) = model.GetResultTableTranslatedJson();
+            StringAssert.Contains(tableJson, "[41,120.1915]");
+            Assert.IsFalse(tableJson.Contains("41.0"), tableJson);
+            StringAssert.Contains(aggJson, "\"sum\":51");
+        }
+
+        [TestMethod]
+        public void SortedPartialResultGivesItsOrder()
+        {
+            //A long list sorted by the SQL and cut by its 'Maximum number of records': partial, but the rows are the first ones in the order of the SQL
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            var report = Report.LoadFromFile(path, repository);
+            report.SkipExternalViewer = true;
+            var model = report.Models.First(i => i.Name == "Employees");
+            model.MaxNumberOfRecords = 1000; //not a short top N
+            var column = model.Elements.First().MetaColumn.Name;
+            model.SqlOrderBy = $"ORDER BY {column} DESC -- the last ones first";
+            var execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            //Fewer rows than 1000: complete, nothing said
+            Assert.IsFalse(model.MaxRowsReached);
+            Assert.AreEqual($"{column} DESC", model.SqlOrderByClause);
+
+            model.MaxRowsReached = true; //as if the limit was reached
+            model.MaxRowsOfModel = true;
+            model.MaxRowsLimit = 1000;
+            Assert.AreEqual($"{model.Elements.First().DisplayNameElTranslated} (descending)", model.MaxRowsOrderBy);
+            StringAssert.Contains(model.MaxRowsMessage, " rows by ");
+            Assert.IsFalse(model.MaxRowsMessage.Contains("arbitrary"));
         }
 
         [TestMethod]

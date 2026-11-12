@@ -877,7 +877,10 @@ namespace Seal.Model
                     {
                         var fetch = Task.Run(async () =>
                         {
+                            var wait = System.Diagnostics.Stopwatch.StartNew();
                             await semaphore.WaitAsync();
+                            if (ReportModel.SlowStepSeconds > 0 && wait.Elapsed.TotalSeconds >= ReportModel.SlowStepSeconds)
+                                Report.LogMessage("Model '{0}': Waiting for the other models (at most {1} queries at the same time): {2} s.", model.Name, MaxParallelModels, wait.Elapsed.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture));
                             try
                             {
                                 if (!Report.Cancel) model.FetchResultTable(_runningModels);

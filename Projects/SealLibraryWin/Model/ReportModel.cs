@@ -1152,6 +1152,119 @@ model.ResultTable = query2.CopyToDataTable2();
         public bool MaxRowsOfModel;
 
         /// <summary>
+        /// ORDER BY clause of the SQL executed (without the ORDER BY keyword and the comment), null if the SQL has no ORDER BY (e.g. a SqlOrderBy set to a comment)
+        /// </summary>
+        [XmlIgnore]
+        public string SqlOrderByClause
+        {
+            get
+            {
+                if (Source == null || Source.IsNoSQL || string.IsNullOrEmpty(Sql)) return null;
+                //Last ORDER BY at the start of a line: the one of the main query
+                var match = System.Text.RegularExpressions.Regex.Matches(Sql, @"^\s*ORDER\s+BY\s+(.*)$", System.Text.RegularExpressions.RegexOptions.Multiline | System.Text.RegularExpressions.RegexOptions.IgnoreCase).LastOrDefault();
+                if (match == null) return null;
+                var clause = match.Groups[1].Value;
+                var comment = clause.IndexOf("--");
+                if (comment >= 0) clause = clause.Substring(0, comment);
+                clause = clause.Trim();
+                return string.IsNullOrEmpty(clause) ? null : clause;
+            }
+        }
+
+        /// <summary>
+        /// When the result is partial (MaxRowsReached) and the SQL is sorted: the order of the rows loaded, with the names of the elements (e.g. 'Year (descending)'), null otherwise.
+        /// The rows loaded are then the first ones in this order, and not an arbitrary part of the data.
+        /// </summary>
+        [XmlIgnore]
+        public string MaxRowsOrderBy
+        {
+            get
+            {
+                if (!MaxRowsReached) return null;
+                try
+                {
+                    var clause = SqlOrderByClause;
+                    if (clause == null) return null;
+                    var result = new List<string>();
+                    foreach (var part in splitSqlList(clause))
+                    {
+                        var expression = part.Trim();
+                        var descending = false;
+                        var nulls = System.Text.RegularExpressions.Regex.Match(expression, @"\s+NULLS\s+(FIRST|LAST)\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (nulls.Success) expression = expression.Substring(0, nulls.Index).Trim();
+                        var direction = System.Text.RegularExpressions.Regex.Match(expression, @"\s+(ASC|DESC)\s*$", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                        if (direction.Success)
+                        {
+                            descending = direction.Groups[1].Value.Equals("DESC", StringComparison.OrdinalIgnoreCase);
+                            expression = expression.Substring(0, direction.Index).Trim();
+                        }
+                        if (string.IsNullOrEmpty(expression)) continue;
+
+                        string label = null;
+                        bool same(string sql) => !string.IsNullOrEmpty(sql) && string.Equals(sql.Trim(), expression, StringComparison.OrdinalIgnoreCase);
+                        var element = Elements.FirstOrDefault(i => same(i.SQLColumn) || same(i.SQLColumnName) || same(i.MetaColumn?.Name));
+                        if (element != null) label = element.DisplayNameElTranslated;
+                        else
+                        {
+                            var column = Source.MetaData.Tables.SelectMany(i => i.Columns).FirstOrDefault(i => same(i.Name));
+                            label = column != null ? Report.Repository.TranslateColumn(column) : expression;
+                        }
+                        result.Add(descending ? $"{label} ({Report.Translate("descending")})" : label);
+                    }
+                    return result.Count == 0 ? null : string.Join(", ", result);
+                }
+                catch
+                {
+                    return null;
+                }
+            }
+        }
+
+        /// <summary>
+        /// Items of a SQL list separated by commas, the commas between parentheses or quotes excluded (e.g. 'coalesce(a,b) DESC, c')
+        /// </summary>
+        static List<string> splitSqlList(string sql)
+        {
+            var result = new List<string>();
+            int depth = 0, start = 0;
+            char quote = '\0';
+            for (int i = 0; i < sql.Length; i++)
+            {
+                var c = sql[i];
+                if (quote != '\0') { if (c == quote) quote = '\0'; }
+                else if (c == '\'' || c == '"') quote = c;
+                else if (c == '(') depth++;
+                else if (c == ')') depth--;
+                else if (c == ',' && depth == 0)
+                {
+                    result.Add(sql.Substring(start, i - start));
+                    start = i + 1;
+                }
+            }
+            result.Add(sql.Substring(start));
+            return result;
+        }
+
+        /// <summary>
+        /// Message telling that the result is partial (MaxRowsReached): rows loaded, limit reached and order of the rows, translated. Null if the result is complete.
+        /// </summary>
+        [XmlIgnore]
+        public string MaxRowsMessage
+        {
+            get
+            {
+                if (!MaxRowsReached) return null;
+                var limit = MaxRowsLimit.ToString("N0", Report.ExecutionView.CultureInfo);
+                var reason = Report.Translate(MaxRowsOfModel ? "maximum of the report" : "limit of your access");
+                var order = MaxRowsOrderBy;
+                var result = order != null
+                    ? Report.Translate("Only the first {0} rows by {1} are displayed ({2}).", limit, order, reason)
+                    : Report.Translate("Only {0} rows are displayed ({1}): an arbitrary part of the data, sorted after reading, the first rows are not the first ones of the complete result.", limit, reason);
+                return result + " " + Report.Translate("Refine the criteria to get the complete result: the totals, the charts and the map only cover the rows displayed.");
+            }
+        }
+
+        /// <summary>
         /// Result DataTable got from the SQL query with the original column names and without hidden columns
         /// </summary>
         [XmlIgnore]
@@ -1177,6 +1290,8 @@ model.ResultTable = query2.CopyToDataTable2();
 
                                 col.ColumnName = Helper.GetUniqueName(el.DisplayNameElTranslated, colNames);
                                 col.SetOrdinal(cnt++);
+                                //Element of the column: format and role used by the Json of the AI (GetResultTableTranslatedJson)
+                                col.ExtendedProperties[kElementProperty] = el;
                             }
                         }
                     }
@@ -1206,7 +1321,54 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
+        /// Key of the ExtendedProperties of a column of ResultTableTranslated holding its ReportElement
+        /// </summary>
+        public const string kElementProperty = "ReportElement";
+
+        /// <summary>
+        /// Number of decimals shown by a numeric .NET format (N2, F0, P1, 0.00, #,##0.0 %...), a percentage keeping 2 more decimals as its value is a fraction. Null if unknown.
+        /// </summary>
+        public static int? GetFormatDecimals(string format)
+        {
+            if (string.IsNullOrWhiteSpace(format)) return null;
+            format = format.Trim();
+            var standard = System.Text.RegularExpressions.Regex.Match(format, @"^([NnFfCcPpDd])(\d{0,2})$");
+            if (standard.Success)
+            {
+                var letter = char.ToUpperInvariant(standard.Groups[1].Value[0]);
+                if (letter == 'D') return 0;
+                int digits = standard.Groups[2].Value.Length > 0 ? int.Parse(standard.Groups[2].Value) : 2;
+                return letter == 'P' ? digits + 2 : digits;
+            }
+            //Custom format: first section only
+            var section = format.Split(';')[0];
+            if (!System.Text.RegularExpressions.Regex.IsMatch(section, @"[0#]")) return null;
+            var point = section.IndexOf('.');
+            int decimals = 0;
+            if (point >= 0) decimals = section.Substring(point + 1).TakeWhile(c => c == '0' || c == '#' || c == ',').Count(c => c == '0' || c == '#');
+            if (section.Contains('%')) decimals += 2;
+            return decimals;
+        }
+
+        /// <summary>
+        /// Value of a numeric cell for the Json of the AI: rounded to the decimals of the format of the element (4 by default), written without decimal when it is an integer (e.g. 41 and not 41.0)
+        /// </summary>
+        static object jsonNumber(object value, int decimals)
+        {
+            decimal number;
+            if (value is double d) { if (double.IsNaN(d) || double.IsInfinity(d) || Math.Abs(d) > 7.9e27) return value; number = (decimal)d; }
+            else if (value is float f) { if (float.IsNaN(f) || float.IsInfinity(f)) return value; number = (decimal)f; }
+            else if (value is decimal m) number = m;
+            else return value;
+            number = Math.Round(number, Math.Min(decimals, 28), MidpointRounding.AwayFromZero);
+            if (number == Math.Truncate(number) && Math.Abs(number) < long.MaxValue) return (long)number;
+            return number / 1.0000000000000000000000000000m; //removes the trailing zeros
+        }
+
+        /// <summary>
         /// Json string for the result table with an additional Json containing aggregation.
+        /// The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column: no sum for a dimension (a year, a code),
+        /// nor for an average, a minimum, a maximum or a percentage.
         /// When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
         /// serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
         /// result is sent to an AI model.
@@ -1219,6 +1381,41 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     return (JsonConvert.SerializeObject(new { table = new { row_count = 0 }, cols = new string[0], rows = new object[0], aggregates = new { } }, Formatting.None), "");
                 }
+
+                bool isPercentage(ReportElement element)
+                {
+                    try
+                    {
+                        var format = element.FormatEl ?? "";
+                        return format.Contains('%') || System.Text.RegularExpressions.Regex.IsMatch(format.Trim(), @"^[Pp]\d{0,2}$");
+                    }
+                    catch { return false; }
+                }
+                //A numeric dimension written without thousands separator (a year, a code, an identifier: 2025 and not 2,025); a quantity in a list (e.g. a population in Row) keeps its sum
+                bool isDimension(ReportElement element)
+                {
+                    if (element.PivotPosition != PivotPosition.Page && element.PivotPosition != PivotPosition.Row && element.PivotPosition != PivotPosition.Column) return false;
+                    try
+                    {
+                        var format = (element.FormatEl ?? "").Trim();
+                        if (System.Text.RegularExpressions.Regex.IsMatch(format, @"^[NnCcPp]\d{0,2}$")) return false;
+                        var section = format.Split(';')[0];
+                        var point = section.IndexOf('.');
+                        return !(point >= 0 ? section.Substring(0, point) : section).Contains(',') && GetFormatDecimals(format) == 0;
+                    }
+                    catch { return false; }
+                }
+                int decimalsOf(DataColumn column)
+                {
+                    if (column.DataType != typeof(decimal) && column.DataType != typeof(double) && column.DataType != typeof(float)) return 0;
+                    try
+                    {
+                        if (column.ExtendedProperties[kElementProperty] is ReportElement element && element.IsNumeric) return GetFormatDecimals(element.FormatEl) ?? 4;
+                    }
+                    catch { }
+                    return 4;
+                }
+                var columnDecimals = dt.Columns.Cast<DataColumn>().Select(i => decimalsOf(i)).ToArray();
 
 
                 var aggregates = new Dictionary<string, object>();
@@ -1236,16 +1433,49 @@ model.ResultTable = query2.CopyToDataTable2();
                         c.DataType == typeof(long) || c.DataType == typeof(short))
                     {
                         var vals = nonNull.Select(v => Convert.ToDecimal(v)).ToList();
-                        aggregates[c.ColumnName] = new
+                        var el = c.ExtendedProperties[kElementProperty] as ReportElement;
+                        int decimals = columnDecimals[c.Ordinal];
+                        int avgDecimals = Math.Max(decimals, 2);
+                        if (el != null && isDimension(el))
                         {
-                            type = "number",
-                            sum = Math.Round(vals.Sum(), 4),
-                            avg = Math.Round(vals.Average(), 4),
-                            median = Math.Round(GetMedian(vals), 4),
-                            min = Math.Round(vals.Min(), 4),
-                            max = Math.Round(vals.Max(), 4),
-                            count = vals.Count
-                        };
+                            //Dimension (a year, a code, an identifier): a sum or an average has no meaning
+                            aggregates[c.ColumnName] = new
+                            {
+                                type = "number",
+                                role = "dimension",
+                                min = jsonNumber(vals.Min(), decimals),
+                                max = jsonNumber(vals.Max(), decimals),
+                                distinct = vals.Distinct().Count(),
+                                count = vals.Count
+                            };
+                        }
+                        else if (el != null && (el.AggregateFunction == AggregateFunction.Avg || el.AggregateFunction == AggregateFunction.Min || el.AggregateFunction == AggregateFunction.Max || isPercentage(el)))
+                        {
+                            //Average, minimum, maximum, percentage or ratio: the values cannot be added
+                            aggregates[c.ColumnName] = new
+                            {
+                                type = "number",
+                                role = isPercentage(el) ? "percentage" : el.AggregateFunction.ToString().ToLowerInvariant(),
+                                avg = jsonNumber(vals.Average(), avgDecimals),
+                                median = jsonNumber(GetMedian(vals), avgDecimals),
+                                min = jsonNumber(vals.Min(), decimals),
+                                max = jsonNumber(vals.Max(), decimals),
+                                count = vals.Count
+                            };
+                        }
+                        else
+                        {
+                            aggregates[c.ColumnName] = new
+                            {
+                                type = "number",
+                                sum = jsonNumber(vals.Sum(), decimals),
+                                avg = jsonNumber(vals.Average(), avgDecimals),
+                                median = jsonNumber(GetMedian(vals), avgDecimals),
+                                min = jsonNumber(vals.Min(), decimals),
+                                max = jsonNumber(vals.Max(), decimals),
+                                count = vals.Count
+                            };
+                        }
                     }
                     // ----- Date / DateTime -----
                     else if (c.DataType == typeof(DateTime))
@@ -1300,7 +1530,7 @@ model.ResultTable = query2.CopyToDataTable2();
                 var cols = dt.Columns.Cast<DataColumn>().Select(c => c.ColumnName).ToArray();
                 var rowsEnumerable = dt.AsEnumerable()
                              .Select(r => r.ItemArray
-                                           .Select(v => v == DBNull.Value ? null : v)
+                                           .Select((v, i) => v == DBNull.Value ? null : jsonNumber(v, columnDecimals[i]))
                                            .ToArray());
 
                 string tableJson;
@@ -3051,7 +3281,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 {
                     isMaster = true; //This model is the master for the Result table
                     DbConnection connection = null;
+                    var watch = System.Diagnostics.Stopwatch.StartNew();
                     connection = Connection.GetOpenConnection();
+                    logSlowStep("Opening the connection", watch);
 
                     try
                     {
@@ -3067,6 +3299,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         executePrePostStatement(Source.PreSQL, "Pre", Source.Name, Source.IgnorePrePostError, Source);
                         executePrePostStatements(true);
                         executePrePostStatement(PreSQL, "Pre", Name, IgnorePrePostError, this);
+                        logSlowStep("Pre SQL", watch);
 
                         if (!IsSubModel) Report.LogMessage("Model '{0}': Executing main query...", Name);
                         else Report.LogMessage("Model '{0}': Executing query for sub-model '{1}'...", MasterModel.Name, Name);
@@ -3097,12 +3330,15 @@ model.ResultTable = query2.CopyToDataTable2();
                             }
                         }
                         else adapter.Fill(ResultTable);
+                        logSlowStep($"Main query and reading of the {ResultTable.Rows.Count} rows", watch);
                         handleDateOnlyColumns();
                         if (connection is SQLiteConnection && dateTimeColumnNames.Any()) handleSQLLiteDateTime();
+                        logSlowStep("Conversion of the date columns", watch);
 
                         executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
                         executePrePostStatements(false);
                         executePrePostStatement(Source.PostSQL, "Post", Source.Name, Source.IgnorePrePostError, Source);
+                        logSlowStep("Post SQL", watch);
                     }
                     finally
                     {
@@ -3171,11 +3407,15 @@ model.ResultTable = query2.CopyToDataTable2();
             Pages.Clear();
 
             //Pre-load script
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             if (!Source.IsNoSQL) ExecuteLoadScript(PreLoadScript, "Pre load script", this);
+            logSlowStep("Pre load script", watch);
 
             ExecutionError = "";
 
             BuildQuery();
+            //Building the SQL reads the restrictions, it may load their enumerated lists
+            logSlowStep("Building of the SQL (restrictions and their enumerated lists)", watch);
             Progression = 5; //5% after building SQL
 
             //A value typed on an enumerated list without value of the list is ignored by the engine: say it
@@ -3186,6 +3426,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     var message = restriction.IgnoredEnumValueMessage;
                     if (message != null) Report.LogMessage("Model '{0}': Warning: {1}", Name, message);
                 }
+                logSlowStep("Check of the values of the restrictions", watch);
             }
 
             ResultTable = null;
@@ -3289,6 +3530,23 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
+        /// Duration in seconds above which a step of the loading of a result table is written in the execution messages (0 to never write it), to find the slow step of a model
+        /// </summary>
+        public static double SlowStepSeconds = 2;
+
+        /// <summary>
+        /// Writes the duration of a step of the loading of the result table if it is slow, and restarts the watch for the next step
+        /// </summary>
+        void logSlowStep(string step, System.Diagnostics.Stopwatch watch)
+        {
+            if (SlowStepSeconds > 0 && watch.Elapsed.TotalSeconds >= SlowStepSeconds && Report != null)
+            {
+                Report.LogMessage("Model '{0}': {1}: {2} s.", Name, step, watch.Elapsed.TotalSeconds.ToString("0.0", System.Globalization.CultureInfo.InvariantCulture));
+            }
+            watch.Restart();
+        }
+
+        /// <summary>
         /// Last step of the ResultTable of a SQL model, after FetchResultTable(): maximum number of records, enumerated lists and Post-load script. Like PrepareResultTable(), do not call it in parallel with other models.
         /// </summary>
         public void CompleteResultTable()
@@ -3301,7 +3559,8 @@ model.ResultTable = query2.CopyToDataTable2();
             }
             //The 'Maximum number of records' of the model is reached (LIMIT in the SQL): the result is partial, as for the limit of the connection
             //A short list sorted by the SQL (e.g. the 50 last contracts, the top 200 holders) is a top N by design, not a partial result
-            var topN = MaxNumberOfRecords > 0 && MaxNumberOfRecords < 1000 && System.Text.RegularExpressions.Regex.IsMatch(Sql ?? "", @"^\s*ORDER\s+BY\b", System.Text.RegularExpressions.RegexOptions.Multiline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            //A longer sorted list stays a partial result, but its rows are the first ones in the order of the SQL (see MaxRowsOrderBy)
+            var topN = MaxNumberOfRecords > 0 && MaxNumberOfRecords < 1000 && SqlOrderByClause != null;
             if (!topN && MaxNumberOfRecords > 0 && ResultTable.Rows.Count >= MaxNumberOfRecords && (!MaxRowsReached || MaxNumberOfRecords < MaxRowsLimit))
             {
                 MaxRowsReached = true;
@@ -3311,9 +3570,12 @@ model.ResultTable = query2.CopyToDataTable2();
             }
 
             //If enum, set enum values directly in the table, only for master model
+            var watch = System.Diagnostics.Stopwatch.StartNew();
             if (_fetchIsMaster && !IsSubModel) handleEnums();
+            logSlowStep("Display values of the enumerated lists", watch);
 
             ExecuteLoadScript(LoadScript, "Post load script", this);
+            logSlowStep("Post load script", watch);
             _resultTableAvailable = true;
 
             ExecutionDuration = Convert.ToInt32((_fillTime + (DateTime.Now - start)).TotalSeconds);

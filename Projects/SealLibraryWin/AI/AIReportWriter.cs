@@ -1538,8 +1538,21 @@ namespace Seal.AI
                 var (tableJson, aggJson) = model.GetResultTableTranslatedJson(MaxRowsForAgent);
                 if (model.MaxRowsReached)
                 {
-                    sb.AppendLine($"WARNING: only the first {model.MaxRowsLimit} rows were loaded ({(model.MaxRowsOfModel ? "maximum number of records of the report" : "maximum rows of the user's access")}): the metrics, totals and rows below cover these rows only, " +
-                        "which are an arbitrary part of the data. Execute again with criteria (e.g. a territory or a year) before giving figures, or tell the user the result is partial.");
+                    var limit = model.MaxRowsOfModel ? "maximum number of records of the report" : "maximum rows of the user's access";
+                    var order = model.MaxRowsOrderBy;
+                    sb.AppendLine(order != null
+                        ? $"WARNING: only the first {model.MaxRowsLimit} rows in the order {order} were loaded ({limit}): the metrics, totals and rows below cover these rows only, not the complete result. " +
+                            "Say it to the user (e.g. the most recent rows only), or execute again with criteria (e.g. a territory or a year) before giving totals."
+                        : $"WARNING: only {model.MaxRowsLimit} rows were loaded ({limit}): the metrics, totals and rows below cover these rows only, " +
+                            "which are an arbitrary part of the data (sorted after reading: the first rows are not the first ones of the complete result). Execute again with criteria (e.g. a territory or a year) before giving figures, or tell the user the result is partial.");
+                }
+                if (model.ResultTable.Rows.Count == 0)
+                {
+                    //A value typed in a free text criterion may match nothing (spelling, abbreviation, code instead of a name)
+                    var typed = model.ExecutionRestrictions.Union(model.ExecutionAggregateRestrictions)
+                        .Where(i => !i.IsEnum && i.IsText && i.HasValue1 && (i.Prompt != PromptType.None || i.AllowAPI))
+                        .Select(i => $"'{i.DisplayNameEl}' = '{i.Value1}'").Distinct().ToList();
+                    if (typed.Count > 0) sb.AppendLine($"NOTE: no row. Check the text typed in {string.Join(", ", typed)} (spelling, abbreviation, a code instead of a name) with database_get_sample_values or a report listing the values, before telling the user there is no data.");
                 }
                 sb.AppendLine("PRE-AGGREGATED METRICS:");
                 sb.AppendLine(aggJson);
@@ -1684,9 +1697,29 @@ namespace Seal.AI
             }
             if (found == null)
             {
-                //List loaded on demand: an identifier not yet loaded is kept as is and loaded with the selected values
-                if (enumRE.IsLoadOnDemand) { id = value; return null; }
-                return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list.";
+                //List loaded on demand: an identifier not yet loaded is loaded, it must exist (an unknown value would give no row without message)
+                if (enumRE.IsLoadOnDemand)
+                {
+                    try { enumRE.EnsureValues(new List<string>() { value }); } catch { }
+                    if (enumRE.Values.Exists(i => i.Id == value)) { id = value; return null; }
+                }
+                //Values close to the one typed: search with its first words (e.g. 'CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)')
+                var close = new List<MetaEV>();
+                if (enumRE.HasDynamicDisplay)
+                {
+                    var shorter = value.Split('(')[0].Trim();
+                    var words = shorter.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+                    while (close.Count == 0 && words.Count > 0)
+                    {
+                        var text = string.Join(" ", words);
+                        if (text.Length < Math.Max(enumRE.FilterChars, 3)) break;
+                        try { close = enumRE.GetSubSetValues(text, null).Take(10).ToList(); } catch { break; }
+                        words.RemoveAt(words.Count - 1);
+                    }
+                }
+                else close = PreferWholeWord(candidates.Where(i => value.Split(' ', '(', ')').Any(w => w.Length >= 4 && (i.DisplayRestriction ?? "").Contains(w, StringComparison.OrdinalIgnoreCase))).ToList(), i => i.DisplayRestriction, value).Take(10).ToList();
+                return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list." +
+                    (close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "");
             }
             id = found.Id;
             return null;

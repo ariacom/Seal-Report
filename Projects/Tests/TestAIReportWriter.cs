@@ -191,7 +191,7 @@ namespace Test
             var tool = new AIToolConfiguration() { CurrentToolCall = new AIToolCall() { Name = "report_execute_from_xml", Arguments = "{}", SecurityContext = user } };
             var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Value1>Ernst</Value1>", "<Value1>a</Value1>").Replace("<SourceGUID>c</SourceGUID>", "<SourceGUID>c</SourceGUID><MaxNumberOfRecords>3</MaxNumberOfRecords><SqlOrderBy>-- unsorted</SqlOrderBy>");
             var result = new AIReportWriter(tool).ExecuteFromXml(xml, null);
-            StringAssert.Contains(result, "WARNING: only the first 3 rows were loaded (maximum number of records of the report)");
+            StringAssert.Contains(result, "WARNING: only 3 rows were loaded (maximum number of records of the report)");
             //Under the limit: no warning
             result = new AIReportWriter(tool).ExecuteFromXml(xml.Replace("<MaxNumberOfRecords>3</MaxNumberOfRecords>", "<MaxNumberOfRecords>5000</MaxNumberOfRecords>"), null);
             Assert.IsFalse(result.Contains("WARNING: only the first"), result);

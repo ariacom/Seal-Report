@@ -63,8 +63,13 @@
                 break;
             }
             var vals = new List<string>();
-            foreach (var v in row.ItemArray)
-                vals.Add(v == DBNull.Value ? "NULL" : v?.ToString() ?? "");
+            foreach (var v in row.ItemArray) {
+                if (v == null || v == DBNull.Value) vals.Add("NULL");
+                // Array columns (e.g. PostgreSQL text[]): the values, not the .NET type name
+                else if (v is System.Collections.IEnumerable list && !(v is string) && !(v is byte[])) vals.Add("{" + string.Join(", ", list.Cast<object>().Select(i => i == null || i == DBNull.Value ? "NULL" : Convert.ToString(i, System.Globalization.CultureInfo.InvariantCulture))) + "}");
+                else if (v is IFormattable f && !(v is DateTime)) vals.Add(f.ToString(null, System.Globalization.CultureInfo.InvariantCulture));
+                else vals.Add(v.ToString());
+            }
             sb.AppendLine(string.Join("\t", vals));
         }
         if (table.Rows.Count == 0) sb.AppendLine("(no rows returned)");

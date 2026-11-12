@@ -14,9 +14,7 @@
         {
             //The query reached the 'Maximum rows loaded' of the connection or the 'Maximum number of records' of the model: the result is partial
             <div class="alert alert-warning py-1 px-2 mb-2 small model_max_rows" role="alert">
-                <span class="fa-solid fa-triangle-exclamation me-1" aria-hidden="true"></span>@Raw(viewModel.MaxRowsOfModel
-                    ? report.Translate("Only the first {0} rows are displayed (maximum of the report). Refine the criteria to get the complete result: the totals, the charts and the map only cover the rows displayed.", viewModel.MaxRowsLimit.ToString("N0", view.CultureInfo))
-                    : report.Translate("Only the first {0} rows are displayed (limit of your access). Refine the criteria to get the complete result: the totals, the charts and the map only cover the rows displayed.", viewModel.MaxRowsLimit.ToString("N0", view.CultureInfo)))
+                <span class="fa-solid fa-triangle-exclamation me-1" aria-hidden="true"></span>@viewModel.MaxRowsMessage
             </div>
         }
     </div>

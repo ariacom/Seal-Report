@@ -12249,6 +12249,16 @@
             Serialize ContainsHtml only if not the default value
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportElement.MaxDisplayLength">
+            <summary>
+            Maximum number of characters of a value displayed in the report result (HTML views). A longer value is cut on a word and ended by '…'. 0 means no limit. The exports (Excel, CSV) and the scripts keep the full value.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportElement.ShouldSerializeMaxDisplayLength">
+            <summary>
+            Serialize MaxDisplayLength only if not the default value
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportElement.InsertPosition">
             <summary>
             The position in Page, Row, Column, Data of the element inserted if the model is used as a reference model. A value of 0 means to add the element at the end. A negative value can be specified to indicate the position from the last element (e.g. -1 means the position before the last element).
@@ -13231,6 +13241,27 @@
             True if MaxRowsReached comes from the 'Maximum number of records' of the model (and not from the 'Maximum rows loaded' of the connection)
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.SqlOrderByClause">
+            <summary>
+            ORDER BY clause of the SQL executed (without the ORDER BY keyword and the comment), null if the SQL has no ORDER BY (e.g. a SqlOrderBy set to a comment)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.MaxRowsOrderBy">
+            <summary>
+            When the result is partial (MaxRowsReached) and the SQL is sorted: the order of the rows loaded, with the names of the elements (e.g. 'Year (descending)'), null otherwise.
+            The rows loaded are then the first ones in this order, and not an arbitrary part of the data.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.splitSqlList(System.String)">
+            <summary>
+            Items of a SQL list separated by commas, the commas between parentheses or quotes excluded (e.g. 'coalesce(a,b) DESC, c')
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.MaxRowsMessage">
+            <summary>
+            Message telling that the result is partial (MaxRowsReached): rows loaded, limit reached and order of the rows, translated. Null if the result is complete.
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportModel.ResultTableTranslated">
             <summary>
             Result DataTable got from the SQL query with the original column names and without hidden columns
@@ -13246,9 +13277,26 @@
             Median of a list of values having at least one value: middle value, or average of the 2 middle values for an even count
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportModel.kElementProperty">
+            <summary>
+            Key of the ExtendedProperties of a column of ResultTableTranslated holding its ReportElement
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.GetFormatDecimals(System.String)">
+            <summary>
+            Number of decimals shown by a numeric .NET format (N2, F0, P1, 0.00, #,##0.0 %...), a percentage keeping 2 more decimals as its value is a fraction. Null if unknown.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.jsonNumber(System.Object,System.Int32)">
+            <summary>
+            Value of a numeric cell for the Json of the AI: rounded to the decimals of the format of the element (4 by default), written without decimal when it is an integer (e.g. 41 and not 41.0)
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportModel.GetResultTableTranslatedJson(System.Int32)">
             <summary>
             Json string for the result table with an additional Json containing aggregation.
+            The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column: no sum for a dimension (a year, a code),
+            nor for an average, a minimum, a maximum or a percentage.
             When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
             serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
             result is sent to an AI model.
@@ -13552,6 +13600,16 @@
         <member name="M:Seal.Model.ReportModel.FetchResultTable(System.Collections.Generic.Dictionary{System.String,Seal.Model.ReportModel})">
             <summary>
             Second step of the ResultTable of a SQL model (IsSQLFill): executes the query of the model (Pre/Post SQL included) and loads the rows. It only uses the SQL and the connection of the model, so the queries of several models can be fetched in parallel.
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportModel.SlowStepSeconds">
+            <summary>
+            Duration in seconds above which a step of the loading of a result table is written in the execution messages (0 to never write it), to find the slow step of a model
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.logSlowStep(System.String,System.Diagnostics.Stopwatch)">
+            <summary>
+            Writes the duration of a step of the loading of the result table if it is slow, and restarts the watch for the next step
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.CompleteResultTable">
@@ -17130,6 +17188,11 @@
             HTML value of the cell
             </summary>
         </member>
+        <member name="M:Seal.Model.ResultCell.TruncateText(System.String,System.Int32)">
+            <summary>
+            Cut a text longer than maxLength characters, on a word if possible, and end it by ' …'
+            </summary>
+        </member>
         <member name="M:Seal.Model.ResultCell.CSVValue(System.Boolean,System.String)">
             <summary>
             CSV value of the cell
@@ -20371,6 +20434,21 @@
             GUID of the connection
             </summary>
         </member>
+        <member name="T:Seal.Model.GuideStateItem">
+            <summary>
+            Store the state (shown/hidden) of the guide of a report chosen by the user
+            </summary>
+        </member>
+        <member name="P:Seal.Model.GuideStateItem.ReportGUID">
+            <summary>
+            GUID of the report
+            </summary>
+        </member>
+        <member name="P:Seal.Model.GuideStateItem.Shown">
+            <summary>
+            True if the guide is shown
+            </summary>
+        </member>
         <member name="T:Seal.Model.SecurityUserProfile">
             <summary>
             Object to store the culture and the recent reports of the user
@@ -20439,6 +20517,27 @@
         <member name="M:Seal.Model.SecurityUserProfile.MarkFavorite(System.String)">
             <summary>
             Mark/unmark as favorite
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SecurityUserProfile.MaxGuideStates">
+            <summary>
+            Maximum number of guide states kept in the profile
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SecurityUserProfile.GuideStates">
+            <summary>
+            State of the report guides (shown/hidden) chosen by the user with the Guide button, the most recent first.
+            Only the reports where the user has used the button are stored: otherwise the view parameter 'show_guide' applies.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUserProfile.GetGuideState(System.String)">
+            <summary>
+            Return the state of the guide chosen by the user for a report, null if the user has not chosen
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SecurityUserProfile.SetGuideState(System.String,System.Boolean)">
+            <summary>
+            Set the state of the guide chosen by the user for a report. Return true if the state has changed.
             </summary>
         </member>
         <member name="P:Seal.Model.SecurityUserProfile.Connections">
