@@ -189,7 +189,19 @@ namespace Test
             model.MaxRowsLimit = 1000;
             //An element with an enumerated list is read by its identifiers: said in the order
             var first = model.Elements.First();
-            Assert.AreEqual($"{first.DisplayNameElTranslated}{(first.IsEnum ? " (by code)" : "")} (descending)", model.MaxRowsOrderBy);
+            var byCode = first.IsEnum && first.EnumEL.Values.Any(i => i.Id != i.DisplayValue);
+            Assert.AreEqual($"{first.DisplayNameElTranslated}{(byCode ? " (by code)" : "")} (descending)", model.MaxRowsOrderBy);
+            if (first.IsEnum)
+            {
+                //A list whose identifiers are its labels (e.g. years): no '(by code)'
+                var values = first.EnumEL.Values;
+                try
+                {
+                    first.EnumEL.Values = new System.Collections.Generic.List<MetaEV> { new MetaEV() { Id = "2025" }, new MetaEV() { Id = "2024", Val = "2024" } };
+                    Assert.AreEqual($"{first.DisplayNameElTranslated} (descending)", model.MaxRowsOrderBy);
+                }
+                finally { first.EnumEL.Values = values; }
+            }
             StringAssert.Contains(model.MaxRowsMessage, " rows by ");
             Assert.IsFalse(model.MaxRowsMessage.Contains("arbitrary"));
         }

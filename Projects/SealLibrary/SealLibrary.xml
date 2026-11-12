@@ -19062,6 +19062,11 @@
             Optional text shown in the tooltip of the product name on the Web site, after the version. If empty, the license information is shown.
             </summary>
         </member>
+        <member name="P:Seal.Model.SealServerConfiguration.WebCopyright">
+            <summary>
+            Optional name of the copyright holder shown in the footer of the Web site ('Copyright © year name. All Rights Reserved'). If empty, 'Seal Report' is used.
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebHelpLink">
             <summary>
             Optional Help link for the Web Report Server: a URL, or the path of a file relative to the repository folder (e.g. 'Settings\Help.pdf') served to the authenticated users

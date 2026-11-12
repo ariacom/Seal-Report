@@ -1204,7 +1204,8 @@ model.ResultTable = query2.CopyToDataTable2();
                         bool same(string sql) => !string.IsNullOrEmpty(sql) && string.Equals(sql.Trim(), expression, StringComparison.OrdinalIgnoreCase);
                         var element = Elements.FirstOrDefault(i => same(i.SQLColumn) || same(i.SQLColumnName) || same(i.MetaColumn?.Name));
                         //An element with an enumerated list is read in the order of its identifiers but displayed by its labels (e.g. the 5 000 first INSEE codes shown by commune name)
-                        if (element != null) label = element.DisplayNameElTranslated + (element.IsEnum ? $" ({Report.Translate("by code")})" : "");
+                        //Said only when the identifiers differ from the labels (not for a list of years: '2025' shown '2025')
+                        if (element != null) label = element.DisplayNameElTranslated + (element.IsEnum && element.EnumEL.Values.Any(i => i.Id != i.DisplayValue) ? $" ({Report.Translate("by code")})" : "");
                         else
                         {
                             var column = Source.MetaData.Tables.SelectMany(i => i.Columns).FirstOrDefault(i => same(i.Name));
