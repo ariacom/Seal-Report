@@ -97,6 +97,14 @@ e.g. `<Restriction>[f1] AND [f2] AND [f3]</Restriction>`):
 Enumerated column → `Equal` + `<EnumValues>` (the id of the list), never `<Value1>`;
 number → `Greater`, `GreaterEqual`, `Smaller`, `SmallerEqual`, `Between` with
 `<Value1>`/`<Value2>`; date or year → `<Date1>`/`<Date2>` (`2024-01-01`).
+Several values of a text column (e.g. two or three city names to compare) → ONE
+restriction, `Equal`, one value per `<Value1>` to `<Value4>` (4 values at most), never
+one restriction per value joined by AND (no row) and never `Contains` with a list:
+
+```xml
+<ReportRestriction><GUID>f4</GUID><Name>Customers.City</Name><MetaColumnGUID>«column GUID»</MetaColumnGUID>
+  <Prompt>Prompt</Prompt><Operator>Equal</Operator><Value1>Berlin</Value1><Value2>London</Value2></ReportRestriction>
+```
 
 ## GUID rules
 

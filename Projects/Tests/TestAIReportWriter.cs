@@ -123,6 +123,19 @@ namespace Test
         }
 
         [TestMethod]
+        public void ModelNameIgnoresTheCase()
+        {
+            //Seen with GPT-6 Luna: 'Chiffres clés Finances' for the model 'Chiffres clés finances'
+            var user = new SecurityUser(_repository.Security) { Name = "ai_user" };
+            user.AddSecurityGroup(_repository.Security.Groups.First().Name);
+            var tool = new AIToolConfiguration() { CurrentToolCall = new AIToolCall() { Name = "report_execute_from_xml", Arguments = "{}", SecurityContext = user } };
+            var result = new AIReportWriter(tool).ExecuteFromXml(ReportXml(ColumnGuid("Orders.ShipName")), " oRDERS ");
+            StringAssert.Contains(result, "=== Model: Orders ===");
+            result = new AIReportWriter(tool).ExecuteFromXml(ReportXml(ColumnGuid("Orders.ShipName")), "Customers");
+            StringAssert.Contains(result, "No model named 'Customers' found. Available: Orders.");
+        }
+
+        [TestMethod]
         public void MedianOfTheResultValues()
         {
             Assert.AreEqual(3m, ReportModel.GetMedian(new List<decimal> { 5, 1, 3 }));

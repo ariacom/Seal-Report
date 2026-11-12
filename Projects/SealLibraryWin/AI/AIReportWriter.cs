@@ -1496,7 +1496,10 @@ namespace Seal.AI
 
             if (report.HasErrors) return $"Error executing {label}:\r\n{report.ExecutionErrors}";
 
+            //Model name: exact match, else case-insensitive (e.g. 'Chiffres clés Finances' for 'Chiffres clés finances')
+            modelName = modelName?.Trim();
             var models = report.Models.Where(m => string.IsNullOrEmpty(modelName) || m.Name == modelName).ToList();
+            if (models.Count == 0 && !string.IsNullOrEmpty(modelName)) models = report.Models.Where(m => string.Equals(m.Name?.Trim(), modelName, StringComparison.OrdinalIgnoreCase)).ToList();
             if (models.Count == 0)
             {
                 return string.IsNullOrEmpty(modelName) ? "No models found in report." : $"No model named '{modelName}' found. Available: {string.Join(", ", report.Models.Select(m => m.Name))}.";
