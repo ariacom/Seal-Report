@@ -1482,8 +1482,8 @@ namespace Seal.AI
             }
 
             //Required criteria: refused without value, as the Web Report Server does (the result would cover the whole data, e.g. every commune of France)
-            var candidates = !string.IsNullOrEmpty(modelName) ? models : report.Models.Where(m => m.Elements.Count > 0).ToList();
-            var missing = candidates.SelectMany(m => m.Restrictions.Concat(m.AggregateRestrictions)).Concat(report.InputValues)
+            //All the models: a Fiche puts its required criterion on a reference model without element ('_Reference'), the other models use it
+            var missing = report.Models.SelectMany(m => m.Restrictions.Concat(m.AggregateRestrictions)).Concat(report.InputValues)
                 .Where(r => r.Prompt != PromptType.None && r.Required && !r.HasValue)
                 .Select(r => r.DisplayNameEl).Distinct().ToList();
             if (missing.Count > 0)

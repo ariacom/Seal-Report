@@ -98,12 +98,16 @@ namespace Test
             report.SkipExternalViewer = true;
             var model = report.Models.First(i => i.Name == "Employees");
             model.MaxNumberOfRecords = 2;
+            model.SqlOrderBy = "-- no ORDER BY"; //unsorted: an arbitrary part of the rows
+            var sorted = report.Models.First(i => i.Name == "Sales per category");
+            sorted.MaxNumberOfRecords = 2; //sorted by the SQL: a top 2 by design
             var execution = new ReportExecution() { Report = report };
             execution.Execute();
             while (report.IsExecuting) System.Threading.Thread.Sleep(50);
             Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
             Assert.AreEqual(2, model.ResultTable.Rows.Count);
             Assert.IsTrue(model.MaxRowsReached && model.MaxRowsOfModel && model.MaxRowsLimit == 2, "partial result flagged");
+            Assert.IsTrue(sorted.Sql.Contains("ORDER BY") && !sorted.MaxRowsReached, "sorted top N not flagged");
             Assert.IsFalse(report.Models.First(i => i.Name == "Sales per year").MaxRowsReached, "model under its limit not flagged");
             var html = File.ReadAllText(execution.GenerateResult(ReportFormat.html));
             StringAssert.Contains(html, "(maximum of the report)");

@@ -391,6 +391,7 @@ namespace SWIUtil {
 
         //OAuth authorizations given to AI clients
         var authorizations = data.authorizations || [];
+        SWIUtil.ShowHideControl($("#mcp-connector-title,#mcp-connector-help"), data.oauth);
         SWIUtil.ShowHideControl($("#mcp-authorizations"), data.oauth || authorizations.length > 0);
         SWIUtil.ShowHideControl($("#mcp-authorizations-table"), authorizations.length > 0);
         SWIUtil.ShowHideControl($("#mcp-authorizations-none"), authorizations.length == 0);

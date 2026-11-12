@@ -3300,7 +3300,9 @@ model.ResultTable = query2.CopyToDataTable2();
                 while (ResultTable.Rows.Count > MaxNumberOfRecords) ResultTable.Rows.RemoveAt(MaxNumberOfRecords);
             }
             //The 'Maximum number of records' of the model is reached (LIMIT in the SQL): the result is partial, as for the limit of the connection
-            if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count >= MaxNumberOfRecords && (!MaxRowsReached || MaxNumberOfRecords < MaxRowsLimit))
+            //A short list sorted by the SQL (e.g. the 50 last contracts, the top 200 holders) is a top N by design, not a partial result
+            var topN = MaxNumberOfRecords > 0 && MaxNumberOfRecords < 1000 && System.Text.RegularExpressions.Regex.IsMatch(Sql ?? "", @"^\s*ORDER\s+BY\b", System.Text.RegularExpressions.RegexOptions.Multiline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            if (!topN && MaxNumberOfRecords > 0 && ResultTable.Rows.Count >= MaxNumberOfRecords && (!MaxRowsReached || MaxNumberOfRecords < MaxRowsLimit))
             {
                 MaxRowsReached = true;
                 MaxRowsLimit = MaxNumberOfRecords;

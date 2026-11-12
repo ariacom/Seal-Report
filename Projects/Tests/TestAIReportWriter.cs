@@ -150,6 +150,12 @@ namespace Test
             //With a value: executed
             result = new AIReportWriter(tool).ExecuteFromXml(xml.Replace("<Operator>Contains</Operator>", "<Operator>Contains</Operator><Value1>Ernst</Value1>"), null);
             StringAssert.Contains(result, "=== Model: Orders ===");
+
+            //Required criterion on a model without element (the '_Reference' model of a Fiche), also when one model is asked
+            var reference = $"<ReportModel><GUID>r</GUID><Name>_Reference</Name><SourceGUID>c</SourceGUID><Restriction>[f9]</Restriction><Restrictions><ReportRestriction><GUID>f9</GUID><Name>Orders.ShipName</Name><MetaColumnGUID>{ColumnGuid("Orders.ShipName")}</MetaColumnGUID><Prompt>Prompt</Prompt><Required>true</Required><Operator>Contains</Operator></ReportRestriction></Restrictions></ReportModel>";
+            var xmlReference = ReportXml(ColumnGuid("Orders.ShipName")).Replace("</ReportModel></Models>", "</ReportModel>" + reference + "</Models>");
+            result = new AIReportWriter(tool).ExecuteFromXml(xmlReference, "Orders");
+            StringAssert.Contains(result, "requires a value for the criteria");
         }
 
         [TestMethod]
@@ -183,7 +189,7 @@ namespace Test
             var user = new SecurityUser(_repository.Security) { Name = "ai_user" };
             user.AddSecurityGroup(_repository.Security.Groups.First().Name);
             var tool = new AIToolConfiguration() { CurrentToolCall = new AIToolCall() { Name = "report_execute_from_xml", Arguments = "{}", SecurityContext = user } };
-            var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Value1>Ernst</Value1>", "<Value1>a</Value1>").Replace("<SourceGUID>c</SourceGUID>", "<SourceGUID>c</SourceGUID><MaxNumberOfRecords>3</MaxNumberOfRecords>");
+            var xml = ReportXml(ColumnGuid("Orders.ShipName")).Replace("<Value1>Ernst</Value1>", "<Value1>a</Value1>").Replace("<SourceGUID>c</SourceGUID>", "<SourceGUID>c</SourceGUID><MaxNumberOfRecords>3</MaxNumberOfRecords><SqlOrderBy>-- unsorted</SqlOrderBy>");
             var result = new AIReportWriter(tool).ExecuteFromXml(xml, null);
             StringAssert.Contains(result, "WARNING: only the first 3 rows were loaded (maximum number of records of the report)");
             //Under the limit: no warning

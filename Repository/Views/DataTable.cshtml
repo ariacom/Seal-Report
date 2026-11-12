@@ -22,7 +22,8 @@
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
 {
 
-    if (view.GetBoolValue("data_warning_show") && reportModel.ResultTable != null && reportModel.MaxNumberOfRecords > 0 && reportModel.ResultTable.Rows.Count >= reportModel.MaxNumberOfRecords)
+    //Not shown if the Model view already warns that the result is partial (MaxRowsReached)
+    if (view.GetBoolValue("data_warning_show") && !reportModel.MaxRowsReached && reportModel.ResultTable != null && reportModel.MaxNumberOfRecords > 0 && reportModel.ResultTable.Rows.Count >= reportModel.MaxNumberOfRecords)
     {
         var warningText = report.Translate("Warning: The maximum number of records is reached");
        warningText += $" ({reportModel.MaxNumberOfRecords})";

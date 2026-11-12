@@ -355,6 +355,28 @@
 
                 <div id="profile-tab-mcp" class="tab-pane fade" role="tabpanel" aria-labelledby="profile-tab-mcp-button">
                 <div id="profile-mcp">
+                    <div id="mcp-connector-title" class="fw-semibold small d-none">@repository.TranslateWeb("Connector")</div>
+                    <div id="mcp-connector-help" class="form-text mb-2 d-none">@repository.TranslateWeb("Recommended: add the MCP server URL of an agent as a connector in your AI client (e.g. claude.ai, Claude Desktop, ChatGPT), then log in with your Seal account to authorize it. No token to copy: the client works with your rights and the authorization can be revoked at any time.")</div>
+                    <div class="form-text">@repository.TranslateWeb("MCP server URLs of your agents:")</div>
+                    <ul id="mcp-agents" class="list-unstyled small mb-2"></ul>
+                    <div id="mcp-authorizations" class="mb-2 d-none">
+                        <div class="form-text mb-1">@repository.TranslateWeb("Connected AI clients")</div>
+                        <table id="mcp-authorizations-table" class="table table-sm align-middle mb-0">
+                            <thead>
+                                <tr>
+                                    <th>@repository.TranslateWeb("Application")</th>
+                                    <th>@repository.TranslateWeb("Agent")</th>
+                                    <th>@repository.TranslateWeb("Authorized")</th>
+                                    <th>@repository.TranslateWeb("Expires")</th>
+                                    <th>@repository.TranslateWeb("Last use")</th>
+                                    <th></th>
+                                </tr>
+                            </thead>
+                            <tbody></tbody>
+                        </table>
+                        <div id="mcp-authorizations-none" class="small text-muted">@repository.TranslateWeb("No application authorized.")</div>
+                    </div>
+                    <div class="fw-semibold small mt-3">@repository.TranslateWeb("Personal access tokens")</div>
                     <div class="form-text mb-2">@repository.TranslateWeb("A personal access token connects an AI client (Claude, Copilot, Cursor...) to the AI agents with your rights: set it in the header 'Authorization: Bearer <token>' of the MCP server URL.")</div>
                     <table id="mcp-tokens-table" class="table table-sm align-middle mb-2">
                         <thead>
@@ -380,26 +402,6 @@
                             <input id="mcp-token-value" class="form-control font-monospace" style="width:1%;" readonly="readonly" />
                             <button id="mcp-token-copy" type="button" class="btn btn-secondary" title="@repository.TranslateWeb("Copy")"><i class="fa fa-copy"></i></button>
                         </div>
-                    </div>
-                    <div class="form-text">@repository.TranslateWeb("MCP server URLs of your agents:")</div>
-                    <ul id="mcp-agents" class="list-unstyled small mb-0"></ul>
-                    <div id="mcp-authorizations" class="mt-3 d-none">
-                        <div class="fw-semibold small">@repository.TranslateWeb("Authorized applications")</div>
-                        <div class="form-text mb-2">@repository.TranslateWeb("AI clients connected with OAuth: add the MCP server URL of an agent as a connector in your AI client (e.g. claude.ai or Claude Desktop) and log in to authorize it.")</div>
-                        <table id="mcp-authorizations-table" class="table table-sm align-middle mb-0">
-                            <thead>
-                                <tr>
-                                    <th>@repository.TranslateWeb("Application")</th>
-                                    <th>@repository.TranslateWeb("Agent")</th>
-                                    <th>@repository.TranslateWeb("Authorized")</th>
-                                    <th>@repository.TranslateWeb("Expires")</th>
-                                    <th>@repository.TranslateWeb("Last use")</th>
-                                    <th></th>
-                                </tr>
-                            </thead>
-                            <tbody></tbody>
-                        </table>
-                        <div id="mcp-authorizations-none" class="small text-muted">@repository.TranslateWeb("No application authorized.")</div>
                     </div>
                 </div>
                 </div>
