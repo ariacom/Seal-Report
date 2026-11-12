@@ -54,6 +54,41 @@ namespace Test
         }
 
         [TestMethod]
+        public void ParallelModelsSameResult()
+        {
+            //The queries of the models of an Execution set run in parallel: same result tables and pages as the execution one model after the other
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            string execute(int maxParallel)
+            {
+                var initial = ReportExecution.MaxParallelModels;
+                try
+                {
+                    ReportExecution.MaxParallelModels = maxParallel;
+                    var report = Report.LoadFromFile(path, repository);
+                    report.SkipExternalViewer = true;
+                    new ReportExecution() { Report = report }.Execute();
+                    while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+                    Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+                    Assert.IsTrue(report.ExecutionModels.Count > 1, "several models");
+                    var result = "";
+                    foreach (var model in report.ExecutionModels)
+                    {
+                        Assert.IsTrue(model.ExecResultTableLoaded, model.Name);
+                        result += $"{model.Name}: {model.Pages.Count} page(s)\r\n";
+                        foreach (System.Data.DataRow row in model.ResultTable.Rows) result += string.Join("|", row.ItemArray) + "\r\n";
+                    }
+                    return result;
+                }
+                finally
+                {
+                    ReportExecution.MaxParallelModels = initial;
+                }
+            }
+            Assert.AreEqual(execute(1), execute(4));
+        }
+
+        [TestMethod]
         public void ModelMaximumOfRecordsShownAsPartialResult()
         {
             //The 'Maximum number of records' of the model is reached: flagged and the Model view warns the user (as for the limit of the connection)

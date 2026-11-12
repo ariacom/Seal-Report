@@ -3201,6 +3201,8 @@ namespace Seal.Model
             }
         }
 
+        readonly object _logLock = new object();
+
         /// <summary>
         /// Log Interface implementation
         /// </summary>
@@ -3212,8 +3214,12 @@ namespace Seal.Model
                 {
                     var msg = string.Format("{0} ({1}) {2}\r\n", DateTime.Now.ToLongTimeString(), Thread.CurrentThread.ManagedThreadId, (args.Length == 0 ? message : string.Format(message, args)));
                     Debug.WriteLine(msg);
-                    ExecutionMessages += msg;
-                    if (ExecutionInitiator != null) ExecutionInitiator.ExecutionMessages += msg;
+                    //Models may log from several threads (queries executed in parallel)
+                    lock (_logLock)
+                    {
+                        ExecutionMessages += msg;
+                        if (ExecutionInitiator != null) ExecutionInitiator.ExecutionMessages += msg;
+                    }
                 }
             }
             catch (Exception ex)

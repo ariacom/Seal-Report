@@ -808,9 +808,17 @@ namespace Seal.Model
             foreach (var set in sets)
             {
                 Report.LogMessage("Build models of Execution set {0}...", set);
-                foreach (ReportModel model in models.Where(i => i.ExecutionSet == set))
+                var setModels = models.Where(i => i.ExecutionSet == set).ToList();
+                if (MaxParallelModels > 1 && setModels.Count > 1)
                 {
-                    tasks.Add(buildResultTables(model));
+                    await buildResultTablesParallel(setModels, tasks);
+                }
+                else
+                {
+                    foreach (ReportModel model in setModels)
+                    {
+                        tasks.Add(buildResultTables(model));
+                    }
                 }
 
                 await Task.WhenAll(tasks);
@@ -838,6 +846,91 @@ namespace Seal.Model
         {
             await LoadResultTableModel(model);
             BuildResultPagesModel(model);
+        }
+
+        /// <summary>
+        /// Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set). 1 executes the models one after the other.
+        /// </summary>
+        public static int MaxParallelModels = 4;
+
+        /// <summary>
+        /// Builds the models of an Execution set: the queries of the SQL models are executed in parallel (MaxParallelModels at most).
+        /// The models share elements and restrictions (reference model), so the SQL is built one model after the other, and the results (enumerated lists, load scripts, pages) are completed one model after the other, in the order of the models.
+        /// </summary>
+        private async Task buildResultTablesParallel(List<ReportModel> setModels, List<Task> tasks)
+        {
+            var semaphore = new SemaphoreSlim(MaxParallelModels);
+            var fetches = new Dictionary<ReportModel, Task>();
+            var prepared = new HashSet<ReportModel>();
+            var sqls = new HashSet<string>();
+            foreach (var model in setModels)
+            {
+                if (Report.Cancel) break;
+                if (model.ExecResultTableLoaded || (model.ResultTable != null && Report.RenderOnly)) continue; //Done by LoadResultTableModel()
+                try
+                {
+                    Report.LogMessage("Model '{0}': Loading result table...", model.Name);
+                    model.PrepareResultTable();
+                    prepared.Add(model);
+                    //A model having the same SQL as a previous model may get its result table from it (ShareResultTable): it is filled after it
+                    if (model.IsSQLFill && sqls.Add(model.Sql))
+                    {
+                        var fetch = Task.Run(async () =>
+                        {
+                            await semaphore.WaitAsync();
+                            try
+                            {
+                                if (!Report.Cancel) model.FetchResultTable(_runningModels);
+                            }
+                            finally
+                            {
+                                semaphore.Release();
+                            }
+                        });
+                        fetches.Add(model, fetch);
+                        tasks.Add(fetch);
+                    }
+                }
+                catch (Exception ex)
+                {
+                    if (string.IsNullOrEmpty(model.ExecutionError)) model.ExecutionError = ex.Message;
+                    SetError("Error in model '{0}': {1}", model.Name, ex.Message);
+                }
+            }
+
+            //Complete the models in their order
+            foreach (var model in setModels)
+            {
+                if (prepared.Contains(model))
+                {
+                    try
+                    {
+                        //The SQL of the next models was built meanwhile: elements and restrictions shared through a reference model are set again for this model
+                        model.RestoreElementsState();
+                        if (fetches.TryGetValue(model, out var fetch))
+                        {
+                            await fetch;
+                            if (!Report.Cancel) model.CompleteResultTable();
+                        }
+                        else
+                        {
+                            await model.FillPreparedResultTableAsync(_runningModels, _runningSubTables);
+                        }
+                        if (!string.IsNullOrEmpty(model.ExecutionError)) throw new Exception(model.ExecutionError);
+                        if (!Report.Cancel) model.ExecResultTableLoaded = true;
+                    }
+                    catch (Exception ex)
+                    {
+                        if (string.IsNullOrEmpty(model.ExecutionError)) model.ExecutionError = ex.Message;
+                        SetError("Error in model '{0}': {1}", model.Name, ex.Message);
+                    }
+                }
+                else if (string.IsNullOrEmpty(model.ExecutionError))
+                {
+                    await LoadResultTableModel(model);
+                }
+                BuildResultPagesModel(model);
+            }
         }
 
         /// <summary>

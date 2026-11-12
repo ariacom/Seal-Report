@@ -12594,6 +12594,17 @@
             List of models to execute after cleaning of models involved in View Restrictions
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportExecution.MaxParallelModels">
+            <summary>
+            Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set). 1 executes the models one after the other.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportExecution.buildResultTablesParallel(System.Collections.Generic.List{Seal.Model.ReportModel},System.Collections.Generic.List{System.Threading.Tasks.Task})">
+            <summary>
+            Builds the models of an Execution set: the queries of the SQL models are executed in parallel (MaxParallelModels at most).
+            The models share elements and restrictions (reference model), so the SQL is built one model after the other, and the results (enumerated lists, load scripts, pages) are completed one model after the other, in the order of the models.
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportExecution.LoadResultTableModel(Seal.Model.ReportModel)">
             <summary>
             Load the result table of a report model
@@ -13516,6 +13527,36 @@
         <member name="M:Seal.Model.ReportModel.FillResultTableAsync(System.Collections.Generic.Dictionary{System.String,Seal.Model.ReportModel},System.Collections.Generic.Dictionary{System.String,Seal.Model.MetaTable})">
             <summary>
             Build the ResultTable for the model
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.FillPreparedResultTableAsync(System.Collections.Generic.Dictionary{System.String,Seal.Model.ReportModel},System.Collections.Generic.Dictionary{System.String,Seal.Model.MetaTable})">
+            <summary>
+            Build the ResultTable for the model after PrepareResultTable()
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.IsSQLFill">
+            <summary>
+            True if the model is filled by a SQL query (not a LINQ query): after PrepareResultTable(), the query can be executed by FetchResultTable() on another thread, in parallel with the queries of other models
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.PrepareResultTable">
+            <summary>
+            First step of the ResultTable: Pre-load script and SQL of the model. It reads and sets elements and restrictions that may be shared with other models (reference model): do not call it in parallel with other models.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.RestoreElementsState">
+            <summary>
+            Sets again the state of the elements and restrictions of the model (references, SQL column names, sort orders), as done by BuildQuery(). Elements and restrictions may be shared with other models through a reference model: called before completing a model whose SQL was built before the SQL of other models.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.FetchResultTable(System.Collections.Generic.Dictionary{System.String,Seal.Model.ReportModel})">
+            <summary>
+            Second step of the ResultTable of a SQL model (IsSQLFill): executes the query of the model (Pre/Post SQL included) and loads the rows. It only uses the SQL and the connection of the model, so the queries of several models can be fetched in parallel.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.CompleteResultTable">
+            <summary>
+            Last step of the ResultTable of a SQL model, after FetchResultTable(): maximum number of records, enumerated lists and Post-load script. Like PrepareResultTable(), do not call it in parallel with other models.
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.EnumDisplayValue(Seal.Model.MetaEnum,System.String,System.Boolean)">

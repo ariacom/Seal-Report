@@ -2574,7 +2574,8 @@ model.ResultTable = query2.CopyToDataTable2();
 
         void checkRunningModels(string key, Dictionary<string, ReportModel> runningModels)
         {
-            if (ShareResultTable && !Elements.Exists(i => i.IsEnum && i.ShowAllEnums)) //Do not share if show all enums as we will add rows to the result table
+            var share = _preparedShare ?? (ShareResultTable && !Elements.Exists(i => i.IsEnum && i.ShowAllEnums));
+            if (share) //Do not share if show all enums as we will add rows to the result table
             {
                 lock (runningModels)
                 {
@@ -3097,7 +3098,7 @@ model.ResultTable = query2.CopyToDataTable2();
                         }
                         else adapter.Fill(ResultTable);
                         handleDateOnlyColumns();
-                        if (connection is SQLiteConnection && Elements.Exists(i => i.TypeEl == ColumnType.DateTime)) handleSQLLiteDateTime();
+                        if (connection is SQLiteConnection && dateTimeColumnNames.Any()) handleSQLLiteDateTime();
 
                         executePrePostStatement(PostSQL, "Post", Name, IgnorePrePostError, this);
                         executePrePostStatements(false);
@@ -3123,6 +3124,44 @@ model.ResultTable = query2.CopyToDataTable2();
         /// </summary>
         public async Task FillResultTableAsync(Dictionary<string, ReportModel> runningModels, Dictionary<string, MetaTable> runningSubTables)
         {
+            PrepareResultTable();
+            await FillPreparedResultTableAsync(runningModels, runningSubTables);
+        }
+
+        /// <summary>
+        /// Build the ResultTable for the model after PrepareResultTable()
+        /// </summary>
+        public async Task FillPreparedResultTableAsync(Dictionary<string, ReportModel> runningModels, Dictionary<string, MetaTable> runningSubTables)
+        {
+            if (Source.IsNoSQL && !string.IsNullOrEmpty(LINQSelect) && !Report.Cancel)
+            {
+                await fillLINQResultTableAsync(runningModels, runningSubTables);
+            }
+            else if (!string.IsNullOrEmpty(Sql) && !Report.Cancel)
+            {
+                FetchResultTable(runningModels);
+                if (Report.Cancel) return;
+                CompleteResultTable();
+                return;
+            }
+
+            ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
+            Progression = 70; //70% after getting result set
+        }
+
+        /// <summary>
+        /// True if the model is filled by a SQL query (not a LINQ query): after PrepareResultTable(), the query can be executed by FetchResultTable() on another thread, in parallel with the queries of other models
+        /// </summary>
+        [XmlIgnore]
+        public bool IsSQLFill => !(Source.IsNoSQL && !string.IsNullOrEmpty(LINQSelect)) && !string.IsNullOrEmpty(Sql);
+
+        bool _fetchIsMaster = false;
+
+        /// <summary>
+        /// First step of the ResultTable: Pre-load script and SQL of the model. It reads and sets elements and restrictions that may be shared with other models (reference model): do not call it in parallel with other models.
+        /// </summary>
+        public void PrepareResultTable()
+        {
             Progression = 0;
             ExecutionDuration = 0;
             ExecutionDate = DateTime.Now;
@@ -3139,98 +3178,143 @@ model.ResultTable = query2.CopyToDataTable2();
             BuildQuery();
             Progression = 5; //5% after building SQL
 
+            //A value typed on an enumerated list without value of the list is ignored by the engine: say it
+            if (!IsSubModel)
+            {
+                foreach (var restriction in ExecutionRestrictions.Union(ExecutionAggregateRestrictions))
+                {
+                    var message = restriction.IgnoredEnumValueMessage;
+                    if (message != null) Report.LogMessage("Model '{0}': Warning: {1}", Name, message);
+                }
+            }
+
             ResultTable = null;
             _command = null;
+            //State of the elements read by FetchResultTable(): the elements may be shared with other models (reference model) and changed by their PrepareResultTable() while the query runs
+            _preparedShare = ShareResultTable && !Elements.Exists(i => i.IsEnum && i.ShowAllEnums);
+            _preparedDateTimeColumns = Elements.Where(i => i.TypeEl == ColumnType.DateTime).Select(i => i.SQLColumnName).ToList();
+            _fillTime = DateTime.Now - ExecutionDate;
+        }
 
-            if (Source.IsNoSQL && !string.IsNullOrEmpty(LINQSelect) && !Report.Cancel)
+        bool? _preparedShare = null;
+        List<string> _preparedDateTimeColumns = null;
+
+        /// <summary>
+        /// Sets again the state of the elements and restrictions of the model (references, SQL column names, sort orders), as done by BuildQuery(). Elements and restrictions may be shared with other models through a reference model: called before completing a model whose SQL was built before the SQL of other models.
+        /// </summary>
+        public void RestoreElementsState()
+        {
+            InitReferences();
+            SetColumnsName();
+            UpdateFinalSortOrders();
+        }
+
+        //Time spent by the model in PrepareResultTable() and FetchResultTable(): the ExecutionDuration does not count the time waiting for the other models
+        TimeSpan _fillTime;
+
+        async Task fillLINQResultTableAsync(Dictionary<string, ReportModel> runningModels, Dictionary<string, MetaTable> runningSubTables)
+        {
+            //No SQL = LINQ
+            try
             {
-                //No SQL = LINQ
-                try
+                ExecResultTables = new Dictionary<string, DataTable>();
+                var tasks = new List<Task>();
+                //Tables execution
+                foreach (var subModel in LINQSubModels)
                 {
-                    if (ResultTable == null)
+                    //Pre-load script
+                    ExecuteLoadScript(subModel.PreLoadScript, "Pre load script", subModel);
+
+                    tasks.Add(subModel.GetModelResultTableAsync(runningModels));
+                }
+
+                foreach (var subTable in LINQSubTables)
+                {
+                    tasks.Add(GetNoSQLResultTableAsync(subTable, runningSubTables));
+                }
+
+                //Wait for the result tables
+                await Task.WhenAll(tasks);
+
+                foreach (var subModel in LINQSubModels)
+                {
+                    ExecResultTables.Add(subModel.ResultTable.TableName, subModel.ResultTable);
+                    if (subModel.MaxRowsReached)
                     {
-                        ExecResultTables = new Dictionary<string, DataTable>();
-                        var tasks = new List<Task>();
-                        //Tables execution
-                        foreach (var subModel in LINQSubModels)
-                        {
-                            //Pre-load script
-                            ExecuteLoadScript(subModel.PreLoadScript, "Pre load script", subModel);
-
-                            tasks.Add(subModel.GetModelResultTableAsync(runningModels));
-                        }
-
-                        foreach (var subTable in LINQSubTables)
-                        {
-                            tasks.Add(GetNoSQLResultTableAsync(subTable, runningSubTables));
-                        }
-
-                        //Wait for the result tables
-                        await Task.WhenAll(tasks);
-
-                        foreach (var subModel in LINQSubModels)
-                        {
-                            ExecResultTables.Add(subModel.ResultTable.TableName, subModel.ResultTable);
-                            if (subModel.MaxRowsReached)
-                            {
-                                MaxRowsReached = true;
-                                MaxRowsLimit = Math.Max(MaxRowsLimit, subModel.MaxRowsLimit);
-                            }
-                        }
-
-                        foreach (var subTable in LINQSubTables)
-                        {
-                            ExecResultTables.Add(subTable.NoSQLTable.TableName, subTable.NoSQLTable);
-                        }
-
-                        var loadScript = LoadScript ?? LINQLoadScript;
-                        if (PrintQuery || Report.PrintQueries)
-                        {
-                            Report.LogMessage("Model '{0}' LINQ Query:\r\n{1}\r\n", Name, loadScript);
-                        }
-
-                        //Finally LINQ query
-                        RazorHelper.CompileExecute(loadScript, this);
-
-                        handleEnums();
+                        MaxRowsReached = true;
+                        MaxRowsLimit = Math.Max(MaxRowsLimit, subModel.MaxRowsLimit);
                     }
                 }
-                catch (Exception ex)
+
+                foreach (var subTable in LINQSubTables)
                 {
-                    throw new Exception(string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
+                    ExecResultTables.Add(subTable.NoSQLTable.TableName, subTable.NoSQLTable);
                 }
+
+                var loadScript = LoadScript ?? LINQLoadScript;
+                if (PrintQuery || Report.PrintQueries)
+                {
+                    Report.LogMessage("Model '{0}' LINQ Query:\r\n{1}\r\n", Name, loadScript);
+                }
+
+                //Finally LINQ query
+                RazorHelper.CompileExecute(loadScript, this);
+
+                handleEnums();
             }
-            else if (!string.IsNullOrEmpty(Sql) && !Report.Cancel)
+            catch (Exception ex)
             {
-                //Normal SQL
-                ResultTable = null;
-                _resultTableAvailable = false;
-                var isMaster = fillResultTableFromDatabase(runningModels);
+                throw new Exception(string.Format("Got unexpected error when building NoSQL Table:\r\n{0}\r\n{1}", ex.Message, ex.StackTrace));
+            }
+        }
 
-                if (Report.Cancel) return;
+        /// <summary>
+        /// Second step of the ResultTable of a SQL model (IsSQLFill): executes the query of the model (Pre/Post SQL included) and loads the rows. It only uses the SQL and the connection of the model, so the queries of several models can be fetched in parallel.
+        /// </summary>
+        public void FetchResultTable(Dictionary<string, ReportModel> runningModels)
+        {
+            var start = DateTime.Now;
+            ResultTable = null;
+            _resultTableAvailable = false;
+            try
+            {
+                _fetchIsMaster = fillResultTableFromDatabase(runningModels);
+            }
+            finally
+            {
+                _fillTime += DateTime.Now - start;
+                _preparedShare = null;
+                _preparedDateTimeColumns = null;
+            }
+        }
 
-                //Check maximum number of records
-                if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count > MaxNumberOfRecords)
-                {
-                    while (ResultTable.Rows.Count > MaxNumberOfRecords) ResultTable.Rows.RemoveAt(MaxNumberOfRecords);
-                }
-                //The 'Maximum number of records' of the model is reached (LIMIT in the SQL): the result is partial, as for the limit of the connection
-                if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count >= MaxNumberOfRecords && (!MaxRowsReached || MaxNumberOfRecords < MaxRowsLimit))
-                {
-                    MaxRowsReached = true;
-                    MaxRowsLimit = MaxNumberOfRecords;
-                    MaxRowsOfModel = true;
-                    if (!IsSubModel) Report.LogMessage("Model '{0}': Maximum number of records of the model reached ({1}), the other rows are not loaded.", Name, MaxNumberOfRecords);
-                }
-
-                //If enum, set enum values directly in the table, only for master model
-                if (isMaster && !IsSubModel) handleEnums();
-
-                ExecuteLoadScript(LoadScript, "Post load script", this);
-                _resultTableAvailable = true;
+        /// <summary>
+        /// Last step of the ResultTable of a SQL model, after FetchResultTable(): maximum number of records, enumerated lists and Post-load script. Like PrepareResultTable(), do not call it in parallel with other models.
+        /// </summary>
+        public void CompleteResultTable()
+        {
+            var start = DateTime.Now;
+            //Check maximum number of records
+            if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count > MaxNumberOfRecords)
+            {
+                while (ResultTable.Rows.Count > MaxNumberOfRecords) ResultTable.Rows.RemoveAt(MaxNumberOfRecords);
+            }
+            //The 'Maximum number of records' of the model is reached (LIMIT in the SQL): the result is partial, as for the limit of the connection
+            if (MaxNumberOfRecords > 0 && ResultTable.Rows.Count >= MaxNumberOfRecords && (!MaxRowsReached || MaxNumberOfRecords < MaxRowsLimit))
+            {
+                MaxRowsReached = true;
+                MaxRowsLimit = MaxNumberOfRecords;
+                MaxRowsOfModel = true;
+                if (!IsSubModel) Report.LogMessage("Model '{0}': Maximum number of records of the model reached ({1}), the other rows are not loaded.", Name, MaxNumberOfRecords);
             }
 
-            ExecutionDuration = Convert.ToInt32((DateTime.Now - ExecutionDate).TotalSeconds);
+            //If enum, set enum values directly in the table, only for master model
+            if (_fetchIsMaster && !IsSubModel) handleEnums();
+
+            ExecuteLoadScript(LoadScript, "Post load script", this);
+            _resultTableAvailable = true;
+
+            ExecutionDuration = Convert.ToInt32((_fillTime + (DateTime.Now - start)).TotalSeconds);
             Progression = 70; //70% after getting result set
         }
 
@@ -3256,15 +3340,18 @@ model.ResultTable = query2.CopyToDataTable2();
             }
         }
 
+        //SQL column names of the DateTime elements (taken by PrepareResultTable() when the query is fetched on another thread)
+        List<string> dateTimeColumnNames => _preparedDateTimeColumns ?? Elements.Where(i => i.TypeEl == ColumnType.DateTime).Select(i => i.SQLColumnName).ToList();
+
         void handleSQLLiteDateTime()
         {
             DataTable newTable = new DataTable();
-            var dtElements = Elements.Where(i => i.TypeEl == ColumnType.DateTime).ToList();
+            var dtColumns = dateTimeColumnNames;
 
             // Copy the schema (excluding the datetime column you want to modify)
             foreach (DataColumn col in ResultTable.Columns)
             {
-                if (dtElements.Exists(i => i.SQLColumnName == col.ColumnName))
+                if (dtColumns.Contains(col.ColumnName))
                     newTable.Columns.Add(col.ColumnName, typeof(DateTime));
                 else
                     newTable.Columns.Add(col.ColumnName, col.DataType);
@@ -3277,20 +3364,17 @@ model.ResultTable = query2.CopyToDataTable2();
 
                 foreach (DataColumn col in ResultTable.Columns)
                 {
-                    foreach (var el in dtElements)
+                    if (dtColumns.Contains(col.ColumnName))
                     {
-                        if (col.ColumnName == el.SQLColumnName)
-                        {
-                            // Parse string to DateTime safely
-                            if (DateTime.TryParse(row[col].ToString(), out DateTime parsedDate))
-                                newRow[col.ColumnName] = parsedDate;
-                            else
-                                newRow[col.ColumnName] = DBNull.Value;  // or handle error
-                        }
+                        // Parse string to DateTime safely
+                        if (DateTime.TryParse(row[col].ToString(), out DateTime parsedDate))
+                            newRow[col.ColumnName] = parsedDate;
                         else
-                        {
-                            newRow[col.ColumnName] = row[col];
-                        }
+                            newRow[col.ColumnName] = DBNull.Value;  // or handle error
+                    }
+                    else
+                    {
+                        newRow[col.ColumnName] = row[col];
                     }
                 }
 
