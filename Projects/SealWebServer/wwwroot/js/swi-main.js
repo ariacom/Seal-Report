@@ -743,6 +743,17 @@ class SWIMain {
                 _main.refreshMenus();
                 _main._lastReport.name = $("#nav_button").text();
             }, 1000);
+        }, function (data) {
+            //Error: message, then the login page if the session was lost, otherwise back to the folders
+            $(".navbar-header,#navbar").removeClass("disabled");
+            SWIUtil.HideModal($waitDialog);
+            SWIUtil.ShowMessage("alert-danger", data.error, 0);
+            if (!data.authenticated)
+                location.reload();
+            else {
+                _main._reportPath = "";
+                _main.toggleFoldersReport(false);
+            }
         });
     }
     clearFilesTable() {

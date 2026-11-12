@@ -206,7 +206,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionSaveWebScheduleRestrictions");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
                 checkWebScheduleUser();
                 var execution = getReportExecution(execution_guid);
                 if (execution == null) throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));

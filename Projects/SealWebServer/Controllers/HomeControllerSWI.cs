@@ -1082,6 +1082,10 @@ namespace SealWebServer.Controllers
             {
                 //No path (e.g. a report tab reloaded or restored by the browser without the posted form): back to the main page
                 if (string.IsNullOrEmpty(path) && fromMenu != true) return Redirect(Url.Content("~/"));
+                //From the menu of the main page, the user is always in the session: no user means that the session was lost (expired, server restarted).
+                //The user must not be authenticated again silently (e.g. as Guest when the guests are allowed): the main page is reloaded.
+                SetSessionId(sessionId);
+                if (fromMenu == true && WebUser == null) throw new SessionLostException(Translate("Your session has expired, please log in again."));
                 if (!CheckAuthentication(sessionId)) return Content(_loginContent);
 
                 Report report = null;
@@ -1138,6 +1142,8 @@ namespace SealWebServer.Controllers
             }
             catch (Exception ex)
             {
+                //From the menu: JSON error shown as a message by the main page (not an HTML page inserted in the report body)
+                if (fromMenu == true) return HandleSWIException(ex);
                 return HandleException(ex);
             }
         }

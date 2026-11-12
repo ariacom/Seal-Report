@@ -165,6 +165,17 @@ namespace SealWebServer.Controllers
             return WebUser.IsAuthenticated;
         }
 
+        /// <summary>
+        /// Authentication of an action on a report execution of the session: no user in the session means that the session was lost (expired, server restarted).
+        /// The user is then not authenticated again silently (e.g. as Guest when the guests are allowed, the report execution is not in the new session anyway): the caller returns the redirection to the main page.
+        /// </summary>
+        bool CheckExecutionAuthentication(string sessionId)
+        {
+            SetSessionId(sessionId);
+            if (WebUser == null) return false;
+            return CheckAuthentication(sessionId);
+        }
+
 
         void Authenticate()
         {
@@ -269,7 +280,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionExecuteReport");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
                 if (string.IsNullOrEmpty(execution_guid))
                 {
                     //check guid from trigger
@@ -303,7 +314,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionResetRestrictions");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
                 var execution = getReportExecution(execution_guid);
                 if (execution == null) throw new Exception(string.Format("No report execution found in session '{0}'", execution_guid));
 
@@ -326,7 +337,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionNavigate");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
                 if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
 
                 ReportExecution execution = getReportExecution(execution_guid);
@@ -434,7 +445,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionGetNavigationLinks");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null && execution.RootReport != null)
@@ -517,7 +528,7 @@ namespace SealWebServer.Controllers
             writeDebug("Result");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
                 if (string.IsNullOrEmpty(execution_guid)) return new EmptyResult();
 
                 var execution = getReportExecution(execution_guid);
@@ -549,7 +560,7 @@ namespace SealWebServer.Controllers
             writeDebug("OutputResult");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -575,7 +586,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionCancelReport");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -602,7 +613,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionUpdateViewParameter");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -631,7 +642,7 @@ namespace SealWebServer.Controllers
             writeDebug("ViewResult");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -671,7 +682,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionSendFeedback");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
                 var configuration = Repository.Configuration;
                 if (!configuration.FeedbackEnabled) throw new Exception("Invalid operation");
 
@@ -731,7 +742,7 @@ namespace SealWebServer.Controllers
             writeDebug("HtmlResultFile");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -755,7 +766,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionGetTableData");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 ReportExecution execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -788,7 +799,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionUpdateEnumValues");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -812,7 +823,7 @@ namespace SealWebServer.Controllers
             string result = "";
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 var execution = getReportExecution(execution_guid);
                 if (execution != null)
@@ -846,7 +857,7 @@ namespace SealWebServer.Controllers
             var views = new List<string>();
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 ReportExecution execution = getReportExecution(execution_guid);
                 if (execution == null) throw new Exception(string.Format("Unable to find execution id {0}", execution_guid));
@@ -953,7 +964,7 @@ namespace SealWebServer.Controllers
             writeDebug("ActionExecuteFromTriggerNewWindow");
             try
             {
-                if (!CheckAuthentication(sessionId)) return _loginContentResult;
+                if (!CheckExecutionAuthentication(sessionId)) return _loginContentResult;
 
                 ReportExecution execution = getReportExecution(execution_guid_trigger);
                 if (execution == null) throw new Exception(string.Format("Unable to find execution id {0}", execution_guid_trigger));

@@ -308,8 +308,17 @@ async function getTableData(datatable, guid, viewid, pageid, data, callback, set
         if (_urlPrefix != "") {
             $.post(_urlPrefix + action, { execution_guid: guid, viewid: viewid, pageid: pageid, parameters: params })
                 .done(function (data) {
+                    var json;
                     try {
-                        var json = jQuery.parseJSON(data);
+                        json = jQuery.parseJSON(data);
+                    }
+                    catch (ex) {
+                        //Not JSON: message of the server (e.g. the report is not in the session anymore after a session lost) or the redirection to the login page (its script is executed by jQuery)
+                        if (typeof data === "string" && data) $(datatable[0]).html(data);
+                        else datatable[0].innerHTML = "Error loading data..." + "<br>" + ex.message;
+                        return;
+                    }
+                    try {
                         callback(json);
                         initNavCells("[viewid='" + viewid + "']");
                     }
