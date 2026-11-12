@@ -139,6 +139,32 @@ namespace Test
         }
 
         [TestMethod]
+        public void AgentJsonNoSumForRatiosByName()
+        {
+            //Columns formatted as plain numbers but named as a percentage, a median or a position: no sum; several periods: the sum is flagged
+            var model = ReportModel.Create();
+            var table = new System.Data.DataTable();
+            table.Columns.Add("Année", typeof(string));
+            table.Columns.Add("Actifs", typeof(decimal));
+            table.Columns.Add("Part de la fibre (%)", typeof(decimal));
+            table.Columns.Add("Niveau de vie médian", typeof(decimal));
+            table.Columns.Add("Latitude", typeof(double));
+            table.Columns.Add("Départs", typeof(decimal));
+            table.Rows.Add("2021", 100m, 80.5m, 21000m, 49.1, 3m);
+            table.Rows.Add("2022", 110m, 90.5m, 22000m, 49.2, 4m);
+            model.ResultTable = table;
+            var (_, aggJson) = model.GetResultTableTranslatedJson();
+            var columns = System.Text.Json.JsonDocument.Parse(aggJson).RootElement.GetProperty("columns");
+            Assert.IsTrue(columns.GetProperty("Actifs").TryGetProperty("sum", out _), aggJson);
+            StringAssert.Contains(columns.GetProperty("Actifs").GetProperty("sum_note").GetString(), "2 values of 'Année'");
+            Assert.IsFalse(columns.GetProperty("Part de la fibre (%)").TryGetProperty("sum", out _), aggJson);
+            Assert.AreEqual("ratio", columns.GetProperty("Niveau de vie médian").GetProperty("role").GetString());
+            Assert.IsFalse(columns.GetProperty("Niveau de vie médian").TryGetProperty("sum", out _), aggJson);
+            Assert.AreEqual("coordinate", columns.GetProperty("Latitude").GetProperty("role").GetString());
+            Assert.IsTrue(columns.GetProperty("Départs").TryGetProperty("sum", out _), "'Départs' is not a 'part'");
+        }
+
+        [TestMethod]
         public void SortedPartialResultGivesItsOrder()
         {
             //A long list sorted by the SQL and cut by its 'Maximum number of records': partial, but the rows are the first ones in the order of the SQL
@@ -161,7 +187,9 @@ namespace Test
             model.MaxRowsReached = true; //as if the limit was reached
             model.MaxRowsOfModel = true;
             model.MaxRowsLimit = 1000;
-            Assert.AreEqual($"{model.Elements.First().DisplayNameElTranslated} (descending)", model.MaxRowsOrderBy);
+            //An element with an enumerated list is read by its identifiers: said in the order
+            var first = model.Elements.First();
+            Assert.AreEqual($"{first.DisplayNameElTranslated}{(first.IsEnum ? " (by code)" : "")} (descending)", model.MaxRowsOrderBy);
             StringAssert.Contains(model.MaxRowsMessage, " rows by ");
             Assert.IsFalse(model.MaxRowsMessage.Contains("arbitrary"));
         }

@@ -2658,6 +2658,16 @@
             Keeps the labels having the value as a whole word when there are some, e.g. 'Ain' for '01 - Ain' and not for 'Ille-et-Vilaine'
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.IsWholeWord(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
+            <summary>
+            True if the values are empty or have the value as a whole word (see PreferWholeWord)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.LevenshteinDistance(System.String,System.String)">
+            <summary>
+            Number of single-character edits (insertion, deletion, substitution) between two texts
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.resolveEnumValue(Seal.Model.ReportRestriction,System.String,System.String,System.String@)">
             <summary>
             Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
@@ -13308,6 +13318,11 @@
             Number of decimals shown by a numeric .NET format (N2, F0, P1, 0.00, #,##0.0 %...), a percentage keeping 2 more decimals as its value is a fraction. Null if unknown.
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportModel.removeDiacritics(System.String)">
+            <summary>
+            Text without its accents (médian -> median), to match the names of the columns in several languages
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportModel.jsonNumber(System.Object,System.Int32)">
             <summary>
             Value of a numeric cell for the Json of the AI: rounded to the decimals of the format of the element (4 by default), written without decimal when it is an integer (e.g. 41 and not 41.0)
@@ -19040,6 +19055,11 @@
         <member name="P:Seal.Model.SealServerConfiguration.WebProductName">
             <summary>
             The name of the product displayed on the Web site
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.WebProductInformation">
+            <summary>
+            Optional text shown in the tooltip of the product name on the Web site, after the version. If empty, the license information is shown.
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.WebHelpLink">

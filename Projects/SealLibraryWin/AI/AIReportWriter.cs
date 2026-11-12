@@ -1645,7 +1645,8 @@ namespace Seal.AI
                             if (error != null) return error;
                             if (!ids.Contains(id)) ids.Add(id);
                         }
-                        restriction.EnumValues = ids;
+                        //A list per restriction: several restrictions of the same name (one per model) must not share the same list
+                        restriction.EnumValues = ids.ToList();
                     }
                     else
                     {
@@ -1669,6 +1670,38 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// True if the values are empty or have the value as a whole word (see PreferWholeWord)
+        /// </summary>
+        public static bool IsWholeWord(List<MetaEV> values, Func<MetaEV, string> label, string value)
+        {
+            if (values.Count == 0) return true;
+            var regex = new Regex($@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(value)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase);
+            return values.Any(i => regex.IsMatch(label(i) ?? ""));
+        }
+
+        /// <summary>
+        /// Number of single-character edits (insertion, deletion, substitution) between two texts
+        /// </summary>
+        public static int LevenshteinDistance(string a, string b)
+        {
+            if (string.IsNullOrEmpty(a)) return b?.Length ?? 0;
+            if (string.IsNullOrEmpty(b)) return a.Length;
+            var previous = new int[b.Length + 1];
+            var current = new int[b.Length + 1];
+            for (int j = 0; j <= b.Length; j++) previous[j] = j;
+            for (int i = 1; i <= a.Length; i++)
+            {
+                current[0] = i;
+                for (int j = 1; j <= b.Length; j++)
+                {
+                    current[j] = Math.Min(Math.Min(current[j - 1] + 1, previous[j] + 1), previous[j - 1] + (a[i - 1] == b[j - 1] ? 0 : 1));
+                }
+                (previous, current) = (current, previous);
+            }
+            return previous[b.Length];
+        }
+
+        /// <summary>
         /// Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
         /// </summary>
         static string resolveEnumValue(ReportRestriction restriction, string name, string value, out string id)
@@ -1685,9 +1718,13 @@ namespace Seal.AI
 
             var found = candidates.FirstOrDefault(i => i.Id == value)
                 ?? candidates.FirstOrDefault(i => string.Equals(i.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(i.DisplayValue, value, StringComparison.OrdinalIgnoreCase));
+            var inWords = new List<MetaEV>();
             if (found == null)
             {
-                var partial = PreferWholeWord(candidates.Where(i => (i.DisplayRestriction ?? "").Contains(value, StringComparison.OrdinalIgnoreCase)).ToList(), i => i.DisplayRestriction, value);
+                var containing = candidates.Where(i => (i.DisplayRestriction ?? "").Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
+                var partial = PreferWholeWord(containing, i => i.DisplayRestriction, value);
+                //The value inside a word only (e.g. 'Metz-Ville' in 'Limetz-Villez'): never chosen silently, given as close values
+                if (!IsWholeWord(partial, i => i.DisplayRestriction, value)) { inWords = partial; partial = new List<MetaEV>(); }
                 //e.g. 'Versonnex' for 'Versonnex (01435)'
                 var starting = partial.Where(i => (i.DisplayRestriction ?? "").StartsWith(value + " ", StringComparison.OrdinalIgnoreCase)).ToList();
                 if (starting.Count > 0) partial = starting;
@@ -1703,23 +1740,38 @@ namespace Seal.AI
                     try { enumRE.EnsureValues(new List<string>() { value }); } catch { }
                     if (enumRE.Values.Exists(i => i.Id == value)) { id = value; return null; }
                 }
-                //Values close to the one typed: search with its first words (e.g. 'CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)')
-                var close = new List<MetaEV>();
-                if (enumRE.HasDynamicDisplay)
+                //Values close to the one typed: search with its first words (e.g. 'CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)'),
+                //then with its beginning (e.g. 'Thionvil' for the misspelled 'Thionvile')
+                var close = inWords.Take(10).ToList();
+                var minLength = Math.Max(enumRE.FilterChars, 3);
+                if (close.Count == 0 && enumRE.HasDynamicDisplay)
                 {
                     var shorter = value.Split('(')[0].Trim();
                     var words = shorter.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
-                    while (close.Count == 0 && words.Count > 0)
+                    var texts = new List<string>();
+                    for (int i = words.Count; i > 0; i--) texts.Add(string.Join(" ", words.Take(i)));
+                    for (int i = 1; i <= 4 && shorter.Length - i >= minLength; i++) texts.Add(shorter.Substring(0, shorter.Length - i));
+                    foreach (var text in texts.Distinct())
                     {
-                        var text = string.Join(" ", words);
-                        if (text.Length < Math.Max(enumRE.FilterChars, 3)) break;
+                        if (text.Length < minLength) continue;
                         try { close = enumRE.GetSubSetValues(text, null).Take(10).ToList(); } catch { break; }
-                        words.RemoveAt(words.Count - 1);
+                        if (close.Count > 0) break;
                     }
                 }
-                else close = PreferWholeWord(candidates.Where(i => value.Split(' ', '(', ')').Any(w => w.Length >= 4 && (i.DisplayRestriction ?? "").Contains(w, StringComparison.OrdinalIgnoreCase))).ToList(), i => i.DisplayRestriction, value).Take(10).ToList();
+                else if (close.Count == 0)
+                {
+                    close = PreferWholeWord(candidates.Where(i => value.Split(' ', '(', ')').Any(w => w.Length >= 4 && (i.DisplayRestriction ?? "").Contains(w, StringComparison.OrdinalIgnoreCase))).ToList(), i => i.DisplayRestriction, value).Take(10).ToList();
+                    //Spelling mistakes: values at a small edit distance
+                    if (close.Count == 0 && value.Length >= 4)
+                        close = candidates.Select(i => new { Value = i, Distance = LevenshteinDistance(value.ToLowerInvariant(), (i.DisplayRestriction ?? "").ToLowerInvariant()) })
+                            .Where(i => i.Distance <= Math.Max(2, value.Length / 4)).OrderBy(i => i.Distance).Select(i => i.Value).Take(10).ToList();
+                }
+                //No close value in a list loaded as a whole: show some values, so the format expected is seen (e.g. names and not codes)
+                var sample = close.Count == 0 && !enumRE.HasDynamicDisplay && candidates.Count > 0
+                    ? $" The list has {candidates.Count} values, e.g. {string.Join(", ", candidates.Take(10).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}."
+                    : "";
                 return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list." +
-                    (close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "");
+                    (close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "") + sample;
             }
             id = found.Id;
             return null;

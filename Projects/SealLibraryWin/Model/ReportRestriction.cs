@@ -1341,9 +1341,9 @@ namespace Seal.Model
                 string result = "";
                 if (IsEnum)
                 {
-                    foreach (string enumValue in EnumValues)
+                    //A value is shown once even if it is several times in the list (e.g. 'Creuse (23) Creuse (23)')
+                    foreach (string enumValue in EnumValues.Distinct())
                     {
-
                         Helper.AddValue(ref result, Report.ExecutionView.CultureInfo.TextInfo.ListSeparator, GetEnumDisplayValue(enumValue));
                     }
                 }

@@ -1203,7 +1203,8 @@ model.ResultTable = query2.CopyToDataTable2();
                         string label = null;
                         bool same(string sql) => !string.IsNullOrEmpty(sql) && string.Equals(sql.Trim(), expression, StringComparison.OrdinalIgnoreCase);
                         var element = Elements.FirstOrDefault(i => same(i.SQLColumn) || same(i.SQLColumnName) || same(i.MetaColumn?.Name));
-                        if (element != null) label = element.DisplayNameElTranslated;
+                        //An element with an enumerated list is read in the order of its identifiers but displayed by its labels (e.g. the 5 000 first INSEE codes shown by commune name)
+                        if (element != null) label = element.DisplayNameElTranslated + (element.IsEnum ? $" ({Report.Translate("by code")})" : "");
                         else
                         {
                             var column = Source.MetaData.Tables.SelectMany(i => i.Columns).FirstOrDefault(i => same(i.Name));
@@ -1395,6 +1396,20 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
+        /// Text without its accents (médian -> median), to match the names of the columns in several languages
+        /// </summary>
+        static string removeDiacritics(string text)
+        {
+            var normalized = text.Normalize(NormalizationForm.FormD);
+            var sb = new StringBuilder(normalized.Length);
+            foreach (var c in normalized)
+            {
+                if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark) sb.Append(c);
+            }
+            return sb.ToString().Normalize(NormalizationForm.FormC);
+        }
+
+        /// <summary>
         /// Value of a numeric cell for the Json of the AI: rounded to the decimals of the format of the element (4 by default), written without decimal when it is an integer (e.g. 41 and not 41.0)
         /// </summary>
         static object jsonNumber(object value, int decimals)
@@ -1449,6 +1464,24 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                     catch { return false; }
                 }
+                //A value that cannot be added, told by the name of the column when its format does not say it (e.g. 'Part de la fibre (%)' formatted N1, 'Niveau de vie médian', 'Densité')
+                string roleByName(string columnName)
+                {
+                    var name = removeDiacritics(columnName ?? "").ToLowerInvariant();
+                    if (System.Text.RegularExpressions.Regex.IsMatch(name, @"\b(latitude|longitude|lat|lon|lng)\b")) return "coordinate";
+                    if (name.Contains('%') || name.Contains("€/") || name.Contains("/hab")
+                        || System.Text.RegularExpressions.Regex.IsMatch(name, @"\b(taux|rate|ratio|part|share|percent\w*|pourcent\w*|median\w*|moyen\w*|average|mean|densite|density|vitesse|speed|indice|index|score|prix|price|per capita|par habitant|pour (1 ?000|10 ?000|100 ?000))\b"))
+                        return "ratio";
+                    return null;
+                }
+                //A period of the rows: several periods make a sum add the values of several years (meaningful for a flow, not for a stock)
+                bool isPeriod(DataColumn column)
+                {
+                    if (column.DataType == typeof(DateTime)) return true;
+                    var name = removeDiacritics(column.ColumnName ?? "").ToLowerInvariant();
+                    if (!System.Text.RegularExpressions.Regex.IsMatch(name, @"\b(annee|year|periode|period|millesime|recensement|census|trimestre|quarter|mois|month|exercice|semestre|scrutin)\b")) return false;
+                    return !(column.ExtendedProperties[kElementProperty] is ReportElement element) || !element.IsNumeric || isDimension(element) || column.DataType == typeof(string);
+                }
                 int decimalsOf(DataColumn column)
                 {
                     if (column.DataType != typeof(decimal) && column.DataType != typeof(double) && column.DataType != typeof(float)) return 0;
@@ -1460,6 +1493,12 @@ model.ResultTable = query2.CopyToDataTable2();
                     return 4;
                 }
                 var columnDecimals = dt.Columns.Cast<DataColumn>().Select(i => decimalsOf(i)).ToArray();
+                //Period columns having several values (e.g. 3 censuses, 7 years)
+                var periods = dt.Columns.Cast<DataColumn>().Where(i => isPeriod(i))
+                    .Select(i => new { Column = i, Count = dt.AsEnumerable().Select(r => r[i]).Where(v => v != DBNull.Value).Distinct().Count() })
+                    .Where(i => i.Count > 1).ToList();
+                string sumNote = periods.Count == 0 ? null :
+                    $"the rows cover several periods ({string.Join(", ", periods.Select(i => $"{i.Count} values of '{i.Column.ColumnName}'"))}): the sum adds them, it is meaningful for a flow (e.g. the sales of each year), not for a stock (e.g. a population, a number of establishments)";
 
 
                 var aggregates = new Dictionary<string, object>();
@@ -1493,13 +1532,39 @@ model.ResultTable = query2.CopyToDataTable2();
                                 count = vals.Count
                             };
                         }
-                        else if (el != null && (el.AggregateFunction == AggregateFunction.Avg || el.AggregateFunction == AggregateFunction.Min || el.AggregateFunction == AggregateFunction.Max || isPercentage(el)))
+                        else if (roleByName(c.ColumnName) == "coordinate")
+                        {
+                            //Latitude, longitude: a position, neither a sum nor an average
+                            aggregates[c.ColumnName] = new
+                            {
+                                type = "number",
+                                role = "coordinate",
+                                min = jsonNumber(vals.Min(), decimals),
+                                max = jsonNumber(vals.Max(), decimals),
+                                count = vals.Count
+                            };
+                        }
+                        else if ((el != null && (el.AggregateFunction == AggregateFunction.Avg || el.AggregateFunction == AggregateFunction.Min || el.AggregateFunction == AggregateFunction.Max || isPercentage(el))) || roleByName(c.ColumnName) == "ratio")
                         {
                             //Average, minimum, maximum, percentage or ratio: the values cannot be added
                             aggregates[c.ColumnName] = new
                             {
                                 type = "number",
-                                role = isPercentage(el) ? "percentage" : el.AggregateFunction.ToString().ToLowerInvariant(),
+                                role = el != null && isPercentage(el) ? "percentage" : el != null && el.AggregateFunction != AggregateFunction.Sum && el.AggregateFunction != AggregateFunction.Count ? el.AggregateFunction.ToString().ToLowerInvariant() : "ratio",
+                                avg = jsonNumber(vals.Average(), avgDecimals),
+                                median = jsonNumber(GetMedian(vals), avgDecimals),
+                                min = jsonNumber(vals.Min(), decimals),
+                                max = jsonNumber(vals.Max(), decimals),
+                                count = vals.Count
+                            };
+                        }
+                        else if (sumNote != null)
+                        {
+                            aggregates[c.ColumnName] = new
+                            {
+                                type = "number",
+                                sum = jsonNumber(vals.Sum(), decimals),
+                                sum_note = sumNote,
                                 avg = jsonNumber(vals.Average(), avgDecimals),
                                 median = jsonNumber(GetMedian(vals), avgDecimals),
                                 min = jsonNumber(vals.Min(), decimals),

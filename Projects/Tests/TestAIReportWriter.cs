@@ -270,6 +270,35 @@ namespace Test
         }
 
         [TestMethod]
+        public void UnknownEnumValueGivesCloseValues()
+        {
+            Assert.AreEqual(1, AIReportWriter.LevenshteinDistance("thionvile", "thionville"));
+            var values = new List<MetaEV> { new MetaEV() { Id = "78337", Val = "Limetz-Villez (78337)" } };
+            Assert.IsFalse(AIReportWriter.IsWholeWord(values, i => i.Val, "Metz-Ville"), "a value inside a word");
+            Assert.IsTrue(AIReportWriter.IsWholeWord(values, i => i.Val, "Limetz"));
+
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var xml = ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Operator>Equal</Operator>");
+            var path = System.IO.Path.Combine(System.IO.Path.GetTempPath(), Guid.NewGuid().ToString() + ".srex");
+            System.IO.File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository, false);
+                //Spelling mistake: the close value is given
+                var error = AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""Germny""]}}]");
+                StringAssert.Contains(error, "Close values: 'Germany'");
+                //Nothing close (e.g. a code instead of a name): some values of the list are shown
+                error = AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""67""]}}]");
+                StringAssert.Contains(error, "The list has ");
+                //A value inside a word only is not chosen silently
+                error = AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""ermany""]}}]");
+                Assert.IsNotNull(error);
+                StringAssert.Contains(error, "Close values: 'Germany'");
+            }
+            finally { System.IO.File.Delete(path); }
+        }
+
+        [TestMethod]
         public void ValidReportGetsNewGuidsAndLimit()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));
