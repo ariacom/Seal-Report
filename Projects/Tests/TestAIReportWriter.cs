@@ -194,7 +194,7 @@ namespace Test
             StringAssert.Contains(result, "WARNING: only 3 rows were loaded (maximum number of records of the report)");
             //Under the limit: no warning
             result = new AIReportWriter(tool).ExecuteFromXml(xml.Replace("<MaxNumberOfRecords>3</MaxNumberOfRecords>", "<MaxNumberOfRecords>5000</MaxNumberOfRecords>"), null);
-            Assert.IsFalse(result.Contains("WARNING: only the first"), result);
+            Assert.IsFalse(result.Contains("WARNING: only"), result);
         }
 
         [TestMethod]

@@ -13252,6 +13252,21 @@
             The rows loaded are then the first ones in this order, and not an arbitrary part of the data.
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.ExplicitSortElements">
+            <summary>
+            Elements having an explicit sort order (e.g. '1 Descendant', not the automatic sort), in the order of the sort
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.ReportSortElements">
+            <summary>
+            Elements whose sort is shown in the headers of a data table: the elements sorted explicitly, or, if none, the first row (or column) element sorted automatically (the main key of the automatic sort)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportModel.GetReportSortIcon(Seal.Model.ReportElement)">
+            <summary>
+            Html of the icon showing the sort of the report on an element in the header of a data table (arrow, and rank when several elements are sorted), empty if the element is not one of the ReportSortElements
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportModel.splitSqlList(System.String)">
             <summary>
             Items of a SQL list separated by commas, the commas between parentheses or quotes excluded (e.g. 'coalesce(a,b) DESC, c')

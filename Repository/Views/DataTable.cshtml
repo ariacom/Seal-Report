@@ -17,6 +17,8 @@
     ResultTable table = page.DataTable;
     var sortEnabled = view.GetBoolValue("data_tables_enabled") && view.GetBoolValue("data_tables_sort_enabled");
     var sortConfiguration = view.GetValue("data_tables_sort_configuration").Replace("{LAST}", (table.ColumnCount-1).ToString());
+    //Sort of the report shown in the headers (the rows are sorted by the server, the data table does not sort them again)
+    var showReportSort = view.GetBoolValue("data_tables_show_report_sort") && string.IsNullOrWhiteSpace(sortConfiguration) && !view.GetBoolValue("invert_data_tables") && reportModel.ReportSortElements.Count > 0;
 }
 
 @if (table != null && table.RowCount > 0 && table.ColumnCount > 0 && modelView.GetBoolValue("show_data_tables"))
@@ -79,6 +81,13 @@
                         }
                 </text>}
                 });
+                @if (showReportSort)
+                {<text>
+                //The sort of the report is no longer the one displayed once the user sorts a column
+                dto.on('order.dt', function () {
+                    if (dto.order().length > 0) $(dto.table().container()).find('.report_sort_icon').remove();
+                });
+                </text>}
                initNavCells('@report.ExecutionGUID', '[viewid="@(view.ViewId)"]');
             }
     }
@@ -99,7 +108,7 @@
                     {
                         if (view.IsColumnHidden(col) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
-                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(view.GetBoolValue("data_tables_show_header_information") ? Helper.AddAttribute("title", cell.TitleTooltip) : "") @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue) @Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon fa-solid fa-up-right-from-square'></span>" : "")</th>
+                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(view.GetBoolValue("data_tables_show_header_information") ? Helper.AddAttribute("title", cell.TitleTooltip) : "") @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)@Raw(showReportSort && row == table.BodyStartRow - 1 ? reportModel.GetReportSortIcon(cell.Element) : "") @Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon fa-solid fa-up-right-from-square'></span>" : "")</th>
                     }
                 </tr>
             }

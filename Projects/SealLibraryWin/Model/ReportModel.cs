@@ -1221,6 +1221,50 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
+        /// Elements having an explicit sort order (e.g. '1 Descendant', not the automatic sort), in the order of the sort
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportElement> ExplicitSortElements
+        {
+            get
+            {
+                int number(ReportElement e) => int.TryParse((e.SortOrder ?? "").Split(' ')[0], out int n) ? n : -1;
+                return Elements.Where(i => i.PivotPosition != PivotPosition.Hidden && number(i) >= 0).OrderBy(i => number(i)).ToList();
+            }
+        }
+
+        /// <summary>
+        /// Elements whose sort is shown in the headers of a data table: the elements sorted explicitly, or, if none, the first row (or column) element sorted automatically (the main key of the automatic sort)
+        /// </summary>
+        [XmlIgnore]
+        public List<ReportElement> ReportSortElements
+        {
+            get
+            {
+                var result = ExplicitSortElements;
+                if (result.Count > 0) return result;
+                bool automatic(ReportElement e) => e.SortOrder == ReportElement.kAutomaticAscSortKeyword || e.SortOrder == ReportElement.kAutomaticDescSortKeyword;
+                var first = Elements.FirstOrDefault(i => i.PivotPosition == PivotPosition.Row && automatic(i)) ?? Elements.FirstOrDefault(i => i.PivotPosition == PivotPosition.Column && automatic(i));
+                if (first != null) result.Add(first);
+                return result;
+            }
+        }
+
+        /// <summary>
+        /// Html of the icon showing the sort of the report on an element in the header of a data table (arrow, and rank when several elements are sorted), empty if the element is not one of the ReportSortElements
+        /// </summary>
+        public string GetReportSortIcon(ReportElement element)
+        {
+            if (element == null) return "";
+            var sorted = ReportSortElements;
+            var rank = sorted.IndexOf(element);
+            if (rank < 0) return "";
+            var descending = (element.SortOrder ?? "").Contains(ReportElement.kDescendantSortKeyword) || element.SortOrder == ReportElement.kAutomaticDescSortKeyword;
+            var title = Report.Translate("Sorted by the report") + (sorted.Count > 1 ? $" ({rank + 1})" : "") + ", " + Report.Translate(descending ? "descending" : "ascending");
+            return $"<span class='report_sort_icon text-body-secondary small ms-1 text-nowrap' title='{System.Net.WebUtility.HtmlEncode(title)}'><span class='fa-solid fa-arrow-{(descending ? "down" : "up")}-long' aria-hidden='true'></span>{(sorted.Count > 1 ? (rank + 1).ToString() : "")}</span>";
+        }
+
+        /// <summary>
         /// Items of a SQL list separated by commas, the commas between parentheses or quotes excluded (e.g. 'coalesce(a,b) DESC, c')
         /// </summary>
         static List<string> splitSqlList(string sql)
