@@ -1260,7 +1260,7 @@ model.ResultTable = query2.CopyToDataTable2();
             var rank = sorted.IndexOf(element);
             if (rank < 0) return "";
             var descending = (element.SortOrder ?? "").Contains(ReportElement.kDescendantSortKeyword) || element.SortOrder == ReportElement.kAutomaticDescSortKeyword;
-            var title = Report.Translate("Sorted by the report") + (sorted.Count > 1 ? $" ({rank + 1})" : "") + ", " + Report.Translate(descending ? "descending" : "ascending");
+            var title = sorted.Count > 1 ? Report.Translate(descending ? "Sort descending (position {0})" : "Sort ascending (position {0})", rank + 1) : Report.Translate(descending ? "Sort descending" : "Sort ascending");
             return $"<span class='report_sort_icon text-body-secondary small ms-1 text-nowrap' title='{System.Net.WebUtility.HtmlEncode(title)}'><span class='fa-solid fa-arrow-{(descending ? "down" : "up")}-long' aria-hidden='true'></span>{(sorted.Count > 1 ? (rank + 1).ToString() : "")}</span>";
         }
 
