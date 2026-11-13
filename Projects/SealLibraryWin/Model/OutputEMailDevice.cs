@@ -172,6 +172,7 @@ namespace Seal.Model
                 GetProperty("ReplyTo").SetIsBrowsable(true);
                 GetProperty("UsedForNotification").SetIsBrowsable(true);
                 GetProperty("MaxMessageSize").SetIsBrowsable(true);
+                GetProperty("AllowZipAttachments").SetIsBrowsable(true);
 
                 GetProperty("HelperTestEmail").SetIsBrowsable(true);
                 GetProperty("TestEmailTo").SetIsBrowsable(true);
@@ -830,6 +831,24 @@ namespace Seal.Model
         public int MaxMessageSize { get; set; } = 0;
 
         /// <summary>
+        /// If false, the device sends no ZIP attachment (some mail services refuse them): the option 'Zip result' of the outputs is ignored, and a result larger than the maximum size of an email is not attached instead of being compressed.
+        /// </summary>
+#if WINDOWS
+        [Category("Advanced"), DisplayName("Allow ZIP attachments"), Description("If false, the device sends no ZIP attachment (some mail services refuse them, e.g. the entry plans of transactional email services): the option 'Zip result' of the outputs is ignored, and a result larger than the maximum size of an email is not attached instead of being compressed."), Id(4, 6)]
+        [DefaultValue(true)]
+#endif
+        public bool AllowZipAttachments { get; set; } = true;
+
+        /// <summary>
+        /// True if the device can send a result compressed in a ZIP file
+        /// </summary>
+#if WINDOWS
+        [Browsable(false)]
+#endif
+        [XmlIgnore]
+        public override bool CanSendZip => AllowZipAttachments;
+
+        /// <summary>
         /// The destination email address used to send the test email
         /// </summary>
 #if WINDOWS
@@ -1018,9 +1037,10 @@ namespace Seal.Model
             var name = Helper.IfNullOrEmpty(report?.ExecutionName, subject);
             string message = null;
 
-            //1. The attachment or the HTML body in a ZIP file
+            //1. The attachment or the HTML body in a ZIP file (if the device allows ZIP attachments)
             string zipPath = null, zipName = null, zipBody = null;
-            if (hasAttachment && !attachPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
+            if (!AllowZipAttachments) { }
+            else if (hasAttachment && !attachPath.EndsWith(".zip", StringComparison.OrdinalIgnoreCase))
             {
                 var entryName = Helper.IfNullOrEmpty(attachName, Path.GetFileName(attachPath));
                 zipPath = FileHelper.GetTempUniqueFileName(entryName, ".zip", true);

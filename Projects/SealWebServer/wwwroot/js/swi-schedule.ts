@@ -106,7 +106,11 @@ namespace SWISchedule {
         SWIUtil.ShowHideControl($(".webschedule-output"), hasOutput);
         SWIUtil.ShowHideControl($(".webschedule-email"), isEmail);
         SWIUtil.ShowHideControl($(".webschedule-file"), hasOutput && !isEmail);
-        SWIUtil.ShowHideControl($(".webschedule-zip"), $("#webschedule-zip").is(":checked"));
+        //Device that sends no ZIP file (e.g. a mail service refusing them): no option to compress the result
+        var canZip = hasOutput && !device.nozip;
+        if (!canZip) $("#webschedule-zip").prop("checked", false);
+        SWIUtil.ShowHideControl($("#webschedule-zip").closest(".col-sm-4"), canZip);
+        SWIUtil.ShowHideControl($(".webschedule-zip"), canZip && $("#webschedule-zip").is(":checked"));
         SWIUtil.ShowHideControl($("#webschedule-removezippassword-div"), _edit.schedule.haszippassword);
 
         var type = parseInt($("#webschedule-type").val() as string);

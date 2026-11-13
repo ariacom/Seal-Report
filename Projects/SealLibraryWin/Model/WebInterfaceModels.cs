@@ -124,6 +124,8 @@ namespace Seal.Model
         public string name;
         public string type;
         public List<string> directories = new List<string>();
+        /// <summary>True if the device sends no ZIP file (option 'Compress the result' hidden)</summary>
+        public bool nozip;
     }
 
     /// <summary>

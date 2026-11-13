@@ -111,6 +111,49 @@ namespace Test
         }
 
         [TestMethod]
+        public void NoZipWhenTheDeviceRefusesThem()
+        {
+            //AllowZipAttachments false: a large result is not compressed but removed from the email, an HTML body too
+            var d = device(1);
+            d.AllowZipAttachments = false;
+            var path = file("nozip.csv", compressible());
+            bool html = false; string body = "Please find the report", attachPath = path, attachName = "Products.csv";
+            var message = d.LimitMessageSize(null, "Products", ref html, ref body, ref attachPath, ref attachName);
+            StringAssert.Contains(message, "exceeds the maximum size of the emails (1 MB)");
+            Assert.AreEqual("", attachPath);
+            Assert.AreEqual(message, body);
+
+            html = true; body = "<html><body>" + string.Concat(Enumerable.Repeat("<p>Chai 18.00</p>", 100000)) + "</body></html>"; attachPath = ""; attachName = "";
+            message = d.LimitMessageSize(null, "Alert", ref html, ref body, ref attachPath, ref attachName);
+            StringAssert.Contains(message, "exceeds the maximum size");
+            Assert.IsFalse(html);
+            Assert.AreEqual("", attachPath);
+
+            //Below the limit, the email is unchanged
+            path = file("nozip-small.csv", Encoding.UTF8.GetBytes("Product;Amount\r\nChai;18.00\r\n"));
+            html = false; body = "body"; attachPath = path; attachName = "small.csv";
+            Assert.IsNull(d.LimitMessageSize(null, "Small", ref html, ref body, ref attachPath, ref attachName));
+            Assert.AreEqual(path, attachPath);
+        }
+
+        [TestMethod]
+        public void ZipResultOptionIgnoredWhenTheDeviceRefusesZip()
+        {
+            var report = Report.Create(Repository.Create());
+            report.DisplayName = "Zip test";
+            report.OutputToExecute = new ReportOutput() { ZipResult = true };
+            var path = file("zipoption.csv", compressible());
+            report.ResultFilePath = path;
+
+            var d = device(0);
+            d.AllowZipAttachments = false;
+            d.HandleZipOptions(report);
+            Assert.AreEqual(path, report.ResultFilePath, "the result is not compressed");
+            StringAssert.Contains(report.ExecutionMessages, "is ignored");
+            Assert.IsTrue(new OutputEmailDevice().AllowZipAttachments, "ZIP attachments allowed by default");
+        }
+
+        [TestMethod]
         public void SendEmailAppliesTheLimit()
         {
             var d = device(1);

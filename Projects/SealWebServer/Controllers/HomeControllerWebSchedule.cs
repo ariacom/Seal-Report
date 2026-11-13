@@ -68,7 +68,7 @@ namespace SealWebServer.Controllers
                 var result = new SWIWebScheduleEdit();
                 foreach (var device in Repository.Devices.Where(i => WebUser.CanAccessDevice(i)))
                 {
-                    var swiDevice = new SWIWebScheduleDevice() { guid = device.GUID, name = Repository.TranslateDevice(device.Name, device.Name), type = getDeviceType(device) };
+                    var swiDevice = new SWIWebScheduleDevice() { guid = device.GUID, name = Repository.TranslateDevice(device.Name, device.Name), type = getDeviceType(device), nozip = !device.CanSendZip };
                     if (device is OutputFileServerDevice fileServer && !string.IsNullOrEmpty(fileServer.Directories)) swiDevice.directories = fileServer.DirectoriesArray.ToList();
                     else if (device is OutputSharePointDevice sharePoint && !string.IsNullOrEmpty(sharePoint.Directories)) swiDevice.directories = sharePoint.DirectoriesArray.ToList();
                     result.devices.Add(swiDevice);
@@ -539,8 +539,10 @@ namespace SealWebServer.Controllers
             output.DeviceGUID = device.GUID;
             output.Format = swi.format;
             output.CancelIfNoRecords = swi.cancel;
-            output.ZipResult = swi.zip;
-            if (!swi.zip || swi.removezippassword) output.ZipPassword = null;
+            //No ZIP for a device that does not send ZIP files (the option is hidden in the dialog)
+            var zip = swi.zip && device.CanSendZip;
+            output.ZipResult = zip;
+            if (!zip || swi.removezippassword) output.ZipPassword = null;
             else if (!string.IsNullOrEmpty(swi.zippassword)) output.ZipPassword = swi.zippassword;
 
             if (device is OutputEmailDevice)

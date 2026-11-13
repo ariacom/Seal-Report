@@ -76,8 +76,10 @@ namespace Seal.Model
                 GetProperty("EmailMessagesInBody").SetIsReadOnly(EmailHtmlBody);
 
                 GetProperty("EmailSkipAttachments").SetIsReadOnly(EmailHtmlBody);
-                GetProperty("ZipResult").SetIsReadOnly(Device is OutputEmailDevice && (EmailHtmlBody || EmailSkipAttachments));
-                GetProperty("ZipPassword").SetIsReadOnly(!ZipResult || (Device is OutputEmailDevice && (EmailHtmlBody || EmailSkipAttachments)));
+                //A device that sends no ZIP file (Email device with 'Allow ZIP attachments' false) ignores the option
+                var noZip = Device != null && !Device.CanSendZip;
+                GetProperty("ZipResult").SetIsReadOnly(noZip || (Device is OutputEmailDevice && (EmailHtmlBody || EmailSkipAttachments)));
+                GetProperty("ZipPassword").SetIsReadOnly(noZip || !ZipResult || (Device is OutputEmailDevice && (EmailHtmlBody || EmailSkipAttachments)));
 
                 TypeDescriptor.Refresh(this);
             }
@@ -353,11 +355,11 @@ namespace Seal.Model
 
         private bool _zipResult = false;
         /// <summary>
-        /// If true, the result file will be compressed in a zip file
+        /// If true, the result file will be compressed in a zip file (ignored if the device sends no ZIP file, e.g. an Email device with 'Allow ZIP attachments' false)
         /// </summary>
 #if WINDOWS
         [DefaultValue(false)]
-        [Category("Zip options"), DisplayName("Zip result"), Description("If true, the result file will be compressed in a zip file."), Id(2, 5)]
+        [Category("Zip options"), DisplayName("Zip result"), Description("If true, the result file will be compressed in a zip file. Ignored if the device sends no ZIP file (Email device with 'Allow ZIP attachments' false)."), Id(2, 5)]
 #endif
         public bool ZipResult
         {

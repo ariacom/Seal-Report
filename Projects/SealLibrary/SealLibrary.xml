@@ -9682,6 +9682,11 @@
             Save the device to a file
             </summary>
         </member>
+        <member name="P:Seal.Model.OutputDevice.CanSendZip">
+            <summary>
+            True if the device can send a result compressed in a ZIP file (option 'Zip result' of the output)
+            </summary>
+        </member>
         <member name="M:Seal.Model.OutputDevice.HandleZipOptions(Seal.Model.Report)">
             <summary>
             Handle the Output ZIP Options: Create a zip file if necessary
@@ -9961,6 +9966,16 @@
         <member name="P:Seal.Model.OutputEmailDevice.MaxMessageSize">
             <summary>
             Maximum size in MB of an email sent by the device (body and attachment, encoded size), 0 for no limit. A larger result is first compressed in a ZIP file; if it is still too large, the email is sent without the result, with a message telling it.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.AllowZipAttachments">
+            <summary>
+            If false, the device sends no ZIP attachment (some mail services refuse them): the option 'Zip result' of the outputs is ignored, and a result larger than the maximum size of an email is not attached instead of being compressed.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.OutputEmailDevice.CanSendZip">
+            <summary>
+            True if the device can send a result compressed in a ZIP file
             </summary>
         </member>
         <member name="P:Seal.Model.OutputEmailDevice.TestEmailTo">
@@ -13818,7 +13833,7 @@
         </member>
         <member name="P:Seal.Model.ReportOutput.ZipResult">
             <summary>
-            If true, the result file will be compressed in a zip file
+            If true, the result file will be compressed in a zip file (ignored if the device sends no ZIP file, e.g. an Email device with 'Allow ZIP attachments' false)
             </summary>
         </member>
         <member name="P:Seal.Model.ReportOutput.ZipPassword">
@@ -20698,6 +20713,9 @@
             <summary>
             Class used for the Seal Web Interface: output device available for a web schedule
             </summary>
+        </member>
+        <member name="F:Seal.Model.SWIWebScheduleDevice.nozip">
+            <summary>True if the device sends no ZIP file (option 'Compress the result' hidden)</summary>
         </member>
         <member name="T:Seal.Model.SWIWebScheduleEdit">
             <summary>

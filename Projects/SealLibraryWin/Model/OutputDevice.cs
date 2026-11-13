@@ -50,13 +50,22 @@ namespace Seal.Model
         public abstract void SaveToFile(string path);
 
         /// <summary>
+        /// True if the device can send a result compressed in a ZIP file (option 'Zip result' of the output)
+        /// </summary>
+        public virtual bool CanSendZip => true;
+
+        /// <summary>
         /// Handle the Output ZIP Options: Create a zip file if necessary
         /// </summary>
         /// <param name="report"></param>
         public void HandleZipOptions(Report report)
         {
             ReportOutput output = report.OutputToExecute;
-            if (output.ZipResult)
+            if (output.ZipResult && !CanSendZip)
+            {
+                report.LogMessage(report.Translate("The option 'Zip result' is ignored: the device '{0}' does not send ZIP files.", Name));
+            }
+            else if (output.ZipResult)
             {
                 var zipPath = FileHelper.GetUniqueFileName(Path.Combine(Path.GetDirectoryName(report.ResultFilePath), Path.GetFileNameWithoutExtension(report.ResultFilePath) + ".zip"));
                 FileHelper.CreateZIP(report.ResultFilePath, Path.GetFileNameWithoutExtension(report.ResultFileName) + Path.GetExtension(report.ResultFilePath), zipPath, output.ZipPassword);
