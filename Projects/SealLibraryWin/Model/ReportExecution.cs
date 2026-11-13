@@ -849,12 +849,12 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// If set, replaces the 'Max parallel models' of the report (e.g. for the tests)
+        /// If set, replaces the 'Maximum parallel models' of the report (e.g. for the tests)
         /// </summary>
         public static int? MaxParallelModelsOverride = null;
 
         /// <summary>
-        /// Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set), from 1 to 16: MaxParallelModelsOverride if set, otherwise the 'Max parallel models' of the report (4 by default).
+        /// Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set), from 1 to 16: MaxParallelModelsOverride if set, otherwise the 'Maximum parallel models' of the report (4 by default).
         /// </summary>
         public int MaxParallelModels
         {

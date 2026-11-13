@@ -232,7 +232,7 @@ namespace Seal.Model
         /// Maximum number of SQL queries executed at the same time for the models of the same Execution set. 1 executes the models one after the other.
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("Max parallel models"), Description("Maximum number of SQL queries executed at the same time for the models of the same Execution set (e.g. a dashboard or a sheet with many models). 1 executes the models one after the other. A higher value shortens the reports having several slow models, but opens more connections at the same time; the Load scripts of the models still run one model after the other. Values from 1 to 16."), Id(5, 1)]
+        [Category("Definition"), DisplayName("Maximum parallel models"), Description("Maximum number of SQL queries executed at the same time for the models of the same Execution set (e.g. a dashboard or a sheet with many models). 1 executes the models one after the other. A higher value shortens the reports having several slow models, but opens more connections at the same time; the Load scripts of the models still run one model after the other. Values from 1 to 16."), Id(5, 1)]
         [DefaultValue(4)]
 #endif
         public int MaxParallelModels { get; set; } = 4;
