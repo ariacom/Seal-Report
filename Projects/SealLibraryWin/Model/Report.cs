@@ -77,6 +77,7 @@ namespace Seal.Model
                 GetProperty("ViewGUID").SetIsBrowsable(!IsTaskOnly);
                 GetProperty("InputValues").SetIsBrowsable(true);
                 GetProperty("PrintQueries").SetIsBrowsable(true);
+                GetProperty("MaxParallelModels").SetIsBrowsable(!IsTaskOnly);
 
                 GetProperty("InitScript").SetIsBrowsable(true);
                 GetProperty("NavigationScript").SetIsBrowsable(true);
@@ -226,6 +227,20 @@ namespace Seal.Model
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializePrintQueries() { return PrintQueries; }
+
+        /// <summary>
+        /// Maximum number of SQL queries executed at the same time for the models of the same Execution set. 1 executes the models one after the other.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Max parallel models"), Description("Maximum number of SQL queries executed at the same time for the models of the same Execution set (e.g. a dashboard or a sheet with many models). 1 executes the models one after the other. A higher value shortens the reports having several slow models, but opens more connections at the same time; the Load scripts of the models still run one model after the other. Values from 1 to 16."), Id(5, 1)]
+        [DefaultValue(4)]
+#endif
+        public int MaxParallelModels { get; set; } = 4;
+        /// <summary>
+        /// True if MaxParallelModels must be serialized
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeMaxParallelModels() { return MaxParallelModels != 4; }
 
         /// <summary>
         /// Kind of report: a standard Report (models and views are executed and rendered) or a Task

@@ -61,10 +61,10 @@ namespace Test
             var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
             string execute(int maxParallel)
             {
-                var initial = ReportExecution.MaxParallelModels;
+                var initial = ReportExecution.MaxParallelModelsOverride;
                 try
                 {
-                    ReportExecution.MaxParallelModels = maxParallel;
+                    ReportExecution.MaxParallelModelsOverride = maxParallel;
                     var report = Report.LoadFromFile(path, repository);
                     report.SkipExternalViewer = true;
                     new ReportExecution() { Report = report }.Execute();
@@ -82,10 +82,29 @@ namespace Test
                 }
                 finally
                 {
-                    ReportExecution.MaxParallelModels = initial;
+                    ReportExecution.MaxParallelModelsOverride = initial;
                 }
             }
             Assert.AreEqual(execute(1), execute(4));
+        }
+
+        [TestMethod]
+        public void MaxParallelModelsFromReport()
+        {
+            //The parallel execution of the models is set by the report: 4 by default (not serialized), 1 = one model after the other, bounded from 1 to 16
+            var repository = Repository.Create();
+            var report = Report.LoadFromFile(Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex"), repository);
+            var execution = new ReportExecution() { Report = report };
+            Assert.AreEqual(4, report.MaxParallelModels, "default");
+            Assert.IsFalse(report.ShouldSerializeMaxParallelModels());
+            Assert.AreEqual(4, execution.MaxParallelModels);
+            report.MaxParallelModels = 1;
+            Assert.IsTrue(report.ShouldSerializeMaxParallelModels());
+            Assert.AreEqual(1, execution.MaxParallelModels);
+            report.MaxParallelModels = 0;
+            Assert.AreEqual(1, execution.MaxParallelModels, "lower bound");
+            report.MaxParallelModels = 100;
+            Assert.AreEqual(16, execution.MaxParallelModels, "upper bound");
         }
 
         [TestMethod]
@@ -139,29 +158,49 @@ namespace Test
         }
 
         [TestMethod]
-        public void AgentJsonNoSumForRatiosByName()
+        public void AgentJsonRoleFromMetadata()
         {
-            //Columns formatted as plain numbers but named as a percentage, a median or a position: no sum; several periods: the sum is flagged
+            //The role of a number sent to the AI comes from the metadata of its element (aggregate, format, total), never from the words of its name (except latitude/longitude)
             var model = ReportModel.Create();
             var table = new System.Data.DataTable();
-            table.Columns.Add("Année", typeof(string));
-            table.Columns.Add("Actifs", typeof(decimal));
+            table.Columns.Add("Total price", typeof(decimal));
             table.Columns.Add("Part de la fibre (%)", typeof(decimal));
-            table.Columns.Add("Niveau de vie médian", typeof(decimal));
             table.Columns.Add("Latitude", typeof(double));
-            table.Columns.Add("Départs", typeof(decimal));
-            table.Rows.Add("2021", 100m, 80.5m, 21000m, 49.1, 3m);
-            table.Rows.Add("2022", 110m, 90.5m, 22000m, 49.2, 4m);
+            table.Rows.Add(100m, 80.5m, 49.1);
+            table.Rows.Add(110m, 90.5m, 49.2);
             model.ResultTable = table;
             var (_, aggJson) = model.GetResultTableTranslatedJson();
             var columns = System.Text.Json.JsonDocument.Parse(aggJson).RootElement.GetProperty("columns");
-            Assert.IsTrue(columns.GetProperty("Actifs").TryGetProperty("sum", out _), aggJson);
-            StringAssert.Contains(columns.GetProperty("Actifs").GetProperty("sum_note").GetString(), "2 values of 'Année'");
-            Assert.IsFalse(columns.GetProperty("Part de la fibre (%)").TryGetProperty("sum", out _), aggJson);
-            Assert.AreEqual("ratio", columns.GetProperty("Niveau de vie médian").GetProperty("role").GetString());
-            Assert.IsFalse(columns.GetProperty("Niveau de vie médian").TryGetProperty("sum", out _), aggJson);
+            Assert.IsTrue(columns.GetProperty("Total price").TryGetProperty("sum", out _), "'price' in the name: still a sum");
+            Assert.IsTrue(columns.GetProperty("Part de la fibre (%)").TryGetProperty("sum", out _), "no metadata: a sum");
+            Assert.IsFalse(columns.GetProperty("Total price").TryGetProperty("sum_note", out _), aggJson);
             Assert.AreEqual("coordinate", columns.GetProperty("Latitude").GetProperty("role").GetString());
-            Assert.IsTrue(columns.GetProperty("Départs").TryGetProperty("sum", out _), "'Départs' is not a 'part'");
+
+            //Element of an executed report: its aggregate and its total give the role
+            var repository = Repository.Create();
+            var report = Report.LoadFromFile(Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex"), repository);
+            report.SkipExternalViewer = true;
+            new ReportExecution() { Report = report }.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            var sales = report.Models.First(i => i.Name == "Sales per category");
+            var data = sales.Elements.First(i => i.PivotPosition == PivotPosition.Data);
+            System.Text.Json.JsonElement column()
+            {
+                var (_, json) = sales.GetResultTableTranslatedJson();
+                return System.Text.Json.JsonDocument.Parse(json).RootElement.GetProperty("columns").GetProperty(data.DisplayNameElTranslated);
+            }
+            Assert.IsTrue(column().TryGetProperty("sum", out _), "sum without total");
+            Assert.IsFalse(column().TryGetProperty("total_shown", out _));
+            data.ShowTotal = ShowTotal.Column;
+            Assert.IsTrue(column().GetProperty("total_shown").GetBoolean(), "total shown: sum flagged");
+            data.TotalAggregateFunction = AggregateFunction.Avg;
+            Assert.IsFalse(column().TryGetProperty("sum", out _), "total average: no sum");
+            Assert.AreEqual("total avg", column().GetProperty("role").GetString());
+            data.ShowTotal = ShowTotal.No;
+            data.AggregateFunction = AggregateFunction.Avg;
+            Assert.AreEqual("avg", column().GetProperty("role").GetString());
+            Assert.IsFalse(column().TryGetProperty("sum", out _), "average: no sum");
         }
 
         [TestMethod]
@@ -204,6 +243,20 @@ namespace Test
             }
             StringAssert.Contains(model.MaxRowsMessage, " rows by ");
             Assert.IsFalse(model.MaxRowsMessage.Contains("arbitrary"));
+
+            //Expressions of a custom ORDER BY: named by the column found inside, the SQL is never shown
+            var label = first.DisplayNameElTranslated + (byCode ? " (by code)" : "");
+            void orderBy(string clause) => model.Sql = System.Text.RegularExpressions.Regex.Replace(model.Sql, @"^\s*ORDER\s+BY\s+.*$", clause, System.Text.RegularExpressions.RegexOptions.Multiline | System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+            orderBy($"ORDER BY ({column} IS NULL), {column} -- names first");
+            Assert.AreEqual(label, model.MaxRowsOrderBy, "an expression then the same column: cited once");
+            orderBy($"ORDER BY coalesce({column}, 0) DESC NULLS LAST");
+            Assert.AreEqual($"{label} (descending)", model.MaxRowsOrderBy);
+            orderBy($"ORDER BY random(), {column}");
+            Assert.AreEqual(label, model.MaxRowsOrderBy, "a term without column is not cited");
+            orderBy("ORDER BY random()");
+            Assert.AreEqual("", model.MaxRowsOrderBy, "sorted, but no term recognized");
+            StringAssert.Contains(model.MaxRowsMessage, "in the order of the report");
+            Assert.IsFalse(model.MaxRowsMessage.Contains("random"), model.MaxRowsMessage);
         }
 
         [TestMethod]

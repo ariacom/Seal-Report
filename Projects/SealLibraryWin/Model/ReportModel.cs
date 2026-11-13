@@ -1174,6 +1174,8 @@ model.ResultTable = query2.CopyToDataTable2();
         /// <summary>
         /// When the result is partial (MaxRowsReached) and the SQL is sorted: the order of the rows loaded, with the names of the elements (e.g. 'Year (descending)'), null otherwise.
         /// The rows loaded are then the first ones in this order, and not an arbitrary part of the data.
+        /// An expression of the ORDER BY is named by the first column found inside (e.g. 'coalesce(a.year, 0) DESC' gives 'Year (descending)'), a term without known column is not cited (the SQL is never shown),
+        /// and empty if no term is recognized (sorted, but the order cannot be named).
         /// </summary>
         [XmlIgnore]
         public string MaxRowsOrderBy
@@ -1186,6 +1188,7 @@ model.ResultTable = query2.CopyToDataTable2();
                     var clause = SqlOrderByClause;
                     if (clause == null) return null;
                     var result = new List<string>();
+                    string lastName = null;
                     foreach (var part in splitSqlList(clause))
                     {
                         var expression = part.Trim();
@@ -1202,18 +1205,37 @@ model.ResultTable = query2.CopyToDataTable2();
 
                         string label = null;
                         bool same(string sql) => !string.IsNullOrEmpty(sql) && string.Equals(sql.Trim(), expression, StringComparison.OrdinalIgnoreCase);
+                        //Position of a column inside an expression (e.g. 'a.name' in '(a.name !~ '^x')' or 'sum(a.amount)'), as a whole identifier: -1 if not found
+                        int position(string sql)
+                        {
+                            if (string.IsNullOrWhiteSpace(sql)) return -1;
+                            var match = System.Text.RegularExpressions.Regex.Match(expression, @"(?<![\w.""\]])" + System.Text.RegularExpressions.Regex.Escape(sql.Trim()) + @"(?![\w.""\[])", System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+                            return match.Success ? match.Index : -1;
+                        }
+                        int first(params string[] sqls) => sqls.Select(i => position(i)).Where(i => i >= 0).DefaultIfEmpty(-1).Min();
                         var element = Elements.FirstOrDefault(i => same(i.SQLColumn) || same(i.SQLColumnName) || same(i.MetaColumn?.Name));
+                        MetaColumn column = null;
+                        if (element == null) column = Source.MetaData.Tables.SelectMany(i => i.Columns).FirstOrDefault(i => same(i.Name));
+                        if (element == null && column == null)
+                        {
+                            //An expression on a column (e.g. 'coalesce(a.year, 0)', 'a.year::text'): named by the first column found inside, the SQL is never shown
+                            element = Elements.Select(i => new { Element = i, Position = first(i.SQLColumn, i.MetaColumn?.Name) }).Where(i => i.Position >= 0).OrderBy(i => i.Position).FirstOrDefault()?.Element;
+                            if (element == null) column = Source.MetaData.Tables.SelectMany(i => i.Columns).Select(i => new { Column = i, Position = position(i.Name) }).Where(i => i.Position >= 0).OrderBy(i => i.Position).FirstOrDefault()?.Column;
+                        }
                         //An element with an enumerated list is read in the order of its identifiers but displayed by its labels (e.g. the 5 000 first INSEE codes shown by commune name)
                         //Said only when the identifiers differ from the labels (not for a list of years: '2025' shown '2025')
                         if (element != null) label = element.DisplayNameElTranslated + (element.IsEnum && element.EnumEL.Values.Any(i => i.Id != i.DisplayValue) ? $" ({Report.Translate("by code")})" : "");
-                        else
-                        {
-                            var column = Source.MetaData.Tables.SelectMany(i => i.Columns).FirstOrDefault(i => same(i.Name));
-                            label = column != null ? Report.Repository.TranslateColumn(column) : expression;
-                        }
-                        result.Add(descending ? $"{label} ({Report.Translate("descending")})" : label);
+                        else if (column != null) label = Report.Repository.TranslateColumn(column);
+                        else continue; //No column recognized (e.g. random()): not cited
+                        label = descending ? $"{label} ({Report.Translate("descending")})" : label;
+                        //The same element sorted twice in a row (e.g. 'names starting with a letter first, then by name'): cited once, with the direction of the first term
+                        var name = element?.DisplayNameElTranslated ?? label;
+                        if (result.Count > 0 && lastName == name) continue;
+                        lastName = name;
+                        result.Add(label);
                     }
-                    return result.Count == 0 ? null : string.Join(", ", result);
+                    //Sorted by the SQL but no term recognized: empty (the order exists but cannot be named), null is kept for an unsorted SQL
+                    return string.Join(", ", result);
                 }
                 catch
                 {
@@ -1303,8 +1325,8 @@ model.ResultTable = query2.CopyToDataTable2();
                 var limit = MaxRowsLimit.ToString("N0", Report.ExecutionView.CultureInfo);
                 var reason = Report.Translate(MaxRowsOfModel ? "maximum of the report" : "limit of your access");
                 var order = MaxRowsOrderBy;
-                var result = order != null
-                    ? Report.Translate("Only the first {0} rows by {1} are displayed ({2}).", limit, order, reason)
+                var result = order == "" ? Report.Translate("Only the first {0} rows in the order of the report are displayed ({1}).", limit, reason)
+                    : order != null ? Report.Translate("Only the first {0} rows by {1} are displayed ({2}).", limit, order, reason)
                     : Report.Translate("Only {0} rows are displayed ({1}): an arbitrary part of the data, sorted after reading, the first rows are not the first ones of the complete result.", limit, reason);
                 return result + " " + Report.Translate("Refine the criteria to get the complete result: the totals, the charts and the map only cover the rows displayed.");
             }
@@ -1397,20 +1419,6 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
-        /// Text without its accents (médian -> median), to match the names of the columns in several languages
-        /// </summary>
-        static string removeDiacritics(string text)
-        {
-            var normalized = text.Normalize(NormalizationForm.FormD);
-            var sb = new StringBuilder(normalized.Length);
-            foreach (var c in normalized)
-            {
-                if (System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c) != System.Globalization.UnicodeCategory.NonSpacingMark) sb.Append(c);
-            }
-            return sb.ToString().Normalize(NormalizationForm.FormC);
-        }
-
-        /// <summary>
         /// Value of a numeric cell for the Json of the AI: rounded to the decimals of the format of the element (4 by default), written without decimal when it is an integer (e.g. 41 and not 41.0)
         /// </summary>
         static object jsonNumber(object value, int decimals)
@@ -1427,8 +1435,9 @@ model.ResultTable = query2.CopyToDataTable2();
 
         /// <summary>
         /// Json string for the result table with an additional Json containing aggregation.
-        /// The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column: no sum for a dimension (a year, a code),
-        /// nor for an average, a minimum, a maximum or a percentage.
+        /// The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column, given by the metadata of its element:
+        /// no sum for a dimension (a year, a code), an average, a minimum, a maximum, a percentage or an element whose total is not a sum, nor for a latitude or a longitude;
+        /// the sum of an element showing a total is flagged 'total_shown'.
         /// When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
         /// serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
         /// result is sent to an AI model.
@@ -1465,24 +1474,14 @@ model.ResultTable = query2.CopyToDataTable2();
                     }
                     catch { return false; }
                 }
-                //A value that cannot be added, told by the name of the column when its format does not say it (e.g. 'Part de la fibre (%)' formatted N1, 'Niveau de vie médian', 'Densité')
-                string roleByName(string columnName)
+                //A latitude or a longitude (as for the Map view, recognized by the name of the column): a position, neither a sum nor an average
+                bool isCoordinate(string columnName)
                 {
-                    var name = removeDiacritics(columnName ?? "").ToLowerInvariant();
-                    if (System.Text.RegularExpressions.Regex.IsMatch(name, @"\b(latitude|longitude|lat|lon|lng)\b")) return "coordinate";
-                    if (name.Contains('%') || name.Contains("€/") || name.Contains("/hab")
-                        || System.Text.RegularExpressions.Regex.IsMatch(name, @"\b(taux|rate|ratio|part|share|percent\w*|pourcent\w*|median\w*|moyen\w*|average|mean|densite|density|vitesse|speed|indice|index|score|prix|price|per capita|par habitant|pour (1 ?000|10 ?000|100 ?000))\b"))
-                        return "ratio";
-                    return null;
+                    return System.Text.RegularExpressions.Regex.IsMatch((columnName ?? "").ToLowerInvariant(), @"\b(latitude|longitude|lat|lon|lng)\b");
                 }
-                //A period of the rows: several periods make a sum add the values of several years (meaningful for a flow, not for a stock)
-                bool isPeriod(DataColumn column)
-                {
-                    if (column.DataType == typeof(DateTime)) return true;
-                    var name = removeDiacritics(column.ColumnName ?? "").ToLowerInvariant();
-                    if (!System.Text.RegularExpressions.Regex.IsMatch(name, @"\b(annee|year|periode|period|millesime|recensement|census|trimestre|quarter|mois|month|exercice|semestre|scrutin)\b")) return false;
-                    return !(column.ExtendedProperties[kElementProperty] is ReportElement element) || !element.IsNumeric || isDimension(element) || column.DataType == typeof(string);
-                }
+                //The total defined on the element (Show total) tells how its values are aggregated: a total other than a sum (e.g. an average) means that the values cannot be added
+                bool hasTotal(ReportElement element) => element != null && element.ShowTotal != ShowTotal.No;
+                bool totalNotSum(ReportElement element) => hasTotal(element) && element.TotalAggregateFunction != AggregateFunction.Sum;
                 int decimalsOf(DataColumn column)
                 {
                     if (column.DataType != typeof(decimal) && column.DataType != typeof(double) && column.DataType != typeof(float)) return 0;
@@ -1494,12 +1493,6 @@ model.ResultTable = query2.CopyToDataTable2();
                     return 4;
                 }
                 var columnDecimals = dt.Columns.Cast<DataColumn>().Select(i => decimalsOf(i)).ToArray();
-                //Period columns having several values (e.g. 3 censuses, 7 years)
-                var periods = dt.Columns.Cast<DataColumn>().Where(i => isPeriod(i))
-                    .Select(i => new { Column = i, Count = dt.AsEnumerable().Select(r => r[i]).Where(v => v != DBNull.Value).Distinct().Count() })
-                    .Where(i => i.Count > 1).ToList();
-                string sumNote = periods.Count == 0 ? null :
-                    $"the rows cover several periods ({string.Join(", ", periods.Select(i => $"{i.Count} values of '{i.Column.ColumnName}'"))}): the sum adds them, it is meaningful for a flow (e.g. the sales of each year), not for a stock (e.g. a population, a number of establishments)";
 
 
                 var aggregates = new Dictionary<string, object>();
@@ -1533,7 +1526,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 count = vals.Count
                             };
                         }
-                        else if (roleByName(c.ColumnName) == "coordinate")
+                        else if (isCoordinate(c.ColumnName))
                         {
                             //Latitude, longitude: a position, neither a sum nor an average
                             aggregates[c.ColumnName] = new
@@ -1545,13 +1538,15 @@ model.ResultTable = query2.CopyToDataTable2();
                                 count = vals.Count
                             };
                         }
-                        else if ((el != null && (el.AggregateFunction == AggregateFunction.Avg || el.AggregateFunction == AggregateFunction.Min || el.AggregateFunction == AggregateFunction.Max || isPercentage(el))) || roleByName(c.ColumnName) == "ratio")
+                        else if (el != null && (el.AggregateFunction == AggregateFunction.Avg || el.AggregateFunction == AggregateFunction.Min || el.AggregateFunction == AggregateFunction.Max || isPercentage(el) || totalNotSum(el)))
                         {
-                            //Average, minimum, maximum, percentage or ratio: the values cannot be added
+                            //Average, minimum, maximum, percentage, or a total other than a sum: the values cannot be added
                             aggregates[c.ColumnName] = new
                             {
                                 type = "number",
-                                role = el != null && isPercentage(el) ? "percentage" : el != null && el.AggregateFunction != AggregateFunction.Sum && el.AggregateFunction != AggregateFunction.Count ? el.AggregateFunction.ToString().ToLowerInvariant() : "ratio",
+                                role = isPercentage(el) ? "percentage"
+                                    : el.AggregateFunction != AggregateFunction.Sum && el.AggregateFunction != AggregateFunction.Count ? el.AggregateFunction.ToString().ToLowerInvariant()
+                                    : "total " + el.TotalAggregateFunction.ToString().ToLowerInvariant(),
                                 avg = jsonNumber(vals.Average(), avgDecimals),
                                 median = jsonNumber(GetMedian(vals), avgDecimals),
                                 min = jsonNumber(vals.Min(), decimals),
@@ -1559,13 +1554,14 @@ model.ResultTable = query2.CopyToDataTable2();
                                 count = vals.Count
                             };
                         }
-                        else if (sumNote != null)
+                        else if (hasTotal(el))
                         {
+                            //Sum shown as the total of the element in the report
                             aggregates[c.ColumnName] = new
                             {
                                 type = "number",
                                 sum = jsonNumber(vals.Sum(), decimals),
-                                sum_note = sumNote,
+                                total_shown = true,
                                 avg = jsonNumber(vals.Average(), avgDecimals),
                                 median = jsonNumber(GetMedian(vals), avgDecimals),
                                 min = jsonNumber(vals.Min(), decimals),

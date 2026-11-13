@@ -1541,7 +1541,7 @@ namespace Seal.AI
                     var limit = model.MaxRowsOfModel ? "maximum number of records of the report" : "maximum rows of the user's access";
                     var order = model.MaxRowsOrderBy;
                     sb.AppendLine(order != null
-                        ? $"WARNING: only the first {model.MaxRowsLimit} rows in the order {order} were loaded ({limit}): the metrics, totals and rows below cover these rows only, not the complete result. " +
+                        ? $"WARNING: only the first {model.MaxRowsLimit} rows in the order {(order == "" ? "of the report" : order)} were loaded ({limit}): the metrics, totals and rows below cover these rows only, not the complete result. " +
                             "Say it to the user (e.g. the most recent rows only), or execute again with criteria (e.g. a territory or a year) before giving totals."
                         : $"WARNING: only {model.MaxRowsLimit} rows were loaded ({limit}): the metrics, totals and rows below cover these rows only, " +
                             "which are an arbitrary part of the data (sorted after reading: the first rows are not the first ones of the complete result). Execute again with criteria (e.g. a territory or a year) before giving figures, or tell the user the result is partial.");

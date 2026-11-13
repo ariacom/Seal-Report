@@ -10792,6 +10792,16 @@
             True if PrintQueries must be serialized
             </summary>
         </member>
+        <member name="P:Seal.Model.Report.MaxParallelModels">
+            <summary>
+            Maximum number of SQL queries executed at the same time for the models of the same Execution set. 1 executes the models one after the other.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Report.ShouldSerializeMaxParallelModels">
+            <summary>
+            True if MaxParallelModels must be serialized
+            </summary>
+        </member>
         <member name="P:Seal.Model.Report.Kind">
             <summary>
             Kind of report: a standard Report (models and views are executed and rendered) or a Task
@@ -12620,9 +12630,14 @@
             List of models to execute after cleaning of models involved in View Restrictions
             </summary>
         </member>
-        <member name="F:Seal.Model.ReportExecution.MaxParallelModels">
+        <member name="F:Seal.Model.ReportExecution.MaxParallelModelsOverride">
             <summary>
-            Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set). 1 executes the models one after the other.
+            If set, replaces the 'Max parallel models' of the report (e.g. for the tests)
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportExecution.MaxParallelModels">
+            <summary>
+            Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set), from 1 to 16: MaxParallelModelsOverride if set, otherwise the 'Max parallel models' of the report (4 by default).
             </summary>
         </member>
         <member name="M:Seal.Model.ReportExecution.buildResultTablesParallel(System.Collections.Generic.List{Seal.Model.ReportModel},System.Collections.Generic.List{System.Threading.Tasks.Task})">
@@ -13266,6 +13281,8 @@
             <summary>
             When the result is partial (MaxRowsReached) and the SQL is sorted: the order of the rows loaded, with the names of the elements (e.g. 'Year (descending)'), null otherwise.
             The rows loaded are then the first ones in this order, and not an arbitrary part of the data.
+            An expression of the ORDER BY is named by the first column found inside (e.g. 'coalesce(a.year, 0) DESC' gives 'Year (descending)'), a term without known column is not cited (the SQL is never shown),
+            and empty if no term is recognized (sorted, but the order cannot be named).
             </summary>
         </member>
         <member name="P:Seal.Model.ReportModel.ExplicitSortElements">
@@ -13318,11 +13335,6 @@
             Number of decimals shown by a numeric .NET format (N2, F0, P1, 0.00, #,##0.0 %...), a percentage keeping 2 more decimals as its value is a fraction. Null if unknown.
             </summary>
         </member>
-        <member name="M:Seal.Model.ReportModel.removeDiacritics(System.String)">
-            <summary>
-            Text without its accents (médian -> median), to match the names of the columns in several languages
-            </summary>
-        </member>
         <member name="M:Seal.Model.ReportModel.jsonNumber(System.Object,System.Int32)">
             <summary>
             Value of a numeric cell for the Json of the AI: rounded to the decimals of the format of the element (4 by default), written without decimal when it is an integer (e.g. 41 and not 41.0)
@@ -13331,8 +13343,9 @@
         <member name="M:Seal.Model.ReportModel.GetResultTableTranslatedJson(System.Int32)">
             <summary>
             Json string for the result table with an additional Json containing aggregation.
-            The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column: no sum for a dimension (a year, a code),
-            nor for an average, a minimum, a maximum or a percentage.
+            The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column, given by the metadata of its element:
+            no sum for a dimension (a year, a code), an average, a minimum, a maximum, a percentage or an element whose total is not a sum, nor for a latitude or a longitude;
+            the sum of an element showing a total is flagged 'total_shown'.
             When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
             serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
             result is sent to an AI model.

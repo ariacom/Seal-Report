@@ -849,9 +849,21 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set). 1 executes the models one after the other.
+        /// If set, replaces the 'Max parallel models' of the report (e.g. for the tests)
         /// </summary>
-        public static int MaxParallelModels = 4;
+        public static int? MaxParallelModelsOverride = null;
+
+        /// <summary>
+        /// Maximum number of SQL queries of models executed at the same time by a report execution (models of the same Execution set), from 1 to 16: MaxParallelModelsOverride if set, otherwise the 'Max parallel models' of the report (4 by default).
+        /// </summary>
+        public int MaxParallelModels
+        {
+            get
+            {
+                var value = MaxParallelModelsOverride ?? Report?.MaxParallelModels ?? 4;
+                return Math.Clamp(value, 1, 16);
+            }
+        }
 
         /// <summary>
         /// Builds the models of an Execution set: the queries of the SQL models are executed in parallel (MaxParallelModels at most).
