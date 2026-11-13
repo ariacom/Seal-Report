@@ -1538,6 +1538,21 @@ model.ResultTable = query2.CopyToDataTable2();
                                 count = vals.Count
                             };
                         }
+                        else if (hasTotal(el) && !totalNotSum(el))
+                        {
+                            //Sum shown as the total of the element in the report: the total defined on the element prevails over its aggregate (e.g. the maximum per notice of an amount repeated on several places, summed in the total)
+                            aggregates[c.ColumnName] = new
+                            {
+                                type = "number",
+                                sum = jsonNumber(vals.Sum(), decimals),
+                                total_shown = true,
+                                avg = jsonNumber(vals.Average(), avgDecimals),
+                                median = jsonNumber(GetMedian(vals), avgDecimals),
+                                min = jsonNumber(vals.Min(), decimals),
+                                max = jsonNumber(vals.Max(), decimals),
+                                count = vals.Count
+                            };
+                        }
                         else if (el != null && (el.AggregateFunction == AggregateFunction.Avg || el.AggregateFunction == AggregateFunction.Min || el.AggregateFunction == AggregateFunction.Max || isPercentage(el) || totalNotSum(el)))
                         {
                             //Average, minimum, maximum, percentage, or a total other than a sum: the values cannot be added
@@ -1547,21 +1562,6 @@ model.ResultTable = query2.CopyToDataTable2();
                                 role = isPercentage(el) ? "percentage"
                                     : el.AggregateFunction != AggregateFunction.Sum && el.AggregateFunction != AggregateFunction.Count ? el.AggregateFunction.ToString().ToLowerInvariant()
                                     : "total " + el.TotalAggregateFunction.ToString().ToLowerInvariant(),
-                                avg = jsonNumber(vals.Average(), avgDecimals),
-                                median = jsonNumber(GetMedian(vals), avgDecimals),
-                                min = jsonNumber(vals.Min(), decimals),
-                                max = jsonNumber(vals.Max(), decimals),
-                                count = vals.Count
-                            };
-                        }
-                        else if (hasTotal(el))
-                        {
-                            //Sum shown as the total of the element in the report
-                            aggregates[c.ColumnName] = new
-                            {
-                                type = "number",
-                                sum = jsonNumber(vals.Sum(), decimals),
-                                total_shown = true,
                                 avg = jsonNumber(vals.Average(), avgDecimals),
                                 median = jsonNumber(GetMedian(vals), avgDecimals),
                                 min = jsonNumber(vals.Min(), decimals),

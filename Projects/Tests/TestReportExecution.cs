@@ -201,6 +201,11 @@ namespace Test
             data.AggregateFunction = AggregateFunction.Avg;
             Assert.AreEqual("avg", column().GetProperty("role").GetString());
             Assert.IsFalse(column().TryGetProperty("sum", out _), "average: no sum");
+            //A sum total prevails over the aggregate (e.g. the maximum per notice of an amount, summed in the total)
+            data.AggregateFunction = AggregateFunction.Max;
+            data.ShowTotal = ShowTotal.Column;
+            data.TotalAggregateFunction = AggregateFunction.Sum;
+            Assert.IsTrue(column().GetProperty("total_shown").GetBoolean(), "maximum with a sum total: sum");
         }
 
         [TestMethod]
