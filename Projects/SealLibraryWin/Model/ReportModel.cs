@@ -1437,7 +1437,7 @@ model.ResultTable = query2.CopyToDataTable2();
         /// Json string for the result table with an additional Json containing aggregation.
         /// The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column, given by the metadata of its element:
         /// no sum for a dimension (a year, a code), an average, a minimum, a maximum, a percentage or an element whose total is not a sum, nor for a latitude or a longitude;
-        /// the sum of an element showing a total is flagged 'total_shown'.
+        /// the sum of an element whose total covers all the rows of the result (not one total per row of a cross table) is flagged 'total_shown'.
         /// When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
         /// serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
         /// result is sent to an AI model.
@@ -1482,6 +1482,18 @@ model.ResultTable = query2.CopyToDataTable2();
                 //The total defined on the element (Show total) tells how its values are aggregated: a total other than a sum (e.g. an average) means that the values cannot be added
                 bool hasTotal(ReportElement element) => element != null && element.ShowTotal != ShowTotal.No;
                 bool totalNotSum(ReportElement element) => hasTotal(element) && element.TotalAggregateFunction != AggregateFunction.Sum;
+                //The sum of all the rows of the result is shown by the report only if a total of the element covers every row:
+                //a total for the rows of a table without column dimension (or the reverse), or the grand total of a cross table; never with page dimensions (one table per page).
+                //E.g. a stock per year (years in rows, categories in columns) with totals for the rows only shows one total per year, not the sum of all the years.
+                bool grandTotalShown(ReportElement element)
+                {
+                    if (!hasTotal(element) || totalNotSum(element)) return false;
+                    if (Elements.Any(i => i.PivotPosition == PivotPosition.Page)) return false;
+                    if (element.ShowTotal == ShowTotal.RowColumn) return true;
+                    var hasColumns = Elements.Any(i => i.PivotPosition == PivotPosition.Column);
+                    var hasRows = Elements.Any(i => i.PivotPosition == PivotPosition.Row && i != element);
+                    return (element.ShowTotal == ShowTotal.Column && !hasColumns) || (element.ShowTotal == ShowTotal.Row && !hasRows);
+                }
                 int decimalsOf(DataColumn column)
                 {
                     if (column.DataType != typeof(decimal) && column.DataType != typeof(double) && column.DataType != typeof(float)) return 0;
@@ -1538,7 +1550,7 @@ model.ResultTable = query2.CopyToDataTable2();
                                 count = vals.Count
                             };
                         }
-                        else if (hasTotal(el) && !totalNotSum(el))
+                        else if (el != null && grandTotalShown(el))
                         {
                             //Sum shown as the total of the element in the report: the total defined on the element prevails over its aggregate (e.g. the maximum per notice of an amount repeated on several places, summed in the total)
                             aggregates[c.ColumnName] = new

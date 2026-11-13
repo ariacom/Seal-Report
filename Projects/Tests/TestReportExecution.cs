@@ -194,6 +194,21 @@ namespace Test
             Assert.IsFalse(column().TryGetProperty("total_shown", out _));
             data.ShowTotal = ShowTotal.Column;
             Assert.IsTrue(column().GetProperty("total_shown").GetBoolean(), "total shown: sum flagged");
+            //Only a total covering all the rows is the sum of the result: one total per row (e.g. a stock per year with the categories in columns) is not
+            data.ShowTotal = ShowTotal.Row;
+            Assert.IsTrue(column().TryGetProperty("sum", out _), "total per row: still a sum");
+            Assert.IsFalse(column().TryGetProperty("total_shown", out _), "total per row of a table with row dimensions: not the sum of the result");
+            var category = sales.Elements.First(i => i.PivotPosition == PivotPosition.Row);
+            category.PivotPosition = PivotPosition.Column;
+            Assert.IsTrue(column().GetProperty("total_shown").GetBoolean(), "dimension in columns only: the total of the row is the sum of the result");
+            data.ShowTotal = ShowTotal.Column;
+            Assert.IsFalse(column().TryGetProperty("total_shown", out _), "one total per column: not the sum of the result");
+            data.ShowTotal = ShowTotal.RowColumn;
+            Assert.IsTrue(column().GetProperty("total_shown").GetBoolean(), "grand total of a cross table");
+            category.PivotPosition = PivotPosition.Page;
+            Assert.IsFalse(column().TryGetProperty("total_shown", out _), "one table per page: no total of the result");
+            category.PivotPosition = PivotPosition.Row;
+            data.ShowTotal = ShowTotal.Column;
             data.TotalAggregateFunction = AggregateFunction.Avg;
             Assert.IsFalse(column().TryGetProperty("sum", out _), "total average: no sum");
             Assert.AreEqual("total avg", column().GetProperty("role").GetString());

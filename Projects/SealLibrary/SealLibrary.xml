@@ -13365,7 +13365,7 @@
             Json string for the result table with an additional Json containing aggregation.
             The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column, given by the metadata of its element:
             no sum for a dimension (a year, a code), an average, a minimum, a maximum, a percentage or an element whose total is not a sum, nor for a latitude or a longitude;
-            the sum of an element showing a total is flagged 'total_shown'.
+            the sum of an element whose total covers all the rows of the result (not one total per row of a cross table) is flagged 'total_shown'.
             When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
             serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
             result is sent to an AI model.
