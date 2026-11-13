@@ -555,10 +555,16 @@
 
     // ── New conversation button ─────────────────────────────────
     $newBtn.on('click', function () {
+        // One clear at a time: the server renders the system prompt (a few seconds), a new click meanwhile is ignored
+        if ($newBtn.prop('disabled')) return;
+        $newBtn.prop('disabled', true);
         _gateway.ClearAIAgent(function () {
+            $newBtn.prop('disabled', false);
             clearConversation();
             _panelChatFileName = '';
             setFavorite(false);
+        }, function () {
+            $newBtn.prop('disabled', false);
         });
     });
 

@@ -545,6 +545,30 @@ namespace Test
             StringAssert.Contains(error, "PromptType");
         }
 
+        [TestMethod]
+        public void ModelSavedWithoutLimitKeepsItInAPatch()
+        {
+            var modelGuid = Guid.NewGuid().ToString();
+            string xml(string max) => ReportXml(ColumnGuid("Orders.ShipName")).Replace("<GUID>d</GUID>", $"<GUID>{modelGuid}</GUID>{max}").Replace("<ModelGUID>d</ModelGUID>", $"<ModelGUID>{modelGuid}</ModelGUID>");
+            int validate(string existingXml, out XDocument doc)
+            {
+                doc = XDocument.Parse(xml("<MaxNumberOfRecords>0</MaxNumberOfRecords>"));
+                Assert.IsNull(new AIReportWriter(null).Validate(doc, existingXml, false, null, false, new List<string>(), out int limited));
+                return limited;
+            }
+
+            //Saved without limit (no_record_limit given at the creation): a patch without no_record_limit keeps it
+            Assert.AreEqual(0, validate(xml("<MaxNumberOfRecords>0</MaxNumberOfRecords>"), out XDocument patched));
+            Assert.AreEqual("0", (string)patched.Descendants("MaxNumberOfRecords").Single());
+
+            //Saved with the default limit: removing it without no_record_limit puts the default back
+            Assert.AreEqual(1, validate(xml($"<MaxNumberOfRecords>{AIReportWriter.DefaultMaxNumberOfRecords}</MaxNumberOfRecords>"), out patched));
+            Assert.AreEqual(AIReportWriter.DefaultMaxNumberOfRecords.ToString(), (string)patched.Descendants("MaxNumberOfRecords").Single());
+
+            //New report: the default limit
+            Assert.AreEqual(1, validate(null, out _));
+        }
+
         static string EnumReportXml(string enumGuid) => $@"<Report>
   <Sources><ReportSource><GUID>c</GUID><MetaData><Enums><MetaEnum><GUID>{enumGuid}</GUID><Name>Types</Name></MetaEnum></Enums></MetaData></ReportSource></Sources>
   <Models><ReportModel><GUID>d</GUID>

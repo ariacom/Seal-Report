@@ -788,12 +788,15 @@ namespace Seal.AI
             if (mapErrors.Count > 0) return "Error: " + string.Join("; ", mapErrors.Distinct()) + ".";
 
             //--- Default record limit of the reports written by the AI agent: a model without a positive limit gets the default, unless the user explicitly asked for no limit.
+            //A model already saved without limit keeps it (a later patch or overwrite without no_record_limit must not limit it again).
             if (!noRecordLimit)
             {
+                var unlimitedModels = UnlimitedModelGuids(existingXml);
                 foreach (var model in doc.Descendants("ReportModel"))
                 {
                     var maxEl = model.Element("MaxNumberOfRecords");
                     if (maxEl != null && int.TryParse(maxEl.Value.Trim(), out int maxVal) && maxVal > 0) continue;
+                    if (unlimitedModels.Contains(text(model, "GUID") ?? "")) continue;
                     if (maxEl != null) maxEl.Value = DefaultMaxNumberOfRecords.ToString();
                     else
                     {
@@ -868,6 +871,27 @@ namespace Seal.AI
                 log($"Enumerated list '{enumName}': values of the column '{column.Name}'");
             }
             return null;
+        }
+
+        /// <summary>
+        /// Returns the GUIDs of the models saved without record limit (MaxNumberOfRecords absent or not positive) in the XML of an existing report.
+        /// </summary>
+        public static HashSet<string> UnlimitedModelGuids(string existingXml)
+        {
+            var result = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            if (string.IsNullOrWhiteSpace(existingXml)) return result;
+            try
+            {
+                foreach (var model in XDocument.Parse(existingXml).Descendants("ReportModel"))
+                {
+                    var guid = text(model, "GUID");
+                    if (string.IsNullOrEmpty(guid)) continue;
+                    var max = text(model, "MaxNumberOfRecords");
+                    if (max == null || !int.TryParse(max, out int maxVal) || maxVal <= 0) result.Add(guid);
+                }
+            }
+            catch { }
+            return result;
         }
 
         static bool isGuid(string value) => Guid.TryParse(value, out _);

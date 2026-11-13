@@ -683,11 +683,16 @@ namespace Seal.AI
 
         void setSystemMessage(string prompt)
         {
-            if (Messages.Count > 0 && Messages[0] is SystemChatMessage)
-                Messages.RemoveAt(0);
+            lock (Messages)
+            {
+                //every leading system message is replaced: a conversation saved with several copies of the prompt
+                //(concurrent clears of a web session) gets only one again
+                while (Messages.Count > 0 && Messages[0] is SystemChatMessage)
+                    Messages.RemoveAt(0);
 
-            if (!string.IsNullOrWhiteSpace(prompt))
-                Messages.Insert(0, new SystemChatMessage(prompt));
+                if (!string.IsNullOrWhiteSpace(prompt))
+                    Messages.Insert(0, new SystemChatMessage(prompt));
+            }
         }
 
         /// <summary>
@@ -726,12 +731,18 @@ namespace Seal.AI
         /// </summary>
         public void Clear()
         {
-            Messages.Clear();
+            //the prompt is rendered first (it can take seconds: user context of the agent), then the conversation is reset in one step:
+            //concurrent clears of the same web session (button clicked several times) gave several copies of the system prompt
+            var prompt = effectiveSystemPrompt;
+            lock (Messages)
+            {
+                Messages.Clear();
+                if (!string.IsNullOrWhiteSpace(prompt)) Messages.Add(new SystemChatMessage(prompt));
+            }
             Title = null;
             LastChatUsage = new AIUsage();
             TotalUsage = new AIUsage();
             _customSystemPrompt = false;
-            seedSystemPrompt();
         }
 
         /// <summary>

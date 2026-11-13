@@ -225,6 +225,28 @@ namespace Test
         static List<string> toolResults(AIAgent agent) => agent.Messages.OfType<ToolChatMessage>().Select(m => m.Content[0].Text).ToList();
 
         [TestMethod]
+        public void SystemPromptIsNeverDuplicated()
+        {
+            var provider = new TestProvider() { ToolCallReplies = 0 };
+            var agent = new AIAgent(_agent, provider);
+            int systemCount() => agent.Messages.OfType<SystemChatMessage>().Count();
+            if (systemCount() == 0) Assert.Inconclusive("The agent of the test has no system prompt.");
+
+            //Concurrent clears of the same agent (web session, 'New conversation' clicked several times): one system prompt
+            System.Threading.Tasks.Parallel.For(0, 20, i => agent.Clear());
+            Assert.AreEqual(1, systemCount());
+            Assert.AreEqual(1, agent.Messages.Count);
+
+            //A conversation saved with several copies of the prompt gets only one again at the next turn
+            agent.Messages.Insert(0, new SystemChatMessage("old prompt"));
+            agent.Messages.Insert(0, new SystemChatMessage("old prompt"));
+            Assert.AreEqual(3, systemCount());
+            agent.Chat("hello");
+            Assert.AreEqual(1, systemCount());
+            Assert.IsInstanceOfType(agent.Messages[0], typeof(SystemChatMessage));
+        }
+
+        [TestMethod]
         public void RepeatedToolCallsStopTheLoop()
         {
             //The same call 5 times in a row: the 2nd and 3rd are refused, the loop ends and the final answer is asked without tools

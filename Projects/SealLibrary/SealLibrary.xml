@@ -2552,6 +2552,11 @@
             Returns an error or null.
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.UnlimitedModelGuids(System.String)">
+            <summary>
+            Returns the GUIDs of the models saved without record limit (MaxNumberOfRecords absent or not positive) in the XML of an existing report.
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.RegenerateGuids(System.Xml.Linq.XDocument,System.Boolean,System.Collections.Generic.List{System.Xml.Linq.XElement})">
             <summary>
             Regenerates the internal GUIDs (the <c>&lt;GUID&gt;</c> elements) and their references (elements ending with GUID, items of a list ending with GUIDs,

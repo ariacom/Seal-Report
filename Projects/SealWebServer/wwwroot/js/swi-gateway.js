@@ -325,7 +325,8 @@ class SWIGateway {
     ClearAIAgent(callback, errorcb) {
         $.post(_server + "SWIClearAIAgent", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); if (errorcb)
+            errorcb(null); });
     }
     GetAIAgentResponse(message, callback, errorcb) {
         this._currentAIXHR = $.post(_server + "SWIGetAIAgentResponse", {

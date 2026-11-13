@@ -372,7 +372,7 @@ class SWIGateway {
     public ClearAIAgent(callback: (data: any) => void, errorcb?: (data: any) => void) {
         $.post(_server + "SWIClearAIAgent", {})
             .done(function (data) { SWIUtil.GatewayCallbackHandler(data, callback, errorcb); })
-            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); });
+            .fail(function (xhr, status, error) { SWIUtil.GatewayFailure(xhr, status, error); if (errorcb) errorcb(null); });
     }
 
     private _currentAIXHR: JQueryXHR | null = null;
