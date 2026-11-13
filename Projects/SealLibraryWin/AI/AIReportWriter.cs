@@ -1843,6 +1843,17 @@ namespace Seal.AI
             return $"Schedule '{schedule.Name}' (scheduleGUID='{schedule.GUID}'): type={schedule.Type}, start={schedule.Start:yyyy-MM-dd HH:mm}, next execution={schedule.NextExecution:yyyy-MM-dd HH:mm}, enabled={schedule.Enabled}, format={output.Format}, {destination}";
         }
 
+        /// <summary>
+        /// E-mail address of a user: the e-mail set during the login, otherwise the login name if it is an e-mail address, otherwise null
+        /// </summary>
+        public static string GetUserEmail(SecurityUser user)
+        {
+            if (user == null) return null;
+            if (!string.IsNullOrWhiteSpace(user.Email)) return user.Email.Trim();
+            var login = user.WebUserName?.Trim();
+            return !string.IsNullOrEmpty(login) && login.Contains('@') && !login.Contains(' ') ? login : null;
+        }
+
         static string getText(JsonElement args, string name)
         {
             return args.TryGetProperty(name, out var value) && value.ValueKind == JsonValueKind.String ? value.GetString() : null;
@@ -1955,7 +1966,9 @@ namespace Seal.AI
             if (device is OutputEmailDevice)
             {
                 output.EmailTo = emailTo ?? output.EmailTo;
-                if (string.IsNullOrWhiteSpace(output.EmailTo)) return "Error: email_to is required for an email device.";
+                //By default, the schedule of the user is sent to the user
+                if (string.IsNullOrWhiteSpace(output.EmailTo)) output.EmailTo = GetUserEmail(user);
+                if (string.IsNullOrWhiteSpace(output.EmailTo)) return "Error: email_to is required for an email device (no e-mail address is known for the current user).";
                 output.EmailCC = getText(args, "email_cc") ?? output.EmailCC;
                 output.EmailBCC = getText(args, "email_bcc") ?? output.EmailBCC;
                 output.EmailSubject = getText(args, "email_subject") ?? output.EmailSubject;

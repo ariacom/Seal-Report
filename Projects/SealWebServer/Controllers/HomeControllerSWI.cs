@@ -449,7 +449,8 @@ namespace SealWebServer.Controllers
         object getMcpTokensResult(string userName)
         {
             var configuration = Repository.AIConfiguration;
-            var baseUrl = $"{Request.Scheme}://{Request.Host}{Request.PathBase}{Startup.McpPath}/";
+            // public URL of the MCP servers (McpPublicUrl if set: behind a proxy the request URL may differ, e.g. a path base the MCP endpoints do not have)
+            var baseUrl = McpOAuth.GetPublicBaseUrl($"{Request.Scheme}://{Request.Host}{Request.PathBase}") + Startup.McpPath + "/";
             var now = DateTime.Now;
             string format(DateTime? date) => date == null ? "" : date.Value.ToString("g", Repository.CultureInfo);
             return new

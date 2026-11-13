@@ -14,7 +14,10 @@ the right to schedule the report, so it also works on a report he cannot edit.
 **Do not call `report_configure_output` to schedule a report**: pass the
 destination directly to `report_configure_schedule` (`folder_path`, `file_name`,
 `output_format`, or `email_to`...). The folder and the file have defaults; the
-output parameters of step 2 below keep the same meaning. The result gives the
+output parameters of step 2 below keep the same meaning. To send it by e-mail,
+pass `device_name` of an email device (see `device_list`): `email_to` defaults to
+the e-mail address of the current user, so **do not ask the user for his address**;
+ask only when he wants other recipients. The result gives the
 next execution: tell the user, and that the schedule is in **My schedules**.
 Windows-only notes below (Administrator rights) do not apply. Find an existing
 schedule with `report_get_detail`, under *My schedules*. The report file is not

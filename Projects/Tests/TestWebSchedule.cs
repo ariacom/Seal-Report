@@ -359,6 +359,16 @@ namespace Test
             CollectionAssert.AreEqual(initialValues, orderRestrictions.Select(i => i.Value1).ToList());
         }
 
+        [TestMethod]
+        public void DefaultEmailIsTheUserEmail()
+        {
+            //The e-mail of a schedule sent by e-mail defaults to the e-mail of the user: set at login, otherwise the login name if it is an e-mail address
+            Assert.AreEqual("set@example.com", Seal.AI.AIReportWriter.GetUserEmail(new SecurityUser(_repository.Security) { WebUserName = "login@example.com", Email = "set@example.com" }));
+            Assert.AreEqual("login@example.com", Seal.AI.AIReportWriter.GetUserEmail(new SecurityUser(_repository.Security) { WebUserName = "login@example.com" }));
+            Assert.IsNull(Seal.AI.AIReportWriter.GetUserEmail(new SecurityUser(_repository.Security) { WebUserName = "jdoe" }));
+            Assert.IsNull(Seal.AI.AIReportWriter.GetUserEmail(null));
+        }
+
         static string configureWebSchedule(Report report, string arguments)
         {
             var tool = new Seal.AI.AIToolConfiguration() { CurrentToolCall = new Seal.AI.AIToolCall() { Name = "report_configure_schedule", Arguments = arguments, SecurityContext = getUserWithFolders() } };

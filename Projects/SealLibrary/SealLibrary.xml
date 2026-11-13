@@ -2684,6 +2684,11 @@
             Description of a web schedule for an AI agent
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.GetUserEmail(Seal.Model.SecurityUser)">
+            <summary>
+            E-mail address of a user: the e-mail set during the login, otherwise the login name if it is an e-mail address, otherwise null
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.setWebScheduleRecurrence(Seal.Model.SealSchedule,System.Text.Json.JsonElement,System.Boolean)">
             <summary>
             Set the recurrence of a web schedule from the arguments of the tool, the current recurrence is kept for an update without type. Returns an error or null.
