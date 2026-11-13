@@ -922,7 +922,8 @@ namespace Seal.AI
                         el.Value = Regex.Replace(el.Value, @"\[([^\]]+)\]", m => map.TryGetValue(m.Groups[1].Value, out string rep) ? "[" + rep + "]" : m.Value);
                         continue;
                     }
-                    var isReference = name.EndsWith("GUID") || (el.Parent != null && el.Parent.Name.LocalName.EndsWith("GUIDs"));
+                    //EnumGUIDEL (element) and EnumGUIDRE (restriction) reference an enumerated list of the report: their names do not end with GUID
+                    var isReference = name.EndsWith("GUID") || name == "EnumGUIDEL" || name == "EnumGUIDRE" || (el.Parent != null && el.Parent.Name.LocalName.EndsWith("GUIDs"));
                     //The sources are external, '1' is the connection of the data source
                     if (!isReference || name == "MetaSourceGUID" || (name == "ConnectionGUID" && val == ReportSource.DefaultRepositoryConnectionGUID)) continue;
                     if (map.TryGetValue(val, out string newValue)) el.Value = newValue;

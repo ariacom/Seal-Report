@@ -544,5 +544,37 @@ namespace Test
             StringAssert.Contains(error, "<Prompt>Département</Prompt>");
             StringAssert.Contains(error, "PromptType");
         }
+
+        static string EnumReportXml(string enumGuid) => $@"<Report>
+  <Sources><ReportSource><GUID>c</GUID><MetaData><Enums><MetaEnum><GUID>{enumGuid}</GUID><Name>Types</Name></MetaEnum></Enums></MetaData></ReportSource></Sources>
+  <Models><ReportModel><GUID>d</GUID>
+    <Elements><ReportElement><GUID>e1</GUID><EnumGUIDEL>{enumGuid}</EnumGUIDEL></ReportElement></Elements>
+    <Restriction>[f1]</Restriction>
+    <Restrictions><ReportRestriction><GUID>f1</GUID><EnumGUIDRE>{enumGuid}</EnumGUIDRE></ReportRestriction></Restrictions>
+  </ReportModel></Models>
+</Report>";
+
+        static void AssertEnumReferencesFollow(XDocument doc)
+        {
+            var enumGuid = (string)doc.Descendants("MetaEnum").Single().Element("GUID");
+            Assert.IsTrue(Guid.TryParse(enumGuid, out _));
+            Assert.AreEqual(enumGuid, (string)doc.Descendants("EnumGUIDEL").Single());
+            Assert.AreEqual(enumGuid, (string)doc.Descendants("EnumGUIDRE").Single());
+        }
+
+        [TestMethod]
+        public void EnumReferencesFollowTheRegeneratedGuid()
+        {
+            //Complete XML (report_create_from_xml): every GUID is regenerated, the enumerated list referenced by an element (EnumGUIDEL) and a restriction (EnumGUIDRE) included
+            var doc = XDocument.Parse(EnumReportXml("7d3c1f2a-5b6e-4c8d-9a0b-1e2f3a4b5c6d"));
+            AIReportWriter.RegenerateGuids(doc, true, null);
+            Assert.AreNotEqual("7d3c1f2a-5b6e-4c8d-9a0b-1e2f3a4b5c6d", (string)doc.Descendants("MetaEnum").Single().Element("GUID"));
+            AssertEnumReferencesFollow(doc);
+
+            //Patch (report_patch_xml): the placeholder of a new enumerated list is regenerated with its references
+            doc = XDocument.Parse(EnumReportXml("enp"));
+            AIReportWriter.RegenerateGuids(doc, false, null);
+            AssertEnumReferencesFollow(doc);
+        }
     }
 }
