@@ -177,13 +177,11 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Translates a built-in progress text in the culture of the user (context AIToolProgress of the repository translations).
+        /// Translates a built-in progress text in the culture of the user (context AIToolProgress of the repository translations, then of Translations.xlsx).
         /// </summary>
         string translateProgress(string text)
         {
-            return string.IsNullOrEmpty(Culture)
-                ? Repository.Instance.RepositoryTranslate("AIToolProgress", "*", text)
-                : Repository.Instance.RepositoryTranslate(Culture, "AIToolProgress", "*", text);
+            return Repository.Instance.TranslateAIProgress(Culture, text);
         }
 
         /// <summary>

@@ -149,9 +149,7 @@ namespace Seal.AI
         public string GetProgressLabel(string culture = null)
         {
             if (string.IsNullOrWhiteSpace(ProgressLabel)) return null;
-            return string.IsNullOrEmpty(culture)
-                ? Repository.Instance.RepositoryTranslate("AIToolProgress", "*", ProgressLabel)
-                : Repository.Instance.RepositoryTranslate(culture, "AIToolProgress", "*", ProgressLabel);
+            return Repository.Instance.TranslateAIProgress(culture, ProgressLabel);
         }
 
         /// <summary>

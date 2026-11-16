@@ -332,9 +332,7 @@ namespace Seal.AI
             if (string.IsNullOrWhiteSpace(ProgressLabel)) return null;
             // Translate with the caller's culture (the web user's session locale) when supplied,
             // otherwise fall back to the repository's current culture.
-            var label = string.IsNullOrEmpty(culture)
-                ? Repository.Instance.RepositoryTranslate("AIToolProgress", "*", ProgressLabel)
-                : Repository.Instance.RepositoryTranslate(culture, "AIToolProgress", "*", ProgressLabel);
+            var label = Repository.Instance.TranslateAIProgress(culture, ProgressLabel);
             return SubstituteArguments(label, toolCall?.Arguments).Trim();
         }
 

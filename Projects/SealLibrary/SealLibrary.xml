@@ -1550,7 +1550,7 @@
         </member>
         <member name="M:Seal.AI.AIToolHost.translateProgress(System.String)">
             <summary>
-            Translates a built-in progress text in the culture of the user (context AIToolProgress of the repository translations).
+            Translates a built-in progress text in the culture of the user (context AIToolProgress of the repository translations, then of Translations.xlsx).
             </summary>
         </member>
         <member name="M:Seal.AI.AIToolHost.Execute(Seal.AI.AIToolCall,Seal.AI.ICancelOperation)">
@@ -17001,6 +17001,14 @@
         <member name="M:Seal.Model.Repository.RepositoryTranslate(System.String,System.String,System.String)">
             <summary>
             Translate a reference text in a repository context with the current culture
+            </summary>
+        </member>
+        <member name="M:Seal.Model.Repository.TranslateAIProgress(System.String,System.String)">
+            <summary>
+            Translate a progress label of the AI agents (text shown while a tool runs or a skill loads).
+            A translation of the repository (RepositoryTranslations, context 'AIToolProgress') is used first,
+            then the translation of the product (Translations.xlsx, context 'AIToolProgress'): the labels of the
+            built-in tools are translated even when the repository has its own repository translations.
             </summary>
         </member>
         <member name="M:Seal.Model.Repository.TranslateColumn(Seal.Model.MetaColumn)">

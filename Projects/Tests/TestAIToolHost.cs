@@ -67,6 +67,22 @@ namespace Test
         }
 
         [TestMethod]
+        public void ProgressLabelsTranslatedByTheProduct()
+        {
+            //The progress labels of the built-in tools and skills are translated by Translations.xlsx (product), not by the repository translations:
+            //a repository having its own RepositoryTranslations (e.g. Open Data) still shows them in French
+            Assert.IsFalse(_repository.RepositoryTranslations.Keys.Any(k => k.StartsWith("AIToolProgress\r")), "AIToolProgress must not be in RepositoryTranslations.xlsx");
+            var labels = _repository.AIConfiguration.AITools.Select(t => t.ProgressLabel)
+                .Concat(_repository.AIConfiguration.AISkills.Select(s => s.ProgressLabel))
+                .Where(l => !string.IsNullOrWhiteSpace(l) && l.All(c => c < 128)) //a label written directly in French is not translated
+                .Distinct().ToList();
+            Assert.IsTrue(labels.Count > 40);
+            foreach (var label in labels) Assert.AreNotEqual(label, _repository.TranslateAIProgress("fr", label), $"No French translation for the progress label '{label}'");
+            Assert.AreEqual("Récupération du dossier courant", _repository.TranslateAIProgress("fr", "Getting the current folder"));
+            Assert.AreEqual("Getting the current folder", _repository.TranslateAIProgress("en", "Getting the current folder"));
+        }
+
+        [TestMethod]
         public void SkillProgressiveDisclosure()
         {
             //An agent having a skill that unlocks a tool not in its base tools

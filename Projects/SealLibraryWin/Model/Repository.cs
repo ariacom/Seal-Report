@@ -2072,6 +2072,20 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Translate a progress label of the AI agents (text shown while a tool runs or a skill loads).
+        /// A translation of the repository (RepositoryTranslations, context 'AIToolProgress') is used first,
+        /// then the translation of the product (Translations.xlsx, context 'AIToolProgress'): the labels of the
+        /// built-in tools are translated even when the repository has its own repository translations.
+        /// </summary>
+        public string TranslateAIProgress(string culture, string reference)
+        {
+            if (string.IsNullOrEmpty(culture)) culture = CultureInfo.TwoLetterISOLanguageName;
+            var result = RepositoryTranslate(culture, "AIToolProgress", "*", reference);
+            if (result != reference) return result;
+            return Translate(culture, "AIToolProgress", reference);
+        }
+
+        /// <summary>
         /// Translate an Element
         /// </summary>
         public string TranslateColumn(MetaColumn col)
