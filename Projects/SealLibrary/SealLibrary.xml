@@ -2696,6 +2696,11 @@
             Label of a display value without its code: without a code in parentheses at the end ('Name (code)') or a code followed by a dash at the start ('01 - Name')
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.FindByCodeInParentheses(System.Collections.Generic.List{Seal.Model.MetaEV},System.String)">
+            <summary>
+            Values whose display value (or identifier) ends with the code given in parentheses, e.g. 'Name (59)' for '59'
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.GetCodeInParentheses(System.String,System.String@)">
             <summary>
             Splits a value 'label (code)': returns the code in parentheses at the end (null if none) and the label before it

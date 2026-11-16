@@ -1766,6 +1766,17 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Values whose display value (or identifier) ends with the code given in parentheses, e.g. 'Name (59)' for '59'
+        /// </summary>
+        public static List<MetaEV> FindByCodeInParentheses(List<MetaEV> values, string code)
+        {
+            code = (code ?? "").Trim();
+            if (code.Length == 0 || code.Contains('(') || code.Contains(')')) return new List<MetaEV>();
+            bool hasCode(string display) => string.Equals(GetCodeInParentheses(display, out _), code, StringComparison.OrdinalIgnoreCase);
+            return values.Where(i => hasCode(i.DisplayRestriction) || hasCode(i.DisplayValue) || hasCode(i.Id)).GroupBy(i => i.Id).Select(i => i.First()).ToList();
+        }
+
+        /// <summary>
         /// Splits a value 'label (code)': returns the code in parentheses at the end (null if none) and the label before it
         /// </summary>
         public static string GetCodeInParentheses(string value, out string label)
@@ -1870,12 +1881,28 @@ namespace Seal.AI
             }
             List<MetaEV> distinct(IEnumerable<MetaEV> values) => values.GroupBy(i => i.Id).Select(i => i.First()).ToList();
             bool isDisplay(MetaEV ev) => string.Equals(ev.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(ev.DisplayValue, value, StringComparison.OrdinalIgnoreCase);
+            string ambiguous(List<MetaEV> values, string hint) => $"Error: the value '{value}' of '{name}' is ambiguous, it matches: {string.Join(", ", values.Take(20).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}{(values.Count > 20 ? ", ..." : "")}. Choose the one asked{hint} and pass its id.";
+            //Texts searched in the database, and the first search that failed (e.g. a timeout): it is logged and told, the value is then not known to be absent
+            var searched = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+            Exception searchException = null;
+            List<MetaEV> search(string text)
+            {
+                searched.Add(text);
+                try { return enumRE.GetSubSetValues(text, null); }
+                catch (Exception ex)
+                {
+                    if (searchException == null) Helper.WriteLogException($"resolveEnumValue '{name}' '{value}'", ex);
+                    searchException ??= ex;
+                    return null;
+                }
+            }
 
             //List filtered by the database: search the value typed
             if (enumRE.HasDynamicDisplay)
             {
-                try { addCandidates(enumRE.GetSubSetValues(value, null)); }
-                catch (Exception ex) { return $"Error: the values of '{name}' cannot be searched: {ex.Message}"; }
+                var results = search(value);
+                if (results == null) return $"Error: the values of '{name}' cannot be searched: {searchException.Message}";
+                addCandidates(results);
             }
 
             var found = candidates.FirstOrDefault(i => i.Id == value) ?? candidates.FirstOrDefault(isDisplay);
@@ -1888,13 +1915,10 @@ namespace Seal.AI
             {
                 if (enumRE.IsLoadOnDemand)
                 {
-                    try { enumRE.EnsureValues(new List<string>() { code }); } catch { }
+                    enumRE.EnsureValues(new List<string>() { code });
                     addCandidates(enumRE.Values.Where(i => i.Id == code));
                 }
-                if (enumRE.HasDynamicDisplay)
-                {
-                    try { addCandidates(enumRE.GetSubSetValues(code, null)); } catch { }
-                }
+                if (enumRE.HasDynamicDisplay) addCandidates(search(code) ?? new List<MetaEV>());
                 var byCode = distinct(candidates.Where(i => i.Id == code || (i.DisplayRestriction ?? "").Contains($"({code})", StringComparison.OrdinalIgnoreCase) || (i.DisplayValue ?? "").Contains($"({code})", StringComparison.OrdinalIgnoreCase)));
                 if (byCode.Count == 1) return accept(byCode[0], out id);
             }
@@ -1903,22 +1927,48 @@ namespace Seal.AI
             //Not when the value has a code that does not match: 'Name (99)' is not 'Name (1)'.
             var normalizedValue = NormalizeLabel(value);
             List<MetaEV> sameLabel() => code != null ? new List<MetaEV>() : distinct(candidates.Where(i => NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)) == normalizedValue || NormalizeLabel(i.DisplayRestriction) == normalizedValue));
+            //Values having the label typed. List filtered by the database: the values known (shared list, rows limited by each search) may not hold
+            //all the values having this label, so a single value is confirmed by a search with its own label (e.g. 'Name-With-Dashes' for 'Name With Dashes')
+            string acceptLabel(List<MetaEV> equalValues, out string resultId)
+            {
+                resultId = null;
+                if (equalValues.Count == 1 && enumRE.HasDynamicDisplay)
+                {
+                    var ownLabel = LabelWithoutCode(equalValues[0].DisplayRestriction);
+                    if (!string.IsNullOrEmpty(ownLabel) && !searched.Contains(ownLabel))
+                    {
+                        addCandidates(search(ownLabel) ?? new List<MetaEV>());
+                        equalValues = sameLabel();
+                    }
+                }
+                if (equalValues.Count == 1) return accept(equalValues[0], out resultId);
+                return ambiguous(equalValues, " (e.g. by its department or postal code)");
+            }
             var equals = sameLabel();
-            if (equals.Count == 1) return accept(equals[0], out id);
-            if (equals.Count > 1)
-                return $"Error: the value '{value}' of '{name}' is ambiguous, it matches: {string.Join(", ", equals.Take(20).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}{(equals.Count > 20 ? ", ..." : "")}. Choose the one asked (e.g. by its department or postal code) and pass its id.";
+            if (equals.Count > 0) return acceptLabel(equals, out id);
+
+            //The code alone, without its label: the value whose display value ends with this code in parentheses, e.g. '59' for 'Name (59)'
+            //when the identifier of the list is the name
+            if (code == null)
+            {
+                var byCodeOnly = FindByCodeInParentheses(candidates, value);
+                if (byCodeOnly.Count == 1) return accept(byCodeOnly[0], out id);
+                if (byCodeOnly.Count > 1) return ambiguous(byCodeOnly, "");
+            }
 
             //List loaded on demand: an identifier not yet loaded is loaded, it must exist (an unknown value would give no row without message)
             if (enumRE.IsLoadOnDemand)
             {
-                try { enumRE.EnsureValues(new List<string>() { value }); } catch { }
+                enumRE.EnsureValues(new List<string>() { value });
                 var loaded = enumRE.Values.FirstOrDefault(i => i.Id == value);
                 if (loaded != null) return accept(loaded, out id);
             }
 
             //Values close to the one typed. List filtered by the database: searches with shorter texts to get candidates, e.g. with the first words
-            //('CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)'), with the beginning ('Thionvil' for the misspelled 'Thionvile',
-            //'Val' for 'Valance'), without the first character, until a value equal or almost equal to the label typed is found
+            //('CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)'), each word alone, the longest first ('Palais' for
+            //'Saint Palais sur Mer' typed without the dashes of 'Saint-Palais-sur-Mer', the first word being too common to find the value within
+            //the rows returned by the search), the beginning ('Thionvil' for the misspelled 'Thionvile', 'Val' for 'Valance'), without the first
+            //character, until a value equal or almost equal to the label typed is found
             if (enumRE.HasDynamicDisplay)
             {
                 var minLength = Math.Max(enumRE.FilterChars, 3);
@@ -1927,17 +1977,19 @@ namespace Seal.AI
                 var words = shorter.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
                 var texts = new List<string>();
                 for (int i = words.Count; i > 0; i--) texts.Add(string.Join(" ", words.Take(i)));
+                var singleWords = Regex.Split(shorter, @"[^\p{L}\p{N}]+").Where(i => i.Length > 0).ToList();
+                if (singleWords.Count > 1) texts.AddRange(singleWords.OrderByDescending(i => i.Length));
                 foreach (var length in new[] { shorter.Length - 1, shorter.Length - 2, shorter.Length - 3, shorter.Length - 4, Math.Min(4, shorter.Length - 1), minLength })
                 {
                     if (length >= minLength && length < shorter.Length) texts.Add(shorter.Substring(0, length));
                 }
                 if (shorter.Length - 1 >= minLength) texts.Add(shorter.Substring(1));
-                foreach (var text in texts.Distinct())
+                foreach (var text in texts.Distinct(StringComparer.OrdinalIgnoreCase))
                 {
-                    if (text.Length < minLength) continue;
+                    if (text.Length < minLength || searched.Contains(text)) continue;
                     if (candidates.Any(i => CloseTier(NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)), normalizedShorter, out _) <= 1)) break;
-                    List<MetaEV> results;
-                    try { results = enumRE.GetSubSetValues(text, null); } catch { break; }
+                    var results = search(text);
+                    if (results == null) break;
                     //The value is a display value of the list that the search does not find as a whole, e.g. 'Name (code)' when the SQL
                     //searches the name or the code: the display value found with the shorter text is the value asked
                     var exact = distinct(results.Where(isDisplay));
@@ -1945,17 +1997,21 @@ namespace Seal.AI
                     addCandidates(results);
                     //Label differing by the accents or the punctuation only, e.g. 'Saint Etienne' for 'Saint-Étienne (code)'
                     equals = sameLabel();
-                    if (equals.Count == 1) return accept(equals[0], out id);
+                    if (equals.Count > 0) return acceptLabel(equals, out id);
                 }
             }
+
             //The closest first (e.g. 'Rennes (35238)' before 'Brennes (52070)' for 'Renne'): the search returns the values in the order of the SQL
             var close = CloseValues(candidates, i => i.DisplayRestriction, value).Take(10).ToList();
+            var closeText = close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "";
+            //A search failed: the value may be in the list
+            if (searchException != null)
+                return $"Error: the value '{value}' was not found in the list of '{name}', but a search of the list failed ({searchException.Message}): the value may exist. Check the value or call the tool again later." + closeText;
             //No close value in a list loaded as a whole: show some values, so the format expected is seen (e.g. names and not codes)
             var sample = close.Count == 0 && !enumRE.HasDynamicDisplay && candidates.Count > 0
                 ? $" The list has {candidates.Count} values, e.g. {string.Join(", ", candidates.Take(10).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}."
                 : "";
-            return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list." +
-                (close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "") + sample;
+            return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list." + closeText + sample;
         }
 
         #endregion

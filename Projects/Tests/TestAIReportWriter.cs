@@ -397,6 +397,79 @@ namespace Test
         }
 
         [TestMethod]
+        public void CodeAloneIsResolved()
+        {
+            //List whose identifier is the display value 'label (code)': the code alone identifies the value (it was refused without close value)
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var xml = ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Operator>Equal</Operator>");
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".srex");
+            File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository, false);
+                var enumRE = report.AllRestrictions.Single().EnumRE;
+                enumRE.Values.AddRange(new[] { "North (59)", "Northern Hills (590)", "East (99)", "West (99)" }.Select(i => new MetaEV() { Id = i }));
+
+                Assert.IsNull(AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""59""]}}]"));
+                CollectionAssert.AreEqual(new List<string> { "North (59)" }, report.AllRestrictions.Single().EnumValues);
+                //Several values with the code: ambiguous, they are listed
+                var error = AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""99""]}}]");
+                StringAssert.Contains(error, "is ambiguous");
+                StringAssert.Contains(error, "'West (99)'");
+                //A code that no value has: still refused
+                StringAssert.StartsWith(AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""5""]}}]"), "Error: the value '5' is not in the list");
+            }
+            finally { File.Delete(path); }
+        }
+
+        [TestMethod]
+        public void LabelWithOtherSeparatorsIsFoundByItsWords()
+        {
+            //Separators typed differing from those of the list ('Chef Anton s' for 'Chef Anton's') and a first word too common to find the value
+            //within the rows returned by the search (one row here): the search with another word of the label finds it
+            var report = LoadOnDemandProductReport();
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = enumRE.SqlDisplay.Replace("SELECT TOP 100", "SELECT TOP 1");
+            Assert.IsNull(ApplyProduct(report, "Chef Anton s Gumbo Mix"));
+            CollectionAssert.AreEqual(new List<string> { "5" }, report.AllRestrictions.First(i => i.DisplayNameEl == "Product Name Search (on demand)").EnumValues);
+        }
+
+        const string HomonymProductsSql = "SELECT TOP 2 ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM (SELECT ProductID, ProductName FROM Products UNION ALL SELECT ProductID + 1000, ProductName FROM Products) p WHERE ProductName LIKE '%{EnumFilter}%' ORDER BY ProductName";
+
+        [TestMethod]
+        public void HomonymsFoundByTheSearchesAreAmbiguous()
+        {
+            //Two values with the same label (ids 5 and 1005) found by a search with a word: ambiguous, never the first one found
+            var report = LoadOnDemandProductReport();
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = HomonymProductsSql;
+            var error = ApplyProduct(report, "Chef Anton s Gumbo Mix");
+            StringAssert.Contains(error, "is ambiguous");
+            StringAssert.Contains(error, "(id 1005)");
+
+            //One homonym already in the shared list (loaded by another execution): the search with its label finds the other one
+            report = LoadOnDemandProductReport();
+            enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = HomonymProductsSql;
+            enumRE.AddValues(new List<MetaEV> { new MetaEV() { Id = "5", Val = "Chef Anton's Gumbo Mix (5)" } });
+            error = ApplyProduct(report, "Chef Anton s Gumbo Mix");
+            StringAssert.Contains(error, "is ambiguous");
+            StringAssert.Contains(error, "(id 1005)");
+        }
+
+        [TestMethod]
+        public void FailedSearchIsNotAnAbsentValue()
+        {
+            //A search with a shorter text fails: the value is not said absent from the list, the failure is told
+            var report = LoadOnDemandProductReport();
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = "SELECT TOP 100 ProductID, ProductName FROM Products WHERE ProductName LIKE '%{EnumFilter}%' AND 1 = CASE WHEN '{EnumFilter}' = 'Mix' THEN 1 / 0 ELSE 1 END";
+            var error = ApplyProduct(report, "Xyz Mix");
+            StringAssert.Contains(error, "a search of the list failed");
+            Assert.IsFalse(error.Contains("is not in the list"), error);
+        }
+
+        [TestMethod]
         public void OneValueCriterionRefusesSeveralValues()
         {
             var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
