@@ -325,7 +325,93 @@ namespace Test
         {
             var values = new List<MetaEV> { new MetaEV() { Id = "52070", Val = "Brennes (52070)" }, new MetaEV() { Id = "88164", Val = "Estrennes (88164)" },
                 new MetaEV() { Id = "35210", Val = "Saint-Rennes (35210)" }, new MetaEV() { Id = "35238", Val = "Rennes (35238)" } };
-            CollectionAssert.AreEqual(new List<string> { "35238", "35210", "52070", "88164" }, AIReportWriter.OrderByCloseness(values, i => i.Val, "rennes").Select(i => i.Id).ToList());
+            //Equal label, then almost equal (one edit), then starting with the text as a whole word, then containing it
+            CollectionAssert.AreEqual(new List<string> { "35238", "52070", "35210", "88164" }, AIReportWriter.OrderByCloseness(values, i => i.Val, "rennes").Select(i => i.Id).ToList());
+        }
+
+        [TestMethod]
+        public void CloseValuesRankSpellingMistakesFirst()
+        {
+            Assert.AreEqual("Name", AIReportWriter.LabelWithoutCode("Name (A12)"));
+            Assert.AreEqual("Name", AIReportWriter.LabelWithoutCode("01 - Name"));
+            Assert.AreEqual("Two - Words", AIReportWriter.LabelWithoutCode("Two - Words"));
+            Assert.AreEqual("A12", AIReportWriter.GetCodeInParentheses("Some Name (A12)", out string label));
+            Assert.AreEqual("Some Name", label);
+            Assert.IsNull(AIReportWriter.GetCodeInParentheses("Some Name", out _));
+            Assert.AreEqual("saint etienne sur l eau", AIReportWriter.NormalizeLabel("Saint-Étienne-sur-l'Eau"));
+            Assert.AreEqual(1, AIReportWriter.DamerauLevenshteinDistance("valence", "valecne"), "transposition");
+            Assert.AreEqual(2, AIReportWriter.LevenshteinDistance("valence", "valecne"));
+
+            var values = new List<MetaEV> { new MetaEV() { Id = "1", Val = "Northbrook (1)" }, new MetaEV() { Id = "2", Val = "Upper-Northbrooks (2)" },
+                new MetaEV() { Id = "3", Val = "Northbrookfield (3)" }, new MetaEV() { Id = "4", Val = "Northbrooks (4)" },
+                new MetaEV() { Id = "5", Val = "Westvale (5)" }, new MetaEV() { Id = "6", Val = "Westvalley (6)" }, new MetaEV() { Id = "7", Val = "Eastvale (7)" } };
+            //One letter missing: the value with one edit first, before the values only starting with or containing the text
+            Assert.AreEqual("4", AIReportWriter.CloseValues(values, i => i.Val, "Northbrook").Skip(1).First().Id);
+            Assert.AreEqual("1", AIReportWriter.CloseValues(values, i => i.Val, "Northbrok").First().Id);
+            Assert.AreEqual("4", AIReportWriter.CloseValues(values, i => i.Val, "Northbrook (99)").Skip(1).First().Id);
+            //Spelling mistake: 'Westvale', not 'Westvalley' or 'Eastvale' (3 edits)
+            CollectionAssert.AreEqual(new List<string> { "5" }, AIReportWriter.CloseValues(values, i => i.Val, "Westvole").Select(i => i.Id).ToList());
+            //Inverted letters: one edit
+            Assert.AreEqual("5", AIReportWriter.CloseValues(values, i => i.Val, "Wsetvale").First().Id);
+            //Nothing close
+            Assert.AreEqual(0, AIReportWriter.CloseValues(values, i => i.Val, "Southport").Count);
+        }
+
+        static Report LoadOnDemandProductReport()
+        {
+            var report = Report.LoadFromFile(Path.Combine(_repository.ReportsFolder, "Samples", "09-Enumerated List - Dynamic Display.srex"), _repository);
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = "SELECT TOP 100 ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM Products WHERE ProductName LIKE '%{EnumFilter}%' ORDER BY ProductName";
+            enumRE.SqlSelected = "SELECT ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM Products WHERE ProductID IN ({EnumSelected})";
+            return report;
+        }
+
+        static string ApplyProduct(Report report, string value) => AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""Product Name Search (on demand)"",""values"":[""{value}""]}}]");
+
+        [TestMethod]
+        public void EnumValueWithCodeOrLabelIsResolved()
+        {
+            var report = LoadOnDemandProductReport();
+            var restriction = report.AllRestrictions.First(i => i.DisplayNameEl == "Product Name Search (on demand)");
+            //'label (code)' with a misspelled label: the code in parentheses identifies the value
+            Assert.IsNull(ApplyProduct(report, "Chnag (2)"));
+            CollectionAssert.AreEqual(new List<string> { "2" }, restriction.EnumValues);
+            //The label of one value only, without its code, ignoring the case
+            Assert.IsNull(ApplyProduct(report, "tofu"));
+            CollectionAssert.AreEqual(new List<string> { "14" }, restriction.EnumValues);
+            //A code that does not exist: refused, the value having the label is proposed
+            StringAssert.Contains(ApplyProduct(report, "Tofu (999)"), "Close values: 'Tofu (14)'");
+        }
+
+        [TestMethod]
+        public void PartialEnumLabelIsRefusedWithCloseValues()
+        {
+            //Tool criteria: a part of a label is no longer chosen silently (another value may be the one asked), the close values are given
+            var report = LoadOnDemandProductReport();
+            var error = ApplyProduct(report, "Longlife");
+            StringAssert.StartsWith(error, "Error: the value 'Longlife' is not in the list");
+            StringAssert.Contains(error, "Close values: 'Longlife Tofu (74)'");
+            //Spelling mistake in a list loaded on demand: the searches with a shorter text find the value
+            error = ApplyProduct(report, "Pavlowa");
+            StringAssert.Contains(error, "Close values: 'Pavlova (16)'");
+        }
+
+        [TestMethod]
+        public void OneValueCriterionRefusesSeveralValues()
+        {
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var xml = ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>PromptOneValue</Prompt><Operator>Equal</Operator>");
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".srex");
+            File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository, false);
+                var error = AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""Germany"",""France""]}}]");
+                StringAssert.StartsWith(error, $"Error: the criterion '{column.Name}' accepts only one value");
+                Assert.IsNull(AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""Germany""]}}]"));
+                CollectionAssert.AreEqual(new List<string> { "Germany" }, report.AllRestrictions.Single().EnumValues);
+            }
+            finally { File.Delete(path); }
         }
 
         [TestMethod]

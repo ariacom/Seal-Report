@@ -1595,7 +1595,7 @@ namespace Seal.AI
 
         /// <summary>
         /// Sets the values of the prompted criteria of a report from a JSON array of {name, operator, values} (or value). The name is the label of the criterion
-        /// (or its column name, or a part of the label designating one criterion only). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
+        /// (or its column name, or a part of the label designating one criterion only). For an enumerated list, a value is an identifier, a display value, the label of one value only (e.g. 'Name' for 'Name (code)') or 'label (code)' whose code identifies one value; a part of a label is refused with the close values. A criterion prompted for one value accepts one value only.
         /// Returns an error or null.
         /// </summary>
         public static string ApplyCriteria(Report report, string criteriaJson)
@@ -1648,6 +1648,11 @@ namespace Seal.AI
                     newOperator = op;
                 }
 
+                //Criterion prompted for one value (or two): more values were silently cut by a model and kept by another
+                var maxValues = restrictions.Any(i => i.Prompt == PromptType.PromptOneValue) ? 1 : restrictions.Any(i => i.Prompt == PromptType.PromptTwoValues) ? 2 : 0;
+                if (maxValues > 0 && values.Distinct().Count() > maxValues)
+                    return $"Error: the criterion '{name}' accepts only {(maxValues == 1 ? "one value" : "two values")} ({values.Distinct().Count()} given): execute the report once per value.";
+
                 foreach (var restriction in restrictions)
                 {
                     if (newOperator != null && newOperator != restriction.Operator)
@@ -1695,16 +1700,120 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Orders the values by closeness to a text: label equal to the text, then label starting with the text as a whole word,
-        /// then label having the text as a whole word, then the others; the order of the values is kept within each group
+        /// Orders the values by closeness to a text, the labels and the text being compared without their code (see LabelWithoutCode),
+        /// ignoring the case, the accents and the punctuation (see CloseTier); within a group, by edit distance then in the order of the values
         /// </summary>
         public static List<MetaEV> OrderByCloseness(List<MetaEV> values, Func<MetaEV, string> label, string text)
         {
-            var wholeWord = new Regex($@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(text)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase);
-            var startingWord = new Regex($@"^{Regex.Escape(text)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase);
-            return values.Select((value, index) => new { value, index, label = label(value) ?? "" })
-                .OrderBy(i => string.Equals(i.label, text, StringComparison.OrdinalIgnoreCase) ? 0 : startingWord.IsMatch(i.label) ? 1 : wholeWord.IsMatch(i.label) ? 2 : 3)
-                .ThenBy(i => i.index).Select(i => i.value).ToList();
+            return rankByCloseness(values, label, text).Select(i => i.Value).ToList();
+        }
+
+        /// <summary>
+        /// Values close to a text (CloseTier below NotClose), the closest first (see OrderByCloseness)
+        /// </summary>
+        public static List<MetaEV> CloseValues(List<MetaEV> values, Func<MetaEV, string> label, string text)
+        {
+            return rankByCloseness(values, label, text).Where(i => i.Tier < NotClose).Select(i => i.Value).ToList();
+        }
+
+        static List<(MetaEV Value, int Tier)> rankByCloseness(List<MetaEV> values, Func<MetaEV, string> label, string text)
+        {
+            var normalizedText = NormalizeLabel(LabelWithoutCode(text));
+            return values.Select((value, index) =>
+            {
+                var tier = CloseTier(NormalizeLabel(LabelWithoutCode(label(value))), normalizedText, out int distance);
+                return new { value, index, tier, distance };
+            }).OrderBy(i => i.tier).ThenBy(i => i.distance).ThenBy(i => i.index).Select(i => (i.value, i.tier)).ToList();
+        }
+
+        /// <summary>
+        /// Tier of a label not close to the text (see CloseTier)
+        /// </summary>
+        public const int NotClose = 8;
+
+        /// <summary>
+        /// Closeness of a normalized label to a normalized text (see NormalizeLabel), the lowest the closest: 0 equal, 1 almost equal (a spelling mistake),
+        /// 2 label starting with the text as a whole word, 3 label starting with the text, 4 text as a whole word of the label, 5 label containing the text,
+        /// 6 label containing a word of the text, 7 small edit distance, NotClose otherwise
+        /// </summary>
+        public static int CloseTier(string label, string text, out int distance)
+        {
+            label ??= ""; text ??= "";
+            distance = DamerauLevenshteinDistance(label, text);
+            if (label == text) return 0;
+            if (text.Length == 0) return NotClose;
+            if (text.Length >= 4 && distance <= (text.Length >= 8 ? 2 : 1)) return 1;
+            if (label.StartsWith(text + " ", StringComparison.Ordinal)) return 2;
+            if (label.StartsWith(text, StringComparison.Ordinal)) return 3;
+            if ((" " + label + " ").Contains(" " + text + " ", StringComparison.Ordinal)) return 4;
+            if (label.Contains(text, StringComparison.Ordinal)) return 5;
+            if (text.Split(' ').Any(w => w.Length >= 4 && label.Contains(w, StringComparison.Ordinal))) return 6;
+            if (text.Length >= 4 && distance <= Math.Max(2, text.Length / 4)) return 7;
+            return NotClose;
+        }
+
+        /// <summary>
+        /// Label of a display value without its code: without a code in parentheses at the end ('Name (code)') or a code followed by a dash at the start ('01 - Name')
+        /// </summary>
+        public static string LabelWithoutCode(string display)
+        {
+            var result = (display ?? "").Trim();
+            var withoutEnd = Regex.Replace(result, @"\s*\([^()]*\)$", "").Trim();
+            if (withoutEnd.Length > 0) result = withoutEnd;
+            var match = Regex.Match(result, @"^(\S{1,12})\s+-\s+(.+)$");
+            if (match.Success && match.Groups[1].Value.Any(char.IsDigit)) result = match.Groups[2].Value.Trim();
+            return result;
+        }
+
+        /// <summary>
+        /// Splits a value 'label (code)': returns the code in parentheses at the end (null if none) and the label before it
+        /// </summary>
+        public static string GetCodeInParentheses(string value, out string label)
+        {
+            label = value;
+            var match = Regex.Match(value ?? "", @"^(.*\S)\s*\(([^()]+)\)\s*$");
+            if (!match.Success || string.IsNullOrWhiteSpace(match.Groups[2].Value)) return null;
+            label = match.Groups[1].Value.Trim();
+            return match.Groups[2].Value.Trim();
+        }
+
+        /// <summary>
+        /// Label to compare: lower case, without accents, the characters other than letters and digits replaced by a space
+        /// </summary>
+        public static string NormalizeLabel(string text)
+        {
+            if (string.IsNullOrEmpty(text)) return "";
+            var sb = new StringBuilder();
+            foreach (var c in text.Normalize(NormalizationForm.FormD))
+            {
+                var category = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
+                if (category == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
+                sb.Append(char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ');
+            }
+            return Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
+        }
+
+        /// <summary>
+        /// Number of single-character edits (insertion, deletion, substitution, transposition of two adjacent characters) between two texts
+        /// </summary>
+        public static int DamerauLevenshteinDistance(string a, string b)
+        {
+            a ??= ""; b ??= "";
+            if (a.Length == 0) return b.Length;
+            if (b.Length == 0) return a.Length;
+            var d = new int[a.Length + 1, b.Length + 1];
+            for (int i = 0; i <= a.Length; i++) d[i, 0] = i;
+            for (int j = 0; j <= b.Length; j++) d[0, j] = j;
+            for (int i = 1; i <= a.Length; i++)
+            {
+                for (int j = 1; j <= b.Length; j++)
+                {
+                    int cost = a[i - 1] == b[j - 1] ? 0 : 1;
+                    d[i, j] = Math.Min(Math.Min(d[i - 1, j] + 1, d[i, j - 1] + 1), d[i - 1, j - 1] + cost);
+                    if (i > 1 && j > 1 && a[i - 1] == b[j - 2] && a[i - 2] == b[j - 1]) d[i, j] = Math.Min(d[i, j], d[i - 2, j - 2] + 1);
+                }
+            }
+            return d[a.Length, b.Length];
         }
 
         /// <summary>
@@ -1740,7 +1849,9 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
+        /// Identifier of a value of the enumerated list of a criterion: identifier, display value, label of one value only (ignoring the case, the accents and
+        /// the code of the display value, e.g. 'Name' for 'Name (code)'), or value 'label (code)' whose code identifies one value.
+        /// A part of a label only (e.g. 'Name' for 'Other-Name (code)') is refused with the close values.
         /// </summary>
         static string resolveEnumValue(ReportRestriction restriction, string name, string value, out string id)
         {
@@ -1749,86 +1860,102 @@ namespace Seal.AI
             if (!string.IsNullOrEmpty(value) && !value.IsNormalized(NormalizationForm.FormC)) value = value.Normalize(NormalizationForm.FormC);
             var enumRE = restriction.EnumRE;
             var candidates = new List<MetaEV>(restriction.MetaEnumValuesRE ?? new List<MetaEV>());
+            void addCandidates(IEnumerable<MetaEV> values) { foreach (var v in values) if (!candidates.Exists(j => j.Id == v.Id)) candidates.Add(v); }
+            string accept(MetaEV ev, out string resultId)
+            {
+                //List loaded on demand: the value is added to the list, so its display value is known
+                if (enumRE.IsLoadOnDemand) enumRE.AddValues(new List<MetaEV> { ev });
+                resultId = ev.Id;
+                return null;
+            }
+            List<MetaEV> distinct(IEnumerable<MetaEV> values) => values.GroupBy(i => i.Id).Select(i => i.First()).ToList();
+            bool isDisplay(MetaEV ev) => string.Equals(ev.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(ev.DisplayValue, value, StringComparison.OrdinalIgnoreCase);
+
             //List filtered by the database: search the value typed
             if (enumRE.HasDynamicDisplay)
             {
-                try { candidates.AddRange(enumRE.GetSubSetValues(value, null).Where(i => !candidates.Exists(j => j.Id == i.Id))); }
+                try { addCandidates(enumRE.GetSubSetValues(value, null)); }
                 catch (Exception ex) { return $"Error: the values of '{name}' cannot be searched: {ex.Message}"; }
             }
 
-            var found = candidates.FirstOrDefault(i => i.Id == value)
-                ?? candidates.FirstOrDefault(i => string.Equals(i.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(i.DisplayValue, value, StringComparison.OrdinalIgnoreCase));
-            var inWords = new List<MetaEV>();
-            if (found == null)
+            var found = candidates.FirstOrDefault(i => i.Id == value) ?? candidates.FirstOrDefault(isDisplay);
+            if (found != null) return accept(found, out id);
+
+            //Value 'label (code)' not found as a whole: the code identifies the value (identifier, or '(code)' in its display value),
+            //e.g. 'Name (code)' with a misspelled name or a display value whose name differs
+            var code = GetCodeInParentheses(value, out string label);
+            if (code != null)
             {
-                var containing = candidates.Where(i => (i.DisplayRestriction ?? "").Contains(value, StringComparison.OrdinalIgnoreCase)).ToList();
-                var partial = PreferWholeWord(containing, i => i.DisplayRestriction, value);
-                //The value inside a word only (e.g. 'Metz-Ville' in 'Limetz-Villez'): never chosen silently, given as close values
-                if (!IsWholeWord(partial, i => i.DisplayRestriction, value)) { inWords = partial; partial = new List<MetaEV>(); }
-                //e.g. 'Versonnex' for 'Versonnex (01435)'
-                var starting = partial.Where(i => (i.DisplayRestriction ?? "").StartsWith(value + " ", StringComparison.OrdinalIgnoreCase)).ToList();
-                if (starting.Count > 0) partial = starting;
-                if (partial.Count == 1) found = partial[0];
-                else if (partial.Count > 1)
-                    return $"Error: the value '{value}' of '{name}' is ambiguous, it matches: {string.Join(", ", partial.Take(20).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}{(partial.Count > 20 ? ", ..." : "")}. Choose the one asked (e.g. by its department or postal code) and pass its id.";
-            }
-            if (found == null)
-            {
-                //List loaded on demand: an identifier not yet loaded is loaded, it must exist (an unknown value would give no row without message)
                 if (enumRE.IsLoadOnDemand)
                 {
-                    try { enumRE.EnsureValues(new List<string>() { value }); } catch { }
-                    if (enumRE.Values.Exists(i => i.Id == value)) { id = value; return null; }
+                    try { enumRE.EnsureValues(new List<string>() { code }); } catch { }
+                    addCandidates(enumRE.Values.Where(i => i.Id == code));
                 }
-                //Values close to the one typed: search with its first words (e.g. 'CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)'),
-                //then with its beginning (e.g. 'Thionvil' for the misspelled 'Thionvile')
-                var close = inWords.Take(10).ToList();
-                var minLength = Math.Max(enumRE.FilterChars, 3);
-                if (close.Count == 0 && enumRE.HasDynamicDisplay)
+                if (enumRE.HasDynamicDisplay)
                 {
-                    var shorter = value.Split('(')[0].Trim();
-                    var words = shorter.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
-                    var texts = new List<string>();
-                    for (int i = words.Count; i > 0; i--) texts.Add(string.Join(" ", words.Take(i)));
-                    for (int i = 1; i <= 4 && shorter.Length - i >= minLength; i++) texts.Add(shorter.Substring(0, shorter.Length - i));
-                    foreach (var text in texts.Distinct())
-                    {
-                        if (text.Length < minLength) continue;
-                        List<MetaEV> results;
-                        try { results = enumRE.GetSubSetValues(text, null); } catch { break; }
-                        //The value is a display value of the list that the search does not find as a whole, e.g. 'Name (code)' when the SQL
-                        //searches the name or the code: the display value found with the shorter text is the value asked
-                        var exact = results.Where(i => string.Equals(i.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(i.DisplayValue, value, StringComparison.OrdinalIgnoreCase))
-                            .GroupBy(i => i.Id).Select(i => i.First()).ToList();
-                        if (exact.Count == 1)
-                        {
-                            //List loaded on demand: the value is added to the list, so its display value is known
-                            if (enumRE.IsLoadOnDemand) enumRE.AddValues(exact);
-                            id = exact[0].Id;
-                            return null;
-                        }
-                        //The values the closest to the text first (e.g. 'Rennes (35238)' before 'Brennes (52070)'): the search returns them in the order of the SQL
-                        close = OrderByCloseness(results, i => i.DisplayRestriction, text).Take(10).ToList();
-                        if (close.Count > 0) break;
-                    }
+                    try { addCandidates(enumRE.GetSubSetValues(code, null)); } catch { }
                 }
-                else if (close.Count == 0)
-                {
-                    close = PreferWholeWord(candidates.Where(i => value.Split(' ', '(', ')').Any(w => w.Length >= 4 && (i.DisplayRestriction ?? "").Contains(w, StringComparison.OrdinalIgnoreCase))).ToList(), i => i.DisplayRestriction, value).Take(10).ToList();
-                    //Spelling mistakes: values at a small edit distance
-                    if (close.Count == 0 && value.Length >= 4)
-                        close = candidates.Select(i => new { Value = i, Distance = LevenshteinDistance(value.ToLowerInvariant(), (i.DisplayRestriction ?? "").ToLowerInvariant()) })
-                            .Where(i => i.Distance <= Math.Max(2, value.Length / 4)).OrderBy(i => i.Distance).Select(i => i.Value).Take(10).ToList();
-                }
-                //No close value in a list loaded as a whole: show some values, so the format expected is seen (e.g. names and not codes)
-                var sample = close.Count == 0 && !enumRE.HasDynamicDisplay && candidates.Count > 0
-                    ? $" The list has {candidates.Count} values, e.g. {string.Join(", ", candidates.Take(10).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}."
-                    : "";
-                return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list." +
-                    (close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "") + sample;
+                var byCode = distinct(candidates.Where(i => i.Id == code || (i.DisplayRestriction ?? "").Contains($"({code})", StringComparison.OrdinalIgnoreCase) || (i.DisplayValue ?? "").Contains($"({code})", StringComparison.OrdinalIgnoreCase)));
+                if (byCode.Count == 1) return accept(byCode[0], out id);
             }
-            id = found.Id;
-            return null;
+
+            //Label of the value, ignoring the case, the accents and the code of the display value: e.g. 'Name' for 'Name (code)'.
+            //Not when the value has a code that does not match: 'Name (99)' is not 'Name (1)'.
+            var normalizedValue = NormalizeLabel(value);
+            List<MetaEV> sameLabel() => code != null ? new List<MetaEV>() : distinct(candidates.Where(i => NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)) == normalizedValue || NormalizeLabel(i.DisplayRestriction) == normalizedValue));
+            var equals = sameLabel();
+            if (equals.Count == 1) return accept(equals[0], out id);
+            if (equals.Count > 1)
+                return $"Error: the value '{value}' of '{name}' is ambiguous, it matches: {string.Join(", ", equals.Take(20).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}{(equals.Count > 20 ? ", ..." : "")}. Choose the one asked (e.g. by its department or postal code) and pass its id.";
+
+            //List loaded on demand: an identifier not yet loaded is loaded, it must exist (an unknown value would give no row without message)
+            if (enumRE.IsLoadOnDemand)
+            {
+                try { enumRE.EnsureValues(new List<string>() { value }); } catch { }
+                var loaded = enumRE.Values.FirstOrDefault(i => i.Id == value);
+                if (loaded != null) return accept(loaded, out id);
+            }
+
+            //Values close to the one typed. List filtered by the database: searches with shorter texts to get candidates, e.g. with the first words
+            //('CA Versailles Grand Parc' for 'CA Versailles Grand Parc (C.A.V.G.P.)'), with the beginning ('Thionvil' for the misspelled 'Thionvile',
+            //'Val' for 'Valance'), without the first character, until a value equal or almost equal to the label typed is found
+            if (enumRE.HasDynamicDisplay)
+            {
+                var minLength = Math.Max(enumRE.FilterChars, 3);
+                var shorter = (code != null ? label : value).Trim();
+                var normalizedShorter = NormalizeLabel(LabelWithoutCode(shorter));
+                var words = shorter.Split(' ', StringSplitOptions.RemoveEmptyEntries).ToList();
+                var texts = new List<string>();
+                for (int i = words.Count; i > 0; i--) texts.Add(string.Join(" ", words.Take(i)));
+                foreach (var length in new[] { shorter.Length - 1, shorter.Length - 2, shorter.Length - 3, shorter.Length - 4, Math.Min(4, shorter.Length - 1), minLength })
+                {
+                    if (length >= minLength && length < shorter.Length) texts.Add(shorter.Substring(0, length));
+                }
+                if (shorter.Length - 1 >= minLength) texts.Add(shorter.Substring(1));
+                foreach (var text in texts.Distinct())
+                {
+                    if (text.Length < minLength) continue;
+                    if (candidates.Any(i => CloseTier(NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)), normalizedShorter, out _) <= 1)) break;
+                    List<MetaEV> results;
+                    try { results = enumRE.GetSubSetValues(text, null); } catch { break; }
+                    //The value is a display value of the list that the search does not find as a whole, e.g. 'Name (code)' when the SQL
+                    //searches the name or the code: the display value found with the shorter text is the value asked
+                    var exact = distinct(results.Where(isDisplay));
+                    if (exact.Count == 1) return accept(exact[0], out id);
+                    addCandidates(results);
+                    //Label differing by the accents or the punctuation only, e.g. 'Saint Etienne' for 'Saint-Étienne (code)'
+                    equals = sameLabel();
+                    if (equals.Count == 1) return accept(equals[0], out id);
+                }
+            }
+            //The closest first (e.g. 'Rennes (35238)' before 'Brennes (52070)' for 'Renne'): the search returns the values in the order of the SQL
+            var close = CloseValues(candidates, i => i.DisplayRestriction, value).Take(10).ToList();
+            //No close value in a list loaded as a whole: show some values, so the format expected is seen (e.g. names and not codes)
+            var sample = close.Count == 0 && !enumRE.HasDynamicDisplay && candidates.Count > 0
+                ? $" The list has {candidates.Count} values, e.g. {string.Join(", ", candidates.Take(10).Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}."
+                : "";
+            return $"Error: the value '{value}' is not in the list of '{name}'. Pass an identifier or a display value of the list." +
+                (close.Count > 0 ? $" Close values: {string.Join(", ", close.Select(i => $"'{i.DisplayRestriction}' (id {i.Id})"))}." : "") + sample;
         }
 
         #endregion

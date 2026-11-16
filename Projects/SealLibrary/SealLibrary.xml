@@ -2659,7 +2659,7 @@
         <member name="M:Seal.AI.AIReportWriter.ApplyCriteria(Seal.Model.Report,System.String)">
             <summary>
             Sets the values of the prompted criteria of a report from a JSON array of {name, operator, values} (or value). The name is the label of the criterion
-            (or its column name, or a part of the label designating one criterion only). For an enumerated list, a value is an identifier or a display value, a partial display value is accepted when it matches one value only.
+            (or its column name, or a part of the label designating one criterion only). For an enumerated list, a value is an identifier, a display value, the label of one value only (e.g. 'Name' for 'Name (code)') or 'label (code)' whose code identifies one value; a part of a label is refused with the close values. A criterion prompted for one value accepts one value only.
             Returns an error or null.
             </summary>
         </member>
@@ -2670,8 +2670,45 @@
         </member>
         <member name="M:Seal.AI.AIReportWriter.OrderByCloseness(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
             <summary>
-            Orders the values by closeness to a text: label equal to the text, then label starting with the text as a whole word,
-            then label having the text as a whole word, then the others; the order of the values is kept within each group
+            Orders the values by closeness to a text, the labels and the text being compared without their code (see LabelWithoutCode),
+            ignoring the case, the accents and the punctuation (see CloseTier); within a group, by edit distance then in the order of the values
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.CloseValues(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
+            <summary>
+            Values close to a text (CloseTier below NotClose), the closest first (see OrderByCloseness)
+            </summary>
+        </member>
+        <member name="F:Seal.AI.AIReportWriter.NotClose">
+            <summary>
+            Tier of a label not close to the text (see CloseTier)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.CloseTier(System.String,System.String,System.Int32@)">
+            <summary>
+            Closeness of a normalized label to a normalized text (see NormalizeLabel), the lowest the closest: 0 equal, 1 almost equal (a spelling mistake),
+            2 label starting with the text as a whole word, 3 label starting with the text, 4 text as a whole word of the label, 5 label containing the text,
+            6 label containing a word of the text, 7 small edit distance, NotClose otherwise
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.LabelWithoutCode(System.String)">
+            <summary>
+            Label of a display value without its code: without a code in parentheses at the end ('Name (code)') or a code followed by a dash at the start ('01 - Name')
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.GetCodeInParentheses(System.String,System.String@)">
+            <summary>
+            Splits a value 'label (code)': returns the code in parentheses at the end (null if none) and the label before it
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.NormalizeLabel(System.String)">
+            <summary>
+            Label to compare: lower case, without accents, the characters other than letters and digits replaced by a space
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.DamerauLevenshteinDistance(System.String,System.String)">
+            <summary>
+            Number of single-character edits (insertion, deletion, substitution, transposition of two adjacent characters) between two texts
             </summary>
         </member>
         <member name="M:Seal.AI.AIReportWriter.IsWholeWord(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
@@ -2686,7 +2723,9 @@
         </member>
         <member name="M:Seal.AI.AIReportWriter.resolveEnumValue(Seal.Model.ReportRestriction,System.String,System.String,System.String@)">
             <summary>
-            Identifier of a value of the enumerated list of a criterion: identifier, display value, or partial display value matching one value only
+            Identifier of a value of the enumerated list of a criterion: identifier, display value, label of one value only (ignoring the case, the accents and
+            the code of the display value, e.g. 'Name' for 'Name (code)'), or value 'label (code)' whose code identifies one value.
+            A part of a label only (e.g. 'Name' for 'Other-Name (code)') is refused with the close values.
             </summary>
         </member>
         <member name="M:Seal.AI.AIReportWriter.ConfigureWebSchedule(Seal.AI.AIToolConfiguration,Seal.Model.Report,System.String)">
