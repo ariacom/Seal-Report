@@ -144,8 +144,13 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
                                 <div>Seal Report Web Server has two options to manage the ASP session:</div>
                                 <ul>
                                     <li>In memory - stored individually in memory not shared between nodes (default)</li>
-                                    <li>In SQL Server - stored in database, in one table, shared between the nodes.</li>
+                                    <li>In SQL Server - the ASP.NET Core session is stored in database, in one table.</li>
                                 </ul>
+                                <div>
+                                    <b>Several nodes (load balancing):</b> the load balancer must use <b>session affinity</b> (sticky sessions, e.g. ARR affinity, nginx <code>ip_hash</code> or a cookie-based affinity): all the requests of a user must reach the same node.
+                                    The SQL Server option shares only the ASP.NET Core session (the identifier of the Seal session). The Seal session itself (logged user, repository, navigation, report executions and their results) is kept in the memory of the node that created it and is never shared:
+                                    without session affinity, a request routed to another node finds no logged user. If a node stops, its users have to log in again.
+                                </div>
                                 <div>To store the session in SQL Server, change the configuration in appsettings.json file:</div>
                                 <pre><code class="language-csharp">
                                     "SealConfiguration": {
