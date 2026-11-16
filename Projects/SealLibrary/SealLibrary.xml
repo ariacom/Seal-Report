@@ -2708,7 +2708,8 @@
         </member>
         <member name="M:Seal.AI.AIReportWriter.NormalizeLabel(System.String)">
             <summary>
-            Label to compare: lower case, without accents, the characters other than letters and digits replaced by a space
+            Label to compare: lower case, without accents, the ligatures written with two letters ('œ' as 'oe', 'æ' as 'ae', 'ß' as 'ss'),
+            the characters other than letters and digits replaced by a space
             </summary>
         </member>
         <member name="M:Seal.AI.AIReportWriter.DamerauLevenshteinDistance(System.String,System.String)">

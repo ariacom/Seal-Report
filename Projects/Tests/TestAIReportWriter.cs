@@ -458,6 +458,52 @@ namespace Test
         }
 
         [TestMethod]
+        public void AlmostEqualValueDoesNotStopTheSearchByWords()
+        {
+            //'Saint Martin': the search of the first word returns 'Saint-Marcan', almost equal (2 edits); the search stopped there and the
+            //value asked, found only by another word, was never searched. Here the search returns one row, sorted descending:
+            //'Chef Anton' and 'Anton' return the decoy 'Chef Anton's Jumbo Mix' (1 edit), 'Gumbo' returns the value asked
+            var report = LoadOnDemandProductReport();
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = "SELECT TOP 1 ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM (SELECT ProductID, ProductName FROM Products UNION ALL SELECT 2000, 'Chef Anton''s Jumbo Mix') p WHERE ProductName LIKE '%{EnumFilter}%' ORDER BY ProductName DESC";
+            var result = ApplyProduct(report, "Chef Anton s Gumbo Mix");
+            Assert.IsNull(result, result);
+            CollectionAssert.AreEqual(new List<string> { "5" }, report.AllRestrictions.First(i => i.DisplayNameEl == "Product Name Search (on demand)").EnumValues);
+        }
+
+        [TestMethod]
+        public void AmbiguousListIsCompletedBySearchingTheLabel()
+        {
+            //'Saint Gilles': two homonyms already in the shared list, the third one not loaded yet: the error lists the 3 values
+            var report = LoadOnDemandProductReport();
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = "SELECT TOP 3 ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM (SELECT ProductID, ProductName FROM Products UNION ALL SELECT ProductID + 1000, ProductName FROM Products UNION ALL SELECT ProductID + 2000, ProductName FROM Products) p WHERE ProductName LIKE '%{EnumFilter}%' ORDER BY ProductID";
+            enumRE.AddValues(new List<MetaEV> { new MetaEV() { Id = "5", Val = "Chef Anton's Gumbo Mix (5)" }, new MetaEV() { Id = "1005", Val = "Chef Anton's Gumbo Mix (1005)" } });
+            var error = ApplyProduct(report, "Chef Anton s Gumbo Mix");
+            StringAssert.Contains(error, "is ambiguous");
+            StringAssert.Contains(error, "(id 2005)");
+        }
+
+        [TestMethod]
+        public void LigaturesAreComparedAsTwoLetters()
+        {
+            Assert.AreEqual("marcq en baroeul", AIReportWriter.NormalizeLabel("Marcq-en-Barœul"));
+            Assert.AreEqual("aegir strasse", AIReportWriter.NormalizeLabel("Ægir Straße"));
+            var column = _northwind.MetaData.Tables.SelectMany(i => i.Columns).First(i => i.Enum?.Name == "Ship Country");
+            var xml = ReportXml(column.GUID).Replace("Orders.ShipName", column.Name).Replace("<Operator>Contains</Operator><Value1>Ernst</Value1>", "<Prompt>Prompt</Prompt><Operator>Equal</Operator>");
+            var path = Path.Combine(Path.GetTempPath(), Guid.NewGuid().ToString() + ".srex");
+            File.WriteAllText(path, xml);
+            try
+            {
+                var report = Report.LoadFromFile(path, _repository, false);
+                report.AllRestrictions.Single().EnumRE.Values.Add(new MetaEV() { Id = "Marcq-en-Barœul (59378)" });
+                Assert.IsNull(AIReportWriter.ApplyCriteria(report, $@"[{{""name"":""{column.Name}"",""values"":[""Marcq en Baroeul""]}}]"));
+                CollectionAssert.AreEqual(new List<string> { "Marcq-en-Barœul (59378)" }, report.AllRestrictions.Single().EnumValues);
+            }
+            finally { File.Delete(path); }
+        }
+
+        [TestMethod]
         public void FailedSearchIsNotAnAbsentValue()
         {
             //A search with a shorter text fails: the value is not said absent from the list, the failure is told

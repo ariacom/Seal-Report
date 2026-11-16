@@ -1789,7 +1789,8 @@ namespace Seal.AI
         }
 
         /// <summary>
-        /// Label to compare: lower case, without accents, the characters other than letters and digits replaced by a space
+        /// Label to compare: lower case, without accents, the ligatures written with two letters ('œ' as 'oe', 'æ' as 'ae', 'ß' as 'ss'),
+        /// the characters other than letters and digits replaced by a space
         /// </summary>
         public static string NormalizeLabel(string text)
         {
@@ -1799,7 +1800,11 @@ namespace Seal.AI
             {
                 var category = System.Globalization.CharUnicodeInfo.GetUnicodeCategory(c);
                 if (category == System.Globalization.UnicodeCategory.NonSpacingMark) continue;
-                sb.Append(char.IsLetterOrDigit(c) ? char.ToLowerInvariant(c) : ' ');
+                var lower = char.ToLowerInvariant(c);
+                if (lower == 'œ') sb.Append("oe");
+                else if (lower == 'æ') sb.Append("ae");
+                else if (lower == 'ß') sb.Append("ss");
+                else sb.Append(char.IsLetterOrDigit(c) ? lower : ' ');
             }
             return Regex.Replace(sb.ToString(), @"\s+", " ").Trim();
         }
@@ -1928,11 +1933,12 @@ namespace Seal.AI
             var normalizedValue = NormalizeLabel(value);
             List<MetaEV> sameLabel() => code != null ? new List<MetaEV>() : distinct(candidates.Where(i => NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)) == normalizedValue || NormalizeLabel(i.DisplayRestriction) == normalizedValue));
             //Values having the label typed. List filtered by the database: the values known (shared list, rows limited by each search) may not hold
-            //all the values having this label, so a single value is confirmed by a search with its own label (e.g. 'Name-With-Dashes' for 'Name With Dashes')
+            //all the values having this label, so they are completed by a search with their own label (e.g. 'Name-With-Dashes' for 'Name With Dashes'):
+            //a single value is confirmed, the list of an ambiguous label is complete
             string acceptLabel(List<MetaEV> equalValues, out string resultId)
             {
                 resultId = null;
-                if (equalValues.Count == 1 && enumRE.HasDynamicDisplay)
+                if (equalValues.Count > 0 && enumRE.HasDynamicDisplay)
                 {
                     var ownLabel = LabelWithoutCode(equalValues[0].DisplayRestriction);
                     if (!string.IsNullOrEmpty(ownLabel) && !searched.Contains(ownLabel))
@@ -1979,6 +1985,9 @@ namespace Seal.AI
                 for (int i = words.Count; i > 0; i--) texts.Add(string.Join(" ", words.Take(i)));
                 var singleWords = Regex.Split(shorter, @"[^\p{L}\p{N}]+").Where(i => i.Length > 0).ToList();
                 if (singleWords.Count > 1) texts.AddRange(singleWords.OrderByDescending(i => i.Length));
+                //Texts made of whole words: always searched. A value almost equal to the label typed (e.g. 'Saint-Marcan' for 'Saint Martin', found
+                //by the search of 'Saint') stops only the searches with a truncated text, the value asked may be found by another word
+                var wholeWordTexts = new HashSet<string>(texts, StringComparer.OrdinalIgnoreCase);
                 foreach (var length in new[] { shorter.Length - 1, shorter.Length - 2, shorter.Length - 3, shorter.Length - 4, Math.Min(4, shorter.Length - 1), minLength })
                 {
                     if (length >= minLength && length < shorter.Length) texts.Add(shorter.Substring(0, length));
@@ -1987,7 +1996,7 @@ namespace Seal.AI
                 foreach (var text in texts.Distinct(StringComparer.OrdinalIgnoreCase))
                 {
                     if (text.Length < minLength || searched.Contains(text)) continue;
-                    if (candidates.Any(i => CloseTier(NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)), normalizedShorter, out _) <= 1)) break;
+                    if (!wholeWordTexts.Contains(text) && candidates.Any(i => CloseTier(NormalizeLabel(LabelWithoutCode(i.DisplayRestriction)), normalizedShorter, out _) <= 1)) break;
                     var results = search(text);
                     if (results == null) break;
                     //The value is a display value of the list that the search does not find as a whole, e.g. 'Name (code)' when the SQL
