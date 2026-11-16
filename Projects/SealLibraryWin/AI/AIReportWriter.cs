@@ -1732,6 +1732,9 @@ namespace Seal.AI
         static string resolveEnumValue(ReportRestriction restriction, string name, string value, out string id)
         {
             id = null;
+            //A value typed with decomposed accents ('e' + combining circumflex) differs from the composed value of the list, while it is
+            //displayed the same: 'Saint-Sulpice-la-Forêt (35315)' was refused and proposed as close value
+            if (!string.IsNullOrEmpty(value) && !value.IsNormalized(NormalizationForm.FormC)) value = value.Normalize(NormalizationForm.FormC);
             var enumRE = restriction.EnumRE;
             var candidates = new List<MetaEV>(restriction.MetaEnumValuesRE ?? new List<MetaEV>());
             //List filtered by the database: search the value typed

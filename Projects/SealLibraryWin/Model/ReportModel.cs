@@ -1661,7 +1661,10 @@ model.ResultTable = query2.CopyToDataTable2();
                         cols,
                         row_count = dt.Rows.Count,
                         rows_shown = maxRows,
-                        note = $"Result truncated: showing the first {maxRows} of {dt.Rows.Count} rows. The aggregates cover all rows. Add restrictions to the report to reduce the result set.",
+                        //A partial result (maximum rows reached): the aggregates cover the rows loaded, not the complete result
+                        note = MaxRowsReached
+                            ? $"Result truncated: showing the first {maxRows} of the {dt.Rows.Count} rows loaded. The aggregates cover these {dt.Rows.Count} rows only, not the complete result (maximum number of rows reached). Add restrictions to the report to reduce the result set."
+                            : $"Result truncated: showing the first {maxRows} of {dt.Rows.Count} rows. The aggregates cover all rows. Add restrictions to the report to reduce the result set.",
                         rows = rowsEnumerable.Take(maxRows).ToArray()
                     }, Formatting.None);
                 }

@@ -1806,7 +1806,17 @@ namespace Seal.Model
             else _MongoText += string.Format("{0},", GetMongoValue(value, finalDate, Operator));
         }
 
+        //The texts are built step by step in the fields below (text = label + operator, then text += values): the models of a report
+        //run in parallel and can read the same restriction, so the build and the read of the texts are done under this lock
+        //(without it two threads added the values twice: 'Département Egale Bas-Rhin (67) Bas-Rhin (67)', and the SQL could be corrupted)
+        readonly object _textsLock = new object();
+
         void BuildTexts()
+        {
+            lock (_textsLock) buildTexts();
+        }
+
+        void buildTexts()
         {
             string displayLabel = DisplayNameElTranslated;
 
@@ -2122,8 +2132,11 @@ namespace Seal.Model
         {
             get
             {
-                BuildTexts();
-                return _displayRestriction;
+                lock (_textsLock)
+                {
+                    BuildTexts();
+                    return _displayRestriction;
+                }
             }
         }
 
@@ -2135,7 +2148,6 @@ namespace Seal.Model
         {
             get
             {
-                BuildTexts();
                 return DisplayRestriction.Replace("[", "{").Replace("]", "}"); //Avoid this perturbing chars for editor....
             }
         }
@@ -2155,8 +2167,11 @@ namespace Seal.Model
         {
             get
             {
-                BuildTexts();
-                return _displayText;
+                lock (_textsLock)
+                {
+                    BuildTexts();
+                    return _displayText;
+                }
             }
         }
 
@@ -2169,8 +2184,11 @@ namespace Seal.Model
         {
             get
             {
-                BuildTexts();
-                return _SQLText;
+                lock (_textsLock)
+                {
+                    BuildTexts();
+                    return _SQLText;
+                }
             }
         }
 
@@ -2183,8 +2201,11 @@ namespace Seal.Model
         {
             get
             {
-                BuildTexts();
-                return _LINQText;
+                lock (_textsLock)
+                {
+                    BuildTexts();
+                    return _LINQText;
+                }
             }
         }
 
@@ -2197,8 +2218,11 @@ namespace Seal.Model
         {
             get
             {
-                BuildTexts();
-                return _MongoText;
+                lock (_textsLock)
+                {
+                    BuildTexts();
+                    return _MongoText;
+                }
             }
         }
 

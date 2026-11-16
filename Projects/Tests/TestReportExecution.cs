@@ -158,6 +158,30 @@ namespace Test
         }
 
         [TestMethod]
+        public void RestrictionTextsThreadSafe()
+        {
+            //The models of a report run in parallel (Report.MaxParallelModels): the texts of a restriction were built step by step in
+            //shared fields (text = label + operator, then text += values), so two threads could add the values twice
+            //(seen in PROD: 'Département (avis TED) Egale Bas-Rhin (67) Bas-Rhin (67)'), and the SQL could be corrupted the same way
+            var repository = Repository.Create();
+            var report = Report.LoadFromFile(Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex"), repository);
+            var restriction = report.Models.SelectMany(i => i.Restrictions).First(i => i.IsText);
+            restriction.Operator = Operator.Equal;
+            restriction.Value1 = "Beverages";
+            restriction.Value2 = "Condiments";
+            var expectedText = restriction.DisplayText;
+            var expectedSQL = restriction.SQLText;
+            var texts = new System.Collections.Concurrent.ConcurrentBag<string>();
+            System.Threading.Tasks.Parallel.For(0, 20000, new System.Threading.Tasks.ParallelOptions() { MaxDegreeOfParallelism = 8 }, i =>
+            {
+                texts.Add(restriction.DisplayText + "|" + restriction.SQLText);
+            });
+            var distinct = texts.Distinct().ToList();
+            Assert.HasCount(1, distinct, string.Join("\r\n", distinct.Take(5)));
+            Assert.AreEqual(expectedText + "|" + expectedSQL, distinct[0]);
+        }
+
+        [TestMethod]
         public void AgentJsonRoleFromMetadata()
         {
             //The role of a number sent to the AI comes from the metadata of its element (aggregate, format, total), never from the words of its name (except latitude/longitude)
