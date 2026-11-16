@@ -1695,6 +1695,19 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Orders the values by closeness to a text: label equal to the text, then label starting with the text as a whole word,
+        /// then label having the text as a whole word, then the others; the order of the values is kept within each group
+        /// </summary>
+        public static List<MetaEV> OrderByCloseness(List<MetaEV> values, Func<MetaEV, string> label, string text)
+        {
+            var wholeWord = new Regex($@"(?<![\p{{L}}\p{{N}}]){Regex.Escape(text)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase);
+            var startingWord = new Regex($@"^{Regex.Escape(text)}(?![\p{{L}}\p{{N}}])", RegexOptions.IgnoreCase);
+            return values.Select((value, index) => new { value, index, label = label(value) ?? "" })
+                .OrderBy(i => string.Equals(i.label, text, StringComparison.OrdinalIgnoreCase) ? 0 : startingWord.IsMatch(i.label) ? 1 : wholeWord.IsMatch(i.label) ? 2 : 3)
+                .ThenBy(i => i.index).Select(i => i.value).ToList();
+        }
+
+        /// <summary>
         /// True if the values are empty or have the value as a whole word (see PreferWholeWord)
         /// </summary>
         public static bool IsWholeWord(List<MetaEV> values, Func<MetaEV, string> label, string value)
@@ -1732,8 +1745,7 @@ namespace Seal.AI
         static string resolveEnumValue(ReportRestriction restriction, string name, string value, out string id)
         {
             id = null;
-            //A value typed with decomposed accents ('e' + combining circumflex) differs from the composed value of the list, while it is
-            //displayed the same: 'Saint-Sulpice-la-Forêt (35315)' was refused and proposed as close value
+            //A value typed with decomposed accents ('e' + combining circumflex) differs from the composed value of the list, while it is displayed the same
             if (!string.IsNullOrEmpty(value) && !value.IsNormalized(NormalizationForm.FormC)) value = value.Normalize(NormalizationForm.FormC);
             var enumRE = restriction.EnumRE;
             var candidates = new List<MetaEV>(restriction.MetaEnumValuesRE ?? new List<MetaEV>());
@@ -1782,7 +1794,21 @@ namespace Seal.AI
                     foreach (var text in texts.Distinct())
                     {
                         if (text.Length < minLength) continue;
-                        try { close = enumRE.GetSubSetValues(text, null).Take(10).ToList(); } catch { break; }
+                        List<MetaEV> results;
+                        try { results = enumRE.GetSubSetValues(text, null); } catch { break; }
+                        //The value is a display value of the list that the search does not find as a whole, e.g. 'Name (code)' when the SQL
+                        //searches the name or the code: the display value found with the shorter text is the value asked
+                        var exact = results.Where(i => string.Equals(i.DisplayRestriction, value, StringComparison.OrdinalIgnoreCase) || string.Equals(i.DisplayValue, value, StringComparison.OrdinalIgnoreCase))
+                            .GroupBy(i => i.Id).Select(i => i.First()).ToList();
+                        if (exact.Count == 1)
+                        {
+                            //List loaded on demand: the value is added to the list, so its display value is known
+                            if (enumRE.IsLoadOnDemand) enumRE.AddValues(exact);
+                            id = exact[0].Id;
+                            return null;
+                        }
+                        //The values the closest to the text first (e.g. 'Rennes (35238)' before 'Brennes (52070)'): the search returns them in the order of the SQL
+                        close = OrderByCloseness(results, i => i.DisplayRestriction, text).Take(10).ToList();
                         if (close.Count > 0) break;
                     }
                 }

@@ -2668,6 +2668,12 @@
             Keeps the labels having the value as a whole word when there are some, e.g. 'Ain' for '01 - Ain' and not for 'Ille-et-Vilaine'
             </summary>
         </member>
+        <member name="M:Seal.AI.AIReportWriter.OrderByCloseness(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
+            <summary>
+            Orders the values by closeness to a text: label equal to the text, then label starting with the text as a whole word,
+            then label having the text as a whole word, then the others; the order of the values is kept within each group
+            </summary>
+        </member>
         <member name="M:Seal.AI.AIReportWriter.IsWholeWord(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
             <summary>
             True if the values are empty or have the value as a whole word (see PreferWholeWord)
@@ -8076,6 +8082,26 @@
         <member name="M:Seal.Model.MetaEnum.ShouldSerializeTranslate">
             <summary>
             Serialize Translate only if not the default value
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.RefreshDelay">
+            <summary>
+            If the list is refreshed before the report execution, number of minutes during which the values loaded are kept and shared by the report executions. 0 refreshes the list at each report execution.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.MetaEnum.ShouldSerializeRefreshDelay">
+            <summary>
+            Serialize RefreshDelay only if positive
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.LastRefresh">
+            <summary>
+            Last time the values were loaded from the database without error
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEnum.IsRefreshDue">
+            <summary>
+            True if the list must be refreshed before a report execution: no refresh delay, or the values were loaded more than 'Refresh delay in minutes' ago
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.FilterChars">
@@ -14912,7 +14938,8 @@
         </member>
         <member name="M:Seal.Model.ReportSource.RefreshEnumsOnDbConnection(System.Boolean)">
             <summary>
-            Refresh the enumerated list values. If lazy, a list is only refreshed the first time its values are used: the lists not used by the report are not loaded.
+            Refresh the enumerated list values. If lazy, a list is only refreshed the first time its values are used: the lists not used by the report are not loaded,
+            and a list loaded less than its 'Refresh delay in minutes' ago is kept.
             </summary>
         </member>
         <member name="T:Seal.Model.ReportTask">

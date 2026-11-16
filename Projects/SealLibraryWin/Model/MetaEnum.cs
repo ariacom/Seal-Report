@@ -41,6 +41,7 @@ namespace Seal.Model
                 GetProperty("ValuesPerConnection").SetIsBrowsable(true);
                 GetProperty("UsePosition").SetIsBrowsable(true);
                 GetProperty("Translate").SetIsBrowsable(true);
+                GetProperty("RefreshDelay").SetIsBrowsable(true);
                 GetProperty("Sql").SetIsBrowsable(true);
                 GetProperty("Script").SetIsBrowsable(true);
 
@@ -61,6 +62,7 @@ namespace Seal.Model
                 //Read only
                 GetProperty("SqlDisplay").SetIsReadOnly(!IsDynamic);
                 GetProperty("IsDbRefresh").SetIsReadOnly(!IsDynamic);
+                GetProperty("RefreshDelay").SetIsReadOnly(!IsDynamic || !IsDbRefresh || LoadOnDemand);
                 GetProperty("ValuesPerConnection").SetIsReadOnly(IsDbRefresh);
                 GetProperty("NumberOfValues").SetIsReadOnly(true);
 
@@ -260,6 +262,35 @@ namespace Seal.Model
         /// </summary>
         [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeTranslate() { return Translate; }
+
+        /// <summary>
+        /// If the list is refreshed before the report execution, number of minutes during which the values loaded are kept and shared by the report executions. 0 refreshes the list at each report execution.
+        /// </summary>
+#if WINDOWS
+        [DefaultValue(0)]
+        [Category("Definition"), DisplayName("Refresh delay in minutes"), Description("If the list is refreshed before the report execution, number of minutes during which the values loaded are kept and shared by the report executions. 0 refreshes the list at each report execution. Use it for lists loaded from large tables whose values change rarely, not for lists depending on the user connected."), Id(10, 1)]
+#endif
+        public int RefreshDelay { get; set; } = 0;
+        /// <summary>
+        /// Serialize RefreshDelay only if positive
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeRefreshDelay() { return RefreshDelay > 0; }
+
+        /// <summary>
+        /// Last time the values were loaded from the database without error
+        /// </summary>
+        [XmlIgnore]
+        public DateTime LastRefresh { get; private set; } = DateTime.MinValue;
+
+        /// <summary>
+        /// True if the list must be refreshed before a report execution: no refresh delay, or the values were loaded more than 'Refresh delay in minutes' ago
+        /// </summary>
+        [XmlIgnore]
+        public bool IsRefreshDue
+        {
+            get { return RefreshDelay <= 0 || DateTime.Now - LastRefresh >= TimeSpan.FromMinutes(RefreshDelay); }
+        }
 
         /// <summary>
         /// If the list is dynamic, refreshed before execution and the SQL for prompted restriction contains the '{EnumFilter}' keyword, the number of characters typed by the used in the filter box before the enum is built and displayed
@@ -675,6 +706,7 @@ namespace Seal.Model
 
 
                     Information = string.Format("List refreshed with {0} value(s).", Values.Count);
+                    if (!checkOnly) LastRefresh = DateTime.Now;
                 }
                 catch (Exception ex)
                 {

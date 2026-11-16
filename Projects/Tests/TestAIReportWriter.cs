@@ -299,6 +299,36 @@ namespace Test
         }
 
         [TestMethod]
+        public void DisplayValueNotFoundByTheSearchIsAccepted()
+        {
+            //List loaded on demand whose display value is 'Name (id)' while its SQL searches the name only: the display value typed
+            //as a whole finds nothing, it was accepted only if another execution had already loaded it (refused just after a restart)
+            var report = Report.LoadFromFile(Path.Combine(_repository.ReportsFolder, "Samples", "09-Enumerated List - Dynamic Display.srex"), _repository);
+            var enumRE = report.Sources.SelectMany(i => i.MetaData.Enums).Single(i => i.Name == "Product Name Search On Demand");
+            enumRE.SqlDisplay = "SELECT TOP 100 ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM Products WHERE ProductName LIKE '%{EnumFilter}%' ORDER BY ProductName";
+            enumRE.SqlSelected = "SELECT ProductID, ProductName + ' (' + CAST(ProductID AS varchar(10)) + ')' FROM Products WHERE ProductID IN ({EnumSelected})";
+            Assert.IsTrue(enumRE.IsLoadOnDemand);
+            Assert.IsFalse(enumRE.Values.Exists(i => i.Id == "1"), "the list starts empty");
+
+            Assert.IsNull(AIReportWriter.ApplyCriteria(report, @"[{""name"":""Product Name Search (on demand)"",""values"":[""Chai (1)""]}]"));
+            var restriction = report.AllRestrictions.First(i => i.DisplayNameEl == "Product Name Search (on demand)");
+            CollectionAssert.AreEqual(new List<string> { "1" }, restriction.EnumValues);
+            Assert.AreEqual("Chai (1)", enumRE.GetDisplayValue("1", null, true));
+
+            //A display value that does not exist is still refused, with the close values
+            var error = AIReportWriter.ApplyCriteria(report, @"[{""name"":""Product Name Search (on demand)"",""values"":[""Chai (99)""]}]");
+            StringAssert.Contains(error, "Close values: 'Chai (1)'");
+        }
+
+        [TestMethod]
+        public void CloseValuesStartWithTheText()
+        {
+            var values = new List<MetaEV> { new MetaEV() { Id = "52070", Val = "Brennes (52070)" }, new MetaEV() { Id = "88164", Val = "Estrennes (88164)" },
+                new MetaEV() { Id = "35210", Val = "Saint-Rennes (35210)" }, new MetaEV() { Id = "35238", Val = "Rennes (35238)" } };
+            CollectionAssert.AreEqual(new List<string> { "35238", "35210", "52070", "88164" }, AIReportWriter.OrderByCloseness(values, i => i.Val, "rennes").Select(i => i.Id).ToList());
+        }
+
+        [TestMethod]
         public void ValidReportGetsNewGuidsAndLimit()
         {
             var doc = XDocument.Parse(ReportXml(ColumnGuid("Orders.ShipName")));

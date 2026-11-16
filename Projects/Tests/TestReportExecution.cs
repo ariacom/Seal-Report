@@ -158,6 +158,35 @@ namespace Test
         }
 
         [TestMethod]
+        public void EnumRefreshDelayKeepsTheValues()
+        {
+            //The lists of a Data Source are shared by the executions and were reloaded at each report load: a list loaded from a large
+            //table cost seconds at each execution when the database had not the table in memory
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "Samples", "09-Enumerated List - Dynamic Display.srex");
+            var itemEnum = repository.Sources.First(i => i.Name == "Northwind").MetaData.Enums.Single(i => i.Name == "Product Name");
+            Assert.IsTrue(itemEnum.IsDbRefresh);
+
+            //No delay: refreshed at each report load
+            Report.LoadFromFile(path, repository);
+            Assert.IsTrue(itemEnum.RefreshPending);
+            Assert.IsTrue(itemEnum.Values.Count > 0);
+            Assert.IsFalse(itemEnum.RefreshPending);
+            Assert.IsTrue(itemEnum.LastRefresh > DateTime.Now.AddMinutes(-1));
+            Report.LoadFromFile(path, repository);
+            Assert.IsTrue(itemEnum.RefreshPending);
+
+            //Delay: the values loaded are kept
+            itemEnum.RefreshDelay = 60;
+            Assert.IsTrue(itemEnum.Values.Count > 0);
+            var lastRefresh = itemEnum.LastRefresh;
+            Report.LoadFromFile(path, repository);
+            Assert.IsFalse(itemEnum.RefreshPending);
+            Assert.IsTrue(itemEnum.Values.Count > 0);
+            Assert.AreEqual(lastRefresh, itemEnum.LastRefresh);
+        }
+
+        [TestMethod]
         public void RestrictionTextsThreadSafe()
         {
             //The models of a report run in parallel (Report.MaxParallelModels): the texts of a restriction were built step by step in

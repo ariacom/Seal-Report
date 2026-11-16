@@ -361,7 +361,8 @@
                                 <h4>Performances</h4>
                                 As building the enum list can be time consuming, it is a good practice to schedule a task to update enum values every morning.<br />
                                 Setting <code>List is refreshed upon the database connection</code> to <b>true</b> means the list is always queried when the report is executed. This can be useful if the list depends on the user connected but can be also time consuming.<br />
-                                Such a list is queried only if the report uses its values (restriction, column displayed with the list, script): the other lists of the Data Source are not loaded.
+                                Such a list is queried only if the report uses its values (restriction, column displayed with the list, script): the other lists of the Data Source are not loaded.<br />
+                                For a list loaded from a large table whose values change rarely, set <code>Refresh delay in minutes</code>: the values loaded are kept and shared by the report executions during this delay instead of being queried at each execution. Keep 0 for a list depending on the user connected.
                             </div>
                         </div>
                         <!-- end col -->
