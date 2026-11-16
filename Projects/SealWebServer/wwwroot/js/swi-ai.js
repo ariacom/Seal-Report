@@ -441,9 +441,11 @@
                 applyPanelWidth(_panelWidth);
             else
                 document.documentElement.style.removeProperty('--ai-panel-width');
+            // Each login starts a new conversation (the server agent is reset by the login),
+            // the previous ones stay available in Recents/Favorites.
             if (profile.aipanelopen) {
                 openPanel();
-                loadAgents(restoreLastChat);
+                loadAgents();
             }
             else
                 closePanel();
@@ -874,14 +876,6 @@
                     }
                 });
                 $messages[0].scrollTop = $messages[0].scrollHeight;
-            }
-        });
-    }
-    // Reselects the last conversation (most recently saved chat of the current agent) after a login.
-    function restoreLastChat() {
-        _gateway.GetAIAgentChats(function (data) {
-            if (data.last && data.last.FileName && !_requesting) {
-                loadChat(data.last.FileName, data.last.IsFavorite === true);
             }
         });
     }

@@ -229,6 +229,8 @@ namespace SealWebServer.Controllers
                     CreateRepository();
                     SetWebUser(user, password, token);
                 }
+                //Each login starts a new AI agent conversation (the agent is re-created on its next use)
+                setSessionValue(SessionAgent, null);
 
                 if (!string.IsNullOrEmpty(WebUser.SecurityCode))
                 {
@@ -1695,9 +1697,6 @@ namespace SealWebServer.Controllers
                 SetSessionId(sessionId);
                 checkSWIAuthentication();
 
-                ChatSessionInfo last = null;
-                DateTime lastTime = DateTime.MinValue;
-
                 List<ChatSessionInfo> ReadFolder(string subFolder, bool isFavorite)
                 {
                     var folder = GetAgentSubFolder(subFolder);
@@ -1720,11 +1719,6 @@ namespace SealWebServer.Controllers
                                     IsFavorite = isFavorite,
                                     LastModified = fi.LastWriteTime.ToString("G", Repository.CultureInfo)
                                 };
-                                if (fi.LastWriteTime > lastTime)
-                                {
-                                    lastTime = fi.LastWriteTime;
-                                    last = info;
-                                }
                                 return info;
                             }
                             catch { return null; }
@@ -1738,9 +1732,7 @@ namespace SealWebServer.Controllers
                 return Json(new
                 {
                     recents = recents,
-                    favorites = favorites,
-                    // Most recently saved chat (Recents or Favorites), used to restore the conversation after a login
-                    last = last
+                    favorites = favorites
                 });
             }
             catch (Exception ex)
