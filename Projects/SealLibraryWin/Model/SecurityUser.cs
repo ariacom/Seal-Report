@@ -207,7 +207,7 @@ namespace Seal.Model
 
                 SWIFolder sub = GetFolder(folder.Combine(subFolder));
                 //Add if right on this folder, or a sub folder is defined with this root
-                if ((sub.right > 0) || SecurityGroups.Exists(i => i.Folders.Exists(j => j.Path.StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
+                if ((sub.right > 0) || SecurityGroups.Exists(i => i.Folders.Exists(j => FileHelper.ConvertOSFilePath(j.Path).StartsWith(sub.path + (sub.path == Path.DirectorySeparatorChar.ToString() ? "" : Path.DirectorySeparatorChar.ToString())) && j.FolderRight != FolderRight.None)))
                 {
                     FillFolder(sub);
                     subFolders.Add(sub);

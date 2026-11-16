@@ -91,6 +91,29 @@ namespace Test
         }
 
         [TestMethod]
+        public void SecurityFolderPathsUseTheSeparatorOfTheOS()
+        {
+            //Security.xml is written on Windows with '\': on Linux the folders are '/System', and before the conversion no folder
+            //matched, so every folder took the rights of the root folder (System and Scrapers visible to a subscriber in PROD).
+            //Mirrored here on Windows: paths written with '/' must match the folders '\...'.
+            var group = new SecurityGroup() { Name = "Test", GUID = "test" };
+            group.Folders.Add(new SecurityFolder() { FolderRight = FolderRight.Execute });
+            group.Folders.Add(new SecurityFolder() { Path = "/System", FolderRight = FolderRight.None });
+            group.Folders.Add(new SecurityFolder() { Path = "/Catalogue", FolderRight = FolderRight.Schedule, Icon = "fa-solid fa-book-atlas" });
+            var security = newSecurity(group);
+            var sep = Path.DirectorySeparatorChar;
+
+            var system = security.FindSecurityFolder(security.Groups, sep + "System");
+            Assert.AreEqual(FolderRight.None, system.FolderRight, "folder written with the other separator");
+            Assert.IsTrue(system.IsDefined);
+            Assert.AreEqual(FolderRight.None, security.FindSecurityFolder(security.Groups, sep + "System" + sep + "Tests").FolderRight, "sub-folder inherits the folder, not the root");
+            var catalogue = security.FindSecurityFolder(security.Groups, sep + "Catalogue");
+            Assert.AreEqual(FolderRight.Schedule, catalogue.FolderRight);
+            Assert.AreEqual("fa-solid fa-book-atlas", catalogue.Icon, "icon of the folder kept");
+            Assert.AreEqual(FolderRight.Execute, security.FindSecurityFolder(security.Groups, sep + "Population").FolderRight, "other folders: root");
+        }
+
+        [TestMethod]
         public void DataSourceManagerRequiresSourcesWrite()
         {
             var group = newGroup(DataSourceManagerGUID);

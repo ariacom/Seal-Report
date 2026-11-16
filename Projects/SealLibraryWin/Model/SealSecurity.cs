@@ -805,6 +805,9 @@ namespace Seal.Model
         public SecurityFolder FindSecurityFolder(List<SecurityGroup> groups, string folder)
         {
             SecurityFolder result = null;
+            //The paths of the security are written with '\' (Security.xml edited on Windows): compared with the separator of the OS,
+            //otherwise on Linux no folder matches '/System' and every folder takes the rights of the root folder
+            folder = FileHelper.ConvertOSFilePath(folder);
             //Weight of the group that provided the current tree view icon (to break ties when several groups define the folder)
             int iconWeight = int.MinValue;
             foreach (var group in groups)
@@ -813,10 +816,10 @@ namespace Seal.Model
                 SecurityFolder current = null;
                 while (current == null && !string.IsNullOrEmpty(folderRoot))
                 {
-                    current = group.Folders.FirstOrDefault(i => i.Path == folderRoot);
+                    current = group.Folders.FirstOrDefault(i => FileHelper.ConvertOSFilePath(i.Path) == folderRoot);
                     folderRoot = Path.GetDirectoryName(folderRoot);
                 }
-                if (current != null && current.Path != folder && !current.UseSubFolders)
+                if (current != null && FileHelper.ConvertOSFilePath(current.Path) != folder && !current.UseSubFolders)
                 {
                     //cannot use this parent
                     current = null;
@@ -843,14 +846,15 @@ namespace Seal.Model
                     //The tree view icon is the one set on the folder by the group having the highest weight.
                     //It applies only to the folder where it is explicitly defined; sub-folders inherited via
                     //UseSubFolders keep the default icon.
-                    if (current.Path == folder && !string.IsNullOrEmpty(current.Icon) && group.Weight > iconWeight)
+                    bool isExact = FileHelper.ConvertOSFilePath(current.Path) == folder;
+                    if (isExact && !string.IsNullOrEmpty(current.Icon) && group.Weight > iconWeight)
                     {
                         result.Icon = current.Icon;
                         iconWeight = group.Weight;
                     }
 
                     //set IsDefined flag
-                    if (current.Path == folder) result.IsDefined = true;
+                    if (isExact) result.IsDefined = true;
                 }
             }
             return result;
