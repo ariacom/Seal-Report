@@ -259,7 +259,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWExecuteReportExecutions");
             try
             {
-                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
                 if (!Repository.Configuration.AuditEnabled) throw new ValidationException(Translate("The audit is not enabled"));
 
                 SWIFolder folder = getParentFolder(path);

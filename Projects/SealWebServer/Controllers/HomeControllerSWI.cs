@@ -1032,7 +1032,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWExecuteReportToResult");
             try
             {
-                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
@@ -1089,7 +1089,8 @@ namespace SealWebServer.Controllers
                 //The user must not be authenticated again silently (e.g. as Guest when the guests are allowed): the main page is reloaded.
                 SetSessionId(sessionId);
                 if (fromMenu == true && WebUser == null) throw new SessionLostException(Translate("Your session has expired, please log in again."));
-                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                //Report opened in a new window: the redirection to the main page must be served as HTML (as text, the browser shows the script)
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
 
                 Report report = null;
                 Repository repository = null;
@@ -1161,7 +1162,7 @@ namespace SealWebServer.Controllers
             {
                 //No path (e.g. a file tab reloaded or restored by the browser without the posted form): back to the main page
                 if (string.IsNullOrEmpty(path)) return Redirect(Url.Content("~/"));
-                if (!CheckAuthentication(sessionId)) return Content(_loginContent);
+                if (!CheckAuthentication(sessionId)) return _loginContentResult;
 
                 SWIFolder folder = getParentFolder(path);
                 if (folder.right == 0) throw new Exception("Error: no right on this folder");
@@ -1188,7 +1189,7 @@ namespace SealWebServer.Controllers
             writeDebug("SWIViewHelpFile");
             try
             {
-                if (!CheckAuthentication(null)) return Content(_loginContent);
+                if (!CheckAuthentication(null)) return _loginContentResult;
 
                 var path = Repository.WebHelpFilePath;
                 if (path == null) throw new Exception("Error: no help file in the repository");
