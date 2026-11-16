@@ -271,7 +271,8 @@ namespace Seal.Model
 	//Attachment
 	if (!string.IsNullOrEmpty(def.attachPath))
 	{
-		var attachment = new System.Net.Mail.Attachment(def.attachPath);
+		//Content type from the file extension (some relays such as Scaleway TEM refuse application/octet-stream)
+		var attachment = new System.Net.Mail.Attachment(def.attachPath, MimeKit.MimeTypes.GetMimeType(string.IsNullOrEmpty(def.attachName) ? def.attachPath : def.attachName));
 		attachment.Name = def.attachName;
 		message.Attachments.Add(attachment);
 	}
