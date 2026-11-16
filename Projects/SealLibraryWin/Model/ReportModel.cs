@@ -1437,7 +1437,7 @@ model.ResultTable = query2.CopyToDataTable2();
         /// Json string for the result table with an additional Json containing aggregation.
         /// The numbers are rounded to the decimals of the format of their element. The aggregates depend on the role of the column, given by the metadata of its element:
         /// no sum for a dimension (a year, a code), an average, a minimum, a maximum, a percentage or an element whose total is not a sum, nor for a latitude or a longitude;
-        /// the sum of an element whose total covers all the rows of the result (not one total per row of a cross table) is flagged 'total_shown'.
+        /// the sum of an element whose total covers all the rows of a complete result (not one total per row of a cross table, not a partial result) is flagged 'total_shown'.
         /// When <paramref name="maxRows"/> is positive, only the first <paramref name="maxRows"/> rows are
         /// serialized (the aggregation Json still covers all rows) — use it to bound the payload when the
         /// result is sent to an AI model.
@@ -1485,9 +1485,11 @@ model.ResultTable = query2.CopyToDataTable2();
                 //The sum of all the rows of the result is shown by the report only if a total of the element covers every row:
                 //a total for the rows of a table without column dimension (or the reverse), or the grand total of a cross table; never with page dimensions (one table per page).
                 //E.g. a stock per year (years in rows, categories in columns) with totals for the rows only shows one total per year, not the sum of all the years.
+                //A partial result (maximum rows reached) is never flagged: its sum covers only the rows loaded, not the data selected by the restrictions.
                 bool grandTotalShown(ReportElement element)
                 {
                     if (!hasTotal(element) || totalNotSum(element)) return false;
+                    if (MaxRowsReached) return false;
                     if (Elements.Any(i => i.PivotPosition == PivotPosition.Page)) return false;
                     if (element.ShowTotal == ShowTotal.RowColumn) return true;
                     var hasColumns = Elements.Any(i => i.PivotPosition == PivotPosition.Column);

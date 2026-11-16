@@ -209,6 +209,12 @@ namespace Test
             Assert.IsFalse(column().TryGetProperty("total_shown", out _), "one table per page: no total of the result");
             category.PivotPosition = PivotPosition.Row;
             data.ShowTotal = ShowTotal.Column;
+            //A partial result (maximum rows reached): the sum covers only the rows loaded, never flagged as the total of the result
+            sales.MaxRowsReached = true;
+            Assert.IsTrue(column().TryGetProperty("sum", out _), "partial result: still a sum");
+            Assert.IsFalse(column().TryGetProperty("total_shown", out _), "partial result: the sum is not the total of the data");
+            sales.MaxRowsReached = false;
+            Assert.IsTrue(column().GetProperty("total_shown").GetBoolean(), "complete result: total flagged again");
             data.TotalAggregateFunction = AggregateFunction.Avg;
             Assert.IsFalse(column().TryGetProperty("sum", out _), "total average: no sum");
             Assert.AreEqual("total avg", column().GetProperty("role").GetString());
