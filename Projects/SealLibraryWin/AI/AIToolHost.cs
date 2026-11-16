@@ -169,11 +169,21 @@ namespace Seal.AI
             if (toolCall.Name == LoadSkillToolName)
             {
                 var skillName = ExtractSkillName(toolCall.Arguments);
-                if (skillName == InstructionsSkillName && AgentInstructions != null) return "Loading the instructions of the agent";
-                return _skills.FirstOrDefault(s => s.Name == skillName)?.GetProgressLabel(Culture) ?? $"Loading skill '{skillName}'";
+                if (skillName == InstructionsSkillName && AgentInstructions != null) return translateProgress("Loading the instructions of the agent");
+                return _skills.FirstOrDefault(s => s.Name == skillName)?.GetProgressLabel(Culture) ?? string.Format(translateProgress("Loading skill '{0}'"), skillName);
             }
             var toolConfig = _activeTools.TryGetValue(toolCall.Name, out var tc) ? tc : null;
-            return toolConfig?.GetProgressLabel(toolCall, Culture) ?? $"Running '{toolCall.Name}'";
+            return toolConfig?.GetProgressLabel(toolCall, Culture) ?? string.Format(translateProgress("Running '{0}'"), toolCall.Name);
+        }
+
+        /// <summary>
+        /// Translates a built-in progress text in the culture of the user (context AIToolProgress of the repository translations).
+        /// </summary>
+        string translateProgress(string text)
+        {
+            return string.IsNullOrEmpty(Culture)
+                ? Repository.Instance.RepositoryTranslate("AIToolProgress", "*", text)
+                : Repository.Instance.RepositoryTranslate(Culture, "AIToolProgress", "*", text);
         }
 
         /// <summary>
