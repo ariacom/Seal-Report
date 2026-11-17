@@ -211,6 +211,42 @@ namespace Test
         }
 
         [TestMethod]
+        public void ServerIdentity()
+        {
+            //Title, web site and icons of the MCP server of an agent shown by the clients
+            var config = _repository.AIConfiguration;
+            var website = config.McpWebsiteUrl;
+            var icons = config.McpIconUrls;
+            try
+            {
+                var agent = config.AIAgents.First(a => a.IsEnabled);
+                Assert.AreEqual(McpOAuth.GetResourceName(agent.Name, _repository.Configuration.WebProductName), McpGateway.GetServerTitle(agent));
+
+                //Defaults: the public base URL and the icon of the Web Report Server
+                config.McpWebsiteUrl = "";
+                config.McpIconUrls = "";
+                Assert.AreEqual("https://reports.test/seal/", McpGateway.GetWebsiteUrl("https://reports.test/seal"));
+                var result = McpGateway.GetIcons("https://reports.test/seal/");
+                Assert.AreEqual(1, result.Count);
+                Assert.AreEqual("https://reports.test/seal/img/faviconWebServer.ico", result[0].Source);
+                Assert.AreEqual("image/x-icon", result[0].MimeType);
+
+                //Configured values: one icon per line, type from the extension
+                config.McpWebsiteUrl = "https://www.test.org/";
+                config.McpIconUrls = "https://www.test.org/logo.svg\r\n\r\n https://www.test.org/icon.png?v=2 \nhttps://www.test.org/icon";
+                Assert.AreEqual("https://www.test.org/", McpGateway.GetWebsiteUrl("https://reports.test/seal"));
+                result = McpGateway.GetIcons("https://reports.test/seal");
+                CollectionAssert.AreEqual(new[] { "https://www.test.org/logo.svg", "https://www.test.org/icon.png?v=2", "https://www.test.org/icon" }, result.Select(i => i.Source).ToArray());
+                CollectionAssert.AreEqual(new[] { "image/svg+xml", "image/png", null }, result.Select(i => i.MimeType).ToArray());
+            }
+            finally
+            {
+                config.McpWebsiteUrl = website;
+                config.McpIconUrls = icons;
+            }
+        }
+
+        [TestMethod]
         public void ToolContext()
         {
             //MCP: the description of the data of the agent ends the descriptions of its own read-only tools only (not the tools of its skills, not the tools that write)

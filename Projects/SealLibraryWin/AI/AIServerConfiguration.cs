@@ -80,6 +80,10 @@ namespace Seal.AI
                 GetProperty("McpOAuthRequireStrongLogin").SetIsBrowsable(true);
                 GetProperty("McpLogToolCalls").SetIsBrowsable(true);
                 GetProperty("McpLogResultMaxLength").SetIsBrowsable(true);
+                GetProperty("McpWebsiteUrl").SetIsBrowsable(true);
+                GetProperty("McpIconUrls").SetIsBrowsable(true);
+                GetProperty("McpWebsiteUrl").SetIsReadOnly(!McpServerEnabled);
+                GetProperty("McpIconUrls").SetIsReadOnly(!McpServerEnabled);
 
                 GetProperty("McpTokenMaxDays").SetIsReadOnly(!McpServerEnabled);
                 GetProperty("McpTokenIdleDays").SetIsReadOnly(!McpServerEnabled);
@@ -356,6 +360,25 @@ namespace Seal.AI
         [DefaultValue(4000)]
 #endif
         public int McpLogResultMaxLength { get; set; } = 4000;
+
+        /// <summary>
+        /// Web Report Server: URL of the web site presented to the MCP clients with the servers of the agents (empty for the MCP public URL or the URL of the request)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP web site URL"), Description("URL of the web site presented to the AI clients with the MCP servers of the agents (e.g. https://www.mycompany.com/). Empty to use the MCP public URL, or the URL of the request."), Category("MCP Server"), Id(14, 2)]
+        [DefaultValue("")]
+#endif
+        public string McpWebsiteUrl { get; set; } = "";
+
+        /// <summary>
+        /// Web Report Server: URLs of the icons presented to the MCP clients with the servers of the agents (one per line, empty for the icon of the Web Report Server)
+        /// </summary>
+#if WINDOWS
+        [DisplayName("MCP icon URLs"), Description("URLs of the icons presented to the AI clients with the MCP servers of the agents (one per line, HTTPS, e.g. https://www.mycompany.com/logo.svg). The type is given by the extension (.svg, .png, .jpg, .webp, .ico). Empty to use the icon of the Web Report Server (img/faviconWebServer.ico)."), Category("MCP Server"), Id(15, 2)]
+        [DefaultValue("")]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string McpIconUrls { get; set; } = "";
 
         List<AIAgentConfiguration> _AIAgents = new List<AIAgentConfiguration>();
         /// <summary>

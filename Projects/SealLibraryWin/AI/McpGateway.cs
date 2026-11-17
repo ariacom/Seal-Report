@@ -110,6 +110,55 @@ namespace Seal.AI
             McpRenderingInstructions;
 
         /// <summary>
+        /// Icon of an MCP server presented to the clients
+        /// </summary>
+        public class McpIcon
+        {
+            /// <summary>URL of the icon</summary>
+            public string Source;
+            /// <summary>Media type of the icon (null if unknown)</summary>
+            public string MimeType;
+        }
+
+        /// <summary>
+        /// Returns the title of the MCP server of an agent presented to the clients (product name followed by the agent name, see <see cref="McpOAuth.GetResourceName"/>)
+        /// </summary>
+        public static string GetServerTitle(AIAgentConfiguration agent)
+        {
+            return McpOAuth.GetResourceName(agent?.Name, Repository.Instance.Configuration.WebProductName);
+        }
+
+        /// <summary>
+        /// Returns the URL of the web site presented with the MCP servers: <see cref="AIServerConfiguration.McpWebsiteUrl"/>, else the public base URL given
+        /// </summary>
+        public static string GetWebsiteUrl(string publicBaseUrl)
+        {
+            var url = Repository.Instance.AIConfiguration.McpWebsiteUrl?.Trim();
+            return string.IsNullOrEmpty(url) ? (publicBaseUrl ?? "").TrimEnd('/') + "/" : url;
+        }
+
+        /// <summary>
+        /// Returns the icons presented with the MCP servers: the URLs of <see cref="AIServerConfiguration.McpIconUrls"/> (one per line), else the icon of the Web Report Server (img/faviconWebServer.ico) under the public base URL given
+        /// </summary>
+        public static List<McpIcon> GetIcons(string publicBaseUrl)
+        {
+            var urls = (Repository.Instance.AIConfiguration.McpIconUrls ?? "").Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries).Select(u => u.Trim()).Where(u => u.Length > 0).ToList();
+            if (urls.Count == 0) urls.Add((publicBaseUrl ?? "").TrimEnd('/') + "/img/faviconWebServer.ico");
+            return urls.Select(u => new McpIcon() { Source = u, MimeType = getIconMimeType(u) }).ToList();
+        }
+
+        static string getIconMimeType(string url)
+        {
+            var path = url.Split('?', '#')[0].ToLowerInvariant();
+            if (path.EndsWith(".svg")) return "image/svg+xml";
+            if (path.EndsWith(".png")) return "image/png";
+            if (path.EndsWith(".jpg") || path.EndsWith(".jpeg")) return "image/jpeg";
+            if (path.EndsWith(".webp")) return "image/webp";
+            if (path.EndsWith(".ico")) return "image/x-icon";
+            return null;
+        }
+
+        /// <summary>
         /// Returns the identifier of an agent in the URL of the MCP server (/mcp/{slug}): its name in lower case, the characters other than letters and digits replaced by '-'.
         /// </summary>
         public static string GetAgentSlug(AIAgentConfiguration agent)

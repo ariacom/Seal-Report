@@ -53,6 +53,16 @@ namespace SealWebServer
                         var context = httpContext.Items[McpContextKey] as McpRequestContext;
                         if (context?.Agent == null) throw new Exception("MCP request not authenticated");
                         configureAgent(context, serverOptions);
+                        //Identity of the server of the agent shown by the clients: title, web site and icons (a new instance: the server info of the options is shared)
+                        var baseUrl = GetMcpPublicBaseUrl(httpContext.Request);
+                        serverOptions.ServerInfo = new Implementation()
+                        {
+                            Name = serverOptions.ServerInfo?.Name ?? "Seal Report",
+                            Version = serverOptions.ServerInfo?.Version ?? "1.0",
+                            Title = McpGateway.GetServerTitle(context.Agent),
+                            WebsiteUrl = McpGateway.GetWebsiteUrl(baseUrl),
+                            Icons = McpGateway.GetIcons(baseUrl).Select(i => new Icon() { Source = i.Source, MimeType = i.MimeType }).ToList()
+                        };
                         return Task.CompletedTask;
                     };
                 });

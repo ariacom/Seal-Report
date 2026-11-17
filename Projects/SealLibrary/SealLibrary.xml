@@ -343,6 +343,16 @@
             Web Report Server: maximum number of characters of a tool result in the log of the MCP tool calls (0 for the complete result)
             </summary>
         </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpWebsiteUrl">
+            <summary>
+            Web Report Server: URL of the web site presented to the MCP clients with the servers of the agents (empty for the MCP public URL or the URL of the request)
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIServerConfiguration.McpIconUrls">
+            <summary>
+            Web Report Server: URLs of the icons presented to the MCP clients with the servers of the agents (one per line, empty for the icon of the Web Report Server)
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIServerConfiguration.AIAgents">
             <summary>
             AI Agents combining a provider, an optional set of tools, and a default system prompt.
@@ -1800,6 +1810,32 @@
         <member name="F:Seal.AI.McpGateway.McpInstructions">
             <summary>
             Instructions added to the system prompt of an agent served by the MCP server
+            </summary>
+        </member>
+        <member name="T:Seal.AI.McpGateway.McpIcon">
+            <summary>
+            Icon of an MCP server presented to the clients
+            </summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.McpIcon.Source">
+            <summary>URL of the icon</summary>
+        </member>
+        <member name="F:Seal.AI.McpGateway.McpIcon.MimeType">
+            <summary>Media type of the icon (null if unknown)</summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetServerTitle(Seal.AI.AIAgentConfiguration)">
+            <summary>
+            Returns the title of the MCP server of an agent presented to the clients (product name followed by the agent name, see <see cref="M:Seal.AI.McpOAuth.GetResourceName(System.String,System.String)"/>)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetWebsiteUrl(System.String)">
+            <summary>
+            Returns the URL of the web site presented with the MCP servers: <see cref="P:Seal.AI.AIServerConfiguration.McpWebsiteUrl"/>, else the public base URL given
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpGateway.GetIcons(System.String)">
+            <summary>
+            Returns the icons presented with the MCP servers: the URLs of <see cref="P:Seal.AI.AIServerConfiguration.McpIconUrls"/> (one per line), else the icon of the Web Report Server (img/faviconWebServer.ico) under the public base URL given
             </summary>
         </member>
         <member name="M:Seal.AI.McpGateway.GetAgentSlug(Seal.AI.AIAgentConfiguration)">
