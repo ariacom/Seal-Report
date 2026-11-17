@@ -18744,9 +18744,34 @@
             True if the token is a valid cookie of a trusted browser for the user: signature, expiration and user name (not case sensitive)
             </summary>
         </member>
+        <member name="M:Seal.Model.SealSecurity.ReadTrustedBrowserToken(System.String,System.String,System.DateTime,System.String@,System.DateTime@)">
+            <summary>
+            Checks the signature and the expiration of a token of a trusted browser and returns its user name and expiration date
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.TrustedBrowserMaxUsers">
+            <summary>
+            Maximum number of users trusted by the same browser: the cookie keeps the most recent ones
+            </summary>
+        </member>
+        <member name="F:Seal.Model.SealSecurity.TrustedBrowserTokenSeparator">
+            <summary>
+            Separator of the tokens in the cookie of a trusted browser (one token per user)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.IsTrustedBrowserCookie(System.String,System.String,System.String,System.DateTime)">
+            <summary>
+            True if the cookie of a trusted browser (one or several tokens) holds a valid token for the user
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealSecurity.AddTrustedBrowserToken(System.String,System.String,System.String,System.DateTime,System.DateTime,System.DateTime@)">
+            <summary>
+            New value of the cookie of a trusted browser once the user is trusted: the token of the user is added or replaced, the invalid or expired tokens are removed and only the last TrustedBrowserMaxUsers users are kept. Several users of the same browser are then trusted at the same time.
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealSecurity.IsTrustedBrowser(System.String,System.String)">
             <summary>
-            True if the token is a valid cookie of a trusted browser for the user with the current configuration
+            True if the cookie of a trusted browser holds a valid token for the user with the current configuration
             </summary>
         </member>
         <member name="P:Seal.Model.SealSecurity.EnableResetPassword">

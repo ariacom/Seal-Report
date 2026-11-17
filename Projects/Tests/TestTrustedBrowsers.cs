@@ -120,6 +120,49 @@ namespace Test
         }
 
         [TestMethod]
+        public void SeveralUsersTrustedByTheSameBrowser()
+        {
+            var security = newSecurity();
+            var now = DateTime.UtcNow;
+
+            //Old cookie of a single token is still read
+            var cookie = SealSecurity.GetTrustedBrowserToken("admin", Secret, now.AddDays(30));
+            Assert.IsTrue(SealSecurity.IsTrustedBrowserCookie(cookie, "admin", Secret, now));
+
+            //Switching of account keeps the first user trusted
+            cookie = SealSecurity.AddTrustedBrowserToken(cookie, "test", Secret, now.AddDays(30), now, out var expiry);
+            Assert.IsTrue(SealSecurity.IsTrustedBrowserCookie(cookie, "admin", Secret, now));
+            Assert.IsTrue(SealSecurity.IsTrustedBrowserCookie(cookie, "test", Secret, now));
+            Assert.IsFalse(SealSecurity.IsTrustedBrowserCookie(cookie, "bob", Secret, now));
+            Assert.IsTrue(expiry >= now.AddDays(30).AddSeconds(-1));
+
+            var user = new SecurityUser(security) { WebUserName = "admin", WebPassword = "ok", TrustedBrowserToken = cookie };
+            user.Authenticate();
+            Assert.IsTrue(user.TrustedBrowser);
+            user = new SecurityUser(security) { WebUserName = "test", WebPassword = "ok", TrustedBrowserToken = cookie };
+            user.Authenticate();
+            Assert.IsTrue(user.TrustedBrowser);
+
+            //Trusting again a user replaces its token (no duplicate)
+            cookie = SealSecurity.AddTrustedBrowserToken(cookie, "ADMIN", Secret, now.AddDays(30), now, out _);
+            Assert.AreEqual(2, cookie.Split(SealSecurity.TrustedBrowserTokenSeparator).Length);
+
+            //Expired, forged or other-secret tokens are dropped
+            var expired = SealSecurity.GetTrustedBrowserToken("old", Secret, now.AddDays(-1));
+            var otherSecret = SealSecurity.GetTrustedBrowserToken("other", "another-secret-of-the-instance", now.AddDays(30));
+            cookie = SealSecurity.AddTrustedBrowserToken(cookie + "~" + expired + "~" + otherSecret + "~garbage", "carol", Secret, now.AddDays(30), now, out _);
+            Assert.AreEqual(3, cookie.Split(SealSecurity.TrustedBrowserTokenSeparator).Length);
+            Assert.IsFalse(cookie.Contains(expired));
+            Assert.IsFalse(cookie.Contains(otherSecret));
+
+            //Only the last users are kept
+            for (int i = 0; i < SealSecurity.TrustedBrowserMaxUsers; i++) cookie = SealSecurity.AddTrustedBrowserToken(cookie, $"user{i}", Secret, now.AddDays(30), now, out _);
+            Assert.AreEqual(SealSecurity.TrustedBrowserMaxUsers, cookie.Split(SealSecurity.TrustedBrowserTokenSeparator).Length);
+            Assert.IsFalse(SealSecurity.IsTrustedBrowserCookie(cookie, "admin", Secret, now));
+            Assert.IsTrue(SealSecurity.IsTrustedBrowserCookie(cookie, $"user{SealSecurity.TrustedBrowserMaxUsers - 1}", Secret, now));
+        }
+
+        [TestMethod]
         public void GuestIsNeverATrustedBrowser()
         {
             var security = newSecurity();

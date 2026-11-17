@@ -263,7 +263,18 @@ namespace Seal.Model
         /// </summary>
         public static bool IsTrustedBrowserToken(string token, string userName, string secret, DateTime nowUtc)
         {
-            if (string.IsNullOrEmpty(token) || string.IsNullOrWhiteSpace(userName) || string.IsNullOrEmpty(secret)) return false;
+            if (string.IsNullOrWhiteSpace(userName)) return false;
+            return ReadTrustedBrowserToken(token, secret, nowUtc, out var tokenUser, out _) && string.Equals(tokenUser, userName.Trim(), StringComparison.OrdinalIgnoreCase);
+        }
+
+        /// <summary>
+        /// Checks the signature and the expiration of a token of a trusted browser and returns its user name and expiration date
+        /// </summary>
+        static bool ReadTrustedBrowserToken(string token, string secret, DateTime nowUtc, out string userName, out DateTime expiryUtc)
+        {
+            userName = null;
+            expiryUtc = DateTime.MinValue;
+            if (string.IsNullOrEmpty(token) || string.IsNullOrEmpty(secret)) return false;
             try
             {
                 var parts = token.Split('.');
@@ -272,9 +283,12 @@ namespace Seal.Model
                 var expected = System.Security.Cryptography.HMACSHA256.HashData(System.Text.Encoding.UTF8.GetBytes(secret), payload);
                 if (!System.Security.Cryptography.CryptographicOperations.FixedTimeEquals(expected, FromBase64Url(parts[1]))) return false;
                 var fields = System.Text.Encoding.UTF8.GetString(payload).Split('\n');
-                if (fields.Length != 3 || fields[0] != "tb1") return false;
-                if (!string.Equals(fields[1], userName.Trim(), StringComparison.OrdinalIgnoreCase)) return false;
-                return long.TryParse(fields[2], out var expiry) && DateTimeOffset.FromUnixTimeSeconds(expiry).UtcDateTime > nowUtc;
+                if (fields.Length != 3 || fields[0] != "tb1" || string.IsNullOrWhiteSpace(fields[1])) return false;
+                if (!long.TryParse(fields[2], out var expiry)) return false;
+                expiryUtc = DateTimeOffset.FromUnixTimeSeconds(expiry).UtcDateTime;
+                if (expiryUtc <= nowUtc) return false;
+                userName = fields[1];
+                return true;
             }
             catch
             {
@@ -283,11 +297,48 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// True if the token is a valid cookie of a trusted browser for the user with the current configuration
+        /// Maximum number of users trusted by the same browser: the cookie keeps the most recent ones
         /// </summary>
-        public bool IsTrustedBrowser(string token, string userName)
+        public const int TrustedBrowserMaxUsers = 5;
+
+        /// <summary>
+        /// Separator of the tokens in the cookie of a trusted browser (one token per user)
+        /// </summary>
+        public const char TrustedBrowserTokenSeparator = '~';
+
+        /// <summary>
+        /// True if the cookie of a trusted browser (one or several tokens) holds a valid token for the user
+        /// </summary>
+        public static bool IsTrustedBrowserCookie(string cookie, string userName, string secret, DateTime nowUtc)
         {
-            return TwoFATrustActive && IsTrustedBrowserToken(token, userName, ClearTrustedBrowserSecret, DateTime.UtcNow);
+            if (string.IsNullOrEmpty(cookie)) return false;
+            return cookie.Split(TrustedBrowserTokenSeparator).Any(i => IsTrustedBrowserToken(i, userName, secret, nowUtc));
+        }
+
+        /// <summary>
+        /// New value of the cookie of a trusted browser once the user is trusted: the token of the user is added or replaced, the invalid or expired tokens are removed and only the last TrustedBrowserMaxUsers users are kept. Several users of the same browser are then trusted at the same time.
+        /// </summary>
+        public static string AddTrustedBrowserToken(string cookie, string userName, string secret, DateTime expiryUtc, DateTime nowUtc, out DateTime cookieExpiryUtc)
+        {
+            var tokens = new List<string>();
+            cookieExpiryUtc = expiryUtc;
+            foreach (var token in (cookie ?? "").Split(TrustedBrowserTokenSeparator))
+            {
+                if (!ReadTrustedBrowserToken(token, secret, nowUtc, out var tokenUser, out var tokenExpiry)) continue;
+                if (string.Equals(tokenUser, (userName ?? "").Trim(), StringComparison.OrdinalIgnoreCase)) continue;
+                tokens.Add(token);
+                if (tokenExpiry > cookieExpiryUtc) cookieExpiryUtc = tokenExpiry;
+            }
+            tokens.Add(GetTrustedBrowserToken(userName, secret, expiryUtc));
+            return string.Join(TrustedBrowserTokenSeparator, tokens.Skip(Math.Max(0, tokens.Count - TrustedBrowserMaxUsers)));
+        }
+
+        /// <summary>
+        /// True if the cookie of a trusted browser holds a valid token for the user with the current configuration
+        /// </summary>
+        public bool IsTrustedBrowser(string cookie, string userName)
+        {
+            return TwoFATrustActive && IsTrustedBrowserCookie(cookie, userName, ClearTrustedBrowserSecret, DateTime.UtcNow);
         }
 
         static byte[] FromBase64Url(string value)

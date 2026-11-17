@@ -282,13 +282,15 @@ namespace SealWebServer.Controllers
                 renewSessionKey();
 
                 //Trust the browser: signed cookie, the next logins of the user from this browser skip the security code until its expiration
+                //The cookie keeps one token per user (the last SealSecurity.TrustedBrowserMaxUsers users): switching of account does not forget the other users
                 var security = WebUser.Security;
                 if (trust && security.TwoFATrustActive && !string.IsNullOrEmpty(WebUser.WebUserName))
                 {
-                    var expiry = DateTime.UtcNow.AddDays(security.TwoFATrustDays);
-                    Response.Cookies.Append(SealSecurity.TrustedBrowserCookieName, SealSecurity.GetTrustedBrowserToken(WebUser.WebUserName, security.ClearTrustedBrowserSecret, expiry), new CookieOptions()
+                    var now = DateTime.UtcNow;
+                    var cookie = SealSecurity.AddTrustedBrowserToken(getCookie(SealSecurity.TrustedBrowserCookieName), WebUser.WebUserName, security.ClearTrustedBrowserSecret, now.AddDays(security.TwoFATrustDays), now, out var cookieExpiry);
+                    Response.Cookies.Append(SealSecurity.TrustedBrowserCookieName, cookie, new CookieOptions()
                     {
-                        Expires = expiry,
+                        Expires = cookieExpiry,
                         HttpOnly = true,
                         Secure = Request.IsHttps,
                         SameSite = SameSiteMode.Lax,
