@@ -105,7 +105,7 @@ namespace Seal.AI
         public const string McpInstructions =
             "## Seal Report MCP server\r\n" +
             "You are connected to the Seal Report server with the tools of this agent, executed with the rights of the user. " +
-            "A tool whose description ends with 'Part of the skill' belongs to a skill: call 'load_skill' with that skill once before its first call and follow the guide returned. " +
+            "Call 'load_skill' once for the skill of a request, before the related work or a tool whose description ends with 'Part of the skill', and follow its guide. " +
             "A tool result starting with 'Error:' tells what to fix before calling the tool again. " +
             McpRenderingInstructions;
 

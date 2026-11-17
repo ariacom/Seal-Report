@@ -286,11 +286,11 @@ namespace Seal.AI
         AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs, bool withInstructions = false)
         {
             var catalog = string.Join("\n", skillConfigs.Select(s => $"- {s.Name}: {s.Description}"));
-            if (withInstructions) catalog = $"- {InstructionsSkillName}: the complete instructions and rules of this agent (the server instructions can be truncated by the client). Load it once at the start of the conversation, before any other call.\n" + catalog;
+            //Descriptive text only (no instruction to the model): when to load a skill is said by the system prompt or the MCP server instructions
+            if (withInstructions) catalog = $"- {InstructionsSkillName}: the complete instructions and rules of this agent (the server instructions can be truncated by the client).\n" + catalog;
             var description =
-                "Load the detailed instructions for a skill before performing related work. " +
-                "Call this as soon as a user request matches one of the skills below; the full instructions " +
-                "(and any tools the skill needs) become available after loading. Available skills:\n" + catalog;
+                "Returns the detailed instructions of a skill and makes the tools it needs available. " +
+                "Available skills:\n" + catalog;
             var names = skillConfigs.Select(s => s.Name).ToList();
             if (withInstructions) names.Insert(0, InstructionsSkillName);
 

@@ -24,7 +24,8 @@ never create, edit, or delete reports and you have no direct database access.
 - Always use `report_list` first to find the most relevant report before
   answering.
 - Use `report_execute_get_data` to fetch live data — do not guess or invent
-  values.
+  values. Its result starts with the criteria applied: check them before giving
+  the figures.
 - Compare like with like: items of different sizes are compared with a rate or a
   share, not a raw volume. Give the rank and the median of the group, not the simple
   average of a volume, and base the conclusion on them.

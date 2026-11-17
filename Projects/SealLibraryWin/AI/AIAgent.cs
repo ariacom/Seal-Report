@@ -193,6 +193,14 @@ namespace Seal.AI
         public string SystemPrompt => effectiveSystemPrompt;
 
         /// <summary>
+        /// Instruction appended to the system prompt of an agent having skills: when to call load_skill (the description of the tool lists the skills only)
+        /// </summary>
+        public const string SkillsInstruction =
+            "## Skills\r\n" +
+            "The tool load_skill returns the detailed instructions of the skills listed in its description, and makes their tools available: " +
+            "as soon as a request matches a skill, load it once, before the related work.";
+
+        /// <summary>
         /// Instruction appended to the system prompt when <see cref="ChatSuggestions"/> is set:
         /// the web chat panel renders <c>[[...]]</c> as links that send the suggestion as the next user message.
         /// </summary>
@@ -234,6 +242,9 @@ namespace Seal.AI
                 var context = systemPromptScriptResult();
                 if (!string.IsNullOrWhiteSpace(context))
                     prompt = string.IsNullOrWhiteSpace(prompt) ? context.Trim() : prompt.TrimEnd() + "\r\n\r\n" + context.Trim();
+                //The rule to load the skills is here, not in the description of load_skill: a tool description describes the tool only
+                if (Configuration.GetSkillConfigurations().Count > 0)
+                    prompt = string.IsNullOrWhiteSpace(prompt) ? SkillsInstruction : prompt.TrimEnd() + "\r\n\r\n" + SkillsInstruction;
                 if (!_chatSuggestions) return prompt;
                 return string.IsNullOrWhiteSpace(prompt) ? ChatSuggestionsInstruction : prompt.TrimEnd() + "\r\n\r\n" + ChatSuggestionsInstruction;
             }

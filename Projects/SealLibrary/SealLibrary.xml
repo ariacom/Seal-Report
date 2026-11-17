@@ -1299,6 +1299,11 @@
             The system prompt of the agent for its <see cref="F:Seal.AI.AIAgent.SecurityContext"/>: the prompt of the configuration followed by the text rendered by its system prompt script.
             </summary>
         </member>
+        <member name="F:Seal.AI.AIAgent.SkillsInstruction">
+            <summary>
+            Instruction appended to the system prompt of an agent having skills: when to call load_skill (the description of the tool lists the skills only)
+            </summary>
+        </member>
         <member name="F:Seal.AI.AIAgent.ChatSuggestionsInstruction">
             <summary>
             Instruction appended to the system prompt when <see cref="P:Seal.AI.AIAgent.ChatSuggestions"/> is set:

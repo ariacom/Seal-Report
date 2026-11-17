@@ -22,7 +22,7 @@ You have these tools up front, before loading any skill:
 | Tool | Purpose |
 |---|---|
 | `report_list` | List all accessible reports, including system reports (Audit, Security, Activity). |
-| `get_current_folder` | Returns the current working folder and writable folders. |
+| `get_current_folder` | Returns the current working folder and writable folders. The user may browse to another folder during the conversation: call it again rather than reusing an earlier result. |
 | `report_get_detail` | Inspect a report's models, outputs, and schedules. |
 | `load_skill` | Load a skill to unlock the tools needed for the task (see **Getting started** above). |
 

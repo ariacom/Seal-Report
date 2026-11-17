@@ -32,7 +32,8 @@ skill — use them to inspect schemas and to **answer data questions in chat**:
 - `report_list` — list existing reports (paths, display names, descriptions). Call before creating a new report to reuse references and mention a similar report — never as a reason to refuse a creation the user asked for.
 - `report_get_detail` — inspect one report's models, elements, and restrictions.
 - `report_execute_get_data` — execute an existing report and read its data, to answer a data question without writing SQL.
-- `get_current_folder` — the user's current working folder and writable folders.
+- `get_current_folder` — the user's current working folder and writable folders. The user may browse to another folder during the conversation: call it again rather than reusing an earlier result.
+- `feedback_send` — sends a feedback of the user to the team in charge of the reports. Only when the user asks for it or accepts your offer: show the text first, never on your own initiative, never twice for the same remark, then give the user the message returned.
 - `report_check_model_type` — analyses a request and returns whether SQL or metadata is required. **Always call this before creating any report**, then load the matching build skill.
 
 ## Before any work

@@ -20,7 +20,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
       <Title>Get the columns of a table</Title>
       <Access>ReadOnly</Access>
       <Description>Returns the column names and data types of a table.
-Use it to confirm column names before generating report elements, or to discover schema when scanning a data source.
+Useful to confirm column names or to discover the schema of a data source.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
       <ProgressLabel>Getting columns of table {table}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name, optionally schema-qualified (e.g. dbo.Orders)"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table"]}</ParametersSchema>
@@ -44,7 +44,7 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
       <Title>Count the rows of a table</Title>
       <Access>ReadOnly</Access>
       <Description>Returns the row count of a table, optionally filtered by a WHERE clause.
-Use it to decide whether TopRecords makes sense or to check the cardinality of a filter before applying it.
+Useful to check the size of a table or the cardinality of a filter.
 Pass datasource_guid (and optionally connection_guid) as returned by datasource_list to target a specific source or connection.</Description>
       <ProgressLabel>Counting rows of table {table}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"table":{"type":"string","description":"Table name"},"where":{"type":"string","description":"Optional SQL WHERE clause without the WHERE keyword (e.g. Country = 'France')"},"datasource_guid":{"type":"string","description":"GUID of the data source, as returned by datasource_list. Omit to use the default source."},"connection_guid":{"type":"string","description":"GUID of the connection to use, as returned by datasource_list. Omit to use the source default connection."}},"required":["table"]}</ParametersSchema>
@@ -56,8 +56,8 @@ Pass datasource_guid (and optionally connection_guid) as returned by datasource_
       <Title>List the data sources</Title>
       <Access>ReadOnly</Access>
       <Description>Lists all configured data sources with their GUID, database type, available connections (each with its GUID), and tables.
-Call this first to discover which sources, connections, and tables are available before querying or inspecting them.
-Use the returned GUIDs with datasource_guid and connection_guid parameters in database tools.</Description>
+It shows which sources, connections and tables are available.
+The GUIDs returned are the values of the datasource_guid and connection_guid parameters of the database tools.</Description>
       <ProgressLabel>Listing data sources</ProgressLabel>
       <ExecutionScriptFile>datasource_list.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
@@ -68,7 +68,7 @@ Use the returned GUIDs with datasource_guid and connection_guid parameters in da
       <Access>ReadOnly</Access>
       <Description>Returns a structured summary of a data source:
 connection info (no credentials), tables with their columns and types, and joins between tables.
-Use this to understand the schema and relationships before writing SQL.
+It describes the schema and the relationships of the tables.
 For a large data source, pass "tables" (table names or prefixes, e.g. ["dg."]) to detail only these tables and their joins: the other tables are listed by name only.</Description>
       <ProgressLabel>Inspecting data source {name}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Data source name"},"tables":{"type":"array","items":{"type":"string"},"description":"Optional: table names or name prefixes to detail (e.g. [\"dg.\", \"ref.v_commune\"]). Omit to detail every table."}},"required":["name"]}</ParametersSchema>
@@ -92,7 +92,7 @@ Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.sr
       <Title>Get the definition of a report</Title>
       <Access>ReadOnly</Access>
       <Description>Returns the raw XML content of a report file.
-Use this to inspect the full report definition, or to modify a metadata report: get its XML, change it, then save it with report_create_from_xml (same path, overwrite=true).
+It is the full report definition; a modified definition of a metadata report is saved by report_create_from_xml (same path, overwrite=true).
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex or Personal\username\monthly.srex).</Description>
       <ProgressLabel>Reading report definition {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"}},"required":["path"]}</ParametersSchema>
@@ -104,7 +104,7 @@ Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.sr
       <Title>Check the model type of a report</Title>
       <Access>ReadOnly</Access>
       <Description>Analyses a report request and returns whether it requires a SQL model (report_create_from_sql) or a metadata model (report_create_from_xml), with the reasoning.
-Always call this before creating any report.</Description>
+ </Description>
       <ProgressLabel>Analyzing the report request</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"request":{"type":"string","description":"The user's report request, exactly as stated."},"source_guid":{"type":"string","description":"GUID of the target data source, as returned by datasource_list. Pass it so a NoSQL source is detected and routed to report_create_from_xml. Omit to analyse the request text only."}},"required":["request"]}</ParametersSchema>
       <ExecutionScriptFile>report_check_model_type.cshtml</ExecutionScriptFile>
@@ -116,9 +116,9 @@ Always call this before creating any report.</Description>
       <Access>Destructive</Access>
       <Description>Creates a new report with a single SQL model using the Seal Report API.
 The SQL is executed at runtime against the chosen data source; columns are resolved dynamically so no metadata GUIDs are required.
-Use datasource_get_detail to obtain the correct table and column names before writing the SQL.</Description>
+The table and column names are those returned by datasource_get_detail.</Description>
       <ProgressLabel>Creating report {display_name}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\Sales\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"display_name":{"type":"string","description":"Report display name shown in results."},"sql":{"type":"string","description":"SELECT statement executed by the model."},"source_guid":{"type":"string","description":"GUID of the data source to use, as returned by datasource_list or datasource_get_detail. Omit to use the default source."},"model_name":{"type":"string","description":"Optional name for the model. Defaults to 'Model'."},"description":{"type":"string","description":"Optional report description stored in MetaInfo."},"keep_column_names":{"type":"boolean","description":"If true, SQL column aliases are used as-is for column headers. Default false."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file. Default false."},"no_record_limit":{"type":"boolean","description":"The result is limited to 5000 records by default. Set true ONLY if the user explicitly asks for no record limit. Default false."}},"required":["path","display_name","sql"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\Sales\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"display_name":{"type":"string","description":"Report display name shown in results."},"sql":{"type":"string","description":"SELECT statement executed by the model."},"source_guid":{"type":"string","description":"GUID of the data source to use, as returned by datasource_list or datasource_get_detail. Omit to use the default source."},"model_name":{"type":"string","description":"Optional name for the model. Defaults to 'Model'."},"description":{"type":"string","description":"Optional report description stored in MetaInfo."},"keep_column_names":{"type":"boolean","description":"If true, SQL column aliases are used as-is for column headers. Default false."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file. Default false."},"no_record_limit":{"type":"boolean","description":"The result is limited to 5000 records by default: true removes this limit. Default false."}},"required":["path","display_name","sql"]}</ParametersSchema>
       <ExecutionScriptFile>report_create_from_sql.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -128,12 +128,12 @@ Use datasource_get_detail to obtain the correct table and column names before wr
       <Access>Destructive</Access>
       <Description>Creates a new metadata report by writing a complete XML definition.
 Use for reports built on the data source's defined metadata columns (tabular, pivot, search reports).
-Before calling this tool, set &lt;MetaSourceGUID&gt; to the GUID from datasource_list and every &lt;MetaColumnGUID&gt; to the matching column GUID from datasource_get_detail.
+&lt;MetaSourceGUID&gt; is the GUID of a data source (datasource_list) and each &lt;MetaColumnGUID&gt; the GUID of one of its columns (datasource_get_detail).
 Internal cross-reference GUIDs (GUID, ViewGUID, SourceGUID, ModelGUID, and the GUIDs of enumerated lists defined in the report with their EnumGUIDRE references) are regenerated automatically; metadata reference GUIDs (MetaSourceGUID, MetaColumnGUID) are preserved exactly as supplied.
 Also used to modify an existing report: pass the XML from report_get_xml, changed, with the same path and overwrite=true.
-For SQL-based reports use report_create_from_sql instead.</Description>
+SQL-based reports are created by report_create_from_sql.</Description>
       <ProgressLabel>Creating report {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\\\Sales\\\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"xml":{"type":"string","description":"Complete XML content of the report file (.srex). Retrieve a template via report_get_xml, replace MetaSourceGUID and MetaColumnGUID with values from datasource_list / datasource_get_detail, then pass the result here."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file at the destination path. Default false."},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default. Set true ONLY if the user explicitly asks for no record limit (MaxNumberOfRecords 0 is then kept). Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false: use it only to check a layout (tabs, containers, charts), not for every save."}},"required":["path","xml"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Destination relative path (e.g. Reports\\\\Sales\\\\new_report.srex). Root prefix (Reports or Personal) determines the folder; defaults to Reports root if omitted."},"xml":{"type":"string","description":"Complete XML content of the report file (.srex). Retrieve a template via report_get_xml, replace MetaSourceGUID and MetaColumnGUID with values from datasource_list / datasource_get_detail, then pass the result here."},"overwrite":{"type":"boolean","description":"If true, overwrites an existing file at the destination path. Default false."},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default: true removes this limit (MaxNumberOfRecords 0 is then kept). Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false. Useful to check a layout (tabs, containers, charts)."}},"required":["path","xml"]}</ParametersSchema>
       <ExecutionScriptFile>report_create_from_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -142,7 +142,7 @@ For SQL-based reports use report_create_from_sql instead.</Description>
       <Title>List the output devices</Title>
       <Access>ReadOnly</Access>
       <Description>Lists the output devices the current user is allowed to use, each with its name, type (email, ftp, sharepoint, or folder) and GUID.
-Call this before report_configure_output when several devices may exist or the user must choose where the output is delivered, then pass the chosen device_name (with a matching device_type) to report_configure_output.
+The device_name and device_type returned are the values of the parameters of report_configure_output.
 Read-only.</Description>
       <ProgressLabel>Listing output devices</ProgressLabel>
       <ExecutionScriptFile>device_list.cshtml</ExecutionScriptFile>
@@ -155,14 +155,14 @@ Read-only.</Description>
       <Description>Configures or removes an output on an existing report.
 Use action=configure (default) to add or update a delivery output; device_type selects the delivery method:
 folder (default), email, ftp, or sharepoint.
-Use action=delete to remove outputs and all their associated schedules — never use file_manage for this.
-Pass output_guid to target a specific output for update or delete; for folder outputs without a GUID the first folder output is reused.
+action=delete removes outputs and all their associated schedules.
+output_guid targets a specific output for update or delete; for folder outputs without a GUID the first folder output is reused.
 For delete:
 pass output_guid or output_name to remove a specific output; omit both to delete all.
 Returns outputGUID in the result — store it to pass to report_configure_schedule.
-Call this before report_configure_schedule only with the Windows Task Scheduler: with the Seal Scheduler, a schedule holds its own output, pass the destination to report_configure_schedule.</Description>
+A schedule needs an output only with the Windows Task Scheduler: with the Seal Scheduler, a schedule holds its own output (destination given to report_configure_schedule).</Description>
       <ProgressLabel>Configuring output of report {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp","sharepoint"],"description":"Delivery type: folder (default), email, ftp, or sharepoint."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific output device to use, as returned by device_list. Call device_list first when several devices may exist or the user must choose. Omit to use the first device of the requested device_type."},"folder_path":{"type":"string","description":"Required for device_type=folder; optional for device_type=ftp. For folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%. For ftp: the remote directory on the file server (default '/'). For sharepoint: the folder in the document library (default '/' for the library root)."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Never include a file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add or update an output. delete: remove the output and all its linked schedules from the report (does NOT delete the report file)."},"device_type":{"type":"string","enum":["folder","email","ftp","sharepoint"],"description":"Delivery type: folder (default), email, ftp, or sharepoint."},"output_guid":{"type":"string","description":"GUID of an existing output to update or delete, as returned by a prior call. Use to target a specific output when the report has multiple."},"output_name":{"type":"string","description":"For action=configure: display name for this output (auto-generated if omitted). For action=delete: name of the specific output to remove. Omit to delete all outputs on the report."},"device_name":{"type":"string","description":"Name of the specific output device to use, as returned by device_list. Omitted: the first device of the requested device_type."},"folder_path":{"type":"string","description":"Required for device_type=folder; optional for device_type=ftp. For folder: 'Personal' or 'Personal\\subfolder' for personal folder; 'Reports\\subfolder' for a repository folder; absolute path (e.g. C:\\Reports\\Daily); or path with %SEALREPOSITORY%. For ftp: the remote directory on the file server (default '/'). For sharepoint: the folder in the document library (default '/' for the library root)."},"file_name":{"type":"string","description":"Output file name template. Use {0:yyyyMMdd} for the execution date. Omit to use the report display name. Without file extension."},"output_format":{"type":"string","enum":["html","pdf","Excel","csv","Text","XML","Json"],"description":"Output file format. Default is Excel."},"email_to":{"type":"string","description":"Required for device_type=email. Recipient email address(es), semicolon-separated."},"email_cc":{"type":"string","description":"CC email address(es), semicolon-separated."},"email_bcc":{"type":"string","description":"BCC email address(es), semicolon-separated."},"email_subject":{"type":"string","description":"Email subject line. Defaults to the report name."},"email_body":{"type":"string","description":"Plain-text or HTML body for the email."},"email_html_body":{"type":"boolean","description":"If true, sends the report HTML as the email body (no attachment)."},"email_skip_attachments":{"type":"boolean","description":"If true, sends the email body only with no file attached."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_output.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -172,15 +172,15 @@ Call this before report_configure_schedule only with the Windows Task Scheduler:
       <Access>Destructive</Access>
       <Description>Adds, updates, or removes a recurring or one-time schedule on an existing report's output.
 Use action=configure (default) to add a new schedule, or pass schedule_guid to update an existing one.
-Use action=delete with schedule_guid (preferred) or schedule_name to remove a specific schedule — never use file_manage for this, and never omit both targets.
+action=delete removes the schedule given by schedule_guid (preferred) or schedule_name: one of them is required.
 With the Seal Scheduler, the schedule belongs to the user: it appears in his 'My schedules' list, holds its own output (device_name, folder_path, file_name, output_format, email_*) and requires only the right to schedule the report: the report file is not modified and report_configure_output is not needed.
-With the Windows Task Scheduler, the report must have an output — call report_configure_output first if none exists — and the schedule attaches to the first folder output or to output_guid.
+With the Windows Task Scheduler, the report must have an output (created by report_configure_output) and the schedule attaches to the first folder output or to output_guid.
 Returns scheduleGUID in the result — store it to later modify or delete this schedule.
 Schedule GUIDs can also be discovered via report_list.
 Use when the user wants automated execution:
 "every morning at 7am", "weekly on Monday", "run daily", "schedule this report", "send every month on the 1st", "delete the schedule".</Description>
       <ProgressLabel>Configuring schedule of report {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule, or update an existing one when schedule_guid is provided. delete: remove the schedule identified by schedule_guid or schedule_name (does NOT delete the report file or its output)."},"schedule_guid":{"type":"string","description":"GUID of an existing schedule, as returned by a prior call or by report_list. Required to update a schedule; for delete, pass this (preferred) or schedule_name to target a specific schedule."},"output_guid":{"type":"string","description":"GUID of an output of the report, as returned by report_configure_output: with the Seal Scheduler it is copied in the schedule, with the Windows Task Scheduler the schedule is attached to it (first folder output if omitted)."},"device_name":{"type":"string","description":"Seal Scheduler: name of the output device (see device_list). Default: the email device if email_to is set, otherwise the first folder device."},"folder_path":{"type":"string","description":"Seal Scheduler: destination folder of the result (Personal, Personal\\subfolder, Reports\\subfolder, with the right to write there), or the directory for an FTP or SharePoint device. Default: the folder of the report if the user can write there, otherwise Personal."},"file_name":{"type":"string","description":"Seal Scheduler: name of the result file without extension, {0:yyyyMMdd} is the execution date. Default: the report name."},"output_format":{"type":"string","description":"Seal Scheduler: format of the result: html, Excel, PDF, CSV... Default: the format of the report."},"email_to":{"type":"string","description":"Seal Scheduler, email device: recipients separated by semicolons. Default (with device_name of an email device): the e-mail address of the current user; ask for an address only for another recipient."},"email_cc":{"type":"string","description":"Seal Scheduler, email device: CC recipients."},"email_bcc":{"type":"string","description":"Seal Scheduler, email device: BCC recipients."},"email_subject":{"type":"string","description":"Seal Scheduler, email device: subject, the report name if empty."},"email_body":{"type":"string","description":"Seal Scheduler, email device: body."},"email_html_body":{"type":"boolean","description":"Seal Scheduler, email device: true to send the HTML result as the body."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"For action=configure: display name for the schedule (auto-generated if omitted). For action=delete: name of the specific schedule to remove when schedule_guid is not provided."}},"required":["path"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"action":{"type":"string","enum":["configure","delete"],"description":"configure (default): add a new schedule, or update an existing one when schedule_guid is provided. delete: remove the schedule identified by schedule_guid or schedule_name (does NOT delete the report file or its output)."},"schedule_guid":{"type":"string","description":"GUID of an existing schedule, as returned by a prior call or by report_list. Required to update a schedule; for delete, pass this (preferred) or schedule_name to target a specific schedule."},"output_guid":{"type":"string","description":"GUID of an output of the report, as returned by report_configure_output: with the Seal Scheduler it is copied in the schedule, with the Windows Task Scheduler the schedule is attached to it (first folder output if omitted)."},"device_name":{"type":"string","description":"Seal Scheduler: name of the output device (see device_list). Default: the email device if email_to is set, otherwise the first folder device."},"folder_path":{"type":"string","description":"Seal Scheduler: destination folder of the result (Personal, Personal\\subfolder, Reports\\subfolder, with the right to write there), or the directory for an FTP or SharePoint device. Default: the folder of the report if the user can write there, otherwise Personal."},"file_name":{"type":"string","description":"Seal Scheduler: name of the result file without extension, {0:yyyyMMdd} is the execution date. Default: the report name."},"output_format":{"type":"string","description":"Seal Scheduler: format of the result: html, Excel, PDF, CSV... Default: the format of the report."},"email_to":{"type":"string","description":"Seal Scheduler, email device: recipients separated by semicolons. Default (with device_name of an email device): the e-mail address of the current user."},"email_cc":{"type":"string","description":"Seal Scheduler, email device: CC recipients."},"email_bcc":{"type":"string","description":"Seal Scheduler, email device: BCC recipients."},"email_subject":{"type":"string","description":"Seal Scheduler, email device: subject, the report name if empty."},"email_body":{"type":"string","description":"Seal Scheduler, email device: body."},"email_html_body":{"type":"boolean","description":"Seal Scheduler, email device: true to send the HTML result as the body."},"type":{"type":"string","enum":["daily","weekly","monthly","once"],"description":"Required for action=configure. Recurrence type. Use once for a single one-time run."},"start_datetime":{"type":"string","description":"Required for action=configure. ISO 8601 date-time for the first or only run, e.g. 2025-06-01T07:00:00"},"days_interval":{"type":"integer","description":"For daily: interval in days between runs (default 1 = every day)."},"weekdays":{"type":"array","items":{"type":"integer"},"description":"For weekly: days of week to run. 0=Sunday, 1=Monday … 6=Saturday. E.g. [1,3] = Mon and Wed."},"months":{"type":"array","items":{"type":"integer"},"description":"For monthly: months to run (1=Jan … 12=Dec). Omit for every month."},"days":{"type":"array","items":{"type":"integer"},"description":"For monthly: days of month to run (1-31, 32=last day). E.g. [1] = 1st of each month."},"schedule_name":{"type":"string","description":"For action=configure: display name for the schedule (auto-generated if omitted). For action=delete: name of the specific schedule to remove when schedule_guid is not provided."}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_configure_schedule.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -193,7 +193,7 @@ Use it to fetch the actual data produced by an existing report for analysis, ans
 Pass the relative path as returned by report_list (e.g. Reports\Sales\monthly.srex).
 Optionally pass model_name to restrict the output to a single model: only this model is executed, much faster for a report having many models (e.g. a Fiche). If its result depends on another model of the report, execute again without model_name.
 Pass criteria to set the values of its prompted criteria for this execution only (nothing is saved): the answer to a question on a filter (a city, a type, a period) comes from the existing report with these criteria, without creating a new report.
-The result starts with the criteria applied, with the display values of the enumerated lists: check them before giving the figures.</Description>
+The result starts with the criteria applied, with the display values of the enumerated lists.</Description>
       <ProgressLabel>Executing report {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex or Personal\\username\\monthly.srex)"},"model_name":{"type":"string","description":"Optional model name to restrict results to a single model. If omitted, all models are returned."},"criteria":{"type":"array","description":"Optional values of prompted criteria of the report (see report_get_detail), for this execution only. Only the prompted criteria can be set.","items":{"type":"object","properties":{"name":{"type":"string","description":"Label of the criterion (or its column name)."},"operator":{"type":"string","description":"Optional operator (Equal, NotEqual, Contains, StartsWith, Between, Greater, GreaterEqual, Smaller, SmallerEqual, IsNull, IsNotNull...), only if the report allows to change it."},"values":{"type":"array","items":{"type":"string"},"description":"Values (dates as yyyy-MM-dd). For an enumerated list: identifiers or display values; a label without its code (e.g. a city name for 'City (code)'), the code alone (e.g. '59' for 'Name (59)') or 'label (code)' is accepted when it identifies one value only, otherwise the error lists the matching or close values with their identifiers. A criterion prompted for one value accepts one value only."}},"required":["name"]}}},"required":["path"]}</ParametersSchema>
       <ExecutionScriptFile>report_execute_get_data.cshtml</ExecutionScriptFile>
@@ -219,7 +219,7 @@ To keep the report afterwards (the user asks to save it, to schedule it, or want
       <Description>Browses files in the folders the current user has access to, across the Reports and Personal roots.
 Returns relative paths in the same format file_manage expects (e.g. Reports\Sales\monthly.srex, Personal\user\notes.txt) together with size and last-modified date.
 Lists every file type, not only reports, and includes files-only folders.
-ALWAYS call this tool first to discover and confirm the exact path of a file before any file_manage operation (delete, rename, move, copy).
+It gives the exact paths of the files used by file_manage (delete, rename, move, copy).
 Optionally filter by sub-folder name(s) via 'folders', or by file extension via 'extension'.</Description>
       <ProgressLabel>Browsing files</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to restrict the scan. Omit or pass [] to scan everything accessible."},"extension":{"type":"string","description":"Optional file extension filter without the dot, e.g. 'srex' or 'txt'. Omit to list all files."}}}</ParametersSchema>
@@ -237,7 +237,7 @@ Paths use the format returned by report_list, e.g. Reports\Sales\monthly.srex.
 Roots are:
 Reports, Personal.
 Access is restricted to files within these roots and to folders the current user has rights on.
-Always call file_list first to discover and confirm the exact source path before performing any file_manage operation.</Description>
+The source paths are those returned by file_list.</Description>
       <ProgressLabel>Managing file {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"action":{"type":"string","enum":["delete","rename","move","copy"],"description":"Operation to perform"},"path":{"type":"string","description":"Relative path of the source report (e.g. Reports\\Sales\\monthly.srex)"},"destination":{"type":"string","description":"Target relative path for rename/move/copy (e.g. Reports\\Archive\\monthly.srex). For rename, a bare file name (e.g. monthly_v2.srex) keeps the file in its folder. Not used for delete."}},"required":["action","path"]}</ParametersSchema>
       <ExecutionScriptFile>file_manage.cshtml</ExecutionScriptFile>
@@ -251,7 +251,7 @@ Always call file_list first to discover and confirm the exact source path before
 Only folders with access rights are browsed — hidden folders (right=0) and files-only folders are excluded — and Personal folders are included when the user has personal folder rights.
 Display paths use "Reports\..." or "Personal\username\..." format compatible with other report tools.
 Pass an optional list of sub-folder names to restrict the scan; omit or pass [] to scan all accessible folders.
-By default one line per report (path, display name, description, number of outputs and schedules); pass detail=true only when you need the columns of the models, the outputs and the schedules of every report — for one report use report_get_detail instead.</Description>
+By default one line per report (path, display name, description, number of outputs and schedules); detail=true adds the columns of the models, the outputs and the schedules of every report (report_get_detail details one report).</Description>
       <ProgressLabel>Listing reports</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"folders":{"type":"array","items":{"type":"string"},"description":"Optional list of sub-folder names to scan. Omit or pass [] to scan everything accessible."},"detail":{"type":"boolean","description":"true to add the columns of each model, the outputs and the schedules of every report (large result). Default false: one line per report."}}}</ParametersSchema>
       <ExecutionScriptFile>report_list.cshtml</ExecutionScriptFile>
@@ -263,7 +263,7 @@ By default one line per report (path, display name, description, number of outpu
       <Access>ReadOnly</Access>
       <Description>Returns the user's current working folder — the folder the user is currently browsing in the web interface — in the display-path format used by report_list and the report creation tools (e.g. "Reports\Sales").
 Also lists all folders where the user has write access.
-Always call this tool fresh every time you need the current folder; never reuse a result from earlier in the conversation, as the user may have navigated to a different folder since then.</Description>
+The current folder changes when the user browses to another folder.</Description>
       <ProgressLabel>Getting the current folder</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{}}</ParametersSchema>
       <ExecutionScriptFile>get_current_folder.cshtml</ExecutionScriptFile>
@@ -301,8 +301,8 @@ Use it to explain why an AI agent or a tool is refused for a user, or to review 
       <Title>Get the parameters of a view</Title>
       <Access>ReadOnly</Access>
       <Description>Lists the configurable rendering parameters of a report's view (e.g. the "Chart JS" view), with each parameter's type, current value, default, allowed values and description.
-Call with only 'path' to list every view in the report; then call again with view_name (e.g. "Chart JS") to see that view's parameters.
-Use this before report_configure_view to discover valid parameter names and values.
+With only 'path', it lists every view in the report; then call again with view_name (e.g. "Chart JS") to see that view's parameters.
+It gives the valid parameter names and values for report_configure_view.
 Read-only.</Description>
       <ProgressLabel>Reading view parameters of {path}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative report path as returned by report_list (e.g. Reports\\Sales\\monthly.srex)"},"view_name":{"type":"string","description":"Name of the view to inspect (e.g. 'Chart JS', 'Page Table'). Omit to list all views in the report."},"template_name":{"type":"string","description":"Optional template name filter (e.g. 'Chart JS') when several views share a name."}},"required":["path"]}</ParametersSchema>
@@ -315,7 +315,7 @@ Read-only.</Description>
       <Access>Destructive</Access>
       <Description>Sets one or more rendering parameters on an existing report's view, in place, without rewriting the report.
 Use it to change how a view renders - for example to make a Chart JS view horizontal and stacked (chartjs_bar_horizontal=True, chartjs_bar_stacked=True), hide a legend, set a chart title, or switch a pie to a doughnut.
-Always call view_get_parameters first to discover valid parameter names and allowed values for the target view.
+The valid parameter names and allowed values of a view are given by view_get_parameters.
 Values are validated against each parameter's type and enumeration; parameters left at their default are not stored.
 For stacked bar charts the model must have a series Splitter (a Column element), otherwise there is a single series and nothing stacks.</Description>
       <ProgressLabel>Configuring view of report {path}</ProgressLabel>
@@ -328,7 +328,7 @@ For stacked bar charts the model must have a series Splitter (a Column element),
       <Title>Find the reports using a column</Title>
       <Access>ReadOnly</Access>
       <Description>Lists the reports that reference a given metadata column (or any column of a given table) of a data source.
-This is the safety primitive: ALWAYS call it before any destructive data-source change (datasource_set_column_sql, datasource_apply_join, datasource_remove, datasource_refresh_schema) and show the user the affected reports.
+It gives the reports affected by a change of the data source (datasource_set_column_sql, datasource_apply_join, datasource_remove, datasource_refresh_schema).
 Read-only. Provide column_guid (from datasource_get_detail) or table_name.</Description>
       <ProgressLabel>Checking which reports use this column</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the metadata column to find usage for (from datasource_get_detail)."},"table_name":{"type":"string","description":"Name or alias of a table; finds reports using any of its columns. Provide column_guid or table_name."}},"required":[]}</ParametersSchema>
@@ -352,9 +352,9 @@ Read-only: nothing is changed. Present the suggestions to the user, then apply t
       <Access>Write</Access>
       <Description>Adds a table to a SQL data source, with its columns. Additive — never breaks an existing report.
 Pass table_name for a database table (columns are read from the catalog), OR sql for a custom dynamic table defined by a SELECT.
-Use datasource_get_detail first to avoid duplicating an existing table.</Description>
+The existing tables are listed by datasource_get_detail.</Description>
       <ProgressLabel>Adding table {table_name} to the data source</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Database table name, optionally schema-qualified (e.g. dbo.Orders). Use this OR sql."},"sql":{"type":"string","description":"A SELECT statement defining a custom (dynamic) table. Use this OR table_name."},"alias":{"type":"string","description":"Optional alias/display name for the table."},"connection_guid":{"type":"string","description":"GUID of the connection to read the schema from. Omit for the source default connection."}},"required":[]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Database table name, optionally schema-qualified (e.g. dbo.Orders). Exclusive with sql."},"sql":{"type":"string","description":"A SELECT statement defining a custom (dynamic) table. Exclusive with table_name."},"alias":{"type":"string","description":"Optional alias/display name for the table."},"connection_guid":{"type":"string","description":"GUID of the connection to read the schema from. Omit for the source default connection."}},"required":[]}</ParametersSchema>
       <ExecutionScriptFile>datasource_add_table.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -397,9 +397,9 @@ Use assign_to_column_guid to attach the enum to a column so its restrictions sho
       <Title>Change the SQL of a column</Title>
       <Access>Destructive</Access>
       <Description>Changes a column's underlying SQL expression, type, or aggregate flag.
-HIGH IMPACT: this changes results in EVERY report that uses the column. You MUST first call datasource_find_usage, show the affected reports to the user, get explicit approval, then call this with confirm=true.</Description>
+HIGH IMPACT: this changes results in EVERY report that uses the column. The change is applied only with confirm=true, the approval of the user (affected reports given by datasource_find_usage).</Description>
       <ProgressLabel>Changing the SQL of a column</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the column to change (from datasource_get_detail)."},"sql":{"type":"string","description":"New SQL name or expression for the column."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"New column data type."},"is_aggregate":{"type":"boolean","description":"Whether the expression is an aggregate."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the change shown by datasource_find_usage."}},"required":["column_guid","confirm"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"column_guid":{"type":"string","description":"GUID of the column to change (from datasource_get_detail)."},"sql":{"type":"string","description":"New SQL name or expression for the column."},"type":{"type":"string","enum":["Default","Text","Numeric","DateTime","UnicodeText"],"description":"New column data type."},"is_aggregate":{"type":"boolean","description":"Whether the expression is an aggregate."},"confirm":{"type":"boolean","description":"Approval of the change by the user: must be true."}},"required":["column_guid","confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_set_column_sql.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -408,10 +408,10 @@ HIGH IMPACT: this changes results in EVERY report that uses the column. You MUST
       <Title>Apply a join</Title>
       <Access>Destructive</Access>
       <Description>Adds or updates a join between two tables of a SQL data source.
-A wrong join skews results across reports — review it with the user first, then call with confirm=true.
+A wrong join skews results across reports: the join is applied only with confirm=true, the approval of the user.
 Pass join_guid to update an existing join; omit it to add a new one (both left_table and right_table required).</Description>
       <ProgressLabel>Applying a join</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"left_table":{"type":"string","description":"Name or alias of the left table."},"right_table":{"type":"string","description":"Name or alias of the right table."},"clause":{"type":"string","description":"Join clause, e.g. Orders.CustomerID = Customers.CustomerID."},"join_type":{"type":"string","enum":["Inner","LeftOuter","RightOuter","Cross"],"description":"Join type. Default LeftOuter when omitted on a new join."},"is_bidirectional":{"type":"boolean","description":"Whether the join can be used in both directions. Default true."},"weight":{"type":"integer","description":"Weight of the join (1 to 1000, default 1). A model uses the joins linking all its tables with the minimal total weight: when several paths exist between tables (circular joins), give a higher weight to the join to avoid."},"join_guid":{"type":"string","description":"GUID of an existing join to update. Omit to add a new join."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has reviewed the join."}},"required":["confirm"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"left_table":{"type":"string","description":"Name or alias of the left table."},"right_table":{"type":"string","description":"Name or alias of the right table."},"clause":{"type":"string","description":"Join clause, e.g. Orders.CustomerID = Customers.CustomerID."},"join_type":{"type":"string","enum":["Inner","LeftOuter","RightOuter","Cross"],"description":"Join type. Default LeftOuter when omitted on a new join."},"is_bidirectional":{"type":"boolean","description":"Whether the join can be used in both directions. Default true."},"weight":{"type":"integer","description":"Weight of the join (1 to 1000, default 1). A model uses the joins linking all its tables with the minimal total weight: when several paths exist between tables (circular joins), give a higher weight to the join to avoid."},"join_guid":{"type":"string","description":"GUID of an existing join to update. Omit to add a new join."},"confirm":{"type":"boolean","description":"Approval of the join by the user: must be true."}},"required":["confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_apply_join.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -420,10 +420,10 @@ Pass join_guid to update an existing join; omit it to add a new one (both left_t
       <Title>Remove an item from a data source</Title>
       <Access>Destructive</Access>
       <Description>Removes a table, column, join, or enum from a data source.
-Can break reports that use the removed object. You MUST first call datasource_find_usage, show the affected reports, get explicit approval, then call this with confirm=true.
+Can break reports that use the removed object. The removal is applied only with confirm=true, the approval of the user (affected reports given by datasource_find_usage).
 Identify the object by guid (preferred) or name.</Description>
       <ProgressLabel>Removing {object_type} from the data source</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"object_type":{"type":"string","enum":["table","column","join","enum"],"description":"Kind of object to remove."},"guid":{"type":"string","description":"GUID of the object to remove (from datasource_get_detail)."},"name":{"type":"string","description":"Name of the object to remove (used when guid is not given)."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the removal shown by datasource_find_usage."}},"required":["object_type","confirm"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"object_type":{"type":"string","enum":["table","column","join","enum"],"description":"Kind of object to remove."},"guid":{"type":"string","description":"GUID of the object to remove (from datasource_get_detail)."},"name":{"type":"string","description":"Name of the object to remove (used when guid is not given)."},"confirm":{"type":"boolean","description":"Approval of the removal by the user: must be true."}},"required":["object_type","confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_remove.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -432,10 +432,10 @@ Identify the object by guid (preferred) or name.</Description>
       <Title>Refresh the schema of a data source</Title>
       <Access>Destructive</Access>
       <Description>Re-reads the database schema into the source's dynamic-column tables (adds new columns, updates types, DROPS columns no longer in the database).
-Standard (non-dynamic) tables are not affected. Can change reports — you MUST first call datasource_find_usage, get explicit approval, then call with confirm=true.
+Standard (non-dynamic) tables are not affected. Can change reports: the refresh is applied only with confirm=true, the approval of the user (affected reports given by datasource_find_usage).
 Pass table_name to refresh a single table, or omit to refresh all dynamic tables.</Description>
       <ProgressLabel>Refreshing the data source schema</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Optional: name/alias of a single dynamic table to refresh. Omit to refresh all dynamic tables."},"confirm":{"type":"boolean","description":"Must be true. Set only after the user has approved the refresh."}},"required":["confirm"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"datasource_guid":{"type":"string","description":"GUID of the data source (from datasource_list). Omit for the default source."},"table_name":{"type":"string","description":"Optional: name/alias of a single dynamic table to refresh. Omit to refresh all dynamic tables."},"confirm":{"type":"boolean","description":"Approval of the refresh by the user: must be true."}},"required":["confirm"]}</ParametersSchema>
       <ExecutionScriptFile>datasource_refresh_schema.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -470,7 +470,7 @@ Then read the file around the line with seal_read. Read-only.</Description>
       <Access>ReadOnly</Access>
       <Description>Describes a Seal class serialized in a report XML (Report, ReportSource, ReportModel, ReportElement, ReportRestriction, ReportView, MetaEnum, ReportOutput, ReportSchedule, ReportTask...):
 its XML elements with their type, default value (an omitted element keeps it), enumeration values, description, and the code level (Sql, Scripts) required to write them.
-Use it to know which elements a class accepts and their valid values before writing or patching a report. Read-only.</Description>
+It tells which elements a class accepts and their valid values. Read-only.</Description>
       <ProgressLabel>Describing the class {name}</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"name":{"type":"string","description":"Class name = XML element name, e.g. ReportElement"}},"required":["name"]}</ParametersSchema>
       <ExecutionScriptFile>seal_describe_class.cshtml</ExecutionScriptFile>
@@ -505,9 +505,9 @@ For a view of an existing report, view_get_parameters also gives the current val
 Operations: set (text of the selected elements or attributes; created in its parent when missing; or 'xml' to replace the selected elements), insert (XML fragment, position append/prepend/before/after), remove.
 The GUIDs of the report are kept: give short placeholders (e.g. e9, v3) as &lt;GUID&gt; of the new elements, they are regenerated with their references. The whole patch is applied or nothing.
 The result goes through the same checks as report_create_from_xml (authorization level, data source references, restrictions), then the report is saved, executed and its views rendered.
-Call report_get_xml first to see the current XML.</Description>
+The current XML is returned by report_get_xml.</Description>
       <ProgressLabel>Modifying the report {path}</ProgressLabel>
-      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative path of the existing report (e.g. Reports\\Sales\\monthly.srex or Personal\\my_report.srex)"},"operations":{"type":"array","description":"Operations applied in order","items":{"type":"object","properties":{"op":{"type":"string","enum":["set","insert","remove"]},"xpath":{"type":"string","description":"XPath of the target nodes, e.g. /Report/Models/ReportModel[Name='Orders']/Elements or //ReportView[Name='Chart JS']/Parameters"},"value":{"type":"string","description":"set: the new text"},"xml":{"type":"string","description":"insert: the XML fragment to insert (one or several elements); set: the fragment replacing the selected elements"},"position":{"type":"string","enum":["append","prepend","before","after"],"description":"insert: append (last child, default), prepend (first child), before or after (sibling of the target)"}},"required":["op","xpath"]}},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default; a model already saved without limit keeps it. Set true ONLY if the user explicitly asks for no record limit. Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false: use it only to check a layout (tabs, containers, charts), not for every save."}},"required":["path","operations"]}</ParametersSchema>
+      <ParametersSchema>{"type":"object","properties":{"path":{"type":"string","description":"Relative path of the existing report (e.g. Reports\\Sales\\monthly.srex or Personal\\my_report.srex)"},"operations":{"type":"array","description":"Operations applied in order","items":{"type":"object","properties":{"op":{"type":"string","enum":["set","insert","remove"]},"xpath":{"type":"string","description":"XPath of the target nodes, e.g. /Report/Models/ReportModel[Name='Orders']/Elements or //ReportView[Name='Chart JS']/Parameters"},"value":{"type":"string","description":"set: the new text"},"xml":{"type":"string","description":"insert: the XML fragment to insert (one or several elements); set: the fragment replacing the selected elements"},"position":{"type":"string","enum":["append","prepend","before","after"],"description":"insert: append (last child, default), prepend (first child), before or after (sibling of the target)"}},"required":["op","xpath"]}},"no_record_limit":{"type":"boolean","description":"A model without a positive MaxNumberOfRecords is limited to 5000 records by default; a model already saved without limit keeps it. true removes this limit. Default false."},"render_picture":{"type":"boolean","description":"If true, a picture of the rendered report (top part) is returned with the result when the AI provider accepts images, to check the layout visually. Default false. Useful to check a layout (tabs, containers, charts)."}},"required":["path","operations"]}</ParametersSchema>
       <ExecutionScriptFile>report_patch_xml.cshtml</ExecutionScriptFile>
     </AIToolConfiguration>
     <AIToolConfiguration>
@@ -516,8 +516,7 @@ Call report_get_xml first to see the current XML.</Description>
       <Title>Send a feedback</Title>
       <Access>Write</Access>
       <Description>Sends a feedback of the user to the team in charge of the reports: a value that seems wrong in a report (kind Data, with the value shown, the value expected and its source), a missing presentation (Presentation: table, chart, map...), something hard to understand (Understanding), a proposal of a new report or of missing data (Proposal, report_path optional) or anything else (Other).
-Call it ONLY when the user asks to report something, or after the user accepted your offer to do it: show the text first, never send a feedback on your own initiative, never twice for the same remark.
-The user and the versions are added by the server. Give the result message to the user.</Description>
+The user and the versions are added by the server. Returns the confirmation message of the feedback.</Description>
       <ProgressLabel>Sending the feedback</ProgressLabel>
       <ParametersSchema>{"type":"object","properties":{"kind":{"type":"string","enum":["Data","Presentation","Understanding","Proposal","Other"]},"text":{"type":"string","description":"The feedback, in the words and the language of the user (2000 characters at most)"},"report_path":{"type":"string","description":"Relative path of the report commented as returned by report_list (e.g. Reports\\Sales\\monthly.srex). Required except for Proposal and Other."},"criteria":{"type":"string","description":"Criteria of the execution commented, e.g. 'Country = France ; Year = 2026'"},"target_label":{"type":"string","description":"Data: name of the column or of the measure commented"},"target_value":{"type":"string","description":"Data: value shown by the report"},"row_label":{"type":"string","description":"Data: row of the value, e.g. the name of the city"},"expected_value":{"type":"string","description":"Data: value expected by the user"},"source_url":{"type":"string","description":"Data: source of the expected value given by the user (e.g. an address of a web site)"}},"required":["kind","text"]}</ParametersSchema>
       <ExecutionScriptFile>feedback_send.cshtml</ExecutionScriptFile>
@@ -530,8 +529,7 @@ The user and the versions are added by the server. Give the result message to th
       <Description>Create a report using the data source's metadata columns (the default report type):
 lists, search reports, totals/counts/averages grouped by dimensions, date-filtered and pivot/cross-tab reports, with optional charts.
 Builds the report XML and creates it.
-Load this whenever the user asks to create, build, save, or generate a report and the query does NOT require raw SQL.
-For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
+For the requests to create, build, save or generate a report whose query does not require raw SQL; a MongoDB/NoSQL source is covered by build-nosql-report.</Description>
       <ProgressLabel>Preparing to build a report from metadata</ProgressLabel>
       <InstructionsFile>build-report-from-metadata.md</InstructionsFile>
       <ToolGUIDs>
@@ -556,8 +554,7 @@ For a MongoDB/NoSQL source, load build-nosql-report instead.</Description>
       <Name>build-report-from-sql</Name>
       <Description>Create a new report backed by a raw SQL query:
 explore the data source, confirm the schema, validate the SQL, then create the report.
-Load this only when the user supplies SQL or the query needs window functions, CTEs, subqueries, UNION, or joins not defined in the source metadata.
-For ordinary aggregation/grouping/filtering, use build-report-from-metadata instead.</Description>
+For the requests where the user supplies SQL or the query needs window functions, CTEs, subqueries, UNION, or joins not defined in the source metadata; ordinary aggregation/grouping/filtering is covered by build-report-from-metadata.</Description>
       <ProgressLabel>Preparing to build a report from SQL</ProgressLabel>
       <InstructionsFile>build-report-from-sql.md</InstructionsFile>
       <ToolGUIDs>
@@ -575,8 +572,8 @@ For ordinary aggregation/grouping/filtering, use build-report-from-metadata inst
       <Name>build-nosql-report</Name>
       <Description>Create a report on a NoSQL / MongoDB data source (one marked "/ NoSQL" by datasource_list).
 Covers the rules specific to NoSQL:
-never write SQL, inspect fields with database_get_columns/get_sample_values, always create via the metadata XML, and use the column's RAW field name (not Table.Column) for element and restriction names.
-Load this whenever the target source is NoSQL.</Description>
+no SQL, fields inspected with database_get_columns/get_sample_values, creation via the metadata XML, and the column's RAW field name (not Table.Column) for element and restriction names.
+For the reports on a NoSQL source.</Description>
       <ProgressLabel>Preparing to build a NoSQL report</ProgressLabel>
       <InstructionsFile>build-nosql-report.md</InstructionsFile>
       <ToolGUIDs>
@@ -597,7 +594,7 @@ Load this whenever the target source is NoSQL.</Description>
       <Name>style-report-view</Name>
       <Description>Change how an already-saved report renders, in place, without rewriting it:
 make a chart horizontal or stacked, hide the legend, set a chart title, switch a pie to a doughnut, or adjust any view parameter.
-Load this when the user asks to restyle or reconfigure the chart/view of an existing report.</Description>
+For the requests to restyle or reconfigure the chart/view of an existing report.</Description>
       <ProgressLabel>Preparing to style the report view</ProgressLabel>
       <InstructionsFile>style-report-view.md</InstructionsFile>
       <ToolGUIDs>
@@ -615,7 +612,7 @@ Load this when the user asks to restyle or reconfigure the chart/view of an exis
       <Name>schedule-report-delivery</Name>
       <Description>Configure delivery and automation for an existing report:
 add or remove folder, email, or FTP/SFTP outputs and set recurring or one-time schedules (daily, weekly, monthly, once).
-Load this when the user wants to save, email, upload, schedule, automate, or unschedule a report.</Description>
+For the requests to save, email, upload, schedule, automate, or unschedule a report.</Description>
       <ProgressLabel>Preparing to schedule the report delivery</ProgressLabel>
       <InstructionsFile>schedule-report-delivery.md</InstructionsFile>
       <ToolGUIDs>
@@ -630,7 +627,7 @@ Load this when the user wants to save, email, upload, schedule, automate, or uns
       <Name>analyze-report-data</Name>
       <Description>Answer a business data question from published reports:
 find the most relevant report, execute it, and summarize the live results in a clear, non-technical way.
-Load this when the user asks a data question ("what were the sales last quarter", "top customers", "summarize monthly orders") rather than to build or configure a report.</Description>
+For the data questions ("what were the sales last quarter", "top customers", "summarize monthly orders") rather than the requests to build or configure a report.</Description>
       <ProgressLabel>Preparing to analyze the report data</ProgressLabel>
       <InstructionsFile>analyze-report-data.md</InstructionsFile>
       <ToolGUIDs>
@@ -644,7 +641,7 @@ Load this when the user asks a data question ("what were the sales last quarter"
       <Name>troubleshoot-with-logs</Name>
       <Description>Diagnose server and report problems using the event, execution, and schedule logs together with the System check reports:
 errors, failed logins, slow or failing executions, and scheduler issues.
-Load this when the user reports something broken, missing, or failing and wants to know why.</Description>
+For the reports of something broken, missing, or failing, to know why.</Description>
       <ProgressLabel>Preparing to troubleshoot with the logs</ProgressLabel>
       <InstructionsFile>troubleshoot-with-logs.md</InstructionsFile>
       <ToolGUIDs>
@@ -657,7 +654,7 @@ Load this when the user reports something broken, missing, or failing and wants 
       <GUID>f0a1b2c3-d4e5-4f60-8a1b-2c3d4e5f6078</GUID>
       <Name>audit-security-and-activity</Name>
       <Description>Answer questions about access rights, user activity, and security/audit events by running the built-in System reports (Security Summary, Audit - Search, Login Failures, Users Activity, Reports Inventory, etc.).
-Load this for "who can access what", "recent login failures", "user activity", and similar audit questions.</Description>
+For "who can access what", "recent login failures", "user activity", and similar audit questions.</Description>
       <ProgressLabel>Preparing to audit security and activity</ProgressLabel>
       <InstructionsFile>audit-security-and-activity.md</InstructionsFile>
       <ToolGUIDs>
@@ -671,7 +668,7 @@ Load this for "who can access what", "recent login failures", "user activity", a
       <Name>manage-report-files</Name>
       <Description>Delete, rename, move, or copy a report file (or any repository file) safely:
 list files to confirm the exact path first, then perform the file operation.
-Load this when the user explicitly asks to delete, rename, move, or copy a report file — not to change its content, output, or schedule.</Description>
+For the explicit requests to delete, rename, move, or copy a report file, not to change its content, output, or schedule.</Description>
       <ProgressLabel>Preparing to manage report files</ProgressLabel>
       <InstructionsFile>manage-report-files.md</InstructionsFile>
       <ToolGUIDs>
@@ -685,7 +682,7 @@ Load this when the user explicitly asks to delete, rename, move, or copy a repor
       <Description>Edit the data source / metadata model itself (not a report):
 add a table or derived column, rename/reformat a column, build an enumerated list, create or fix a join, change a column's SQL, or remove/refresh metadata.
 Because a data source is shared by many reports, destructive changes first check report usage and require confirmation.
-Load this when the user asks to change the metadata model, add tables/columns, define enums, or set up joins.</Description>
+For the requests to change the metadata model, add tables/columns, define enums, or set up joins.</Description>
       <ProgressLabel>Preparing to manage the data source</ProgressLabel>
       <InstructionsFile>manage-data-source.md</InstructionsFile>
       <ToolGUIDs>
@@ -710,7 +707,7 @@ Load this when the user asks to change the metadata model, add tables/columns, d
       <Name>prospection-face</Name>
       <Description>Rechercher dans la base FACE des entreprises suisses (hub Zefix, registre genevois REG_GE, grille d'emploi STATENT) pour constituer des listes de prospects :
 cibler les entreprises par localisation, activité NOGA, taille, date d'inscription, capital ou signaux comme « sans site web », en comptant d'abord puis en présentant une liste exploitable.
-Charger ce skill dès que l'utilisateur demande de trouver, cibler, compter ou lister des entreprises pour de la prospection.</Description>
+Pour les demandes de trouver, cibler, compter ou lister des entreprises pour de la prospection.</Description>
       <ProgressLabel>Préparation de la recherche de prospects</ProgressLabel>
       <InstructionsFile>prospection-face.md</InstructionsFile>
       <ToolGUIDs>
