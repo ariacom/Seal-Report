@@ -193,6 +193,23 @@ namespace Test
         }
 
         [TestMethod]
+        public void ToolTitles()
+        {
+            //Every tool of the configuration has a title (required by the Claude connectors directory), translated in the culture of the user
+            var untitled = _repository.AIConfiguration.AITools.Where(t => string.IsNullOrWhiteSpace(t.Title)).Select(t => t.Name).ToList();
+            Assert.AreEqual(0, untitled.Count, "tools without title: " + string.Join(", ", untitled));
+            Assert.AreEqual("Report list", AIToolConfiguration.GetDefaultTitle("report_list"));
+
+            var agent = _repository.AIConfiguration.AIAgents.First(a => a.IsEnabled && new AIToolHost(a).GetTools().Any(t => t.Name == "report_list"));
+            var tools = new AIToolHost(agent).GetTools();
+            Assert.IsTrue(tools.All(t => !string.IsNullOrWhiteSpace(t.Title)), "every tool sent to the clients has a title");
+            Assert.AreEqual("List the reports", tools.First(t => t.Name == "report_list").Title);
+            var french = new AIToolHost(agent) { Culture = "fr" }.GetTools();
+            Assert.AreEqual("Lister les rapports", french.First(t => t.Name == "report_list").Title);
+            if (french.Any(t => t.Name == AIToolHost.LoadSkillToolName)) Assert.AreEqual("Charger une compétence", french.First(t => t.Name == AIToolHost.LoadSkillToolName).Title);
+        }
+
+        [TestMethod]
         public void PromptsAndResources()
         {
             Assert.AreEqual("seal://report/Reports/Sales/my%20report.srex", McpGateway.GetReportResourceUri(@"Reports\Sales\my report.srex"));

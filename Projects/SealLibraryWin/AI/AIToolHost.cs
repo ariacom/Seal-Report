@@ -153,6 +153,7 @@ namespace Seal.AI
             var list = _activeTools.Values.Select(t =>
             {
                 var tool = t.ToAITool();
+                tool.Title = string.IsNullOrWhiteSpace(t.Title) ? AIToolConfiguration.GetDefaultTitle(t.Name) : translateProgress(t.Title);
                 if (_toolSkills.TryGetValue(t.Name, out var skillName) && !_loadedSkills.Contains(skillName))
                     tool.Description = $"Requires the skill '{skillName}': call '{LoadSkillToolName}' with skill_name '{skillName}' once before the first call of this tool, and follow its instructions.\n" + tool.Description;
                 return tool;
@@ -267,7 +268,7 @@ namespace Seal.AI
         /// agent's skills (name: description) and its single <c>skill_name</c> parameter is constrained to
         /// the available skill names.
         /// </summary>
-        static AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs, bool withInstructions = false)
+        AITool BuildLoadSkillTool(List<AISkillConfiguration> skillConfigs, bool withInstructions = false)
         {
             var catalog = string.Join("\n", skillConfigs.Select(s => $"- {s.Name}: {s.Description}"));
             if (withInstructions) catalog = $"- {InstructionsSkillName}: the complete instructions and rules of this agent (the server instructions can be truncated by the client). Load it once at the start of the conversation, before any other call.\n" + catalog;
@@ -293,7 +294,7 @@ namespace Seal.AI
                 required = new[] { "skill_name" }
             });
 
-            return new AITool { Name = LoadSkillToolName, Description = description, ParametersSchema = schema, Access = Model.AIToolAccess.ReadOnly };
+            return new AITool { Name = LoadSkillToolName, Title = translateProgress("Load a skill"), Description = description, ParametersSchema = schema, Access = Model.AIToolAccess.ReadOnly };
         }
 
         /// <summary>

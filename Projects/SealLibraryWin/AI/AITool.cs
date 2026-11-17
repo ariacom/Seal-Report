@@ -12,6 +12,9 @@ namespace Seal.AI
         /// <summary>Function name – must be unique within a request.</summary>
         public string Name { get; set; }
 
+        /// <summary>Short title of the tool shown to the user by the MCP clients (e.g. in the confirmation of a call).</summary>
+        public string Title { get; set; }
+
         /// <summary>Human-readable description of what the tool does.</summary>
         public string Description { get; set; }
 

@@ -625,6 +625,9 @@
         <member name="P:Seal.AI.AITool.Name">
             <summary>Function name – must be unique within a request.</summary>
         </member>
+        <member name="P:Seal.AI.AITool.Title">
+            <summary>Short title of the tool shown to the user by the MCP clients (e.g. in the confirmation of a call).</summary>
+        </member>
         <member name="P:Seal.AI.AITool.Description">
             <summary>Human-readable description of what the tool does.</summary>
         </member>
@@ -749,6 +752,17 @@
             <summary>
             Unique function name sent to the AI model (e.g. <c>get_report_data</c>).
             Must contain only letters, digits, and underscores.
+            </summary>
+        </member>
+        <member name="P:Seal.AI.AIToolConfiguration.Title">
+            <summary>
+            Short title of the tool shown to the user by the MCP clients (e.g. in the confirmation of a call or in the list of the tools of a connector).
+            Translatable via the repository <c>AIToolProgress</c> context. Leave empty to use a title built from the tool name.
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIToolConfiguration.GetDefaultTitle(System.String)">
+            <summary>
+            Returns the title of a tool built from its name, used when the tool has no <see cref="P:Seal.AI.AIToolConfiguration.Title"/> (e.g. 'Report list' for report_list)
             </summary>
         </member>
         <member name="P:Seal.AI.AIToolConfiguration.Description">

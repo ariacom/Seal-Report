@@ -62,6 +62,25 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Short title of the tool shown to the user by the MCP clients (e.g. in the confirmation of a call or in the list of the tools of a connector).
+        /// Translatable via the repository <c>AIToolProgress</c> context. Leave empty to use a title built from the tool name.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("Title"), Description("Short title of the tool shown to the user by the MCP clients, e.g. 'List the reports'. Translated like the progress text. Leave empty to use a title built from the tool name (e.g. 'Report list' for report_list)."), Id(1, 1)]
+#endif
+        public string Title { get; set; }
+
+        /// <summary>
+        /// Returns the title of a tool built from its name, used when the tool has no <see cref="Title"/> (e.g. 'Report list' for report_list)
+        /// </summary>
+        public static string GetDefaultTitle(string name)
+        {
+            if (string.IsNullOrWhiteSpace(name)) return name;
+            var result = name.Replace('_', ' ').Trim();
+            return char.ToUpperInvariant(result[0]) + result.Substring(1);
+        }
+
+        /// <summary>
         /// Human-readable description of what the tool does, shown to the AI model to help
         /// it decide when to call the tool.
         /// </summary>
@@ -362,6 +381,7 @@ namespace Seal.AI
         public AITool ToAITool() => new AITool
         {
             Name = Name,
+            Title = Title,
             Description = Description,
             ParametersSchema = ParametersSchema,
             Access = Access

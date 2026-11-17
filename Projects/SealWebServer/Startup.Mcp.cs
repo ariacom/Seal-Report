@@ -71,9 +71,10 @@ namespace SealWebServer
                 var tools = McpGateway.GetToolHost(context).GetTools().Select(t => new Tool()
                 {
                     Name = t.Name,
+                    Title = t.Title,
                     Description = t.Description,
                     InputSchema = getInputSchema(t.ParametersSchema),
-                    Annotations = getAnnotations(t.Access)
+                    Annotations = getAnnotations(t.Access, t.Title)
                 }).ToList();
                 return ValueTask.FromResult(new ListToolsResult() { Tools = tools });
             };
@@ -165,15 +166,18 @@ namespace SealWebServer
             return await task;
         }
 
-        static ToolAnnotations getAnnotations(AIToolAccess access)
+        /// <summary>Annotations of a tool: its title (also in the annotations for the older clients) and the hints of its effect</summary>
+        static ToolAnnotations getAnnotations(AIToolAccess access, string title)
         {
-            return access switch
+            var result = access switch
             {
                 AIToolAccess.ReadOnly => new ToolAnnotations() { ReadOnlyHint = true },
                 AIToolAccess.Write => new ToolAnnotations() { ReadOnlyHint = false, DestructiveHint = false },
                 AIToolAccess.Destructive => new ToolAnnotations() { ReadOnlyHint = false, DestructiveHint = true },
-                _ => null
+                _ => new ToolAnnotations()
             };
+            result.Title = title;
+            return result;
         }
 
         static JsonElement getInputSchema(string parametersSchema)
