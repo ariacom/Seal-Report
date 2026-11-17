@@ -447,7 +447,7 @@ namespace Seal.AI
         /// <summary>
         /// Returns the protected resource metadata of the MCP server of an agent (RFC 9728)
         /// </summary>
-        public static Dictionary<string, object> GetProtectedResourceMetadata(string publicBaseUrl, string agentSlug, string agentName)
+        public static Dictionary<string, object> GetProtectedResourceMetadata(string publicBaseUrl, string agentSlug, string agentName, string productName = null)
         {
             return new Dictionary<string, object>()
             {
@@ -455,8 +455,19 @@ namespace Seal.AI
                 { "authorization_servers", new[] { publicBaseUrl } },
                 { "scopes_supported", new[] { McpScope } },
                 { "bearer_methods_supported", new[] { "header" } },
-                { "resource_name", "Seal Report - " + agentName }
+                { "resource_name", GetResourceName(agentName, productName) }
             };
+        }
+
+        /// <summary>
+        /// Returns the name of the MCP server of an agent shown to the clients: the product name (Server Configuration WebProductName) followed by the agent name,
+        /// or the product name alone when it already contains the agent name (e.g. 'Seal Open Data' for the agent 'Open Data')
+        /// </summary>
+        public static string GetResourceName(string agentName, string productName)
+        {
+            if (string.IsNullOrWhiteSpace(productName)) productName = "Seal Report";
+            if (string.IsNullOrWhiteSpace(agentName) || productName.Contains(agentName.Trim(), StringComparison.OrdinalIgnoreCase)) return productName;
+            return productName + " - " + agentName;
         }
 
         /// <summary>Returns the agent of the MCP server having the slug given, whatever the user (null if none)</summary>

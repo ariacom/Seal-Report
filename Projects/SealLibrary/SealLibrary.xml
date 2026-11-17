@@ -2159,9 +2159,15 @@
             <param name="publicBaseUrl">Public base URL of the server (issuer)</param>
             <param name="openIdConfiguration">True for the document served as OpenID Connect discovery: the fields required by its schema are added (the MCP clients validate it strictly, e.g. for an issuer in a virtual directory found at {path}/.well-known/openid-configuration), no ID token is issued (empty key set)</param>
         </member>
-        <member name="M:Seal.AI.McpOAuth.GetProtectedResourceMetadata(System.String,System.String,System.String)">
+        <member name="M:Seal.AI.McpOAuth.GetProtectedResourceMetadata(System.String,System.String,System.String,System.String)">
             <summary>
             Returns the protected resource metadata of the MCP server of an agent (RFC 9728)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.McpOAuth.GetResourceName(System.String,System.String)">
+            <summary>
+            Returns the name of the MCP server of an agent shown to the clients: the product name (Server Configuration WebProductName) followed by the agent name,
+            or the product name alone when it already contains the agent name (e.g. 'Seal Open Data' for the agent 'Open Data')
             </summary>
         </member>
         <member name="M:Seal.AI.McpOAuth.FindMcpAgent(System.String)">

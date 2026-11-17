@@ -166,6 +166,13 @@ namespace Test
             Assert.AreEqual(BaseUrl + "/mcp/" + _slug, resource["resource"], "the resource must be the URL entered in the client");
             CollectionAssert.AreEqual(new[] { BaseUrl }, (string[])resource["authorization_servers"]);
             Assert.AreEqual(BaseUrl + "/.well-known/oauth-protected-resource/mcp/" + _slug, McpOAuth.GetResourceMetadataUrl(BaseUrl, _slug));
+
+            //Name shown to the clients: product name (WebProductName), followed by the agent name unless the product name contains it
+            Assert.AreEqual("Seal Report - Analyst", McpOAuth.GetResourceName("Analyst", "Seal Report"));
+            Assert.AreEqual("Seal Report - Analyst", McpOAuth.GetResourceName("Analyst", null));
+            Assert.AreEqual("Seal Open Data", McpOAuth.GetResourceName("Open Data", "Seal Open Data"));
+            Assert.AreEqual("Seal Open Data", McpOAuth.GetResourceName("open data", "Seal Open Data"));
+            Assert.AreEqual("Seal Open Data", McpOAuth.GetProtectedResourceMetadata(BaseUrl, _slug, "Open Data", "Seal Open Data")["resource_name"]);
         }
 
         [TestMethod]

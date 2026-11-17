@@ -73,7 +73,7 @@ namespace SealWebServer
                     return Task.CompletedTask;
                 }
                 var baseUrl = GetMcpPublicBaseUrl(httpContext.Request);
-                return writeJson(httpContext, McpOAuth.GetProtectedResourceMetadata(baseUrl, agent, configuration.Name));
+                return writeJson(httpContext, McpOAuth.GetProtectedResourceMetadata(baseUrl, agent, configuration.Name, Repository.Instance.Configuration.WebProductName));
             }).RequireCors("cors");
 
             //Metadata of the authorization server (RFC 8414), also served as OpenID Connect discovery for the issuers having a path (e.g. a virtual directory of IIS)
