@@ -227,6 +227,19 @@
         if (!string.IsNullOrEmpty(folderPath))
         {
             // ── Resolve folder_path to a keyword-based stored path ──────────────────
+            // No parent segment: 'Personal\..\..\Reports\System' would escape the allowed root at execution
+            // (the separators are normalized and the folder created by Report.OutputFolderDeviceResultFolder).
+            string NormalizeSeparators(string p) => p.Replace('\\', Path.DirectorySeparatorChar).Replace('/', Path.DirectorySeparatorChar);
+            bool IsUnder(string physical, string root)
+            {
+                var cmp = OperatingSystem.IsWindows() ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
+                var full = Path.GetFullPath(NormalizeSeparators(physical)).TrimEnd(Path.DirectorySeparatorChar);
+                var r = Path.GetFullPath(NormalizeSeparators(root)).TrimEnd(Path.DirectorySeparatorChar);
+                return string.Equals(full, r, cmp) || full.StartsWith(r + Path.DirectorySeparatorChar, cmp);
+            }
+            if (folderPath.Replace('\\', '/').Split('/').Any(s => s.Trim() == ".."))
+                { tool.ExecResult = $"Error: the folder path '{folderPath}' must not contain '..'."; return; }
+
             string resolvedFolderPath;
             if (folderPath.StartsWith("Personal", StringComparison.OrdinalIgnoreCase))
             {
@@ -240,11 +253,15 @@
                 else if (string.Equals(sub, userName, StringComparison.OrdinalIgnoreCase))
                     sub = string.Empty;
                 var physPath = string.IsNullOrEmpty(sub) ? personalRoot : Path.Combine(personalRoot, sub);
+                if (!IsUnder(physPath, personalRoot))
+                    { tool.ExecResult = $"Error: the folder path '{folderPath}' is outside your personal folder."; return; }
                 resolvedFolderPath = physPath.Replace(repo.PersonalFolder, Repository.SealPersonalRepositoryKeyword);
             }
             else if (folderPath.StartsWith("Reports", StringComparison.OrdinalIgnoreCase))
             {
                 var sub = folderPath.Substring("Reports".Length);
+                if (!IsUnder(repo.ReportsFolder + NormalizeSeparators(sub), repo.ReportsFolder))
+                    { tool.ExecResult = $"Error: the folder path '{folderPath}' is outside the reports folder."; return; }
                 var swiSub = sub.Length > 0 ? sub : Path.DirectorySeparatorChar.ToString();
                 var secFolder = securityContext.FindSecurityFolder(swiSub);
                 if (secFolder != null && secFolder.FolderRight != FolderRight.Edit)
@@ -255,7 +272,7 @@
             {
                 // Absolute or keyword-based path: it must resolve to a location inside an
                 // allowed root (Reports or Personal) with write access. Reject anything else (e.g. C:\temp).
-                var physical = Path.GetFullPath(repo.ReplaceRepositoryKeyword(folderPath));
+                var physical = Path.GetFullPath(NormalizeSeparators(repo.ReplaceRepositoryKeyword(folderPath)));
                 if (!securityContext.HasFolderRight(physical, (int)FolderRight.Edit))
                     { tool.ExecResult = $"Error: no write access to folder '{folderPath}'."; return; }
                 resolvedFolderPath = folderPath;

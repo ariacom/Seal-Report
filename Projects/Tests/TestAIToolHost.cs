@@ -128,6 +128,47 @@ namespace Test
         }
 
         [TestMethod]
+        public void OutputFolderPathTraversalRejected()
+        {
+            //report_configure_output: a folder path with '..' must not escape the personal or reports folder (the folder is created at execution)
+            var tool = _repository.AIConfiguration.AITools.First(t => t.Name == "report_configure_output");
+            var user = new SecurityUser(_repository.Security) { WebUserName = "test_traversal" };
+            user.SecurityGroups.Add(_repository.Security.Groups.First(g => g.Name == "Developers"));
+            user.SetFolders();
+            var personalRoot = _repository.GetPersonalFolder(user);
+            Directory.CreateDirectory(personalRoot);
+            var reportName = $"seal_test_output_{Guid.NewGuid():N}.srex";
+            var reportPath = Path.Combine(personalRoot, reportName);
+            File.Copy(Path.Combine(_repository.ReportsFolder, "System", "Tests", "TST010 Data Sources integrity.srex"), reportPath);
+            try
+            {
+                string configure(string folderPath) => tool.Execute(new AIToolCall()
+                {
+                    Name = tool.Name,
+                    SecurityContext = user,
+                    Arguments = System.Text.Json.JsonSerializer.Serialize(new { path = Path.Combine("Personal", reportName), folder_path = folderPath, file_name = "out", output_format = "HTML" })
+                });
+
+                foreach (var folderPath in new[] { @"Personal\..\..\Reports\System", "Personal/../../Reports/System", @"Reports\..\Settings", @"Personal\sub\..\..\x" })
+                {
+                    var result = configure(folderPath);
+                    StringAssert.StartsWith(result, "Error:", $"'{folderPath}' accepted: {result}");
+                    StringAssert.Contains(result, "'..'");
+                }
+                Assert.IsFalse(File.ReadAllText(reportPath).Contains(".."), "no traversal path stored in the report");
+
+                //A sub-folder of the personal folder is still accepted
+                var ok = configure(@"Personal\Results");
+                Assert.IsFalse(ok.StartsWith("Error:"), ok);
+                StringAssert.Contains(File.ReadAllText(reportPath), Repository.SealPersonalRepositoryKeyword);
+            }
+            finally
+            {
+                File.Delete(reportPath);
+            }
+        }
+
+        [TestMethod]
         public void ToolContextAndErrors()
         {
             var agent = agentWithScript("test_context", "@{ Seal.AI.AIToolConfiguration tool = Model; if (tool.CurrentToolCall.Arguments == \"crash\") { throw new System.Exception(\"script failure\"); } tool.ExecResult = (tool.CurrentToolCall.SecurityContext?.WebUserName == \"test_user\" && tool.CurrentToolCall.AgentConfiguration?.Name == \"Test agent\" ? \"context\" : \"no context\") + \"|\" + new string('x', 300000); }", out var tool, out var scriptPath);
