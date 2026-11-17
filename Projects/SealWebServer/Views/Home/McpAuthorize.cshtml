@@ -106,7 +106,7 @@
                                 @foreach (var group in new[] { (readOnly, "fa-eye text-success", t("Read only")), (write, "fa-pen text-warning", t("Write")), (destructive, "fa-triangle-exclamation text-danger", t("Modify or delete")) })
                                 {
                                     if (group.Item1.Count == 0) { continue; }
-                                    <li class="mb-1"><i class="fa-solid @group.Item2 me-1"></i><b>@group.Item3 (@group.Item1.Count)</b>: <span class="text-muted">@string.Join(", ", group.Item1.Select(i => i.Name))</span></li>
+                                    <li class="mb-1"><i class="fa-solid @group.Item2 me-1"></i><b>@group.Item3 (@group.Item1.Count)</b>: <span class="text-muted">@for (int n = 0; n < group.Item1.Count; n++) { var tool = group.Item1[n]; if (n > 0) { @(" · ") }<span title="@tool.Name">@(string.IsNullOrEmpty(tool.Title) ? tool.Name : tool.Title)</span> }</span></li>
                                 }
                             </ul>
                             <p class="small text-muted">@t("The data returned by the tools are sent to the AI model of the client. You can revoke this authorization at any time in your profile ('MCP access').")</p>

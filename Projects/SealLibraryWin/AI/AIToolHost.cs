@@ -146,6 +146,11 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Note ending the description of a tool whose skill is not loaded yet ({0}: skill name, {1}: name of the load_skill tool)
+        /// </summary>
+        public const string SkillToolNote = "Part of the skill '{0}': its usage guide is returned by '{1}'.";
+
+        /// <summary>
         /// Returns the tools to send to the AI: the active tools plus the built-in <c>load_skill</c> tool when the agent has skills.
         /// </summary>
         public List<AITool> GetTools()
@@ -154,8 +159,10 @@ namespace Seal.AI
             {
                 var tool = t.ToAITool();
                 tool.Title = string.IsNullOrWhiteSpace(t.Title) ? AIToolConfiguration.GetDefaultTitle(t.Name) : translateProgress(t.Title);
+                //Tool of a skill not loaded yet (MCP: all the tools are listed upfront): the description says what the tool does first, then names its skill, without instructions to the model
+                //(the rule to load the skill first is in the server instructions, see McpGateway.McpInstructions)
                 if (_toolSkills.TryGetValue(t.Name, out var skillName) && !_loadedSkills.Contains(skillName))
-                    tool.Description = $"Requires the skill '{skillName}': call '{LoadSkillToolName}' with skill_name '{skillName}' once before the first call of this tool, and follow its instructions.\n" + tool.Description;
+                    tool.Description = (tool.Description ?? "").TrimEnd() + "\n\n" + string.Format(SkillToolNote, skillName, LoadSkillToolName);
                 return tool;
             }).ToList();
             if (_skills.Count > 0 || AgentInstructions != null) list.Add(BuildLoadSkillTool(_skills, AgentInstructions != null));

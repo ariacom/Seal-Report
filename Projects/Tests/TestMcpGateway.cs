@@ -141,7 +141,8 @@ namespace Test
                 StringAssert.Contains(McpGateway.GetInstructions(context), "Seal Report MCP server");
                 var tools = McpGateway.GetToolHost(context).GetTools();
                 var skillTools = agent.GetSkillConfigurations().SelectMany(s => s.GetToolConfigurations()).Where(t => !agent.ToolGUIDs.Contains(t.GUID)).ToList();
-                foreach (var t in skillTools) Assert.IsTrue(tools.Any(i => i.Name == t.Name && i.Description.StartsWith("Requires the skill")), $"tool '{t.Name}' missing");
+                //A tool of a skill is listed upfront: its description starts with what it does and ends with the name of its skill, without instructions to the model
+                foreach (var t in skillTools) Assert.IsTrue(tools.Any(i => i.Name == t.Name && i.Description.Contains("Part of the skill") && !i.Description.StartsWith("Part of the skill") && !i.Description.Contains("follow its instructions")), $"tool '{t.Name}' missing");
                 if (agent.GetSkillConfigurations().Count > 0) Assert.IsTrue(tools.Any(t => t.Name == AIToolHost.LoadSkillToolName));
 
                 //Long system prompt: the instructions are an extract under the limit of the clients, the complete prompt is returned by load_skill('instructions')

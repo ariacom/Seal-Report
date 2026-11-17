@@ -744,6 +744,9 @@
             (the notifications are part of the response of the request, allowed by the stateless mode).
             </summary>
         </member>
+        <member name="M:SealWebServer.Startup.getAnnotations(Seal.Model.AIToolAccess,System.String)">
+            <summary>Annotations of a tool: its title (also in the annotations for the older clients) and the hints of its effect</summary>
+        </member>
         <member name="M:SealWebServer.Startup.UseMcpAuthentication(Microsoft.AspNetCore.Builder.IApplicationBuilder)">
             <summary>
             Authenticates the requests of the MCP server before the MCP endpoint: 404 if the server is not enabled or the agent not available, 401 for a missing, invalid or expired token
