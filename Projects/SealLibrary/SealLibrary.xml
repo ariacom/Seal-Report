@@ -950,6 +950,13 @@
             Short description of what this agent can do.
             </summary>
         </member>
+        <member name="P:Seal.AI.AIAgentConfiguration.McpToolContext">
+            <summary>
+            Short description of the data of this agent, added at the end of the description of its tools that read data when the agent is served by the MCP server.
+            The MCP clients (e.g. claude.ai) search the tools of a connector by their names and descriptions: this text lets them find the tools for a question on these data.
+            It describes the data only (no instruction to the AI model) and is not translated.
+            </summary>
+        </member>
         <member name="P:Seal.AI.AIAgentConfiguration.IsEnabled">
             <summary>
             When <c>false</c>, this agent is excluded from all operations without being deleted.
@@ -1522,6 +1529,11 @@
         </member>
         <member name="F:Seal.AI.AIToolHost.AcceptsImages">
             <summary>True if the AI accepts images in a tool result</summary>
+        </member>
+        <member name="F:Seal.AI.AIToolHost.ToolContext">
+            <summary>
+            Description of the data of the agent added at the end of the description of its own read-only tools (set by the MCP server from <see cref="P:Seal.AI.AIAgentConfiguration.McpToolContext"/>, null for the web chat)
+            </summary>
         </member>
         <member name="F:Seal.AI.AIToolHost.ExecutionLog">
             <summary>Log of the tool executions</summary>

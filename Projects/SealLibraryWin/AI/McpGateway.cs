@@ -244,7 +244,8 @@ namespace Seal.AI
                 SecurityContext = context.User,
                 AcceptsImages = true,
                 Culture = context.User.Profile?.Culture,
-                LoadSkillNote = McpRenderingInstructions
+                LoadSkillNote = McpRenderingInstructions,
+                ToolContext = context.Agent.McpToolContext
             };
             host.ActivateAllTools();
             //The clients truncate long server instructions: the complete system prompt is returned by load_skill('instructions')

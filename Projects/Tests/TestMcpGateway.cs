@@ -211,6 +211,28 @@ namespace Test
         }
 
         [TestMethod]
+        public void ToolContext()
+        {
+            //MCP: the description of the data of the agent ends the descriptions of its own read-only tools only (not the tools of its skills, not the tools that write)
+            const string context = "Test data context: sales by country.";
+            var agent = _repository.AIConfiguration.AIAgents.First(a => a.IsEnabled && a.GetSkillConfigurations().Count > 0
+                && a.GetToolConfigurations().Any(t => t.Access == AIToolAccess.ReadOnly) && a.GetToolConfigurations().Any(t => t.Access != AIToolAccess.ReadOnly));
+            var own = agent.GetToolConfigurations().Select(t => t.Name).ToList();
+            var host = new AIToolHost(agent) { ToolContext = context };
+            host.ActivateAllTools();
+            var tools = host.GetTools();
+            foreach (var t in tools)
+            {
+                var expected = own.Contains(t.Name) && t.Access == AIToolAccess.ReadOnly;
+                Assert.AreEqual(expected, t.Description.EndsWith(context), $"tool '{t.Name}'");
+            }
+            Assert.IsTrue(tools.Any(t => t.Description.EndsWith(context)));
+
+            //Web chat: no context
+            Assert.IsFalse(new AIToolHost(agent).GetTools().Any(t => t.Description.Contains(context)));
+        }
+
+        [TestMethod]
         public void PromptsAndResources()
         {
             Assert.AreEqual("seal://report/Reports/Sales/my%20report.srex", McpGateway.GetReportResourceUri(@"Reports\Sales\my report.srex"));

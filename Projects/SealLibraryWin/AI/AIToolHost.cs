@@ -75,6 +75,11 @@ namespace Seal.AI
         /// <summary>True if the AI accepts images in a tool result</summary>
         public bool AcceptsImages = false;
 
+        /// <summary>
+        /// Description of the data of the agent added at the end of the description of its own read-only tools (set by the MCP server from <see cref="AIAgentConfiguration.McpToolContext"/>, null for the web chat)
+        /// </summary>
+        public string ToolContext = null;
+
         /// <summary>Log of the tool executions</summary>
         public ReportExecutionLog ExecutionLog = null;
 
@@ -163,6 +168,9 @@ namespace Seal.AI
                 //(the rule to load the skill first is in the server instructions, see McpGateway.McpInstructions)
                 if (_toolSkills.TryGetValue(t.Name, out var skillName) && !_loadedSkills.Contains(skillName))
                     tool.Description = (tool.Description ?? "").TrimEnd() + "\n\n" + string.Format(SkillToolNote, skillName, LoadSkillToolName);
+                //Own read-only tool of the agent (entry point of a question on its data): description of the data of the agent, to be found by the tool search of the MCP clients
+                else if (!string.IsNullOrWhiteSpace(ToolContext) && t.Access == AIToolAccess.ReadOnly && !_toolSkills.ContainsKey(t.Name))
+                    tool.Description = (tool.Description ?? "").TrimEnd() + "\n\n" + ToolContext.Trim();
                 return tool;
             }).ToList();
             if (_skills.Count > 0 || AgentInstructions != null) list.Add(BuildLoadSkillTool(_skills, AgentInstructions != null));

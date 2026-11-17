@@ -90,6 +90,17 @@ namespace Seal.AI
         }
 
         /// <summary>
+        /// Short description of the data of this agent, added at the end of the description of its tools that read data when the agent is served by the MCP server.
+        /// The MCP clients (e.g. claude.ai) search the tools of a connector by their names and descriptions: this text lets them find the tools for a question on these data.
+        /// It describes the data only (no instruction to the AI model) and is not translated.
+        /// </summary>
+#if WINDOWS
+        [Category("Definition"), DisplayName("\t\tMCP tool context"), Description("Short description of the data of this agent (e.g. 'French public data by commune: local taxes, property sales, companies...'), added at the end of the description of its own read-only tools when the agent is served by the MCP server. The MCP clients search the tools of a connector by their names and descriptions: this text lets them find the tools for a question on these data. Describe the data only, without instructions to the AI model. Leave empty for none."), Id(3, 1)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        public string McpToolContext { get; set; }
+
+        /// <summary>
         /// When <c>false</c>, this agent is excluded from all operations without being deleted.
         /// </summary>
 #if WINDOWS
