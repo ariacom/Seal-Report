@@ -44,6 +44,9 @@ See the [release notes](https://github.com/ariacom/Seal-Report/releases) for det
 * **NuGet packages** to ease integration into existing projects.
 * **Low TCO (total cost of ownership)**: Designed for minimal ongoing maintenance.
 
+## Built with Seal Report
+* **[Seal Open Data](https://sealopendata.fr/)**: a portal of French public data in production. It crosses the datasets of data.gouv.fr (territories, companies, housing, population...) in reports, maps and an AI agent, also served to Claude and the other MCP clients by the Seal MCP server.
+
 ## Quick Start
 1. **Install**: Download the latest setup from <a href="https://github.com/ariacom/Seal-Report/releases" target=_blank>GitHub Releases</a>.
 2. **Connect**: Use the Server Manager to declare a data source (OLE DB, ODBC, MS SQL Server, Oracle, MySQL, SQLite, PostgreSQL, MongoDB, Excel, CSV, ...).
