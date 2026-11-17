@@ -808,6 +808,8 @@ namespace Seal.Model
             //The paths of the security are written with '\' (Security.xml edited on Windows): compared with the separator of the OS,
             //otherwise on Linux no folder matches '/System' and every folder takes the rights of the root folder
             folder = FileHelper.ConvertOSFilePath(folder);
+            //Windows file names ignore the case: '\system' is the folder '\System' and must take its rights, not the ones of the root
+            var comparison = Path.DirectorySeparatorChar == '\\' ? StringComparison.OrdinalIgnoreCase : StringComparison.Ordinal;
             //Weight of the group that provided the current tree view icon (to break ties when several groups define the folder)
             int iconWeight = int.MinValue;
             foreach (var group in groups)
@@ -816,10 +818,10 @@ namespace Seal.Model
                 SecurityFolder current = null;
                 while (current == null && !string.IsNullOrEmpty(folderRoot))
                 {
-                    current = group.Folders.FirstOrDefault(i => FileHelper.ConvertOSFilePath(i.Path) == folderRoot);
+                    current = group.Folders.FirstOrDefault(i => string.Equals(FileHelper.ConvertOSFilePath(i.Path), folderRoot, comparison));
                     folderRoot = Path.GetDirectoryName(folderRoot);
                 }
-                if (current != null && FileHelper.ConvertOSFilePath(current.Path) != folder && !current.UseSubFolders)
+                if (current != null && !string.Equals(FileHelper.ConvertOSFilePath(current.Path), folder, comparison) && !current.UseSubFolders)
                 {
                     //cannot use this parent
                     current = null;
@@ -846,7 +848,7 @@ namespace Seal.Model
                     //The tree view icon is the one set on the folder by the group having the highest weight.
                     //It applies only to the folder where it is explicitly defined; sub-folders inherited via
                     //UseSubFolders keep the default icon.
-                    bool isExact = FileHelper.ConvertOSFilePath(current.Path) == folder;
+                    bool isExact = string.Equals(FileHelper.ConvertOSFilePath(current.Path), folder, comparison);
                     if (isExact && !string.IsNullOrEmpty(current.Icon) && group.Weight > iconWeight)
                     {
                         result.Icon = current.Icon;

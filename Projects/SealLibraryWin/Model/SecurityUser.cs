@@ -107,6 +107,8 @@ namespace Seal.Model
             if (!IsAuthenticated) throw new Exception("Error: user is not authenticated");
             if (path.Contains("..\\") || path.Contains("../")) throw new Exception("Error: invalid path");
             path = FileHelper.ConvertOSFilePath(path);
+            //A path written differently ('/./System', '//System', 'System.') would not match its security folder and would take the rights of a parent folder
+            if (!SWIFolder.IsCanonicalPath(path)) throw new Exception("Error: invalid path");
 
             SWIFolder result = AllFolders.FirstOrDefault(i => i.path == path);
             if (result != null)
@@ -177,7 +179,8 @@ namespace Seal.Model
                 SecurityFolder securityFolder = FindSecurityFolder(path);
                 if (securityFolder != null)
                 {
-                    result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder, securityFolder.IsDefined);
+                    //Sub-folders are managed only with the right Edit (like the repository folders): with Execute or None, a guest could create, rename or delete folders
+                    result.SetManageFlag(securityFolder.UseSubFolders, securityFolder.ManageFolder && securityFolder.FolderRight == FolderRight.Edit, securityFolder.IsDefined);
                     result.expand = securityFolder.ExpandSubFolders;
                     result.right = (int)securityFolder.FolderRight;
                     result.files = securityFolder.FilesOnly;

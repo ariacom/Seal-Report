@@ -259,6 +259,31 @@ namespace Seal.Model
             return RepositoryPrefix;
         }
 
+        /// <summary>
+        /// True if the relative path (separators of the OS) is canonical: no '.' or '..' segment, no empty segment inside the path,
+        /// no segment ending with a dot or a space, no ':' after the prefix.
+        /// The security folders are compared with the path as written: '/./System' or '//System' reached the folder System with the rights of the root folder.
+        /// </summary>
+        public static bool IsCanonicalPath(string path)
+        {
+            if (path == null) return false;
+            var finalPath = (path.StartsWith(PersonalPrefix) || path.StartsWith(RepositoryPrefix)) ? path.Substring(1) : path;
+            var segments = finalPath.Split(Path.DirectorySeparatorChar);
+            for (int i = 0; i < segments.Length; i++)
+            {
+                var segment = segments[i];
+                if (segment == "")
+                {
+                    //Leading or trailing separator only
+                    if (i == 0 || i == segments.Length - 1) continue;
+                    return false;
+                }
+                //Windows ignores the trailing dots and spaces of a name ('System.' is 'System')
+                if (segment == "." || segment == ".." || segment.EndsWith(".") || segment.EndsWith(" ") || segment.IndexOfAny(new[] { ':', '/', '\\' }) >= 0) return false;
+            }
+            return true;
+        }
+
         public static string GetParentPath(string path)
         {
             string result;

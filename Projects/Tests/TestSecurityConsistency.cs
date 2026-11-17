@@ -114,6 +114,37 @@ namespace Test
         }
 
         [TestMethod]
+        public void FolderPathWrittenDifferentlyKeepsItsRights()
+        {
+            //PROD 2026-11-17: a guest listed and executed the reports of '/System' with the path '/./System' or '//System' (no security folder
+            //matched, the root right Execute applied), and could create, rename or delete folders with the right Execute only.
+            var group = new SecurityGroup() { Name = "Test", GUID = "test" };
+            group.Folders.Add(new SecurityFolder() { FolderRight = FolderRight.Execute });
+            group.Folders.Add(new SecurityFolder() { Path = "\\System", FolderRight = FolderRight.None });
+            group.Folders.Add(new SecurityFolder() { Path = "\\Shared", FolderRight = FolderRight.Edit });
+            var security = newSecurity(group);
+            var user = new SecurityUser(security);
+            user.SecurityGroups.Add(group);
+            var sep = Path.DirectorySeparatorChar.ToString();
+
+            foreach (var path in new[] { "/./System", "//System", "/System//Tests", "/System.", "/System ", "/System/.", "/System::$INDEX_ALLOCATION", ":/./x", "~/./Security" })
+            {
+                var ex = Assert.ThrowsExactly<System.Exception>(() => user.GetFolder(path), path);
+                Assert.AreEqual("Error: invalid path", ex.Message, path);
+            }
+            Assert.AreEqual(0, user.GetFolder("/System").right);
+            Assert.AreEqual(0, user.GetFolder("/System/Tests").right, "sub-folder inherits the folder, not the root");
+            Assert.AreEqual(0, user.GetFolder("/System/").right, "trailing separator");
+            if (sep == "\\") Assert.AreEqual(0, user.GetFolder("\\system\\Tests").right, "Windows: the case of the folder name is ignored");
+
+            //Sub-folders managed only with the right Edit
+            Assert.AreEqual(0, user.GetFolder("/Catalogue").manage, "Execute: no folder management");
+            Assert.AreEqual(0, user.GetFolder("/System/Tests").manage, "None: no folder management");
+            Assert.AreEqual(1, user.GetFolder("/Shared").manage, "Edit, folder defined: create only");
+            Assert.AreEqual(2, user.GetFolder("/Shared/Sub").manage, "Edit: create, rename, delete");
+        }
+
+        [TestMethod]
         public void DataSourceManagerRequiresSourcesWrite()
         {
             var group = newGroup(DataSourceManagerGUID);
