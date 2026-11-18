@@ -16026,7 +16026,14 @@
         </member>
         <member name="M:Seal.Model.ReportView.IsColumnHidden(System.Int32)">
             <summary>
-            True if the column is hidden
+            True if the column is hidden by its number (1-based) in the 'columns_hidden' parameter
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportView.IsColumnHidden(System.Int32,Seal.Model.ResultTable)">
+            <summary>
+            True if the column of the result table is hidden by the 'columns_hidden' parameter: either by its number (1-based)
+            or by its name (title shown, display name of the element, or name of its column in the source).
+            A name keeps hiding the right column when elements are added or moved in the model.
             </summary>
         </member>
         <member name="M:Seal.Model.ReportView.FindViewFromTemplate(System.String)">

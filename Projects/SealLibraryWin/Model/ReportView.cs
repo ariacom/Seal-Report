@@ -1957,12 +1957,65 @@ namespace Seal.Model
         List<string> _columnsHidden = null;
 
         /// <summary>
-        /// True if the column is hidden
+        /// True if the column is hidden by its number (1-based) in the 'columns_hidden' parameter
         /// </summary>
         public bool IsColumnHidden(int col)
         {
-            if (_columnsHidden == null) _columnsHidden = GetValue(Parameter.ColumnsHiddenParameter).Split(';').ToList();
+            checkColumnsHiddenValue();
+            if (_columnsHidden == null) _columnsHidden = _columnsHiddenValue.Split(';').ToList();
             return _columnsHidden.Contains((col + 1).ToString());
+        }
+
+        string _columnsHiddenValue = null;
+        List<string> _columnsHiddenNames = null;
+        ResultTable _columnsHiddenTable = null;
+        bool[] _columnsHiddenByName = null;
+
+        //Clears the cached lists when the parameter has changed
+        void checkColumnsHiddenValue()
+        {
+            var value = GetValue(Parameter.ColumnsHiddenParameter) ?? "";
+            if (value == _columnsHiddenValue) return;
+            _columnsHiddenValue = value;
+            _columnsHidden = null;
+            _columnsHiddenNames = null;
+            _columnsHiddenByName = null;
+        }
+
+        /// <summary>
+        /// True if the column of the result table is hidden by the 'columns_hidden' parameter: either by its number (1-based)
+        /// or by its name (title shown, display name of the element, or name of its column in the source).
+        /// A name keeps hiding the right column when elements are added or moved in the model.
+        /// </summary>
+        public bool IsColumnHidden(int col, ResultTable table)
+        {
+            if (IsColumnHidden(col)) return true;
+            if (_columnsHiddenNames == null)
+            {
+                _columnsHiddenNames = _columnsHiddenValue.Split(';').Select(i => i.Trim()).Where(i => i.Length > 0 && !int.TryParse(i, out _)).ToList();
+            }
+            if (_columnsHiddenNames.Count == 0 || table == null || table.BodyStartRow < 1 || col < 0 || col >= table.ColumnCount) return false;
+
+            //Result per column, computed once per table
+            if (_columnsHiddenTable != table || _columnsHiddenByName == null || _columnsHiddenByName.Length != table.ColumnCount)
+            {
+                _columnsHiddenTable = table;
+                _columnsHiddenByName = new bool[table.ColumnCount];
+                for (int i = 0; i < table.ColumnCount; i++)
+                {
+                    var cell = table[table.BodyStartRow - 1, i];
+                    var names = new List<string>() { cell.DisplayValue };
+                    var element = cell.Element;
+                    if (element != null)
+                    {
+                        names.Add(element.DisplayNameElTranslated);
+                        names.Add(element.DisplayNameEl);
+                        if (element.MetaColumn != null) { names.Add(element.MetaColumn.ColumnName); names.Add(element.MetaColumn.Name); }
+                    }
+                    _columnsHiddenByName[i] = names.Any(n => !string.IsNullOrEmpty(n) && _columnsHiddenNames.Any(h => string.Compare(n.Trim(), h, true) == 0));
+                }
+            }
+            return _columnsHiddenByName[col];
         }
 
 

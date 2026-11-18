@@ -54,6 +54,46 @@ namespace Test
         }
 
         [TestMethod]
+        public void ColumnsHiddenByName()
+        {
+            //'columns_hidden' of a Data Table: a column number or a column name (title, element or source column), the name is not shifted by the column order
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            var report = Report.LoadFromFile(path, repository);
+            report.SkipExternalViewer = true;
+            new ReportExecution() { Report = report }.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+
+            var model = report.ExecutionModels.First(i => i.Pages.Count > 0 && i.Pages[0].DataTable != null && i.Pages[0].DataTable.ColumnCount > 1);
+            var table = model.Pages[0].DataTable;
+            var titleRow = table.BodyStartRow - 1;
+            int last = table.ColumnCount - 1;
+            var element = table[titleRow, last].Element;
+            Assert.IsNotNull(element, "title cell with its element");
+
+            void setHidden(ReportView v, string value)
+            {
+                if (v.GetParameter(Parameter.ColumnsHiddenParameter) == null) v.Parameters.Add(new Parameter() { Name = Parameter.ColumnsHiddenParameter });
+                v.SetParameter(Parameter.ColumnsHiddenParameter, value);
+            }
+            var view = report.AllViews.First(i => i.TemplateName == "Data Table");
+            setHidden(view, "  " + element.DisplayNameElTranslated.ToUpper() + " ;");
+            for (int col = 0; col < table.ColumnCount; col++) Assert.AreEqual(col == last, view.IsColumnHidden(col, table), $"column {col} by title");
+
+            //Name of the source column, number, unknown name
+            view = Report.LoadFromFile(path, repository).AllViews.First(i => i.TemplateName == "Data Table");
+            setHidden(view, "1;" + element.MetaColumn.Name);
+            Assert.IsTrue(view.IsColumnHidden(0, table), "number");
+            Assert.IsTrue(view.IsColumnHidden(last, table), "source column name");
+            Assert.IsFalse(view.IsColumnHidden(1, table) && last != 1, "other column");
+            view = Report.LoadFromFile(path, repository).AllViews.First(i => i.TemplateName == "Data Table");
+            setHidden(view, "No such column");
+            for (int col = 0; col < table.ColumnCount; col++) Assert.IsFalse(view.IsColumnHidden(col, table), $"column {col} unknown name");
+            Assert.IsFalse(view.IsColumnHidden(0), "the number-only overload ignores the names");
+        }
+
+        [TestMethod]
         public void ParallelModelsSameResult()
         {
             //The queries of the models of an Execution set run in parallel: same result tables and pages as the execution one model after the other

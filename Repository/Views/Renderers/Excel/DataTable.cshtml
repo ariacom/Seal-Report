@@ -27,7 +27,7 @@
             result.CurrentCol = initialCol;
             for (int col = 0; col < page.DataTable.ColumnCount; col++)
             {
-                if ((view.IsColumnHidden(col)) || dataTable.IsColumnHidden(col)) { continue; }
+                if ((view.IsColumnHidden(col, dataTable)) || dataTable.IsColumnHidden(col)) { continue; }
                 result.SetValue(page.DataTable[row, col], modelViewRenderer.GetBoolValue("use_display_format"), modelViewRenderer.GetBoolValue("use_cell_styles"));
                 result.CurrentCol++;
             }

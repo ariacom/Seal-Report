@@ -147,7 +147,7 @@ namespace Seal.Model
                 //Handle hidden columns
                 for (int col = 0; col < refLine.Length; col++)
                 {
-                    if (col <= sortIndex && (view.IsColumnHidden(col) || IsColumnHidden(col)))
+                    if (col <= sortIndex && (view.IsColumnHidden(col, this) || IsColumnHidden(col)))
                     {
                         sortIndex++;
                     }
@@ -210,7 +210,7 @@ namespace Seal.Model
                 sb.Append("[");
                 for (int col = 0; col < line.Length; col++)
                 {
-                    if (view.IsColumnHidden(col) || IsColumnHidden(col)) { continue; }
+                    if (view.IsColumnHidden(col, this) || IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
                     var cellValue = cell.HTMLValue;
                     var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(view, cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
