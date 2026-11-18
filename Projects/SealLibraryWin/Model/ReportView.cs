@@ -2018,6 +2018,90 @@ namespace Seal.Model
             return _columnsHiddenByName[col];
         }
 
+        /// <summary>
+        /// Header information style: the description is shown as a tooltip on the header (default)
+        /// </summary>
+        public const string HeaderInformationTooltip = "tooltip";
+        /// <summary>
+        /// Header information style: an information icon after the header shows the description (hover, click or touch)
+        /// </summary>
+        public const string HeaderInformationIcon = "icon";
+        /// <summary>
+        /// Header information style: information icon on screen, numbered notes under the table when printed (HTML print, PDF)
+        /// </summary>
+        public const string HeaderInformationIconNotes = "icon_notes";
+
+        //Notes of the header information collected while rendering one table: description -> (number, header label)
+        List<Tuple<string, string>> _headerNotes = new List<Tuple<string, string>>();
+
+        string getHeaderInformationStyle(string showParameter, string styleParameter)
+        {
+            if (!GetBoolValue(showParameter)) return "";
+            var style = GetValue(styleParameter);
+            return string.IsNullOrEmpty(style) ? HeaderInformationTooltip : style;
+        }
+
+        /// <summary>
+        /// Attribute of a header cell showing its description (semantic layer) as a tooltip.
+        /// Empty if the parameter 'showParameter' is false or if the style 'styleParameter' is not 'tooltip'.
+        /// </summary>
+        public string HeaderInformationAttribute(ResultCell cell, string showParameter, string styleParameter)
+        {
+            if (cell == null || getHeaderInformationStyle(showParameter, styleParameter) != HeaderInformationTooltip) return "";
+            return Helper.AddAttribute("title", cell.TitleTooltip);
+        }
+
+        /// <summary>
+        /// HTML added after the header text to show its description (semantic layer): an information icon for the styles 'icon' and 'icon_notes',
+        /// plus, for 'icon_notes', the number of the note written under the table by HeaderInformationNotes() (visible when printed only).
+        /// Empty for the style 'tooltip' or if the header has no description.
+        /// </summary>
+        public string HeaderInformationHTML(ResultCell cell, string showParameter, string styleParameter)
+        {
+            if (cell == null) return "";
+            var style = getHeaderInformationStyle(showParameter, styleParameter);
+            if (style != HeaderInformationIcon && style != HeaderInformationIconNotes) return "";
+            var description = cell.TitleTooltip; //already HTML encoded
+            if (string.IsNullOrEmpty(description)) return "";
+
+            var result = new StringBuilder();
+            var printLayout = Report != null && Report.PrintLayout;
+            if (!printLayout)
+            {
+                result.AppendFormat("<span class='header_info_icon fa-solid fa-circle-info no-print' tabindex='0' role='button' aria-label='{0}' data-bs-content='{0}'></span>", description);
+            }
+            if (style == HeaderInformationIconNotes)
+            {
+                var index = _headerNotes.FindIndex(i => i.Item1 == description);
+                if (index < 0)
+                {
+                    _headerNotes.Add(new Tuple<string, string>(description, cell.HTMLValue));
+                    index = _headerNotes.Count - 1;
+                }
+                result.AppendFormat("<sup class='header_info_note_ref{0}'>{1}</sup>", printLayout ? " header_info_printed" : "", index + 1);
+            }
+            return result.ToString();
+        }
+
+        /// <summary>
+        /// Numbered notes with the descriptions of the headers rendered since the last call (style 'icon_notes'), to write under the table.
+        /// The notes are visible when printed only (HTML print, PDF). Empty if there is no note.
+        /// </summary>
+        public string HeaderInformationNotes()
+        {
+            if (_headerNotes.Count == 0) return "";
+            var printLayout = Report != null && Report.PrintLayout;
+            var result = new StringBuilder();
+            result.AppendFormat("<div class='header_info_notes{0}'>", printLayout ? " header_info_printed" : "");
+            for (int i = 0; i < _headerNotes.Count; i++)
+            {
+                result.AppendFormat("<div><sup>{0}</sup> <b>{1}</b>: {2}</div>", i + 1, _headerNotes[i].Item2, _headerNotes[i].Item1);
+            }
+            result.Append("</div>");
+            _headerNotes.Clear();
+            return result.ToString();
+        }
+
 
         /// <summary>
         /// Helper to find a child view from its template name

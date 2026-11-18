@@ -45,11 +45,12 @@ else
                         ResultCell value = page.DataTable[1, i];
                         string navigation = reportModel.GetNavigation(view, value);
                         <tr>
-                                <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.GetBoolValue("modeldetail_show_header_information") ? Helper.AddAttribute("title", title.TitleTooltip) : "")>@Raw(title.HTMLValue) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
+                                <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.HeaderInformationAttribute(title, "modeldetail_show_header_information", "modeldetail_header_information_style"))>@Raw(title.HTMLValue)@Raw(view.HeaderInformationHTML(title, "modeldetail_show_header_information", "modeldetail_header_information_style")) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
                                 <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(navigation)>@Raw(value.HTMLValue)</td>
                         </tr>
                     }
                 </table>
+                @Raw(view.HeaderInformationNotes())
             }
         </div>
     }

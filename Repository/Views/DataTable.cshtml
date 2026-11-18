@@ -108,7 +108,7 @@
                     {
                         if (view.IsColumnHidden(col, table) || table.IsColumnHidden(col)) { continue; }
                         ResultCell cell = table[row, col];
-                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(view.GetBoolValue("data_tables_show_header_information") ? Helper.AddAttribute("title", cell.TitleTooltip) : "") @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)@Raw(showReportSort && row == table.BodyStartRow - 1 ? reportModel.GetReportSortIcon(cell.Element) : "") @Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon fa-solid fa-up-right-from-square'></span>" : "")</th>
+                        <th @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(view.HeaderInformationAttribute(cell, "data_tables_show_header_information", "data_tables_header_information_style")) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)@Raw(view.HeaderInformationHTML(cell, "data_tables_show_header_information", "data_tables_header_information_style"))@Raw(showReportSort && row == table.BodyStartRow - 1 ? reportModel.GetReportSortIcon(cell.Element) : "") @Raw(view.GetBoolValue("data_tables_show_navigation") && table.HasNavigation(view, row, col) && report.GenerateHTMLDisplay ? "<span class='navigation_icon fa-solid fa-up-right-from-square'></span>" : "")</th>
                     }
                 </tr>
             }
@@ -145,4 +145,5 @@
             }
         </tfoot>
     </table>
+    @Raw(view.HeaderInformationNotes())
 }

@@ -16152,6 +16152,40 @@
             A name keeps hiding the right column when elements are added or moved in the model.
             </summary>
         </member>
+        <member name="F:Seal.Model.ReportView.HeaderInformationTooltip">
+            <summary>
+            Header information style: the description is shown as a tooltip on the header (default)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportView.HeaderInformationIcon">
+            <summary>
+            Header information style: an information icon after the header shows the description (hover, click or touch)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.ReportView.HeaderInformationIconNotes">
+            <summary>
+            Header information style: information icon on screen, numbered notes under the table when printed (HTML print, PDF)
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportView.HeaderInformationAttribute(Seal.Model.ResultCell,System.String,System.String)">
+            <summary>
+            Attribute of a header cell showing its description (semantic layer) as a tooltip.
+            Empty if the parameter 'showParameter' is false or if the style 'styleParameter' is not 'tooltip'.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportView.HeaderInformationHTML(Seal.Model.ResultCell,System.String,System.String)">
+            <summary>
+            HTML added after the header text to show its description (semantic layer): an information icon for the styles 'icon' and 'icon_notes',
+            plus, for 'icon_notes', the number of the note written under the table by HeaderInformationNotes() (visible when printed only).
+            Empty for the style 'tooltip' or if the header has no description.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportView.HeaderInformationNotes">
+            <summary>
+            Numbered notes with the descriptions of the headers rendered since the last call (style 'icon_notes'), to write under the table.
+            The notes are visible when printed only (HTML print, PDF). Empty if there is no note.
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportView.FindViewFromTemplate(System.String)">
             <summary>
             Helper to find a child view from its template name

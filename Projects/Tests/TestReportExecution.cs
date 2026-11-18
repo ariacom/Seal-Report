@@ -94,6 +94,70 @@ namespace Test
         }
 
         [TestMethod]
+        public void HeaderInformationStyles()
+        {
+            //Description of a header (semantic layer): tooltip (default), information icon, or icon + numbered notes written under the table
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            var report = Report.LoadFromFile(path, repository);
+            report.SkipExternalViewer = true;
+            new ReportExecution() { Report = report }.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+
+            var model = report.ExecutionModels.First(i => i.Pages.Count > 0 && i.Pages[0].DataTable != null && i.Pages[0].DataTable.ColumnCount > 1);
+            var table = model.Pages[0].DataTable;
+            var titleRow = table.BodyStartRow - 1;
+            var cell = table[titleRow, 0];
+            var other = table[titleRow, 1];
+            Assert.IsNotNull(cell.Element, "title cell with its element");
+            cell.Element.Description = "Share of 'people' below the <threshold>";
+            other.Element.Description = "";
+            if (!string.IsNullOrEmpty(other.Element.MetaColumn?.Description)) other = null; //no header without description in this table
+
+            const string show = "data_tables_show_header_information", style = "data_tables_header_information_style";
+            var view = report.AllViews.First(i => i.TemplateName == "Data Table");
+            void setStyle(string value)
+            {
+                if (view.GetParameter(style) == null) view.Parameters.Add(new Parameter() { Name = style });
+                view.SetParameter(style, value);
+            }
+            var encoded = System.Net.WebUtility.HtmlEncode(cell.Element.Description);
+
+            //Default: tooltip only
+            Assert.AreEqual($"title='{encoded}'", view.HeaderInformationAttribute(cell, show, style));
+            Assert.AreEqual("", view.HeaderInformationHTML(cell, show, style));
+            Assert.AreEqual("", view.HeaderInformationNotes());
+
+            //Icon: no tooltip, icon with the encoded description, no notes
+            setStyle(ReportView.HeaderInformationIcon);
+            Assert.AreEqual("", view.HeaderInformationAttribute(cell, show, style));
+            var html = view.HeaderInformationHTML(cell, show, style);
+            StringAssert.Contains(html, "header_info_icon");
+            StringAssert.Contains(html, "data-bs-content='" + encoded + "'");
+            Assert.IsFalse(html.Contains("<threshold>"), "description encoded");
+            Assert.IsFalse(html.Contains("<sup"), "no note number");
+            Assert.AreEqual("", view.HeaderInformationNotes());
+            if (other != null) Assert.AreEqual("", view.HeaderInformationHTML(other, show, style), "no description, no icon");
+
+            //Icon + notes: same description = same number, the notes are written once then cleared
+            setStyle(ReportView.HeaderInformationIconNotes);
+            StringAssert.Contains(view.HeaderInformationHTML(cell, show, style), ">1</sup>");
+            StringAssert.Contains(view.HeaderInformationHTML(cell, show, style), ">1</sup>");
+            var notes = view.HeaderInformationNotes();
+            StringAssert.Contains(notes, "header_info_notes");
+            StringAssert.Contains(notes, encoded);
+            Assert.AreEqual(1, notes.Split(new[] { "<sup>" }, StringSplitOptions.None).Length - 1, "one note");
+            Assert.AreEqual("", view.HeaderInformationNotes(), "notes cleared");
+
+            //Show header information false: nothing at all
+            if (view.GetParameter(show) == null) view.Parameters.Add(new Parameter() { Name = show });
+            view.SetParameter(show, false);
+            Assert.AreEqual("", view.HeaderInformationAttribute(cell, show, style));
+            Assert.AreEqual("", view.HeaderInformationHTML(cell, show, style));
+        }
+
+        [TestMethod]
         public void ParallelModelsSameResult()
         {
             //The queries of the models of an Execution set run in parallel: same result tables and pages as the execution one model after the other

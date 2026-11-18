@@ -27,8 +27,8 @@
             }
 
             <tr>
-                <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle)) @Raw(view.GetBoolValue("page_table_show_header_information") ? Helper.AddAttribute("title", header.TitleTooltip) : "")>
-                    @Raw(header.HTMLValue)
+                <th @Raw(Helper.AddAttribute("class", header.CellCssPageClass)) @Raw(Helper.AddAttribute("style", header.CellCssPageStyle)) @Raw(view.HeaderInformationAttribute(header, "page_table_show_header_information", "page_table_header_information_style"))>
+                    @Raw(header.HTMLValue)@Raw(view.HeaderInformationHTML(header, "page_table_show_header_information", "page_table_header_information_style"))
                 </th>
 
                 <td @Raw(Helper.AddAttribute("class", value.CellCssPageClass)) @Raw(Helper.AddAttribute("style", value.CellCssPageStyle)) @Raw(reportModel.GetNavigation(view, value))>
@@ -38,4 +38,5 @@
             </tr>
         }
     </table>
+    @Raw(view.HeaderInformationNotes())
 }

@@ -243,6 +243,48 @@ table.dataTable thead .dt-column-order {
     margin-left: 2px;
 }
 
+/* Header information (description of the column): icon on screen, numbered notes under the table when printed */
+.header_info_icon {
+    font-size: 0.8em;
+    margin-left: 4px;
+    color: var(--bs-secondary-color, #6c757d);
+    cursor: help;
+}
+
+    .header_info_icon:hover, .header_info_icon:focus, .header_info_icon.header_info_pinned {
+        color: var(--bs-primary, #0d6efd);
+        outline: none;
+    }
+
+.header_info_note_ref, .header_info_notes {
+    display: none;
+}
+
+    .header_info_note_ref.header_info_printed {
+        display: inline;
+    }
+
+    .header_info_notes.header_info_printed {
+        display: block;
+    }
+
+.header_info_notes {
+    font-size: 0.85em;
+    color: var(--bs-secondary-color, #6c757d);
+    margin: -0.5rem 0 1rem 0;
+    page-break-inside: avoid;
+}
+
+@media print {
+    .header_info_note_ref {
+        display: inline;
+    }
+
+    .header_info_notes {
+        display: block;
+    }
+}
+
 /* Widget (panel) header title link.
    The widget title can be an <a> (drill to a view/report). Inside the coloured
    .card-header (text-bg-*) the default blue underlined link is unreadable, so it

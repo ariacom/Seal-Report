@@ -784,3 +784,68 @@ function mainInit() {
     }
     initResize(_printLayout);
 }
+
+//Information icon of a header (header information style 'icon' or 'icon_notes'): the description is shown in a popover on hover,
+//and kept open on click, touch or Enter until a click elsewhere or Escape.
+//Listeners in the capture phase: a click on the icon must not sort the column or open the navigation menu of the header.
+if (!window._headerInfoInit) {
+    window._headerInfoInit = true;
+    var getHeaderInfo = function (icon) {
+        if (typeof bootstrap === "undefined") return null;
+        return bootstrap.Popover.getOrCreateInstance(icon, { trigger: "manual", container: "body", placement: "auto" });
+    };
+    //Bootstrap hides a manual popover if show() is called while it is already shown: show it only once
+    var showHeaderInfo = function (p) {
+        if (p && !(p.tip && p.tip.classList.contains("show"))) p.show();
+    };
+    var hideHeaderInfos = function (except) {
+        $(".header_info_icon").each(function () {
+            if (this !== except && typeof bootstrap !== "undefined") {
+                var p = bootstrap.Popover.getInstance(this);
+                if (p) p.hide();
+                $(this).removeClass("header_info_pinned");
+            }
+        });
+    };
+    var toggleHeaderInfo = function (icon) {
+        var p = getHeaderInfo(icon);
+        if (!p) return;
+        hideHeaderInfos(icon);
+        if ($(icon).hasClass("header_info_pinned")) {
+            $(icon).removeClass("header_info_pinned");
+            p.hide();
+        }
+        else {
+            $(icon).addClass("header_info_pinned");
+            showHeaderInfo(p);
+        }
+    };
+    $(document).on("mouseenter", ".header_info_icon", function () {
+        showHeaderInfo(getHeaderInfo(this));
+    }).on("mouseleave", ".header_info_icon", function () {
+        var p = getHeaderInfo(this);
+        if (p && !$(this).hasClass("header_info_pinned")) p.hide();
+    });
+    document.addEventListener("click", function (e) {
+        var icon = e.target && e.target.closest ? e.target.closest(".header_info_icon") : null;
+        if (icon) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleHeaderInfo(icon);
+        }
+        else if (!(e.target && e.target.closest && e.target.closest(".popover"))) {
+            hideHeaderInfos(null);
+        }
+    }, true);
+    document.addEventListener("keydown", function (e) {
+        var icon = e.target && e.target.closest ? e.target.closest(".header_info_icon") : null;
+        if (icon && (e.key === "Enter" || e.key === " ")) {
+            e.preventDefault();
+            e.stopPropagation();
+            toggleHeaderInfo(icon);
+        }
+        else if (e.key === "Escape") {
+            hideHeaderInfos(null);
+        }
+    }, true);
+}
