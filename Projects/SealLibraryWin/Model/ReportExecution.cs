@@ -1075,6 +1075,8 @@ namespace Seal.Model
                     if (!Report.Cancel)
                     {
                         Report.LogMessage("Model '{0}': Building pages...", model.Name);
+                        var sortWarning = model.SortWarning;
+                        if (sortWarning != null) Report.LogMessage("WARNING for Model '{0}': {1}", model.Name, sortWarning);
                         buildPages(model);
                     }
                     model.Progression = 75; //75% 

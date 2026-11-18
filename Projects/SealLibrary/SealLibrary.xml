@@ -13585,9 +13585,25 @@
             Elements having an explicit sort order (e.g. '1 Descendant', not the automatic sort), in the order of the sort
             </summary>
         </member>
+        <member name="P:Seal.Model.ReportModel.appliedSortElements">
+            <summary>
+            Row, Column and Data elements in the order of the sort really applied (see buildOrderClause): Row elements first, then
+            Column, then Data, each position by its sort number ('1 Descendant'), its automatic sorts after ('100 Ascendant'...),
+            one element per SQL column
+            </summary>
+        </member>
         <member name="P:Seal.Model.ReportModel.ReportSortElements">
             <summary>
-            Elements whose sort is shown in the headers of a data table: the elements sorted explicitly, or, if none, the first row (or column) element sorted automatically (the main key of the automatic sort)
+            Elements whose sort is shown in the headers of a data table, in the order of the sort really applied (Row elements before
+            Column and Data elements, whatever their sort numbers): the elements sorted until the first Row or Column element sorted
+            automatically included (the following ones only break the ties); an automatic sort of a Data element is not shown
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ReportModel.SortWarning">
+            <summary>
+            Warning when the explicit sort of a Data element (e.g. '1 Descendant') is preceded by the automatic sort of a Row element:
+            the rows are then sorted by the Row element first, not by the Data element. Null if there is nothing to say (also for
+            a model with Column elements, whose Data elements cannot sort the rows)
             </summary>
         </member>
         <member name="M:Seal.Model.ReportModel.GetReportSortIcon(Seal.Model.ReportElement)">

@@ -1258,19 +1258,72 @@ model.ResultTable = query2.CopyToDataTable2();
         }
 
         /// <summary>
-        /// Elements whose sort is shown in the headers of a data table: the elements sorted explicitly, or, if none, the first row (or column) element sorted automatically (the main key of the automatic sort)
+        /// Row, Column and Data elements in the order of the sort really applied (see buildOrderClause): Row elements first, then
+        /// Column, then Data, each position by its sort number ('1 Descendant'), its automatic sorts after ('100 Ascendant'...),
+        /// one element per SQL column
+        /// </summary>
+        List<ReportElement> appliedSortElements
+        {
+            get
+            {
+                var result = new List<ReportElement>();
+                foreach (var position in new[] { PivotPosition.Row, PivotPosition.Column, PivotPosition.Data })
+                {
+                    var elements = GetElements(position).ToList();
+                    int key(ReportElement e) => int.TryParse((e.SortOrder ?? "").Split(' ')[0], out int n) ? n : 100 + elements.IndexOf(e);
+                    foreach (var element in elements.Where(i => i.IsSorted).OrderBy(i => key(i)))
+                    {
+                        if (!result.Exists(i => i.SQLColumn == element.SQLColumn)) result.Add(element);
+                    }
+                }
+                return result;
+            }
+        }
+
+        static bool isAutomaticSort(ReportElement e) => e.SortOrder == ReportElement.kAutomaticAscSortKeyword || e.SortOrder == ReportElement.kAutomaticDescSortKeyword;
+
+        /// <summary>
+        /// Elements whose sort is shown in the headers of a data table, in the order of the sort really applied (Row elements before
+        /// Column and Data elements, whatever their sort numbers): the elements sorted until the first Row or Column element sorted
+        /// automatically included (the following ones only break the ties); an automatic sort of a Data element is not shown
         /// </summary>
         [XmlIgnore]
         public List<ReportElement> ReportSortElements
         {
             get
             {
-                var result = ExplicitSortElements;
-                if (result.Count > 0) return result;
-                bool automatic(ReportElement e) => e.SortOrder == ReportElement.kAutomaticAscSortKeyword || e.SortOrder == ReportElement.kAutomaticDescSortKeyword;
-                var first = Elements.FirstOrDefault(i => i.PivotPosition == PivotPosition.Row && automatic(i)) ?? Elements.FirstOrDefault(i => i.PivotPosition == PivotPosition.Column && automatic(i));
-                if (first != null) result.Add(first);
+                var result = new List<ReportElement>();
+                foreach (var element in appliedSortElements)
+                {
+                    if (isAutomaticSort(element))
+                    {
+                        if (element.PivotPosition != PivotPosition.Data) result.Add(element);
+                        break;
+                    }
+                    result.Add(element);
+                }
                 return result;
+            }
+        }
+
+        /// <summary>
+        /// Warning when the explicit sort of a Data element (e.g. '1 Descendant') is preceded by the automatic sort of a Row element:
+        /// the rows are then sorted by the Row element first, not by the Data element. Null if there is nothing to say (also for
+        /// a model with Column elements, whose Data elements cannot sort the rows)
+        /// </summary>
+        [XmlIgnore]
+        public string SortWarning
+        {
+            get
+            {
+                if (GetElements(PivotPosition.Column).Any()) return null;
+                var applied = appliedSortElements;
+                var data = applied.FirstOrDefault(i => i.PivotPosition == PivotPosition.Data && !isAutomaticSort(i));
+                if (data == null) return null;
+                var automatic = applied.Take(applied.IndexOf(data)).Where(i => i.PivotPosition == PivotPosition.Row && isAutomaticSort(i)).ToList();
+                if (automatic.Count == 0) return null;
+                var names = string.Join(", ", automatic.Select(i => $"'{i.DisplayNameEl}'"));
+                return $"the sort of '{data.DisplayNameEl}' ({data.SortOrder}) applies only after the automatic sort of {names}: Row elements are sorted before Data elements. Set the sort order of {names} to '{ReportElement.kNoSortKeyword}' to sort the rows by '{data.DisplayNameEl}'.";
             }
         }
 

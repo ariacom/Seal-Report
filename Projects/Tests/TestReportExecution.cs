@@ -94,6 +94,44 @@ namespace Test
         }
 
         [TestMethod]
+        public void ReportSortFollowsAppliedSort()
+        {
+            //The sort shown in the headers follows the ORDER BY really built: Row elements before Data elements, whatever their sort numbers
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "System", "Tests", "Reports", "TST040 Complete dashboard.srex");
+            var report = Report.LoadFromFile(path, repository);
+            var model = report.Models.First(m => m.GetElements(PivotPosition.Row).Any() && m.GetElements(PivotPosition.Data).Any() && !m.GetElements(PivotPosition.Column).Any());
+            var row = model.GetElements(PivotPosition.Row).First();
+            var data = model.GetElements(PivotPosition.Data).First();
+            foreach (var e in model.Elements) e.SortOrder = ReportElement.kNoSortKeyword;
+
+            //'1 Descendant' on the data element, automatic sort on the row element: the rows are sorted by the row element first
+            data.SortOrder = "1 " + ReportElement.kDescendantSortKeyword;
+            row.SortOrder = ReportElement.kAutomaticAscSortKeyword;
+            CollectionAssert.AreEqual(new[] { row }, model.ReportSortElements, "the automatic row sort comes first and ends the shown sort");
+            Assert.IsNotNull(model.SortWarning, "warning: the data sort applies after the row sort");
+            StringAssert.Contains(model.SortWarning, row.DisplayNameEl);
+
+            //Row element not sorted: the data element sorts the rows, no warning
+            row.SortOrder = ReportElement.kNoSortKeyword;
+            CollectionAssert.AreEqual(new[] { data }, model.ReportSortElements, "data sort shown");
+            Assert.IsNull(model.SortWarning, "no warning without automatic row sort");
+
+            //Explicit numbers: '2 Ascendant' on the row still comes before '1 Descendant' on the data, both shown, no warning
+            row.SortOrder = "2 " + ReportElement.kAscendantSortKeyword;
+            CollectionAssert.AreEqual(new[] { row, data }, model.ReportSortElements, "row then data");
+            Assert.IsNull(model.SortWarning, "an explicit row sort is chosen by the author");
+
+            //Only automatic sorts: the first row element is shown, an automatic data sort is not
+            row.SortOrder = ReportElement.kAutomaticAscSortKeyword;
+            data.SortOrder = ReportElement.kAutomaticAscSortKeyword;
+            CollectionAssert.AreEqual(new[] { row }, model.ReportSortElements, "main key of the automatic sort");
+            row.SortOrder = ReportElement.kNoSortKeyword;
+            Assert.AreEqual(0, model.ReportSortElements.Count, "automatic data sort not shown");
+            Assert.IsNull(model.SortWarning);
+        }
+
+        [TestMethod]
         public void HeaderInformationStyles()
         {
             //Description of a header (semantic layer): tooltip (default), information icon, or icon + numbered notes written under the table
