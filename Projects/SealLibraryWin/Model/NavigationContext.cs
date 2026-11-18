@@ -152,8 +152,8 @@ namespace Seal.Model
         {
             if (string.IsNullOrEmpty(reportPath)) return null;
             string path = FileHelper.ConvertOSFilePath(reportPath.Replace(Repository.SealRepositoryKeyword, repository.RepositoryPath));
-            //A path not fully qualified is relative to the Reports folder
-            if (!Path.IsPathFullyQualified(path)) path = getReportsFolderPath(path, repository);
+            //A path not fully qualified is relative to the Reports folder (on Linux, '/Folder/x.srex' outside the repository is relative as well)
+            if (!Path.IsPathFullyQualified(path) || (path.StartsWith(Path.DirectorySeparatorChar) && !isInRepository(path, repository))) path = getReportsFolderPath(path, repository);
             if (!isInRepository(path, repository)) throw new Exception("Error: invalid path");
             return Path.GetFullPath(path);
         }
@@ -166,7 +166,8 @@ namespace Seal.Model
         {
             if (string.IsNullOrEmpty(reportPath)) return null;
             reportPath = FileHelper.ConvertOSFilePath(reportPath);
-            if (Path.IsPathFullyQualified(reportPath)) throw new Exception("Error: invalid path");
+            //A drive or UNC path is refused; a path starting with the separator is relative to the Reports folder ('\Folder\x.srex' on Windows, '/Folder/x.srex' on Linux where it is fully qualified)
+            if (Path.IsPathFullyQualified(reportPath) && !(reportPath.StartsWith(Path.DirectorySeparatorChar) && Path.DirectorySeparatorChar == '/')) throw new Exception("Error: invalid path");
             string path = getReportsFolderPath(reportPath, repository);
             var reportsFolder = Path.GetFullPath(repository.ReportsFolder).TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar;
             if (!Path.GetFullPath(path).StartsWith(reportsFolder, StringComparison.OrdinalIgnoreCase)) throw new Exception("Error: invalid path");
