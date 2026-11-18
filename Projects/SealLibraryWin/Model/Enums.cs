@@ -1722,14 +1722,14 @@ namespace Seal.Model
         [Description("Use the key values defined in the configuration file (default)")]
         Default,
         /// <summary>
-        /// Use the Machine RSA Key Container (works only for the current machine)
+        /// Obsolete: use the Machine RSA Key Container (works only for the current machine). Replaced by Certificate, the values remain readable to re-encrypt them
         /// </summary>
-        [Description("Use the Machine RSA Key Container (Works only for the current machine)")]
+        [Description("Obsolete: use the Machine RSA Key Container (Works only for the current machine)")]
         MachineRSAContainer,
         /// <summary>
-        /// Use the User RSA Key Container (works only for the current user)
+        /// Obsolete: use the User RSA Key Container (works only for the current user). Replaced by Certificate, the values remain readable to re-encrypt them
         /// </summary>
-        [Description("Use the User RSA Key Container (Works only for the current user)")]
+        [Description("Obsolete: use the User RSA Key Container (Works only for the current user)")]
         UserRSAContainer,
         /// <summary>
         /// Use a certificate: Windows certificate store or PFX/PEM file (Windows and Linux, can be shared by several servers)

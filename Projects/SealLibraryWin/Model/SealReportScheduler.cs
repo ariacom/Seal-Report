@@ -325,6 +325,8 @@ namespace Seal.Model
             {
                 Helper.WriteLogEntryScheduler(EventLogEntryType.Information, $"Starting Report Scheduler (Repository '{Repository.Instance.RepositoryPath}')");
                 Audit.LogEventAudit(AuditType.EventServer, "Starting Report Scheduler");
+                var encryptionWarning = Repository.Instance.Configuration.EncryptionWarning;
+                if (!string.IsNullOrEmpty(encryptionWarning)) Helper.WriteLogEntryScheduler(EventLogEntryType.Warning, "Encryption of the secrets: " + encryptionWarning);
                 DateTime lastLoad = DateTime.MinValue;
 
                 if (!Repository.Instance.UseSealScheduler)

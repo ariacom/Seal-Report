@@ -150,6 +150,25 @@ namespace Test
         }
 
         [TestMethod]
+        public void EncryptionWarning()
+        {
+            //Default mode with the key values published in the source code
+            var config = configuration(EncryptionMode.Default);
+            StringAssert.Contains(config.EncryptionWarning, "are those published in the source code");
+
+            //Some keys changed: the others are named
+            foreach (var key in config.KeyValues) if (key.Name != MetaConnection.PasswordKeyName) key.Value = "changed " + key.Name;
+            StringAssert.Contains(config.EncryptionWarning, $"'{MetaConnection.PasswordKeyName}' are published");
+            config.KeyValues.Find(i => i.Name == MetaConnection.PasswordKeyName).Value = "changed";
+            Assert.IsNull(config.EncryptionWarning);
+
+            //Obsolete RSA key container modes, no warning for the Certificate mode
+            StringAssert.Contains(configuration(EncryptionMode.MachineRSAContainer).EncryptionWarning, "obsolete");
+            StringAssert.Contains(configuration(EncryptionMode.UserRSAContainer).EncryptionWarning, "obsolete");
+            Assert.IsNull(configuration(EncryptionMode.Certificate, _pfxA).EncryptionWarning);
+        }
+
+        [TestMethod]
         public void MissingCertificateFile()
         {
             var config = configuration(EncryptionMode.Certificate, Path.Combine(_folder, "missing.pfx"));

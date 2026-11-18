@@ -138,8 +138,9 @@ powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site
                                 <ul>
                                     <li><b>Default</b>: the keys are stored in the configuration file of the repository, next to the encrypted values. Anybody reading the repository (a backup, a copy) can decrypt the secrets: use it for development.</li>
                                     <li><b>Certificate</b> (recommended for production): each value is encrypted with a random AES-256-GCM key, itself encrypted with the RSA public key of a certificate (OAEP SHA-256). The private key stays outside of the repository: a copy of the repository reveals no secret. It works on Windows and Linux, and several servers can share the same certificate.</li>
-                                    <li><b>Machine RSA Container</b> and <b>User RSA Container</b>: RSA key containers of Windows, bound to one machine or one Windows account; the Certificate mode replaces them.</li>
+                                    <li><b>Machine RSA Container</b> and <b>User RSA Container</b> (obsolete): RSA key containers of Windows, bound to one machine or one Windows account, without export. They are no longer proposed (except for a configuration already using them) and their values remain readable to re-encrypt them with the Certificate mode.</li>
                                 </ul>
+                                The <code>Encryption warning</code> of the <i>Server Keys</i> (also written in the logs when the Web Report Server or the Scheduler starts) tells when the Default mode uses the key values published in the source code of Seal Report, or when an obsolete mode is used.
                                 <h5>Certificate mode</h5>
                                 Create one self-signed certificate per environment (no certification authority is needed). On Windows, as administrator:
                                 <pre><code class="language-bash">

@@ -7297,12 +7297,12 @@
         </member>
         <member name="F:Seal.Model.EncryptionMode.MachineRSAContainer">
             <summary>
-            Use the Machine RSA Key Container (works only for the current machine)
+            Obsolete: use the Machine RSA Key Container (works only for the current machine). Replaced by Certificate, the values remain readable to re-encrypt them
             </summary>
         </member>
         <member name="F:Seal.Model.EncryptionMode.UserRSAContainer">
             <summary>
-            Use the User RSA Key Container (works only for the current user)
+            Obsolete: use the User RSA Key Container (works only for the current user). Replaced by Certificate, the values remain readable to re-encrypt them
             </summary>
         </member>
         <member name="F:Seal.Model.EncryptionMode.Certificate">
@@ -19764,9 +19764,19 @@
             Init and decode application keys
             </summary>
         </member>
+        <member name="F:Seal.Model.SealServerConfiguration.BuiltInKeyValues">
+            <summary>
+            Key values of the Default mode set at the installation: they are published in the source code of Seal Report
+            </summary>
+        </member>
         <member name="M:Seal.Model.SealServerConfiguration.InitDefaultKeyValues">
             <summary>
             Init default encryption keys
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.EncryptionWarning">
+            <summary>
+            Warning on the encryption mode, null if none: Default mode with key values published in the source code of Seal Report, or obsolete RSA key container mode
             </summary>
         </member>
         <member name="M:Seal.Model.SealServerConfiguration.DecryptValue(System.String,System.String,System.Boolean)">

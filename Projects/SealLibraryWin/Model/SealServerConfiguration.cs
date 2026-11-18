@@ -32,6 +32,9 @@ namespace Seal.Model
     /// <summary>
     /// Main configuration of the Seal Server
     /// </summary>
+#if WINDOWS
+    [DefaultProperty("LogoName")] //First property of the editor, otherwise the property grid selects the first property by name (e.g. EncryptionWarning)
+#endif
     public class SealServerConfiguration : RootComponent
     {
         /// <summary>
@@ -131,6 +134,7 @@ namespace Seal.Model
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
+                GetProperty("EncryptionWarning").SetIsBrowsable(!ForPublication && !string.IsNullOrEmpty(EncryptionWarning));
                 GetProperty("CertificateThumbprint").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
                 GetProperty("CertificatePath").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
                 GetProperty("CertificatePasswordVariable").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
@@ -710,7 +714,7 @@ namespace Seal.Model
 #if WINDOWS
         [DisplayName("Storage and encryption mode"), Description("Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. Default: the keys are in this configuration file. Certificate: the values are encrypted with a certificate (Windows store or PFX/PEM file) whose private key stays outside of the repository, recommended for production. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. After a change of mode, use 'Tools > Re-encrypt secrets' to encrypt the existing values with the new mode."), Category("Server Keys"), Id(1, 7)]
         [DefaultValue(EncryptionMode.Default)]
-        [TypeConverter(typeof(NamedEnumConverter))]
+        [TypeConverter(typeof(EncryptionModeConverter))]
 #endif
         public EncryptionMode EncryptionMode
         {
@@ -1048,56 +1052,62 @@ namespace Seal.Model
         readonly Dictionary<string, string> _applicationKeysNotDecrypted = new Dictionary<string, string>();
 
         /// <summary>
+        /// Key values of the Default mode set at the installation: they are published in the source code of Seal Report
+        /// </summary>
+        public static readonly IReadOnlyList<(string Name, string Value)> BuiltInKeyValues = new List<(string, string)>()
+        {
+            (MetaConnection.PasswordKeyName, MetaConnection.PasswordKeyValue),
+            (OutputEmailDevice.PasswordKeyName, OutputEmailDevice.PasswordKeyValue),
+            (OutputEmailDevice.SendGridKeyName, OutputEmailDevice.SendGridKeyValue),
+            (OutputEmailDevice.AzureSecretKeyName, OutputEmailDevice.AzureSecretKeyValue),
+            (OutputFileServerDevice.PasswordKeyName, OutputFileServerDevice.PasswordKeyValue),
+            (OutputSharePointDevice.SecretKeyName, OutputSharePointDevice.SecretKeyValue),
+            (SealSecurity.AccountLinkSecretKeyName, SealSecurity.AccountLinkSecretKeyValue),
+            (SealSecurity.TrustedBrowserSecretKeyName, SealSecurity.TrustedBrowserSecretKeyValue),
+            (ApplicationKeysKeyName, ApplicationKeysKeyValue),
+            (SchedulerPasswordKeyName, SchedulerPasswordKeyValue),
+            (AIProviderConfiguration.AIProviderKeysKeyName, AIProviderConfiguration.AIProviderKeysKeyValue),
+        };
+
+        /// <summary>
         /// Init default encryption keys
         /// </summary>
         public void InitDefaultKeyValues()
         {
             lock (_keyValues)
             {
-                if (!_keyValues.Exists(i => i.Name == MetaConnection.PasswordKeyName))
+                foreach (var key in BuiltInKeyValues)
                 {
-                    _keyValues.Add(new KeyValue() { Name = MetaConnection.PasswordKeyName, Value = MetaConnection.PasswordKeyValue });
+                    if (!_keyValues.Exists(i => i.Name == key.Name)) _keyValues.Add(new KeyValue() { Name = key.Name, Value = key.Value });
                 }
-                if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.PasswordKeyName))
+            }
+        }
+
+        /// <summary>
+        /// Warning on the encryption mode, null if none: Default mode with key values published in the source code of Seal Report, or obsolete RSA key container mode
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Encryption warning"), Description("Warning on the storage and encryption mode of the secrets."), Category("Server Keys"), Id(0, 7)]
+        [ReadOnly(true)]
+#endif
+        [XmlIgnore]
+        public string EncryptionWarning
+        {
+            get
+            {
+                if (EncryptionMode == EncryptionMode.MachineRSAContainer || EncryptionMode == EncryptionMode.UserRSAContainer)
                 {
-                    _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.PasswordKeyName, Value = OutputEmailDevice.PasswordKeyValue });
+                    return "This mode is obsolete: RSA keys of 1024 bits bound to one machine or one Windows account, without export, unavailable on Linux. Choose the mode 'Certificate', save the configuration and execute 'Tools > Re-encrypt Secrets'.";
                 }
-                if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.SendGridKeyName))
+                if (EncryptionMode == EncryptionMode.Default)
                 {
-                    _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.SendGridKeyName, Value = OutputEmailDevice.SendGridKeyValue });
+                    var published = BuiltInKeyValues.Where(i => KeyValues.Exists(j => j.Name == i.Name && j.Value == i.Value)).Select(i => i.Name).ToList();
+                    if (published.Count > 0)
+                    {
+                        return $"The key values {(published.Count == BuiltInKeyValues.Count ? "are those" : $"'{string.Join("', '", published)}' are")} published in the source code of Seal Report: anybody having the repository files can decrypt the secrets. For a production server, choose the mode 'Certificate', save the configuration and execute 'Tools > Re-encrypt Secrets'.";
+                    }
                 }
-                if (!_keyValues.Exists(i => i.Name == OutputEmailDevice.AzureSecretKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = OutputEmailDevice.AzureSecretKeyName, Value = OutputEmailDevice.AzureSecretKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == OutputFileServerDevice.PasswordKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = OutputFileServerDevice.PasswordKeyName, Value = OutputFileServerDevice.PasswordKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == OutputSharePointDevice.SecretKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = OutputSharePointDevice.SecretKeyName, Value = OutputSharePointDevice.SecretKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == SealSecurity.AccountLinkSecretKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = SealSecurity.AccountLinkSecretKeyName, Value = SealSecurity.AccountLinkSecretKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == SealSecurity.TrustedBrowserSecretKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = SealSecurity.TrustedBrowserSecretKeyName, Value = SealSecurity.TrustedBrowserSecretKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == ApplicationKeysKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = ApplicationKeysKeyName, Value = ApplicationKeysKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == SchedulerPasswordKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = SchedulerPasswordKeyName, Value = SchedulerPasswordKeyValue });
-                }
-                if (!_keyValues.Exists(i => i.Name == AIProviderConfiguration.AIProviderKeysKeyName))
-                {
-                    _keyValues.Add(new KeyValue() { Name = AIProviderConfiguration.AIProviderKeysKeyName, Value = AIProviderConfiguration.AIProviderKeysKeyValue });
-                }
+                return null;
             }
         }
 

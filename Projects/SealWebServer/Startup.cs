@@ -33,6 +33,9 @@ namespace SealWebServer
 
             WebHelper.WriteLogEntryWeb(EventLogEntryType.Information, "Starting Web Report Server");
             Audit.LogEventAudit(AuditType.EventServer, "Starting Web Report Server");
+            //Default mode with the published key values, or obsolete RSA key container mode
+            var encryptionWarning = Repository.Instance.Configuration.EncryptionWarning;
+            if (!string.IsNullOrEmpty(encryptionWarning)) WebHelper.WriteLogEntryWeb(EventLogEntryType.Warning, "Encryption of the secrets: " + encryptionWarning);
             Audit.LogEventAudit(AuditType.EventLoggedUsers, "0");
 
             if (Repository.Instance.Configuration.SchedulerMode == SchedulerMode.WebServer)
