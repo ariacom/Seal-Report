@@ -2019,11 +2019,11 @@ namespace Seal.Model
         }
 
         /// <summary>
-        /// Header information style: the description is shown as a tooltip on the header (default)
+        /// Header information style: the description is shown as a tooltip on the header
         /// </summary>
         public const string HeaderInformationTooltip = "tooltip";
         /// <summary>
-        /// Header information style: an information icon after the header shows the description (hover, click or touch)
+        /// Header information style (default): an information icon after the header shows the description (hover, click or touch)
         /// </summary>
         public const string HeaderInformationIcon = "icon";
         /// <summary>
@@ -2038,7 +2038,7 @@ namespace Seal.Model
         {
             if (!GetBoolValue(showParameter)) return "";
             var style = GetValue(styleParameter);
-            return string.IsNullOrEmpty(style) ? HeaderInformationTooltip : style;
+            return string.IsNullOrEmpty(style) ? HeaderInformationIcon : style;
         }
 
         /// <summary>

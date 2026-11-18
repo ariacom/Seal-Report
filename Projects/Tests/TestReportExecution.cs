@@ -162,7 +162,13 @@ namespace Test
             }
             var encoded = System.Net.WebUtility.HtmlEncode(cell.Element.Description);
 
-            //Default: tooltip only
+            //Default: information icon, no tooltip
+            Assert.AreEqual(ReportView.HeaderInformationIcon, view.GetValue(style), "default style");
+            Assert.AreEqual("", view.HeaderInformationAttribute(cell, show, style));
+            StringAssert.Contains(view.HeaderInformationHTML(cell, show, style), "header_info_icon");
+
+            //Tooltip only
+            setStyle(ReportView.HeaderInformationTooltip);
             Assert.AreEqual($"title='{encoded}'", view.HeaderInformationAttribute(cell, show, style));
             Assert.AreEqual("", view.HeaderInformationHTML(cell, show, style));
             Assert.AreEqual("", view.HeaderInformationNotes());

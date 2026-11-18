@@ -16170,12 +16170,12 @@
         </member>
         <member name="F:Seal.Model.ReportView.HeaderInformationTooltip">
             <summary>
-            Header information style: the description is shown as a tooltip on the header (default)
+            Header information style: the description is shown as a tooltip on the header
             </summary>
         </member>
         <member name="F:Seal.Model.ReportView.HeaderInformationIcon">
             <summary>
-            Header information style: an information icon after the header shows the description (hover, click or touch)
+            Header information style (default): an information icon after the header shows the description (hover, click or touch)
             </summary>
         </member>
         <member name="F:Seal.Model.ReportView.HeaderInformationIconNotes">

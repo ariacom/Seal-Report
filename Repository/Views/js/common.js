@@ -785,18 +785,23 @@ function mainInit() {
     initResize(_printLayout);
 }
 
-//Information icon of a header (header information style 'icon' or 'icon_notes'): the description is shown in a popover on hover,
-//and kept open on click, touch or Enter until a click elsewhere or Escape.
+//Information icon of a header (header information style 'icon' or 'icon_notes'): the description is shown in a popover when the header
+//is hovered (short delay, devices with a mouse), and kept open on a click, touch or Enter on the icon until a click elsewhere or Escape.
 //Listeners in the capture phase: a click on the icon must not sort the column or open the navigation menu of the header.
 if (!window._headerInfoInit) {
     window._headerInfoInit = true;
     var getHeaderInfo = function (icon) {
         if (typeof bootstrap === "undefined") return null;
-        return bootstrap.Popover.getOrCreateInstance(icon, { trigger: "manual", container: "body", placement: "auto" });
+        return bootstrap.Popover.getOrCreateInstance(icon, { trigger: "manual", container: "body", placement: "top", fallbackPlacements: ["bottom", "right", "left"] });
     };
-    //Bootstrap hides a manual popover if show() is called while it is already shown: show it only once
-    var showHeaderInfo = function (p) {
-        if (p && !(p.tip && p.tip.classList.contains("show"))) p.show();
+    //Bootstrap 5.3 hides a manual popover at the end of show() once it has been shown and hidden before (internal hover state),
+    //or if show() is called while it is shown: a closed popover is disposed and created again, an open one is not shown again
+    var showHeaderInfo = function (icon) {
+        var p = getHeaderInfo(icon);
+        if (!p || (p.tip && p.tip.classList.contains("show"))) return;
+        p.dispose();
+        p = getHeaderInfo(icon);
+        if (p) p.show();
     };
     var hideHeaderInfos = function (except) {
         $(".header_info_icon").each(function () {
@@ -817,14 +822,31 @@ if (!window._headerInfoInit) {
         }
         else {
             $(icon).addClass("header_info_pinned");
-            showHeaderInfo(p);
+            showHeaderInfo(icon);
         }
     };
-    $(document).on("mouseenter", ".header_info_icon", function () {
-        showHeaderInfo(getHeaderInfo(this));
-    }).on("mouseleave", ".header_info_icon", function () {
-        var p = getHeaderInfo(this);
-        if (p && !$(this).hasClass("header_info_pinned")) p.hide();
+    //Hover of the header (th) having an information icon: popover after a short delay, hidden when the mouse leaves the header
+    var _headerInfoHovered = null, _headerInfoTimer = null;
+    var canHover = !window.matchMedia || window.matchMedia("(hover: hover)").matches;
+    document.addEventListener("mouseover", function (e) {
+        if (!canHover || !e.target || !e.target.closest) return;
+        //the mouse on the popover keeps it open (it may be shown over the pointer)
+        if (e.target.closest(".popover")) return;
+        var th = e.target.closest("th");
+        var icon = th ? th.querySelector(".header_info_icon") : null;
+        if (icon === _headerInfoHovered) return;
+        if (_headerInfoTimer) { clearTimeout(_headerInfoTimer); _headerInfoTimer = null; }
+        if (_headerInfoHovered && !$(_headerInfoHovered).hasClass("header_info_pinned")) {
+            var previous = getHeaderInfo(_headerInfoHovered);
+            if (previous) previous.hide();
+        }
+        _headerInfoHovered = icon;
+        if (icon) {
+            _headerInfoTimer = setTimeout(function () {
+                _headerInfoTimer = null;
+                if (_headerInfoHovered === icon) showHeaderInfo(icon);
+            }, 400);
+        }
     });
     document.addEventListener("click", function (e) {
         var icon = e.target && e.target.closest ? e.target.closest(".header_info_icon") : null;
