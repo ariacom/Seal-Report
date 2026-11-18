@@ -243,12 +243,26 @@ table.dataTable thead .dt-column-order {
     margin-left: 2px;
 }
 
-/* Header information (description of the column): icon on screen, numbered notes under the table when printed */
+/* Header information (description of the column): icon on screen, numbered notes under the table when printed.
+   The icon is hidden at rest and shown when the header (or the row of a Model Detail / Page Table) is hovered or focused;
+   always shown on touch screens (no hover). It keeps its place: the header does not move when it appears. */
 .header_info_icon {
     font-size: 0.8em;
     margin-left: 4px;
     color: var(--bs-secondary-color, #6c757d);
     cursor: help;
+    opacity: 0;
+    transition: opacity 0.15s ease-in-out;
+}
+
+th:hover .header_info_icon, th:focus-within .header_info_icon, tr:has(> td):hover .header_info_icon, .header_info_icon.header_info_pinned {
+    opacity: 1;
+}
+
+@media (hover: none) {
+    .header_info_icon {
+        opacity: 1;
+    }
 }
 
     .header_info_icon:hover, .header_info_icon:focus, .header_info_icon.header_info_pinned {
