@@ -18,31 +18,12 @@
     sb.AppendLine("Output devices available for the current user. Pass device_name to report_configure_output to select one (device_type must match the listed type).");
     sb.AppendLine();
 
+    //Name and type only: the servers of the devices (SMTP relay, FTP host, SharePoint site) are details of the infrastructure,
+    //not needed to configure an output and not to be shown to the users
     foreach (var device in devices)
     {
-        if (device is OutputEmailDevice email)
-        {
-            sb.AppendLine($"## {email.Name} [type: email] (GUID: {email.GUID})");
-            if (!string.IsNullOrEmpty(email.Server)) sb.AppendLine($"  - SMTP server: {email.Server}:{email.Port}");
-        }
-        else if (device is OutputFileServerDevice ftp)
-        {
-            sb.AppendLine($"## {ftp.Name} [type: ftp] (GUID: {ftp.GUID})");
-            sb.AppendLine($"  - {ftp.Protocol} server: {ftp.HostName}{(ftp.PortNumber > 0 ? ":" + ftp.PortNumber : "")}");
-        }
-        else if (device is OutputSharePointDevice sp)
-        {
-            sb.AppendLine($"## {sp.Name} [type: sharepoint] (GUID: {sp.GUID})");
-            sb.AppendLine($"  - SharePoint site: {sp.SiteUrl} (document library: {sp.LibraryName})");
-        }
-        else if (device is OutputFolderDevice folder)
-        {
-            sb.AppendLine($"## {folder.Name} [type: folder] (GUID: {folder.GUID})");
-        }
-        else
-        {
-            sb.AppendLine($"## {device.Name} [type: {device.GetType().Name}] (GUID: {device.GUID})");
-        }
+        string type = device is OutputEmailDevice ? "email" : device is OutputFileServerDevice ? "ftp" : device is OutputSharePointDevice ? "sharepoint" : device is OutputFolderDevice ? "folder" : device.GetType().Name;
+        sb.AppendLine($"## {device.Name} [type: {type}] (GUID: {device.GUID})");
     }
 
     tool.ExecResult = sb.ToString();
