@@ -1462,9 +1462,9 @@ namespace Seal.Model
                 }
                 else
                 {
-                    //Generate result in html
+                    //Generate result in html: a page with a translated message, the detail only for the users allowed to see it (stack traces of the renderer otherwise shown to anyone)
                     Report.ResultFilePath = Path.ChangeExtension(Report.ResultFilePath, "html");
-                    File.WriteAllText(Report.ResultFilePath, Helper.ToHtml(Error), UTF8Encoding.UTF8);
+                    File.WriteAllText(Report.ResultFilePath, Report.GetResultErrorPage(Error), UTF8Encoding.UTF8);
                 }
             }
 

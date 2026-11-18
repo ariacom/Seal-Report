@@ -214,6 +214,15 @@ namespace Seal.Model
         /// </summary>
         public static void LogReportExportAudit(Report report, ReportFormat format, int durationSeconds)
         {
+            LogReportExportAudit(report, format, durationSeconds, null);
+        }
+
+        /// <summary>
+        /// Audit the export of a report result from the Web Report Server, with the error of the generation if the result could not be generated
+        /// (e.g. the browser converting the result in PDF did not start): the error is set in the Error of the audit.
+        /// </summary>
+        public static void LogReportExportAudit(Report report, ReportFormat format, int durationSeconds, string error)
+        {
             try
             {
                 if (report == null || !Repository.Instance.Configuration.AuditEnabled) return;
@@ -223,6 +232,7 @@ namespace Seal.Model
                     User = report.SecurityContext,
                     Path = report.Repository.GetAuditPath(report.FilePath),
                     Detail = format.ToString(),
+                    Error = string.IsNullOrEmpty(error) ? null : error,
                     Report = report,
                     Duration = durationSeconds,
                     ExecutionKind = "Export"

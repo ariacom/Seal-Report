@@ -847,6 +847,30 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// HTML page written as result file when the result could not be rendered in the format of the execution (e.g. the browser converting the result
+        /// in PDF did not start): a translated message. The detail of the error is shown out of the Web Report Server, or to the users allowed to see
+        /// the error details (ForceShowErrorMessages); otherwise it is only in the logs and in the execution errors.
+        /// </summary>
+        public string GetResultErrorPage(string error)
+        {
+            bool showDetail = string.IsNullOrEmpty(WebUrl) || ForceShowErrorMessages;
+            var title = Translate("The result could not be generated");
+            var message = Translate("The result of the report '{0}' could not be generated in the format {1}.", DisplayNameEx, Helper.GetEnumDescription(typeof(ReportFormat), Format));
+            var advice = Translate("Please try again later or choose another format. The error has been recorded.");
+            var detail = "";
+            if (showDetail && !string.IsNullOrEmpty(error))
+            {
+                if (Repository != null && !string.IsNullOrEmpty(Repository.RepositoryPath)) error = error.Replace(Repository.RepositoryPath, "");
+                detail = $"<pre style='white-space:pre-wrap;font-size:12px;color:#555;border-top:1px solid #ddd;padding-top:12px;margin-top:24px'>{HttpUtility.HtmlEncode(error)}</pre>";
+            }
+            //Web Report Server: the file is served by /ViewResult, the icon of the web interface is relative to it (a PDF or plain page has no icon tag otherwise)
+            var icon = string.IsNullOrEmpty(WebUrl) ? "" : "<link rel='icon' href='img/favicon.ico'>";
+            return $"<!DOCTYPE html><html><head><meta charset='utf-8'><meta name='viewport' content='width=device-width, initial-scale=1'>{icon}<title>{HttpUtility.HtmlEncode(title)}</title></head>" +
+                $"<body style='font-family:Helvetica,Arial,sans-serif;margin:0;padding:60px 16px;color:#212529'><div style='max-width:760px;margin:0 auto'>" +
+                $"<h3 style='font-weight:600'>{HttpUtility.HtmlEncode(title)}</h3><p>{HttpUtility.HtmlEncode(message)}</p><p>{HttpUtility.HtmlEncode(advice)}</p>{detail}</div></body></html>";
+        }
+
+        /// <summary>
         /// Indicates if the execution messages are shown in the report
         /// </summary>
         [XmlIgnore]

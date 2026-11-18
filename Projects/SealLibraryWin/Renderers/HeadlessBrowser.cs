@@ -101,7 +101,17 @@ namespace Seal.Renderer
             {
                 var chromePath = await GetChromiumPath(repository);
                 //Desktop size: with the default viewport of PuppeteerSharp (800x600), the Bootstrap columns are narrow and the pictures of the views may be truncated by their container
-                result.Browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = chromePath, DefaultViewport = new ViewPortOptions() { Width = ViewportWidth, Height = ViewportHeight } });
+                try
+                {
+                    result.Browser = await Puppeteer.LaunchAsync(new LaunchOptions { Headless = true, ExecutablePath = chromePath, DefaultViewport = new ViewPortOptions() { Width = ViewportWidth, Height = ViewportHeight } });
+                }
+                catch (Exception ex) when (ex.Message.Contains("No usable sandbox"))
+                {
+                    //Ubuntu 23.10+ (kernel.apparmor_restrict_unprivileged_userns = 1): the sandbox of Chromium may not create its user namespace
+                    throw new Exception($"Unable to start Chromium: its sandbox cannot be created. On Ubuntu 23.10 or later, add an AppArmor profile allowing 'userns' for '{chromePath}' " +
+                        "(e.g. /etc/apparmor.d/seal-chromium: 'abi <abi/4.0>, include <tunables/global> profile seal-chromium <path of chrome> flags=(unconfined) { userns, }', then 'apparmor_parser -r' on it); " +
+                        "see https://chromium.googlesource.com/chromium/src/+/main/docs/security/apparmor-userns-restrictions.md", ex);
+                }
                 result.Page = await result.Browser.NewPageAsync();
                 //The result is a local file (no HTTP Referer): the application is identified in the User-Agent, as required by the usage policy of
                 //some resource providers (e.g. the tiles of the Map view)

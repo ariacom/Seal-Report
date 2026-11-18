@@ -658,8 +658,13 @@ namespace SealWebServer.Controllers
                     ReportFormat f;
                     if (!Enum.TryParse(format, out f)) f = ReportFormat.html;
                     var start = DateTime.Now;
+                    var errorsBefore = execution.Report.ExecutionErrors ?? "";
                     var fileResult = execution.GenerateResult(f);
-                    Audit.LogReportExportAudit(execution.Report, f, Convert.ToInt32((DateTime.Now - start).TotalSeconds));
+                    //Errors of the generation (e.g. the browser converting in PDF did not start): the result is then an error page, the export is audited with the error and logged
+                    var errors = execution.Report.ExecutionErrors ?? "";
+                    var newErrors = errors.Length > errorsBefore.Length && errors.StartsWith(errorsBefore) ? errors.Substring(errorsBefore.Length).Trim() : "";
+                    if (!string.IsNullOrEmpty(newErrors)) WebHelper.WriteWebException(new Exception(newErrors), getContextDetail(Request, WebUser));
+                    Audit.LogReportExportAudit(execution.Report, f, Convert.ToInt32((DateTime.Now - start).TotalSeconds), newErrors);
                     return getFileResult(fileResult, execution.Report);
                 }
             }
