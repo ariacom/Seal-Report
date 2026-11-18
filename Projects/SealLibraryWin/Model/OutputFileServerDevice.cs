@@ -274,7 +274,8 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during password encryption:" + ex.Message;
-                    Password = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }

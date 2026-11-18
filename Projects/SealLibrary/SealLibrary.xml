@@ -2945,6 +2945,33 @@
             Decrypt a base64 text using the RSA key pair stored in a key container
             </summary>
         </member>
+        <member name="F:Seal.Helpers.CryptoHelper.CertificatePrefix">
+            <summary>
+            Prefix of a value encrypted with a certificate (see <see cref="M:Seal.Helpers.CryptoHelper.EncryptWithCertificate(System.String,System.String,System.Security.Cryptography.X509Certificates.X509Certificate2)"/>)
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.CryptoHelper.IsCertificateValue(System.String)">
+            <summary>
+            True if the value has been encrypted with a certificate
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.CryptoHelper.EncryptWithCertificate(System.String,System.String,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Encrypt a text with the public key of a certificate: the text is encrypted with a random AES-256-GCM key, itself encrypted with the RSA key of the certificate (OAEP SHA-256).
+            The result is 'cert1:' followed by the base64 of: version, SHA-1 thumbprint of the certificate, length and value of the encrypted key, nonce, tag and encrypted text.
+            The key name is authenticated with the value: a value cannot be moved to another kind of secret. Only the public key is required.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.CryptoHelper.GetCertificateThumbprint(System.String)">
+            <summary>
+            Thumbprint (upper case hexadecimal) of the certificate used to encrypt a value, null if the value is not encrypted with a certificate
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.CryptoHelper.DecryptWithCertificate(System.String,System.String,System.Security.Cryptography.X509Certificates.X509Certificate2)">
+            <summary>
+            Decrypt a value encrypted by <see cref="M:Seal.Helpers.CryptoHelper.EncryptWithCertificate(System.String,System.String,System.Security.Cryptography.X509Certificates.X509Certificate2)"/> with the private key of the certificate
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.CryptoHelper.RSAEncrypt(System.String,System.String)">
             <summary>
             Encrypt a text with an RSA public key (XML format), returned as a base64 string
@@ -4804,6 +4831,63 @@
         <member name="M:Seal.Helpers.SqlGuard.GetCode(System.String,System.String@)">
             <summary>
             Returns the SQL text without its comments, with its strings and quoted identifiers emptied.
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.SecretsHelper">
+            <summary>
+            Re-encryption of the secrets of a repository (passwords, keys and secrets of the configuration, security, AI providers, data sources, devices and reports)
+            with the current encryption mode of the server configuration, e.g. after a change of mode or of certificate.
+            The values are replaced in the XML text of the files: nothing else is modified in the files.
+            </summary>
+        </member>
+        <member name="T:Seal.Helpers.SecretsHelper.SecretElement">
+            <summary>
+            Encrypted element of a file: name of the XML element, key name used for its encryption, AES or Triple DES in the Default mode
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.SecretElement.Element">
+            <summary>Name of the XML element holding the encrypted value</summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.SecretElement.KeyName">
+            <summary>Key name used to encrypt the value</summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.SecretElement.UseAES">
+            <summary>True if the value is encrypted with AES instead of Triple DES in the Default mode</summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.SecretElement.Scope">
+            <summary>Optional parent element: only the elements inside it are secrets (e.g. the values of the application keys)</summary>
+        </member>
+        <member name="T:Seal.Helpers.SecretsHelper.Result">
+            <summary>
+            Result of a re-encryption
+            </summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.Result.Files">
+            <summary>Files modified (or to modify when simulated)</summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.Result.Values">
+            <summary>Values re-encrypted (or to re-encrypt when simulated)</summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.Result.UpToDate">
+            <summary>Values already encrypted with the current certificate</summary>
+        </member>
+        <member name="F:Seal.Helpers.SecretsHelper.Result.Errors">
+            <summary>Values that cannot be decrypted: file, element and error</summary>
+        </member>
+        <member name="M:Seal.Helpers.SecretsHelper.ReEncryptRepository(Seal.Model.Repository,System.Boolean,Seal.Model.ExecutionLogInterface)">
+            <summary>
+            Re-encrypt all the secrets of the repository with the encryption mode of the configuration file of the repository.
+            If simulate is true, the files are not modified (count of the values to re-encrypt and of the errors).
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.SecretsHelper.ReEncryptFile(System.String,Seal.Model.SealServerConfiguration,System.Collections.Generic.IEnumerable{Seal.Helpers.SecretsHelper.SecretElement},System.Boolean,Seal.Helpers.SecretsHelper.Result,Seal.Model.ExecutionLogInterface)">
+            <summary>
+            Re-encrypt the secrets of a file
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.SecretsHelper.ReEncryptXml(System.String,Seal.Model.SealServerConfiguration,Seal.Helpers.SecretsHelper.SecretElement,System.Int32@,Seal.Helpers.SecretsHelper.Result,System.String)">
+            <summary>
+            Re-encrypt the values of an element in an XML text
             </summary>
         </member>
         <member name="T:Seal.Model.ScheduleCheckMoment">
@@ -7219,6 +7303,11 @@
         <member name="F:Seal.Model.EncryptionMode.UserRSAContainer">
             <summary>
             Use the User RSA Key Container (works only for the current user)
+            </summary>
+        </member>
+        <member name="F:Seal.Model.EncryptionMode.Certificate">
+            <summary>
+            Use a certificate: Windows certificate store or PFX/PEM file (Windows and Linux, can be shared by several servers)
             </summary>
         </member>
         <member name="T:Seal.Model.ExcelNewSheetMode">
@@ -19527,7 +19616,47 @@
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.EncryptionMode">
             <summary>
-            Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. Warning: You must retype the used password after changing mode or key values.
+            Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. Default: the keys are in this configuration file. Certificate: the values are encrypted with a certificate (Windows store or PFX/PEM file) whose private key stays outside of the repository, recommended for production. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. After a change of mode, use 'Tools > Re-encrypt secrets' to encrypt the existing values with the new mode.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.CertificateThumbprint">
+            <summary>
+            Certificate mode: thumbprint of the certificate in the Windows store 'Local Machine\Personal' (or 'Current User\Personal').
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ShouldSerializeCertificateThumbprint">
+            <summary>
+            Serialize CertificateThumbprint only if set
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.CertificatePath">
+            <summary>
+            Certificate mode: path of a PFX or PEM certificate file, used if no thumbprint is set (e.g. on Linux).
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ShouldSerializeCertificatePath">
+            <summary>
+            Serialize CertificatePath only if set
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.CertificatePasswordVariable">
+            <summary>
+            Certificate mode: name of the environment variable holding the password of the PFX file.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ShouldSerializeCertificatePasswordVariable">
+            <summary>
+            Serialize CertificatePasswordVariable only if set
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.PreviousCertificates">
+            <summary>
+            Certificate mode: thumbprints or file paths of the previous certificates (one per line), used only to decrypt the values encrypted before a change of certificate.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ShouldSerializePreviousCertificates">
+            <summary>
+            Serialize PreviousCertificates only if set
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.KeyValues">
@@ -19643,6 +19772,27 @@
         <member name="M:Seal.Model.SealServerConfiguration.DecryptValue(System.String,System.String,System.Boolean)">
             <summary>
             Decrypt a value using the key name and the encryption mode
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.DecryptValueAnyMode(System.String,System.String,System.Boolean)">
+            <summary>
+            Decrypt a value encrypted with any mode (used to re-encrypt the secrets after a change of mode): certificate, then the current mode, then the other modes
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.decryptLegacyValue(System.String,System.String,System.Boolean,System.Nullable{Seal.Model.EncryptionMode})">
+            <summary>
+            A value not encrypted with a certificate was encrypted with the key values or an RSA key container (e.g. before a change of mode and the re-encryption of the secrets).
+            The preferred mode is tried first, then the key values of the configuration and the RSA key containers on Windows (first if the value has the size of an RSA block).
+            </summary>
+        </member>
+        <member name="P:Seal.Model.SealServerConfiguration.CurrentCertificate">
+            <summary>
+            Certificate used to encrypt the values in Certificate mode: the certificate of the Windows store if a thumbprint is set, otherwise the certificate file
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.FindCertificate(System.String)">
+            <summary>
+            Returns the certificate having the thumbprint among the current certificate and the previous certificates, null if not found
             </summary>
         </member>
         <member name="M:Seal.Model.SealServerConfiguration.EncryptValue(System.String,System.String,System.Boolean)">

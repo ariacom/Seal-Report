@@ -194,7 +194,8 @@ namespace Seal.AI
                 {
                     Helper.WriteLogException("ClearProviderKey set", ex);
                     TypeDescriptor.Refresh(this);
-                    ProviderKey = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }

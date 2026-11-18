@@ -5,6 +5,8 @@
 using System;
 using System.Collections.Generic;
 using System.Xml.Serialization;
+using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.ComponentModel;
 using System.IO;
 using System.Linq;
@@ -129,6 +131,10 @@ namespace Seal.Model
 
                 GetProperty("EncryptionMode").SetIsBrowsable(!ForPublication);
                 GetProperty("KeyValues").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Default);
+                GetProperty("CertificateThumbprint").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
+                GetProperty("CertificatePath").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
+                GetProperty("CertificatePasswordVariable").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
+                GetProperty("PreviousCertificates").SetIsBrowsable(!ForPublication && EncryptionMode == EncryptionMode.Certificate);
                 GetProperty("ApplicationKeys").SetIsBrowsable(!ForPublication);
 
                 GetProperty("WebApplicationPoolName").SetIsBrowsable(ForPublication);
@@ -494,7 +500,8 @@ namespace Seal.Model
                 {
                     Helper.WriteLogException("ClearSchedulerPassword set", ex);
                     TypeDescriptor.Refresh(this);
-                    SchedulerPassword = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }
@@ -698,10 +705,10 @@ namespace Seal.Model
 
         EncryptionMode _encryptionMode = EncryptionMode.Default;
         /// <summary>
-        /// Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. Warning: You must retype the used password after changing mode or key values.
+        /// Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. Default: the keys are in this configuration file. Certificate: the values are encrypted with a certificate (Windows store or PFX/PEM file) whose private key stays outside of the repository, recommended for production. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows User will have access to the keys. After a change of mode, use 'Tools > Re-encrypt secrets' to encrypt the existing values with the new mode.
         /// </summary>
 #if WINDOWS
-        [DisplayName("Storage and encryption mode"), Description("Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. Warning: You must retype the used password after changing mode or key values."), Category("Server Keys"), Id(1, 7)]
+        [DisplayName("Storage and encryption mode"), Description("Storage and encryption mode of encryption keys used for Passwords, SendGrid Keys and Application Keys/Passwords. Default: the keys are in this configuration file. Certificate: the values are encrypted with a certificate (Windows store or PFX/PEM file) whose private key stays outside of the repository, recommended for production. If Machine RSA Container is chosen, only the users of the machine will have access to the keys. If User RSA Container is chosen, only the Windows user will have access to the keys to decrypt the password. After a change of mode, use 'Tools > Re-encrypt secrets' to encrypt the existing values with the new mode."), Category("Server Keys"), Id(1, 7)]
         [DefaultValue(EncryptionMode.Default)]
         [TypeConverter(typeof(NamedEnumConverter))]
 #endif
@@ -718,12 +725,70 @@ namespace Seal.Model
             }
         }
 
+        /// <summary>
+        /// Certificate mode: thumbprint of the certificate in the Windows store 'Local Machine\Personal' (or 'Current User\Personal').
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Certificate"), Description("Certificate mode: certificate of the Windows store 'Local Machine\\Personal' (or 'Current User\\Personal') identified by its thumbprint. The accounts executing the Web Report Server and the schedules must have the right to read its private key (certlm.msc: Manage Private Keys). Leave it empty to use a certificate file."), Category("Server Keys"), Id(2, 7)]
+        [TypeConverter(typeof(CertificateConverter))]
+        [DefaultValue("")]
+#endif
+        public string CertificateThumbprint { get; set; } = "";
+        /// <summary>
+        /// Serialize CertificateThumbprint only if set
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeCertificateThumbprint() { return !string.IsNullOrEmpty(CertificateThumbprint); }
+
+        /// <summary>
+        /// Certificate mode: path of a PFX or PEM certificate file, used if no thumbprint is set (e.g. on Linux).
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Certificate file"), Description("Certificate mode: path of a PFX file (.pfx, .p12) or of a PEM file (.pem, .crt, .cer with the private key in the same file or in a .key file of the same name), used if no certificate of the Windows store is set (e.g. on Linux). The file must be located outside of the repository and protected by the rights of the system (only the accounts executing Seal can read it). A file without private key can only encrypt."), Category("Server Keys"), Id(3, 7)]
+        [DefaultValue("")]
+#endif
+        public string CertificatePath { get; set; } = "";
+        /// <summary>
+        /// Serialize CertificatePath only if set
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeCertificatePath() { return !string.IsNullOrEmpty(CertificatePath); }
+
+        /// <summary>
+        /// Certificate mode: name of the environment variable holding the password of the PFX file.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Certificate password variable"), Description("Certificate mode: name of the environment variable holding the password of the PFX certificate file. The password itself is never stored in the configuration."), Category("Server Keys"), Id(4, 7)]
+        [DefaultValue("")]
+#endif
+        public string CertificatePasswordVariable { get; set; } = "";
+        /// <summary>
+        /// Serialize CertificatePasswordVariable only if set
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializeCertificatePasswordVariable() { return !string.IsNullOrEmpty(CertificatePasswordVariable); }
+
+        /// <summary>
+        /// Certificate mode: thumbprints or file paths of the previous certificates (one per line), used only to decrypt the values encrypted before a change of certificate.
+        /// </summary>
+#if WINDOWS
+        [DisplayName("Previous certificates"), Description("Certificate mode: thumbprints (Windows store) or file paths of the previous certificates, one per line. They are used only to decrypt the values encrypted before a change of certificate: execute 'Tools > Re-encrypt secrets', then remove them."), Category("Server Keys"), Id(5, 7)]
+        [Editor(typeof(MultilineStringEditor), typeof(UITypeEditor))]
+        [DefaultValue("")]
+#endif
+        public string PreviousCertificates { get; set; } = "";
+        /// <summary>
+        /// Serialize PreviousCertificates only if set
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
+        public bool ShouldSerializePreviousCertificates() { return !string.IsNullOrEmpty(PreviousCertificates); }
+
         List<KeyValue> _keyValues = new List<KeyValue>();
         /// <summary>
         /// If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting connection password, SMTP or FTP passwords).
         /// </summary>
 #if WINDOWS
-        [DisplayName("Key values"), Description("If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting Connection password, SMTP or FTP passwords)."), Category("Server Keys"), Id(2, 7)]
+        [DisplayName("Key values"), Description("If default mode is chosen, the key values used by the server for different operations (e.g. for encrypting/decrypting Connection password, SMTP or FTP passwords)."), Category("Server Keys"), Id(6, 7)]
         [DefaultValue(false)]
 #endif
         public List<KeyValue> KeyValues
@@ -736,7 +801,7 @@ namespace Seal.Model
         }
 
  #if WINDOWS
-        [DisplayName("Application keys and passwords"), Description("Keys or passwords used in the application (e.g. keys used in scripts in reports and tasks using the Repository.GetApplicationKey(\"KeyName\") method). Values are encrypted using the encryption mode defined above."), Category("Server Keys"), Id(3, 7)]
+        [DisplayName("Application keys and passwords"), Description("Keys or passwords used in the application (e.g. keys used in scripts in reports and tasks using the Repository.GetApplicationKey(\"KeyName\") method). Values are encrypted using the encryption mode defined above."), Category("Server Keys"), Id(7, 7)]
 #endif       
         /// <summary>
         /// Keys or passwords used in the application (report and tasks). Values are encrypted using the encryption mode.
@@ -909,6 +974,8 @@ namespace Seal.Model
             {
                 foreach (var k in ApplicationKeys)
                 {
+                    //A key not decrypted at the load and not changed is still encrypted: kept as is (it would be encrypted twice)
+                    if (_applicationKeysNotDecrypted.TryGetValue(k.Name ?? "", out var encrypted) && encrypted == k.Value) continue;
                     try
                     {
                         k.Value = EncryptValue(k.Value, ApplicationKeysKeyName);
@@ -916,6 +983,8 @@ namespace Seal.Model
                     catch (Exception ex)
                     {
                         Helper.WriteEventLogEntry("SealServerConfiguration", ex);
+                        //The clear value is never written in the file
+                        throw new Exception($"Unable to encrypt the application key '{k.Name}': {ex.Message}", ex);
                     }
                 }
 
@@ -961,6 +1030,7 @@ namespace Seal.Model
         /// </summary>
         public void InitApplicationKeys()
         {
+            _applicationKeysNotDecrypted.Clear();
             foreach (var key in ApplicationKeys)
             {
                 try
@@ -969,10 +1039,13 @@ namespace Seal.Model
                 }
                 catch (Exception ex)
                 {
+                    _applicationKeysNotDecrypted[key.Name ?? ""] = key.Value;
                     Helper.WriteEventLogEntry("SealServerConfiguration", ex);
                 }
             }
         }
+
+        readonly Dictionary<string, string> _applicationKeysNotDecrypted = new Dictionary<string, string>();
 
         /// <summary>
         /// Init default encryption keys
@@ -1035,22 +1108,176 @@ namespace Seal.Model
         {
             if (string.IsNullOrEmpty(value)) return "";
 
-            var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
-            var result = "";
+            //A value encrypted with a certificate is decrypted with it whatever the current mode (values kept after a change of mode)
+            if (CryptoHelper.IsCertificateValue(value)) return decryptCertificateValue(value, keyName);
 
-            if (EncryptionMode == EncryptionMode.Default)
+            if (EncryptionMode == EncryptionMode.Certificate) return decryptLegacyValue(value, keyName, useAES, null);
+            return decryptValueWithMode(value, keyName, useAES, EncryptionMode);
+        }
+
+        /// <summary>
+        /// Decrypt a value encrypted with any mode (used to re-encrypt the secrets after a change of mode): certificate, then the current mode, then the other modes
+        /// </summary>
+        public string DecryptValueAnyMode(string value, string keyName, bool useAES = false)
+        {
+            if (string.IsNullOrEmpty(value)) return "";
+            if (CryptoHelper.IsCertificateValue(value)) return decryptCertificateValue(value, keyName);
+            return decryptLegacyValue(value, keyName, useAES, EncryptionMode == EncryptionMode.Certificate ? null : EncryptionMode);
+        }
+
+        string decryptCertificateValue(string value, string keyName)
+        {
+            var thumbprint = CryptoHelper.GetCertificateThumbprint(value);
+            var certificate = FindCertificate(thumbprint);
+            if (certificate == null) throw new CryptographicException($"The certificate {thumbprint} used to encrypt the value is not available: check the properties 'Certificate', 'Certificate file' and 'Previous certificates' of the server configuration.");
+            return CryptoHelper.DecryptWithCertificate(value, keyName, certificate);
+        }
+
+        string decryptValueWithMode(string value, string keyName, bool useAES, EncryptionMode mode)
+        {
+            if (mode == EncryptionMode.MachineRSAContainer) return CryptoHelper.DecryptWithRSAContainer(value, keyName, true);
+            if (mode == EncryptionMode.UserRSAContainer) return CryptoHelper.DecryptWithRSAContainer(value, keyName, false);
+
+            var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
+            if (key == null) throw new CryptographicException($"No key value '{keyName}' in the server configuration.");
+            return useAES ? CryptoHelper.DecryptAES(value, key.Value) : CryptoHelper.DecryptTripleDES(value, key.Value);
+        }
+
+        /// <summary>
+        /// A value not encrypted with a certificate was encrypted with the key values or an RSA key container (e.g. before a change of mode and the re-encryption of the secrets).
+        /// The preferred mode is tried first, then the key values of the configuration and the RSA key containers on Windows (first if the value has the size of an RSA block).
+        /// </summary>
+        string decryptLegacyValue(string value, string keyName, bool useAES, EncryptionMode? preferredMode)
+        {
+            var modes = new List<EncryptionMode>() { EncryptionMode.Default };
+            if (OperatingSystem.IsWindows())
             {
-                result = useAES ? CryptoHelper.DecryptAES(value, key.Value) : CryptoHelper.DecryptTripleDES(value, key.Value);
+                int length = 0;
+                try { length = Convert.FromBase64String(value).Length; } catch { }
+                var rsaFirst = length >= 128 && length % 128 == 0;
+                modes.Insert(rsaFirst ? 0 : 1, EncryptionMode.MachineRSAContainer);
+                modes.Insert(rsaFirst ? 1 : 2, EncryptionMode.UserRSAContainer);
             }
-            else if (EncryptionMode == EncryptionMode.MachineRSAContainer)
+            if (preferredMode != null)
             {
-                result = CryptoHelper.DecryptWithRSAContainer(value, keyName, true);
+                modes.Remove(preferredMode.Value);
+                modes.Insert(0, preferredMode.Value);
             }
-            else if (EncryptionMode == EncryptionMode.UserRSAContainer)
+
+            Exception firstError = null;
+            foreach (var mode in modes)
             {
-                result = CryptoHelper.DecryptWithRSAContainer(value, keyName, false);
+                try
+                {
+                    return decryptValueWithMode(value, keyName, useAES, mode);
+                }
+                catch (Exception ex)
+                {
+                    firstError ??= ex;
+                }
             }
-            return result;
+            throw new CryptographicException($"The value is not encrypted with a certificate and cannot be decrypted with the key values or the RSA key containers: retype it or execute 'Tools > Re-encrypt secrets' with the former mode. {firstError?.Message}", firstError);
+        }
+
+        readonly Dictionary<string, X509Certificate2> _certificates = new Dictionary<string, X509Certificate2>(StringComparer.OrdinalIgnoreCase);
+
+        /// <summary>
+        /// Certificate used to encrypt the values in Certificate mode: the certificate of the Windows store if a thumbprint is set, otherwise the certificate file
+        /// </summary>
+        public X509Certificate2 CurrentCertificate
+        {
+            get
+            {
+                var source = !string.IsNullOrWhiteSpace(CertificateThumbprint) ? CertificateThumbprint : CertificatePath;
+                if (string.IsNullOrWhiteSpace(source)) throw new CryptographicException("Certificate mode: no certificate is defined in the server configuration (properties 'Certificate' or 'Certificate file').");
+                return loadCertificate(source);
+            }
+        }
+
+        /// <summary>
+        /// Returns the certificate having the thumbprint among the current certificate and the previous certificates, null if not found
+        /// </summary>
+        public X509Certificate2 FindCertificate(string thumbprint)
+        {
+            var sources = new List<string>() { CertificateThumbprint, CertificatePath };
+            if (!string.IsNullOrEmpty(PreviousCertificates)) sources.AddRange(PreviousCertificates.Split(new[] { '\r', '\n' }, StringSplitOptions.RemoveEmptyEntries));
+
+            Exception firstError = null;
+            foreach (var source in sources.Where(i => !string.IsNullOrWhiteSpace(i)).Select(i => i.Trim()))
+            {
+                //A thumbprint is only loaded if it is the one searched
+                if (isThumbprint(source) && !normalizeThumbprint(source).Equals(thumbprint, StringComparison.OrdinalIgnoreCase)) continue;
+                try
+                {
+                    var certificate = loadCertificate(source);
+                    if (certificate.Thumbprint.Equals(thumbprint, StringComparison.OrdinalIgnoreCase)) return certificate;
+                }
+                catch (Exception ex)
+                {
+                    firstError ??= ex;
+                }
+            }
+            if (firstError != null) throw new CryptographicException($"The certificate {thumbprint} used to encrypt the value cannot be loaded: {firstError.Message}", firstError);
+            return null;
+        }
+
+        static string normalizeThumbprint(string text)
+        {
+            return new string(text.Where(Uri.IsHexDigit).ToArray()).ToUpperInvariant();
+        }
+
+        static bool isThumbprint(string source)
+        {
+            //A file path has a dot or a separator, a thumbprint (possibly pasted with spaces) has 40 hexadecimal digits
+            return source.IndexOfAny(new[] { '.', '/', '\\' }) < 0 && normalizeThumbprint(source).Length == 40;
+        }
+
+        X509Certificate2 loadCertificate(string source)
+        {
+            lock (_certificates)
+            {
+                if (_certificates.TryGetValue(source, out var cached)) return cached;
+                var certificate = isThumbprint(source) ? loadCertificateFromStores(normalizeThumbprint(source)) : loadCertificateFromFile(source, CertificatePasswordVariable);
+                _certificates[source] = certificate;
+                return certificate;
+            }
+        }
+
+        static X509Certificate2 loadCertificateFromStores(string thumbprint)
+        {
+            foreach (var location in new[] { StoreLocation.LocalMachine, StoreLocation.CurrentUser })
+            {
+                try
+                {
+                    using var store = new X509Store(StoreName.My, location);
+                    store.Open(OpenFlags.ReadOnly | OpenFlags.OpenExistingOnly);
+                    var found = store.Certificates.Find(X509FindType.FindByThumbprint, thumbprint, false);
+                    if (found.Count > 0) return found[0];
+                }
+                catch { /* store not available (e.g. Local Machine on Linux) */ }
+            }
+            throw new CryptographicException($"The certificate {thumbprint} is not in the Windows stores 'Local Machine\\Personal' or 'Current User\\Personal' of this machine.");
+        }
+
+        static X509Certificate2 loadCertificateFromFile(string path, string passwordVariable)
+        {
+            path = FileHelper.ConvertOSFilePath(Environment.ExpandEnvironmentVariables(path.Trim()));
+            if (!File.Exists(path)) throw new CryptographicException($"The certificate file '{path}' does not exist or cannot be read by the account '{Environment.UserDomainName}\\{Environment.UserName}'.");
+            var extension = System.IO.Path.GetExtension(path).ToLowerInvariant();
+            if (extension == ".pfx" || extension == ".p12")
+            {
+                string password = string.IsNullOrEmpty(passwordVariable) ? null : Environment.GetEnvironmentVariable(passwordVariable);
+                if (!string.IsNullOrEmpty(passwordVariable) && password == null) throw new CryptographicException($"The environment variable '{passwordVariable}' holding the password of the certificate file '{path}' is not defined for the account '{Environment.UserDomainName}\\{Environment.UserName}'.");
+                //Ephemeral key: the private key is not written to the key stores of the machine
+                return X509CertificateLoader.LoadPkcs12FromFile(path, password, X509KeyStorageFlags.EphemeralKeySet);
+            }
+
+            //PEM: private key in a .key file of the same name or in the same file, otherwise public key only (encryption only)
+            var keyPath = System.IO.Path.ChangeExtension(path, ".key");
+            if (File.Exists(keyPath)) return X509Certificate2.CreateFromPemFile(path, keyPath);
+            var text = File.ReadAllText(path);
+            if (text.Contains("PRIVATE KEY")) return X509Certificate2.CreateFromPemFile(path);
+            return X509CertificateLoader.LoadCertificateFromFile(path);
         }
 
         /// <summary>
@@ -1059,6 +1286,9 @@ namespace Seal.Model
         public string EncryptValue(string value, string keyName, bool useAES = false)
         {
             if (string.IsNullOrEmpty(value)) return "";
+
+            //Certificate mode: only the public key is required
+            if (EncryptionMode == EncryptionMode.Certificate) return CryptoHelper.EncryptWithCertificate(value, keyName, CurrentCertificate);
 
             var key = KeyValues.FirstOrDefault(i => i.Name == keyName);
             var result = "";

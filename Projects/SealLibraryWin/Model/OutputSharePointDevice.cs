@@ -232,7 +232,8 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during client secret encryption:" + ex.Message;
-                    ClientSecret = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }
@@ -288,7 +289,8 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Error = "Error during certificate password encryption:" + ex.Message;
-                    CertificatePassword = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }

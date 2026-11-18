@@ -132,6 +132,33 @@ namespace MyNamespace
 powershell -ExecutionPolicy Bypass -File "C:\Program Files\Seal Report\Core\site-colors-gen.ps1" -Primary "#908A85" -Out "C:\inetpub\wwwroot\Seal Report\wwwroot\css\site-colors.css"
                                 </code></pre>
                             </div>
+                            <div class="bs-callout bs-callout-warning">
+                                <h4>Encryption of the passwords and secrets</h4>
+                                The passwords of the connections and of the devices, the keys of the AI providers, the application keys and the other secrets are encrypted in the repository files. The <code>Storage and encryption mode</code> of the <b>Server Configuration</b> (category <i>Server Keys</i>) defines how:
+                                <ul>
+                                    <li><b>Default</b>: the keys are stored in the configuration file of the repository, next to the encrypted values. Anybody reading the repository (a backup, a copy) can decrypt the secrets: use it for development.</li>
+                                    <li><b>Certificate</b> (recommended for production): each value is encrypted with a random AES-256-GCM key, itself encrypted with the RSA public key of a certificate (OAEP SHA-256). The private key stays outside of the repository: a copy of the repository reveals no secret. It works on Windows and Linux, and several servers can share the same certificate.</li>
+                                    <li><b>Machine RSA Container</b> and <b>User RSA Container</b>: RSA key containers of Windows, bound to one machine or one Windows account; the Certificate mode replaces them.</li>
+                                </ul>
+                                <h5>Certificate mode</h5>
+                                Create one self-signed certificate per environment (no certification authority is needed). On Windows, as administrator:
+                                <pre><code class="language-bash">
+New-SelfSignedCertificate -Subject "CN=Seal Report Secrets PROD" -CertStoreLocation Cert:\LocalMachine\My -KeyAlgorithm RSA -KeyLength 3072 -KeyExportPolicy Exportable -KeyUsage KeyEncipherment,DataEncipherment -Provider "Microsoft Software Key Storage Provider" -NotAfter (Get-Date).AddYears(20)
+                                </code></pre>
+                                Then give the right to read its private key to the accounts executing Seal Report only (<i>certlm.msc</i>, <i>Personal</i>, right click on the certificate, <i>All Tasks</i>, <i>Manage Private Keys</i>: <eg>e.g. <i>IIS AppPool\SealReport</i> and the account of the scheduler service</eg>), and select the certificate in the <code>Certificate</code> property.<br />
+                                On Linux, create the certificate and its key in PEM files outside of the repository and of the web site, readable only by the account of the service:
+                                <pre><code class="language-bash">
+openssl req -x509 -newkey rsa:3072 -nodes -days 7300 -subj "/CN=Seal Report Secrets PROD" -keyout seal-secrets.key -out seal-secrets.crt
+sudo install -d -m 700 -o seal -g seal /etc/seal/secrets
+sudo install -m 600 -o seal -g seal seal-secrets.key seal-secrets.crt /etc/seal/secrets/
+                                </code></pre>
+                                and set the <code>Certificate file</code> property to <i>/etc/seal/secrets/seal-secrets.crt</i> (the private key is read from the <i>.key</i> file of the same name). A PFX file can also be used: its password is read from the environment variable named by the <code>Certificate password variable</code> property, never from the configuration.<br />
+                                The encryption only needs the public key: the <b>Server Manager</b> of a workstation can encrypt the passwords with the certificate alone (<i>.cer</i> file without private key), only the servers need the private key.<br />
+                                After a change of mode, execute <b>Tools &gt; Re-encrypt Secrets...</b> in the <b>Server Manager</b> (save the configuration first): the secrets of the configuration, the security, the AI providers, the data sources, the devices and the reports are re-encrypted with the current mode, the values that cannot be decrypted are listed and left unchanged. The values encrypted with another mode remain readable until then.
+                                <h5>Backup and rotation</h5>
+                                <b>If the certificate is lost, all the secrets are lost</b> and must be typed again: export it at once in a PFX file protected by a strong password (<i>Export-PfxCertificate</i> or <i>openssl pkcs12 -export</i>) and keep it in a vault, never with the backups of the repository. Import the same PFX on every server of a farm or of a recovery site.<br />
+                                To change the certificate, deploy the new one, set it as <code>Certificate</code> and declare the former one in <code>Previous certificates</code>, execute <i>Re-encrypt Secrets</i>, then remove the former certificate.
+                            </div>
                             <div class="bs-callout bs-callout-info">
                                 <h4>Session cookie and several instances on the same web site</h4>
                                 The session cookie is scoped to the application: its path and its name are built from the application path of each request (<eg>e.g. the cookie <i>.AspNetCore.Session.rep</i> with the path <i>/rep</i></eg>).<br />

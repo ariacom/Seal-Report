@@ -9,6 +9,7 @@ using System;
 using System.IO;
 using System.Linq;
 using System.Security.Cryptography;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 
 namespace Seal.Helpers
@@ -199,13 +200,20 @@ namespace Seal.Helpers
         /// Decrypt a base64 text using the RSA key pair stored in a key container
         /// </summary>
         public static string DecryptWithRSAContainer(string text, string containerName, bool useMachineKeyStore)
-
         {
             CspParameters csp = new CspParameters();
             csp.KeyContainerName = containerName;
-            if (useMachineKeyStore) csp.Flags = CspProviderFlags.UseMachineKeyStore;
-            RSACryptoServiceProvider rsa = new RSACryptoServiceProvider(csp);
-            rsa.PersistKeyInCsp = true;
+            //Existing key only: opening a missing container must not create a new empty key (the decryption would fail with an unclear error)
+            csp.Flags = CspProviderFlags.UseExistingKey | (useMachineKeyStore ? CspProviderFlags.UseMachineKeyStore : CspProviderFlags.NoFlags);
+            RSACryptoServiceProvider rsa;
+            try
+            {
+                rsa = new RSACryptoServiceProvider(csp);
+            }
+            catch (CryptographicException ex)
+            {
+                throw new CryptographicException($"The {(useMachineKeyStore ? "machine" : "user")} RSA key container '{containerName}' does not exist or cannot be read by the account '{Environment.UserDomainName}\\{Environment.UserName}': {ex.Message}", ex);
+            }
 
             //Decrypt by blocks of KeySize/8 bytes (single block for values encrypted before the block support)
             byte[] bytes = Convert.FromBase64String(text);
@@ -222,6 +230,126 @@ namespace Seal.Helpers
                 }
                 return Encoding.UTF8.GetString(result.ToArray());
             }
+        }
+
+        /// <summary>
+        /// Prefix of a value encrypted with a certificate (see <see cref="EncryptWithCertificate"/>)
+        /// </summary>
+        public const string CertificatePrefix = "cert1:";
+
+        const byte CertificateFormatVersion = 1;
+        const int CertificateThumbprintLength = 20, CertificateNonceLength = 12, CertificateTagLength = 16;
+
+        /// <summary>
+        /// True if the value has been encrypted with a certificate
+        /// </summary>
+        public static bool IsCertificateValue(string value)
+        {
+            return value != null && value.StartsWith(CertificatePrefix, StringComparison.Ordinal);
+        }
+
+        /// <summary>
+        /// Encrypt a text with the public key of a certificate: the text is encrypted with a random AES-256-GCM key, itself encrypted with the RSA key of the certificate (OAEP SHA-256).
+        /// The result is 'cert1:' followed by the base64 of: version, SHA-1 thumbprint of the certificate, length and value of the encrypted key, nonce, tag and encrypted text.
+        /// The key name is authenticated with the value: a value cannot be moved to another kind of secret. Only the public key is required.
+        /// </summary>
+        public static string EncryptWithCertificate(string text, string keyName, X509Certificate2 certificate)
+        {
+            using var rsa = certificate.GetRSAPublicKey();
+            if (rsa == null) throw new CryptographicException($"The certificate '{certificate.Subject}' ({certificate.Thumbprint}) has no RSA key.");
+
+            byte[] key = RandomNumberGenerator.GetBytes(32);
+            byte[] nonce = RandomNumberGenerator.GetBytes(CertificateNonceLength);
+            byte[] plain = Encoding.UTF8.GetBytes(text ?? "");
+            byte[] cipher = new byte[plain.Length];
+            byte[] tag = new byte[CertificateTagLength];
+            byte[] thumbprint = Convert.FromHexString(certificate.Thumbprint);
+            using (var aes = new AesGcm(key, CertificateTagLength))
+            {
+                aes.Encrypt(nonce, plain, cipher, tag, getCertificateAssociatedData(keyName, thumbprint));
+            }
+            byte[] wrappedKey = rsa.Encrypt(key, RSAEncryptionPadding.OaepSHA256);
+            CryptographicOperations.ZeroMemory(key);
+
+            using var result = new MemoryStream();
+            result.WriteByte(CertificateFormatVersion);
+            result.Write(thumbprint, 0, thumbprint.Length);
+            result.WriteByte((byte)(wrappedKey.Length >> 8));
+            result.WriteByte((byte)(wrappedKey.Length & 0xFF));
+            result.Write(wrappedKey, 0, wrappedKey.Length);
+            result.Write(nonce, 0, nonce.Length);
+            result.Write(tag, 0, tag.Length);
+            result.Write(cipher, 0, cipher.Length);
+            return CertificatePrefix + Convert.ToBase64String(result.ToArray());
+        }
+
+        /// <summary>
+        /// Thumbprint (upper case hexadecimal) of the certificate used to encrypt a value, null if the value is not encrypted with a certificate
+        /// </summary>
+        public static string GetCertificateThumbprint(string value)
+        {
+            if (!IsCertificateValue(value)) return null;
+            var bytes = Convert.FromBase64String(value.Substring(CertificatePrefix.Length));
+            if (bytes.Length < 1 + CertificateThumbprintLength || bytes[0] != CertificateFormatVersion) throw new CryptographicException("Invalid certificate encrypted value.");
+            return Convert.ToHexString(bytes, 1, CertificateThumbprintLength);
+        }
+
+        /// <summary>
+        /// Decrypt a value encrypted by <see cref="EncryptWithCertificate"/> with the private key of the certificate
+        /// </summary>
+        public static string DecryptWithCertificate(string value, string keyName, X509Certificate2 certificate)
+        {
+            var bytes = Convert.FromBase64String(value.Substring(CertificatePrefix.Length));
+            int pos = 0;
+            if (bytes.Length < 1 + CertificateThumbprintLength + 2 || bytes[pos++] != CertificateFormatVersion) throw new CryptographicException("Invalid certificate encrypted value.");
+            byte[] thumbprint = bytes.AsSpan(pos, CertificateThumbprintLength).ToArray();
+            pos += CertificateThumbprintLength;
+            if (!Convert.ToHexString(thumbprint).Equals(certificate.Thumbprint, StringComparison.OrdinalIgnoreCase)) throw new CryptographicException($"The value has been encrypted with the certificate {Convert.ToHexString(thumbprint)}, not with '{certificate.Subject}' ({certificate.Thumbprint}).");
+            int wrappedLength = (bytes[pos] << 8) | bytes[pos + 1];
+            pos += 2;
+            if (bytes.Length < pos + wrappedLength + CertificateNonceLength + CertificateTagLength) throw new CryptographicException("Invalid certificate encrypted value.");
+            byte[] wrappedKey = bytes.AsSpan(pos, wrappedLength).ToArray();
+            pos += wrappedLength;
+            byte[] nonce = bytes.AsSpan(pos, CertificateNonceLength).ToArray();
+            pos += CertificateNonceLength;
+            byte[] tag = bytes.AsSpan(pos, CertificateTagLength).ToArray();
+            pos += CertificateTagLength;
+            byte[] cipher = bytes.AsSpan(pos).ToArray();
+
+            RSA rsa;
+            try
+            {
+                rsa = certificate.GetRSAPrivateKey();
+            }
+            catch (CryptographicException ex)
+            {
+                throw new CryptographicException($"The private key of the certificate '{certificate.Subject}' ({certificate.Thumbprint}) cannot be read by the account '{Environment.UserDomainName}\\{Environment.UserName}': {ex.Message}", ex);
+            }
+            if (rsa == null) throw new CryptographicException($"The certificate '{certificate.Subject}' ({certificate.Thumbprint}) has no private key available for the account '{Environment.UserDomainName}\\{Environment.UserName}'.");
+
+            byte[] key = null;
+            try
+            {
+                using (rsa)
+                {
+                    key = rsa.Decrypt(wrappedKey, RSAEncryptionPadding.OaepSHA256);
+                }
+                byte[] plain = new byte[cipher.Length];
+                using (var aes = new AesGcm(key, CertificateTagLength))
+                {
+                    aes.Decrypt(nonce, cipher, tag, plain, getCertificateAssociatedData(keyName, thumbprint));
+                }
+                return Encoding.UTF8.GetString(plain);
+            }
+            finally
+            {
+                if (key != null) CryptographicOperations.ZeroMemory(key);
+            }
+        }
+
+        static byte[] getCertificateAssociatedData(string keyName, byte[] thumbprint)
+        {
+            return Encoding.UTF8.GetBytes((keyName ?? "") + "|" + Convert.ToHexString(thumbprint));
         }
 
 

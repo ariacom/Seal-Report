@@ -234,7 +234,8 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Helper.WriteLogException("Error during trusted browser secret encryption", ex);
-                    TrustedBrowserSecret = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }
@@ -476,7 +477,8 @@ namespace Seal.Model
                 catch (Exception ex)
                 {
                     Helper.WriteLogException("Error during account link secret encryption", ex);
-                    AccountLinkSecret = value;
+                    //The clear value is never stored in the file
+                    throw new Exception("Unable to encrypt the value: " + ex.Message, ex);
                 }
             }
         }

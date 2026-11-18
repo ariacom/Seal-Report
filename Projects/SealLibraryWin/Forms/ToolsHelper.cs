@@ -48,6 +48,7 @@ namespace Seal.Forms
         ToolStripMenuItem _executeManager = new ToolStripMenuItem() { Text = Repository.SealRootProductName + " Server Manager", ToolTipText = "run the Server Manager application", AutoToolTip = true, ShortcutKeys = ((System.Windows.Forms.Keys)((System.Windows.Forms.Keys.Control | System.Windows.Forms.Keys.M))), ShowShortcutKeys = true };
         ToolStripMenuItem _openReportFolder = new ToolStripMenuItem() { Text = "Open Repository Reports Folder", ToolTipText = "open the Reports repository folder in Windows Explorer", AutoToolTip = true };
         ToolStripMenuItem _openTempFolder = new ToolStripMenuItem() { Text = "Open Temporary Report Results Folder", ToolTipText = "open the folder where are generated report results in Windows Explorer", AutoToolTip = true };
+        ToolStripMenuItem _reEncryptSecrets = new ToolStripMenuItem() { Text = "Re-encrypt Secrets...", ToolTipText = "Re-encrypt all the passwords, keys and secrets of the repository with the encryption mode of the saved server configuration (e.g. after a change of mode or of certificate)", AutoToolTip = true };
 
         public void InitHelpers(ToolStripMenuItem toolsMenuItem, bool forDesigner)
         {
@@ -66,6 +67,9 @@ namespace Seal.Forms
                     _synchronizeSchedules.Click += tools_Click;
                     toolsMenuItem.DropDownItems.Add(_synchronizeSchedules);
                 }
+
+                _reEncryptSecrets.Click += tools_Click;
+                toolsMenuItem.DropDownItems.Add(_reEncryptSecrets);
             }
 
             if (!forDesigner)
@@ -258,6 +262,28 @@ namespace Seal.Forms
                     {
                         SynchronizeSchedules((ExecutionLogInterface)param);
                     });
+                }
+                else if (sender == _reEncryptSecrets)
+                {
+                    var mode = SealServerConfiguration.LoadFromFile(Repository.Instance.ConfigurationPath, false).EncryptionMode;
+                    var message = $"Re-encrypt all the passwords, keys and secrets of the repository (configuration, security, AI providers, data sources, devices and reports) with the encryption mode '{Helper.GetEnumDescription(typeof(EncryptionMode), mode)}' of the saved server configuration?\r\n\r\nThe files are modified: make a backup of the repository first. The values that cannot be decrypted are listed and left unchanged.\r\n\r\nYes: re-encrypt, No: simulate only (no file modified).";
+                    var answer = MessageBox.Show(message, Repository.SealRootProductName + " Server Manager", MessageBoxButtons.YesNoCancel, MessageBoxIcon.Question, MessageBoxDefaultButton.Button2);
+                    if (answer != DialogResult.Cancel)
+                    {
+                        var simulate = (answer == DialogResult.No);
+                        thread = new Thread(delegate (object param)
+                        {
+                            var log = (ExecutionLogInterface)param;
+                            try
+                            {
+                                SecretsHelper.ReEncryptRepository(Repository.Instance, simulate, log);
+                            }
+                            catch (Exception ex)
+                            {
+                                log.Log("{0}", "ERROR: " + ex.Message);
+                            }
+                        });
+                    }
                 }
                 else if (sender == _executeManager || sender == _executeDesigner)
                 {

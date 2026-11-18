@@ -1731,6 +1731,11 @@ namespace Seal.Model
         /// </summary>
         [Description("Use the User RSA Key Container (Works only for the current user)")]
         UserRSAContainer,
+        /// <summary>
+        /// Use a certificate: Windows certificate store or PFX/PEM file (Windows and Linux, can be shared by several servers)
+        /// </summary>
+        [Description("Use a certificate (Windows certificate store or PFX/PEM file, Windows and Linux)")]
+        Certificate,
     }
 
     /// <summary>
