@@ -1,6 +1,8 @@
 ﻿@using QuestPDF.Fluent
 @using QuestPDF.Infrastructure
+@using QuestPDF.Helpers
 @using Colors = QuestPDF.Helpers.Colors
+@using Seal.Helpers
 @using Seal.Model
 @using Seal.Renderer
 @{
@@ -25,27 +27,63 @@
 
     if (dataTable != null && dataTable.RowCount > 0 && modelView.GetBoolValue("show_data_tables", true))
     {
-        container.Column(column =>
+        int fontSize = renderer.GetNumericValue("font_size");
+        int columnCount = dataTable.Lines.First().Length;
+
+        //Columns allowed by the page width: a wider table is split into blocks of columns, one below the other (QuestPDF fails
+        //with 'conflicting size constraints' when a column is too narrow for its text, e.g. a pivot with 100 departments as columns)
+        int minWidth = renderer.GetNumericValue("min_column_width");
+        int maxColumns = minWidth > 0 ? Math.Max(1, (int)(getContentWidth(report) / minWidth)) : int.MaxValue;
+        if (columnCount <= maxColumns)
         {
-            ComposeDataTable(column.Item(), dataTable, renderer.GetNumericValue("font_size"));
-        });
+            container.Column(column =>
+            {
+                ComposeDataTable(column.Item(), dataTable, fontSize, Enumerable.Range(0, columnCount).ToList());
+            });
+        }
+        else
+        {
+            //Columns repeated in each block: the row dimensions of a pivot table, else the first column
+            int repeated = reportModel.GetElements(PivotPosition.Column).Any() ? reportModel.GetElements(PivotPosition.Row).Count() : 1;
+            repeated = Math.Min(repeated, maxColumns / 2);
+            int blockSize = maxColumns - repeated;
+            container.Column(column =>
+            {
+                for (int start = repeated; start < columnCount; start += blockSize)
+                {
+                    var indexes = Enumerable.Range(0, repeated).Concat(Enumerable.Range(start, Math.Min(blockSize, columnCount - start))).ToList();
+                    if (start > repeated) column.Item().PaddingTop(15);
+                    ComposeDataTable(column.Item(), dataTable, fontSize, indexes, repeated);
+                }
+            });
+        }
     }
 }
 
 
 @functions
 {
-    void ComposeDataTable(IContainer container, ResultTable dataTable, int fontSize)
+    //Width available for the content of a page in points: size and orientation of the PDF renderer of the report, margins of 30
+    float getContentWidth(Report report)
+    {
+        var reportRenderer = report.ExecutionView.PDFRenderer;
+        var pageSize = Helper.GetStaticPropertyValue(typeof(PageSizes), reportRenderer.GetValue("page_size")) as PageSize ?? PageSizes.A4;
+        if (reportRenderer.GetValue("page_orientation") == "landscape") pageSize = pageSize.Landscape();
+        else pageSize = pageSize.Portrait();
+        return pageSize.Width - 60;
+    }
+
+    //indexes: columns of the table shown; repeated: count of row header columns repeated in a block of a split table
+    void ComposeDataTable(IContainer container, ResultTable dataTable, int fontSize, List<int> indexes, int repeated = 0)
     {
         if (dataTable.ColumnCount == 0) return;
 
         container.Table(table =>
         {
             //Column definition
-            var firstLine = dataTable.Lines.First();
             table.ColumnsDefinition(columns =>
             {
-                foreach (var col in firstLine)
+                foreach (var index in indexes)
                 {
                     columns.RelativeColumn();
                 }
@@ -57,8 +95,12 @@
             {
                 table.Header(header =>
                 {
-                    foreach (var cell in headerLine)
+                    for (int position = 0; position < indexes.Count; position++)
                     {
+                        var cell = headerLine[indexes[position]];
+                        var text = cell.DisplayValue;
+                        //Split table: the title of the column dimensions, on the first column after the row headers, is repeated in each block
+                        if (position == repeated && indexes[position] > repeated && string.IsNullOrEmpty(text) && repeated < headerLine.Length) text = headerLine[repeated].DisplayValue;
                         header.Cell()
                         .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))
                         .PaddingVertical(5)
@@ -68,13 +110,13 @@
                         .Background(Colors.Grey.Lighten3)
                         .AlignCell(cell)
                         .PaddingHorizontal(1)
-                        .Text(cell.DisplayValue);
+                        .Text(text);
                     }
                 });
                 //Following header lines
                 foreach (var headerLine2 in dataTable.HeaderLines.Where(i => i != headerLine))
                 {
-                    foreach (var cell in headerLine2)
+                    foreach (var cell in indexes.Select(i => headerLine2[i]))
                     {
                         table.Cell()
                         .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))
@@ -93,7 +135,7 @@
             //Body
             foreach (var bodyLine in dataTable.BodyLines)
             {
-                foreach (var cell in bodyLine)
+                foreach (var cell in indexes.Select(i => bodyLine[i]))
                 {
                     table.Cell()
                     .DefaultTextStyle(x => x.FontSize(fontSize))
@@ -111,7 +153,7 @@
             {
                 foreach (var footerLine in dataTable.FooterLines)
                 {
-                    foreach (var cell in footerLine)
+                    foreach (var cell in indexes.Select(i => footerLine[i]))
                     {
                         footer.Cell()
                         .DefaultTextStyle(x => x.SemiBold().FontSize(fontSize))

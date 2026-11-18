@@ -4,4 +4,5 @@
 
     //Parameters for this template
     Template.Parameters.Add(new Parameter() { Name = "font_size", DisplayName = "Font size", NumericValue = 10, Description = "Font size of the table texts." });
+    Template.Parameters.Add(new Parameter() { Name = "min_column_width", DisplayName = "Minimum column width", NumericValue = 40, Description = "Minimum width of a column in points. A table having more columns than the page width allows is split into several tables, one below the other, the row header columns being repeated in each of them. 0 to never split the table." });
 }

@@ -67,9 +67,14 @@
     }
     catch (Exception ex)
     {
-        var exceptionDocument = new PDFExceptionDocument() { Exception = ex };
-        exceptionDocument.GeneratePdf(report.ResultFilePath);
-        throw ex;
+        //PDF of the error: a failure here (e.g. the layout message of QuestPDF has emojis missing in the fonts) must not hide the original error
+        try
+        {
+            var exceptionDocument = new PDFExceptionDocument() { Exception = ex };
+            exceptionDocument.GeneratePdf(report.ResultFilePath);
+        }
+        catch { }
+        throw;
     }
     finally
     {
@@ -292,7 +297,9 @@
                 .Page(page =>
                 {
                     page.Margin(30);
-                    page.Content().Text(Exception.Message);
+                    //Only the characters of the Basic Multilingual Plane outside the emoji and symbol blocks: QuestPDF stops on a glyph missing in the fonts
+                    var message = new string(Exception.Message.Where(c => !char.IsSurrogate(c) && !(c >= '☀' && c <= '➿') && !(c >= '︀' && c <= '️')).ToArray());
+                    page.Content().Text(message);
                 });
         }
     }
