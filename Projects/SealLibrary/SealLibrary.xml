@@ -2749,12 +2749,26 @@
         <member name="M:Seal.AI.AIReportWriter.OrderByCloseness(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
             <summary>
             Orders the values by closeness to a text, the labels and the text being compared without their code (see LabelWithoutCode),
-            ignoring the case, the accents and the punctuation (see CloseTier); within a group, by edit distance then in the order of the values
+            ignoring the case, the accents and the punctuation (see CloseTier and CloseRank); within a group, by edit distance, then the labels
+            having the text with letters missing (see MissingLettersRank), then in the order of the values
             </summary>
         </member>
         <member name="M:Seal.AI.AIReportWriter.CloseValues(System.Collections.Generic.List{Seal.Model.MetaEV},System.Func{Seal.Model.MetaEV,System.String},System.String)">
             <summary>
             Values close to a text (CloseTier below NotClose), the closest first (see OrderByCloseness)
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.CloseRank(System.Int32,System.Int32)">
+            <summary>
+            Rank of a label to display the close values (see CloseTier), the lowest first: the tier, except an almost equal label with two edits
+            ranked after the labels starting with the text or having it as a whole word (e.g. 'La Rochelle' before 'Rodelle' for 'Rochelle').
+            The tier itself is unchanged: it decides when a search stops
+            </summary>
+        </member>
+        <member name="M:Seal.AI.AIReportWriter.MissingLettersRank(System.String,System.String)">
+            <summary>
+            Rank of a normalized label for a text typed with letters missing, the most frequent spelling mistake: 0 text being the label
+            without one of its doubled letters (e.g. 'renes' for 'rennes'), 1 text being a subsequence of the label (e.g. 'renes' for 'reynes'), 2 otherwise
             </summary>
         </member>
         <member name="F:Seal.AI.AIReportWriter.NotClose">

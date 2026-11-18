@@ -357,6 +357,39 @@ namespace Test
             Assert.AreEqual(0, AIReportWriter.CloseValues(values, i => i.Val, "Southport").Count);
         }
 
+        [TestMethod]
+        public void CloseValuesRankMissingLettersFirst()
+        {
+            //One edit for all: the text with a letter missing first ('Renes' is 'Rennes' without its doubled 'n'), not the order of the list
+            var values = new List<MetaEV> { new MetaEV() { Id = "31574", Val = "Vénès (31574)" }, new MetaEV() { Id = "12091", Val = "Ernes (14246)" },
+                new MetaEV() { Id = "61324", Val = "Rânes (61324)" }, new MetaEV() { Id = "12199", Val = "Reynès (66160)" }, new MetaEV() { Id = "35238", Val = "Rennes (35238)" } };
+            var close = AIReportWriter.CloseValues(values, i => i.Val, "Renes");
+            Assert.AreEqual(5, close.Count);
+            Assert.AreEqual("35238", close[0].Id);
+            //Then the text being a subsequence of the label ('Reynès'), then the order of the list
+            CollectionAssert.AreEqual(new List<string> { "35238", "12199", "31574", "12091", "61324" }, close.Select(i => i.Id).ToList());
+            Assert.AreEqual(0, AIReportWriter.MissingLettersRank("rennes", "renes"));
+            Assert.AreEqual(1, AIReportWriter.MissingLettersRank("reynes", "renes"));
+            Assert.AreEqual(2, AIReportWriter.MissingLettersRank("venes", "renes"));
+        }
+
+        [TestMethod]
+        public void CloseValuesRankTwoEditsAfterWholeWords()
+        {
+            //Two edits ('Rodelle', 'Rocheville'): after the label having the text as a whole word, then the text with letters missing ('Rocheville')
+            var values = new List<MetaEV> { new MetaEV() { Id = "12200", Val = "Rodelle (12200)" }, new MetaEV() { Id = "76530", Val = "Rocheville (50440)" },
+                new MetaEV() { Id = "17300", Val = "La Rochelle (17300)" } };
+            CollectionAssert.AreEqual(new List<string> { "17300", "76530", "12200" }, AIReportWriter.CloseValues(values, i => i.Val, "Rochelle").Select(i => i.Id).ToList());
+            //The tier is unchanged (it stops the searches): two edits are still almost equal
+            Assert.AreEqual(1, AIReportWriter.CloseTier("rodelle", "rochelle", out int distance));
+            Assert.AreEqual(2, distance);
+
+            //One edit stays first, before the whole word
+            values.Add(new MetaEV() { Id = "17299", Val = "Rochele (17299)" });
+            Assert.AreEqual("17299", AIReportWriter.CloseValues(values, i => i.Val, "Rochelle").First().Id);
+            Assert.AreEqual("17300", AIReportWriter.CloseValues(values, i => i.Val, "Rochelle").Skip(1).First().Id);
+        }
+
         static Report LoadOnDemandProductReport()
         {
             var report = Report.LoadFromFile(Path.Combine(_repository.ReportsFolder, "Samples", "09-Enumerated List - Dynamic Display.srex"), _repository);

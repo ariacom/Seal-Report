@@ -1701,7 +1701,8 @@ namespace Seal.AI
 
         /// <summary>
         /// Orders the values by closeness to a text, the labels and the text being compared without their code (see LabelWithoutCode),
-        /// ignoring the case, the accents and the punctuation (see CloseTier); within a group, by edit distance then in the order of the values
+        /// ignoring the case, the accents and the punctuation (see CloseTier and CloseRank); within a group, by edit distance, then the labels
+        /// having the text with letters missing (see MissingLettersRank), then in the order of the values
         /// </summary>
         public static List<MetaEV> OrderByCloseness(List<MetaEV> values, Func<MetaEV, string> label, string text)
         {
@@ -1721,9 +1722,42 @@ namespace Seal.AI
             var normalizedText = NormalizeLabel(LabelWithoutCode(text));
             return values.Select((value, index) =>
             {
-                var tier = CloseTier(NormalizeLabel(LabelWithoutCode(label(value))), normalizedText, out int distance);
-                return new { value, index, tier, distance };
-            }).OrderBy(i => i.tier).ThenBy(i => i.distance).ThenBy(i => i.index).Select(i => (i.value, i.tier)).ToList();
+                var normalizedLabel = NormalizeLabel(LabelWithoutCode(label(value)));
+                var tier = CloseTier(normalizedLabel, normalizedText, out int distance);
+                return new { value, index, tier, distance, rank = CloseRank(tier, distance), missing = MissingLettersRank(normalizedLabel, normalizedText) };
+            }).OrderBy(i => i.rank).ThenBy(i => i.distance).ThenBy(i => i.missing).ThenBy(i => i.index).Select(i => (i.value, i.tier)).ToList();
+        }
+
+        /// <summary>
+        /// Rank of a label to display the close values (see CloseTier), the lowest first: the tier, except an almost equal label with two edits
+        /// ranked after the labels starting with the text or having it as a whole word (e.g. 'La Rochelle' before 'Rodelle' for 'Rochelle').
+        /// The tier itself is unchanged: it decides when a search stops
+        /// </summary>
+        public static int CloseRank(int tier, int distance)
+        {
+            return tier == 1 && distance > 1 ? 9 : tier * 2;
+        }
+
+        /// <summary>
+        /// Rank of a normalized label for a text typed with letters missing, the most frequent spelling mistake: 0 text being the label
+        /// without one of its doubled letters (e.g. 'renes' for 'rennes'), 1 text being a subsequence of the label (e.g. 'renes' for 'reynes'), 2 otherwise
+        /// </summary>
+        public static int MissingLettersRank(string label, string text)
+        {
+            label ??= ""; text ??= "";
+            if (label.Length == text.Length + 1)
+            {
+                for (int i = 0; i < label.Length - 1; i++)
+                {
+                    if (label[i] == label[i + 1] && label.Remove(i, 1) == text) return 0;
+                }
+            }
+            int j = 0;
+            foreach (var c in label)
+            {
+                if (j < text.Length && c == text[j]) j++;
+            }
+            return j == text.Length ? 1 : 2;
         }
 
         /// <summary>
