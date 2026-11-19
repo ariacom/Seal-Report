@@ -186,7 +186,8 @@ namespace Seal.Forms
 
         private async void setProgressBarInformation(string id, int progression, string message, string barClass)
         {
-            await webBrowser.CoreWebView2.ExecuteScriptAsync($"setProgressBarMessage('#{id}',{progression},'{message}','bg-{barClass}');");
+            //message encoded as in the Web Report Server (HTML), then for the JavaScript string (a quote of a translation broke the script)
+            await webBrowser.CoreWebView2.ExecuteScriptAsync($"setProgressBarMessage('#{id}',{progression},'{Helper.ToJS(Helper.ToHtml(message))}','bg-{barClass}');");
         }
 
         private void initFromForm(string formValues)
@@ -218,8 +219,7 @@ namespace Seal.Forms
 
         private async void setProperty(string id, string property, string value)
         {
-            value = value.Replace("\\", "\\\\");
-            await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').{property}('{value}')");
+            await webBrowser.CoreWebView2.ExecuteScriptAsync($"$('#{id}').{property}('{Helper.ToJS(value)}')");
         }
 
         private void WebBrowser_CoreWebView2InitializationCompleted(object sender, CoreWebView2InitializationCompletedEventArgs e)
@@ -328,6 +328,8 @@ namespace Seal.Forms
         {
             public ReportViewerForm Container;
             bool _iconExecuting = true;
+            //execution messages last sent to the page: nothing is sent while they do not change
+            string _lastExecutionMessages = null;
 
             Report Report { get { return Container._report; } }
             ReportExecution Execution { get { return Container._execution; } }
@@ -369,6 +371,7 @@ namespace Seal.Forms
             public void ExecuteReport(string formValues)
             {
                 _iconExecuting = true;
+                _lastExecutionMessages = null;
                 Container.setCurrentExecution(HttpUtility.ParseQueryString(formValues)[ReportExecution.HtmlId_execution_guid]);
                 Container.initFromForm(formValues);
                 Report.ExecutionTriggerView = null;
@@ -392,8 +395,10 @@ namespace Seal.Forms
 
                 if (Report.IsExecuting)
                 {
-                    if (Report.ExecutionView.GetValue("messages_mode") != "disabled")
+                    //a new message creates a new string: same instance = unchanged messages, no rewrite nor scroll
+                    if (Report.ExecutionView.GetValue("messages_mode") != "disabled" && !ReferenceEquals(Report.ExecutionMessages, _lastExecutionMessages))
                     {
+                        _lastExecutionMessages = Report.ExecutionMessages;
                         Container.setProperty(ReportExecution.HtmlId_execution_messages, "html", Helper.ToHtml(Report.ExecutionMessagesToDisplay));
                         Container.webBrowser.CoreWebView2.ExecuteScriptAsync("scrollMessages(false);");
                     }
@@ -425,6 +430,7 @@ namespace Seal.Forms
             public string Navigate(string nav, string parameter)
             {
                 string result = "";
+                _lastExecutionMessages = null;
                 Container.InitIcon();
 
                 var parameters = HttpUtility.ParseQueryString(parameter);

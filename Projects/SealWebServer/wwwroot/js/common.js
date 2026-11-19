@@ -380,16 +380,22 @@ function showHideNavbar() {
 }
 
 
+//next refresh of the execution, planned when the previous one is done: no overlapping requests (an older answer could overwrite newer messages)
+function scheduleExecuteTimer() {
+    _executionTimer = setTimeout(function () { executeTimer(); }, 1200);
+}
+
 function executeTimer() {
     if (_executionTimer != null) {
         var $messages = $("#execution_messages");
         var $form = $("#header_form");
         $form.attr("action", _urlPrefix + "ActionRefreshReport");
         if (_urlPrefix != "") {
+            var next = true;
             $.post(_urlPrefix + "ActionRefreshReport", { execution_guid: _executionGUID })
                 .done(function (data) {
                     if (data.result_ready) {
-                        clearInterval(_executionTimer);
+                        next = false;
                         if (_executionGUID != null) {
                             if (_reportStandalone) {
                                 $form.attr("action", _urlPrefix + "Result");
@@ -413,20 +419,29 @@ function executeTimer() {
                         setProgressBarMessage("#progress_bar_models", data.progression_models, data.progression_models_message, "bg-info");
                         if (data.execution_messages != null && $messages.length) {
                             $messages.removeClass('d-none');
-                            $messages.html(data.execution_messages);
-                            scrollMessages(_printLayout);
+                            //unchanged messages: nothing to render nor to scroll
+                            if ($messages.data("raw_messages") !== data.execution_messages) {
+                                $messages.data("raw_messages", data.execution_messages);
+                                $messages.html(data.execution_messages);
+                                scrollMessages(_printLayout);
+                            }
                         }
                     }
                     else if (data.error != null) {
                         setProgressBarMessage("#progress_bar", 100, data.error, "bg-danger");
-                        clearInterval(_executionTimer);
+                        next = false;
                         $("#execute_button").css("display", "none");
                     }
+                })
+                .always(function () {
+                    //not if the execution is finished or the report body has been replaced (timer reset)
+                    if (next && _executionTimer != null) scheduleExecuteTimer();
                 });
         }
         else {
             window.chrome.webview.hostObjects.sync.dotnet.RefreshReport();
             $messages.removeClass('d-none');
+            if (_executionTimer != null) scheduleExecuteTimer();
         }
     }
 }
@@ -493,12 +508,13 @@ function executeReport(nav, formName) {
         if (messages.length) {
             messages.addClass('d-none');
             messages.html("");
+            messages.removeData("raw_messages");
         }
 
         processInitProgressBar();
 
         url = _urlPrefix + (nav == null ? "ActionExecuteReport" : "ActionNavigate");
-        if (nav == null || _urlPrefix == "") _executionTimer = setInterval(function () { executeTimer(); }, 1200);
+        if (nav == null || _urlPrefix == "") scheduleExecuteTimer();
     }
     else {
         url = _urlPrefix + "ActionCancelReport";

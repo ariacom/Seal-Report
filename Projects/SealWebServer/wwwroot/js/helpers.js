@@ -148,14 +148,16 @@ function initMessageMenu() {
 function scrollMessages(printLayout) {
     if ($('#message_autoscroll').is(":checked")) {
         var messages = $("#execution_messages");
-        if (!printLayout) setMessageHeight();
-        if (messages && messages[0] && messages[0].scrollHeight) {
-            setTimeout(function () { messages.scrollTop(messages[0].scrollHeight); }, 200);
-        }
+        var scrollToBottom = function () {
+            if (messages[0] && messages[0].scrollHeight) messages[0].scrollTop = messages[0].scrollHeight;
+        };
+        //scrolled as soon as the height is set: no intermediate position shown between the two
+        if (!printLayout) setMessageHeight(scrollToBottom);
+        else scrollToBottom();
     }
 }
 
-function setMessageHeight() {
+function setMessageHeight(callback) {
     setTimeout(function () {
         //jQuery reports the would-be height of display:none elements, so only count elements actually shown
         function visibleHeight(selector) { var $e = $(selector); return $e.is(":visible") ? $e.height() : 0; }
@@ -175,12 +177,16 @@ function setMessageHeight() {
             });
             height = Math.floor(viewHeight - $messages.offset().top - bottom) - 2;
         }
+        //keep the scroll position: a transient greater height clamps scrollTop, the messages would jump up then down (blink at each refresh)
+        var scrollTop = $messages.length ? $messages[0].scrollTop : 0;
         $messages.css("height", height + "px");
         if ($messages.is(":visible")) {
             //safety net: shrink by any remaining page overflow (collapsed margins, late layout changes)
             var overflow = document.documentElement.scrollHeight - document.documentElement.clientHeight;
             if (overflow > 0) $messages.css("height", (height - overflow) + "px");
         }
+        if ($messages.length && $messages[0].scrollTop != scrollTop) $messages[0].scrollTop = scrollTop;
+        if (callback) callback();
     }, 100);
 }
 
