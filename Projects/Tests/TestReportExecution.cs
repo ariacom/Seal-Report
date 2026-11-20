@@ -282,6 +282,12 @@ namespace Test
                 Assert.AreEqual("&R&G", headerFooter.Elements().First(i => i.Name.LocalName == "oddHeader").Value);
                 Assert.IsTrue(names.IndexOf("firstHeader") < names.IndexOf("firstFooter"), "firstHeader before firstFooter: " + string.Join(",", names));
                 Assert.IsTrue(names.IndexOf("oddHeader") == 0, string.Join(",", names));
+                //One shape per header: RH for all pages, RHFIRST for the first page (else Excel shows the logo at the top left of the first page)
+                using var vmlReader = new StreamReader(zip.GetEntry("xl/drawings/sealHeaderLogo1.vml").Open());
+                var vml = vmlReader.ReadToEnd();
+                StringAssert.Contains(vml, "id=\"RH\"");
+                StringAssert.Contains(vml, "id=\"RHFIRST\"");
+                Assert.IsFalse(vml.Contains("id=\"RHEVEN\""), "no even header");
             }
             finally
             {

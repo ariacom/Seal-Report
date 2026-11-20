@@ -439,7 +439,19 @@ namespace Seal.Renderer
                     }
                 }
 
-                //VML drawing of the header (shape LH, CH or RH), with its relation to the image
+                //VML drawing of the header, with its relation to the image: one shape per header (LH, CH or RH for all pages,
+                //suffix FIRST for the header of the first page, EVEN for the even pages), else Excel puts the picture at the top left
+                string shapes = "";
+                int shapeIndex = 1;
+                foreach (var headerName in new string[] { "oddHeader", "firstHeader", "evenHeader" })
+                {
+                    if (headerFooter.Element(main + headerName) == null) continue;
+                    if ((headerName == "firstHeader" && !differentFirst) || (headerName == "evenHeader" && !differentOddEven)) continue;
+                    string shapeId = section + "H" + (headerName == "firstHeader" ? "FIRST" : headerName == "evenHeader" ? "EVEN" : "");
+                    shapes += "<v:shape id=\"" + shapeId + "\" o:spid=\"_x0000_s" + (index * 1024 + shapeIndex++) + "\" type=\"#_x0000_t75\" style=\"position:absolute;margin-left:0;margin-top:0;width:"
+                        + ptWidth.ToString(ic) + "pt;height:" + ptHeight.ToString(ic) + "pt;z-index:" + shapeIndex + "\">"
+                        + "<v:imagedata o:relid=\"rId1\" o:title=\"logo\"/><o:lock v:ext=\"edit\" rotation=\"t\"/></v:shape>";
+                }
                 string vmlName = "sealHeaderLogo" + index + ".vml";
                 string vml = "<xml xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\">"
                     + "<o:shapelayout v:ext=\"edit\"><o:idmap v:ext=\"edit\" data=\"" + index + "\"/></o:shapelayout>"
@@ -449,9 +461,7 @@ namespace Seal.Renderer
                     + "<v:f eqn=\"prod @3 21600 pixelWidth\"/><v:f eqn=\"prod @3 21600 pixelHeight\"/><v:f eqn=\"sum @0 0 1\"/><v:f eqn=\"prod @6 1 2\"/>"
                     + "<v:f eqn=\"prod @7 21600 pixelWidth\"/><v:f eqn=\"sum @8 21600 0\"/><v:f eqn=\"prod @7 21600 pixelHeight\"/><v:f eqn=\"sum @10 21600 0\"/>"
                     + "</v:formulas><v:path o:extrusionok=\"f\" gradientshapeok=\"t\" o:connecttype=\"rect\"/><o:lock v:ext=\"edit\" aspectratio=\"t\"/></v:shapetype>"
-                    + "<v:shape id=\"" + section + "H\" o:spid=\"_x0000_s" + (index * 1024 + 1) + "\" type=\"#_x0000_t75\" style=\"position:absolute;margin-left:0;margin-top:0;width:"
-                    + ptWidth.ToString(ic) + "pt;height:" + ptHeight.ToString(ic) + "pt;z-index:1\">"
-                    + "<v:imagedata o:relid=\"rId1\" o:title=\"logo\"/><o:lock v:ext=\"edit\" rotation=\"t\"/></v:shape></xml>";
+                    + shapes + "</xml>";
                 saveText("xl/drawings/" + vmlName, vml);
                 saveText("xl/drawings/_rels/" + vmlName + ".rels",
                     "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"" + rels.NamespaceName + "\">"
