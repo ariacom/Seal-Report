@@ -6,9 +6,13 @@ using ClosedXML.Excel;
 using Seal.Helpers;
 using Seal.Model;
 using System;
+using System.Globalization;
 using System.IO;
+using System.IO.Compression;
 using System.Linq;
+using System.Text;
 using System.Threading.Tasks;
+using System.Xml.Linq;
 using ClosedXML.Excel.Drawings;
 using AngleSharp.Html.Parser;
 using AngleSharp.Dom;
@@ -302,6 +306,223 @@ namespace Seal.Renderer
             XLPageOrientation result;
             if (!string.IsNullOrEmpty(name) && Enum.TryParse(name, true, out result)) return result;
             return XLPageOrientation.Portrait;
+        }
+
+        /// <summary>
+        /// Returns the path of the PNG or JPG logo to show in the page header: the file name given (in the Views\img folder of the repository, or a full path),
+        /// else the logo of the server configuration. Excel does not accept a SVG in a page header: a '.svg' is replaced by the '.png', '.jpg' or '.jpeg' file of the same name.
+        /// Returns null if no logo is found (a message is logged).
+        /// </summary>
+        public string GetHeaderLogoPath(string fileName)
+        {
+            if (string.IsNullOrWhiteSpace(fileName)) fileName = Report.Repository.Configuration.LogoName;
+            if (string.IsNullOrWhiteSpace(fileName)) return null;
+            var path = Path.IsPathRooted(fileName) ? fileName : Path.Combine(Report.Repository.ViewImagesFolder, fileName);
+            if (path.EndsWith(".svg", StringComparison.OrdinalIgnoreCase))
+            {
+                foreach (var ext in new string[] { ".png", ".jpg", ".jpeg" })
+                {
+                    var other = Path.ChangeExtension(path, ext);
+                    if (File.Exists(other)) return other;
+                }
+                Report.LogMessage("Excel header logo: no PNG or JPG file found for '{0}' (a SVG cannot be used in a page header).", path);
+                return null;
+            }
+            if (!File.Exists(path))
+            {
+                Report.LogMessage("Excel header logo: file not found '{0}'.", path);
+                return null;
+            }
+            return path;
+        }
+
+        /// <summary>
+        /// Top margin of the page (inches) leaving the place of a header logo of the given height (points)
+        /// </summary>
+        static public double GetHeaderLogoTopMargin(double logoHeight, double headerMargin, double defaultTopMargin)
+        {
+            return Math.Max(defaultTopMargin, Math.Round(headerMargin + logoHeight / 72 + 0.15, 2));
+        }
+
+        /// <summary>
+        /// Adds a PNG or JPG logo in the page header (printing, page layout view) of every sheet of a saved Excel file having a header.
+        /// ClosedXML has no API for a header picture: the file is completed with the image, a VML drawing per sheet (legacyDrawingHF) and the code '&amp;G' in the header section.
+        /// The logo keeps its proportions, within maxHeight points of height and 150 points of width. Position is 'Left', 'Center' or 'Right'.
+        /// </summary>
+        public static void AddHeaderLogo(string filePath, string logoPath, double maxHeight, string position)
+        {
+            const double maxWidth = 150; //points
+            var image = File.ReadAllBytes(logoPath);
+            if (!getImageSize(image, out int pxWidth, out int pxHeight) || pxWidth == 0 || pxHeight == 0) throw new Exception("Unsupported logo format (PNG or JPG only): " + logoPath);
+            if (maxHeight <= 0) maxHeight = 30;
+            double ptWidth = pxWidth * 0.75, ptHeight = pxHeight * 0.75; //96 dpi
+            double ratio = Math.Min(maxHeight / ptHeight, maxWidth / ptWidth);
+            ptWidth = Math.Round(ptWidth * ratio, 1);
+            ptHeight = Math.Round(ptHeight * ratio, 1);
+            bool isPng = image[0] == 0x89;
+            string extension = isPng ? "png" : "jpeg";
+            char section = string.Equals(position, "Left", StringComparison.OrdinalIgnoreCase) ? 'L' : string.Equals(position, "Center", StringComparison.OrdinalIgnoreCase) ? 'C' : 'R';
+            var ic = CultureInfo.InvariantCulture;
+
+            XNamespace main = "http://schemas.openxmlformats.org/spreadsheetml/2006/main";
+            XNamespace rels = "http://schemas.openxmlformats.org/package/2006/relationships";
+            XNamespace ct = "http://schemas.openxmlformats.org/package/2006/content-types";
+            XNamespace r = "http://schemas.openxmlformats.org/officeDocument/2006/relationships";
+            const string vmlType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/vmlDrawing";
+            const string imageType = "http://schemas.openxmlformats.org/officeDocument/2006/relationships/image";
+            const string relId = "rIdSealHeaderLogo";
+
+            using var zipStream = new FileStream(filePath, FileMode.Open, FileAccess.ReadWrite);
+            using var zip = new ZipArchive(zipStream, ZipArchiveMode.Update);
+
+            XDocument load(string name)
+            {
+                var entry = zip.GetEntry(name);
+                if (entry == null) return null;
+                using var s = entry.Open();
+                return XDocument.Load(s);
+            }
+            void save(string name, XDocument doc)
+            {
+                zip.GetEntry(name)?.Delete();
+                using var s = zip.CreateEntry(name).Open();
+                doc.Save(s, System.Xml.Linq.SaveOptions.DisableFormatting);
+            }
+            void saveText(string name, string text)
+            {
+                zip.GetEntry(name)?.Delete();
+                using var w = new StreamWriter(zip.CreateEntry(name).Open(), new UTF8Encoding(false));
+                w.Write(text);
+            }
+
+            //Image
+            string imageName = "xl/media/sealHeaderLogo." + extension;
+            zip.GetEntry(imageName)?.Delete();
+            using (var s = zip.CreateEntry(imageName).Open()) s.Write(image, 0, image.Length);
+
+            //Content types
+            var types = load("[Content_Types].xml");
+            void addDefault(string ext, string contentType)
+            {
+                if (!types.Root.Elements(ct + "Default").Any(i => string.Equals((string)i.Attribute("Extension"), ext, StringComparison.OrdinalIgnoreCase)))
+                {
+                    types.Root.AddFirst(new XElement(ct + "Default", new XAttribute("Extension", ext), new XAttribute("ContentType", contentType)));
+                }
+            }
+            addDefault(extension, isPng ? "image/png" : "image/jpeg");
+            addDefault("vml", "application/vnd.openxmlformats-officedocument.vmlDrawing");
+            save("[Content_Types].xml", types);
+
+            var sheetNames = zip.Entries.Select(i => i.FullName).Where(i => i.StartsWith("xl/worksheets/sheet") && i.EndsWith(".xml")).ToList();
+            int index = 0;
+            foreach (var sheetName in sheetNames)
+            {
+                var sheet = load(sheetName);
+                var headerFooter = sheet.Root.Element(main + "headerFooter");
+                if (headerFooter == null) continue;
+                index++;
+
+                //Header: code of the picture in its section
+                foreach (var headerName in new string[] { "oddHeader", "evenHeader", "firstHeader" })
+                {
+                    var header = headerFooter.Element(main + headerName);
+                    if (header != null) header.Value = AddHeaderPictureCode(header.Value, section);
+                }
+                if (headerFooter.Element(main + "oddHeader") == null) headerFooter.AddFirst(new XElement(main + "oddHeader", AddHeaderPictureCode("", section)));
+
+                //VML drawing of the header (shape LH, CH or RH), with its relation to the image
+                string vmlName = "sealHeaderLogo" + index + ".vml";
+                string vml = "<xml xmlns:v=\"urn:schemas-microsoft-com:vml\" xmlns:o=\"urn:schemas-microsoft-com:office:office\" xmlns:x=\"urn:schemas-microsoft-com:office:excel\">"
+                    + "<o:shapelayout v:ext=\"edit\"><o:idmap v:ext=\"edit\" data=\"" + index + "\"/></o:shapelayout>"
+                    + "<v:shapetype id=\"_x0000_t75\" coordsize=\"21600,21600\" o:spt=\"75\" o:preferrelative=\"t\" path=\"m@4@5l@4@11@9@11@9@5xe\" filled=\"f\" stroked=\"f\">"
+                    + "<v:stroke joinstyle=\"miter\"/><v:formulas>"
+                    + "<v:f eqn=\"if lineDrawn pixelLineWidth 0\"/><v:f eqn=\"sum @0 1 0\"/><v:f eqn=\"sum 0 0 @1\"/><v:f eqn=\"prod @2 1 2\"/>"
+                    + "<v:f eqn=\"prod @3 21600 pixelWidth\"/><v:f eqn=\"prod @3 21600 pixelHeight\"/><v:f eqn=\"sum @0 0 1\"/><v:f eqn=\"prod @6 1 2\"/>"
+                    + "<v:f eqn=\"prod @7 21600 pixelWidth\"/><v:f eqn=\"sum @8 21600 0\"/><v:f eqn=\"prod @7 21600 pixelHeight\"/><v:f eqn=\"sum @10 21600 0\"/>"
+                    + "</v:formulas><v:path o:extrusionok=\"f\" gradientshapeok=\"t\" o:connecttype=\"rect\"/><o:lock v:ext=\"edit\" aspectratio=\"t\"/></v:shapetype>"
+                    + "<v:shape id=\"" + section + "H\" o:spid=\"_x0000_s" + (index * 1024 + 1) + "\" type=\"#_x0000_t75\" style=\"position:absolute;margin-left:0;margin-top:0;width:"
+                    + ptWidth.ToString(ic) + "pt;height:" + ptHeight.ToString(ic) + "pt;z-index:1\">"
+                    + "<v:imagedata o:relid=\"rId1\" o:title=\"logo\"/><o:lock v:ext=\"edit\" rotation=\"t\"/></v:shape></xml>";
+                saveText("xl/drawings/" + vmlName, vml);
+                saveText("xl/drawings/_rels/" + vmlName + ".rels",
+                    "<?xml version=\"1.0\" encoding=\"UTF-8\" standalone=\"yes\"?><Relationships xmlns=\"" + rels.NamespaceName + "\">"
+                    + "<Relationship Id=\"rId1\" Type=\"" + imageType + "\" Target=\"../media/sealHeaderLogo." + extension + "\"/></Relationships>");
+
+                //Relation of the sheet to the VML drawing
+                string sheetRelsName = "xl/worksheets/_rels/" + Path.GetFileName(sheetName) + ".rels";
+                var sheetRels = load(sheetRelsName) ?? new XDocument(new XElement(rels + "Relationships"));
+                sheetRels.Root.Elements(rels + "Relationship").Where(i => (string)i.Attribute("Id") == relId).Remove();
+                sheetRels.Root.Add(new XElement(rels + "Relationship", new XAttribute("Id", relId), new XAttribute("Type", vmlType), new XAttribute("Target", "../drawings/" + vmlName)));
+                save(sheetRelsName, sheetRels);
+
+                //legacyDrawingHF element at its place in the sequence of the worksheet
+                sheet.Root.Elements(main + "legacyDrawingHF").Remove();
+                var legacy = new XElement(main + "legacyDrawingHF", new XAttribute(r + "id", relId));
+                var after = new string[] { "picture", "oleObjects", "controls", "webPublishItems", "tableParts", "extLst" };
+                var next = sheet.Root.Elements().FirstOrDefault(i => i.Name.Namespace == main && after.Contains(i.Name.LocalName));
+                if (next != null) next.AddBeforeSelf(legacy); else sheet.Root.Add(legacy);
+                save(sheetName, sheet);
+            }
+        }
+
+        /// <summary>
+        /// Adds the picture code '&amp;G' at the start of a section (L, C or R) of an Excel header text
+        /// </summary>
+        public static string AddHeaderPictureCode(string header, char section)
+        {
+            header ??= "";
+            if (header.Contains("&G")) return header;
+            int i = 0;
+            while (i < header.Length - 1)
+            {
+                if (header[i] == '&')
+                {
+                    if (char.ToUpperInvariant(header[i + 1]) == section) return header.Insert(i + 2, "&G");
+                    if (header[i + 1] == '"')
+                    {
+                        //Font code &"Name,Style": skip to the closing quote
+                        int end = header.IndexOf('"', i + 2);
+                        i = end < 0 ? header.Length : end + 1;
+                        continue;
+                    }
+                    i += 2;
+                    continue;
+                }
+                i++;
+            }
+            return header + "&" + section + "&G";
+        }
+
+        /// Size of a PNG or JPG image in pixels
+        static bool getImageSize(byte[] data, out int width, out int height)
+        {
+            width = height = 0;
+            //PNG: IHDR chunk
+            if (data.Length > 24 && data[0] == 0x89 && data[1] == 0x50)
+            {
+                width = (data[16] << 24) | (data[17] << 16) | (data[18] << 8) | data[19];
+                height = (data[20] << 24) | (data[21] << 16) | (data[22] << 8) | data[23];
+                return true;
+            }
+            //JPEG: SOFn marker
+            if (data.Length > 4 && data[0] == 0xFF && data[1] == 0xD8)
+            {
+                int i = 2;
+                while (i + 9 < data.Length)
+                {
+                    if (data[i] != 0xFF) { i++; continue; }
+                    int marker = data[i + 1];
+                    int length = (data[i + 2] << 8) | data[i + 3];
+                    if (marker >= 0xC0 && marker <= 0xCF && marker != 0xC4 && marker != 0xC8 && marker != 0xCC)
+                    {
+                        height = (data[i + 5] << 8) | data[i + 6];
+                        width = (data[i + 7] << 8) | data[i + 8];
+                        return true;
+                    }
+                    i += 2 + length;
+                }
+            }
+            return false;
         }
     }
 

@@ -21771,6 +21771,33 @@
             Returns the ClosedXML page orientation matching a name
             </summary>
         </member>
+        <member name="M:Seal.Renderer.ExcelResult.GetHeaderLogoPath(System.String)">
+            <summary>
+            Returns the path of the PNG or JPG logo to show in the page header: the file name given (in the Views\img folder of the repository, or a full path),
+            else the logo of the server configuration. Excel does not accept a SVG in a page header: a '.svg' is replaced by the '.png', '.jpg' or '.jpeg' file of the same name.
+            Returns null if no logo is found (a message is logged).
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.GetHeaderLogoTopMargin(System.Double,System.Double,System.Double)">
+            <summary>
+            Top margin of the page (inches) leaving the place of a header logo of the given height (points)
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.AddHeaderLogo(System.String,System.String,System.Double,System.String)">
+            <summary>
+            Adds a PNG or JPG logo in the page header (printing, page layout view) of every sheet of a saved Excel file having a header.
+            ClosedXML has no API for a header picture: the file is completed with the image, a VML drawing per sheet (legacyDrawingHF) and the code '&amp;G' in the header section.
+            The logo keeps its proportions, within maxHeight points of height and 150 points of width. Position is 'Left', 'Center' or 'Right'.
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.AddHeaderPictureCode(System.String,System.Char)">
+            <summary>
+            Adds the picture code '&amp;G' at the start of a section (L, C or R) of an Excel header text
+            </summary>
+        </member>
+        <member name="M:Seal.Renderer.ExcelResult.getImageSize(System.Byte[],System.Int32@,System.Int32@)">
+            Size of a PNG or JPG image in pixels
+        </member>
         <member name="T:Seal.Renderer.HtmlToText">
             <summary>
             Converts limited HTML to plain text with the structure preserved. Usable from any renderer (Excel, Text, ...).

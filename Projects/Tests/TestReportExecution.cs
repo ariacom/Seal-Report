@@ -202,6 +202,66 @@ namespace Test
         }
 
         [TestMethod]
+        public void ExcelHeaderLogo()
+        {
+            //Logo in the page header of the Excel result (default 'header_logo' true): image, VML drawing per sheet, code &G in the header
+            var repository = Repository.Create();
+            var path = Path.Combine(repository.ReportsFolder, "Samples", "01-Simple list (Products).srex");
+            var report = Report.LoadFromFile(path, repository);
+            report.SkipExternalViewer = true;
+            var execution = new ReportExecution() { Report = report };
+            execution.Execute();
+            while (report.IsExecuting) System.Threading.Thread.Sleep(50);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            var resultPath = execution.GenerateResult(ReportFormat.Excel);
+            Assert.IsFalse(report.HasErrors, report.ExecutionErrors);
+            Assert.IsFalse(report.ExecutionMessages.Contains("Unable to add the logo"), report.ExecutionMessages);
+
+            int sheets = 0;
+            using (var zip = System.IO.Compression.ZipFile.OpenRead(resultPath))
+            {
+                string read(string name)
+                {
+                    var entry = zip.GetEntry(name);
+                    Assert.IsNotNull(entry, name);
+                    using var reader = new StreamReader(entry.Open());
+                    return reader.ReadToEnd();
+                }
+                Assert.IsNotNull(zip.GetEntry("xl/media/sealHeaderLogo.png"), "logo.svg replaced by logo.png");
+                StringAssert.Contains(read("[Content_Types].xml"), "Extension=\"vml\"");
+                foreach (var sheetName in zip.Entries.Select(i => i.FullName).Where(i => i.StartsWith("xl/worksheets/sheet") && i.EndsWith(".xml")))
+                {
+                    sheets++;
+                    var sheet = read(sheetName);
+                    StringAssert.Contains(sheet, "legacyDrawingHF");
+                    StringAssert.Contains(sheet, "&amp;R&amp;G");
+                    Assert.IsTrue(sheet.IndexOf("legacyDrawingHF") > sheet.IndexOf("headerFooter"), "legacyDrawingHF after headerFooter");
+                    var rels = read("xl/worksheets/_rels/" + Path.GetFileName(sheetName) + ".rels");
+                    StringAssert.Contains(rels, "sealHeaderLogo");
+                }
+                var vml = read("xl/drawings/sealHeaderLogo1.vml");
+                StringAssert.Contains(vml, "id=\"RH\"");
+                StringAssert.Contains(vml, "height:30pt");
+                StringAssert.Contains(read("xl/drawings/_rels/sealHeaderLogo1.vml.rels"), "../media/sealHeaderLogo.png");
+            }
+            Assert.IsTrue(sheets > 0);
+
+            //Margin and header codes
+            Assert.AreEqual(0.88, Seal.Renderer.ExcelResult.GetHeaderLogoTopMargin(30, 0.314, 0.59), 0.001);
+            Assert.AreEqual(0.59, Seal.Renderer.ExcelResult.GetHeaderLogoTopMargin(5, 0.1, 0.59), 0.001);
+            Assert.AreEqual("&L&\"Arial,Bold\"&14Name&R&G", Seal.Renderer.ExcelResult.AddHeaderPictureCode("&L&\"Arial,Bold\"&14Name", 'R'));
+            Assert.AreEqual("&L&G&\"Arial,Bold\"&14Name", Seal.Renderer.ExcelResult.AddHeaderPictureCode("&L&\"Arial,Bold\"&14Name", 'L'));
+            Assert.AreEqual("&LA&C&GB&RC", Seal.Renderer.ExcelResult.AddHeaderPictureCode("&LA&CB&RC", 'C'));
+            Assert.AreEqual("&L&&R&C&G", Seal.Renderer.ExcelResult.AddHeaderPictureCode("&L&&R", 'C'));
+            Assert.AreEqual("&R&G", Seal.Renderer.ExcelResult.AddHeaderPictureCode("&R&G", 'R'), "added once");
+
+            //A SVG without PNG/JPG of the same name: no logo, message
+            var excel = new Seal.Renderer.ExcelResult(report);
+            Assert.IsNull(excel.GetHeaderLogoPath("no_such_logo.svg"));
+            StringAssert.Contains(report.ExecutionMessages, "no PNG or JPG file found");
+        }
+
+        [TestMethod]
         public void ParallelModelsSameResult()
         {
             //The queries of the models of an Execution set run in parallel: same result tables and pages as the execution one model after the other

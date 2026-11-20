@@ -9,6 +9,11 @@
     ExcelRenderer renderer = view.ExcelRenderer;
     ExcelResult result = new ExcelResult(report);
 
+    //Logo in the page header
+    string logoPath = renderer.GetBoolValue("header_logo") ? result.GetHeaderLogoPath(renderer.GetValue("header_logo_file")) : null;
+    double logoHeight = renderer.GetNumericValue("header_logo_height");
+    if (logoHeight <= 0) logoHeight = 30;
+
     //Init Excel Result
     using (result.Workbook = new XLWorkbook())
     {
@@ -60,7 +65,7 @@
             }
             sheet.PageSetup.Margins.Left = 0.314;
             sheet.PageSetup.Margins.Right = 0.314;
-            sheet.PageSetup.Margins.Top = 0.59;
+            sheet.PageSetup.Margins.Top = logoPath != null ? ExcelResult.GetHeaderLogoTopMargin(logoHeight, 0.314, 0.59) : 0.59;
             sheet.PageSetup.Margins.Bottom = 0.59;
             sheet.PageSetup.Margins.Header = 0.314;
             sheet.PageSetup.Margins.Footer = 0.314;
@@ -88,7 +93,21 @@
             footer.Left.AddText(XLHFPredefinedText.File);
         }
 
-        if (!report.HasErrors) result.Workbook.SaveAs(report.ResultFilePath);
+        if (!report.HasErrors)
+        {
+            result.Workbook.SaveAs(report.ResultFilePath);
+            if (logoPath != null)
+            {
+                try
+                {
+                    ExcelResult.AddHeaderLogo(report.ResultFilePath, logoPath, logoHeight, renderer.GetValue("header_logo_position"));
+                }
+                catch (Exception ex)
+                {
+                    report.LogMessage("Unable to add the logo in the Excel page header: " + ex.Message);
+                }
+            }
+        }
     }
 }
 
