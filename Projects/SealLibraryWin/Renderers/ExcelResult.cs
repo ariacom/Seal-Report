@@ -422,13 +422,22 @@ namespace Seal.Renderer
                 if (headerFooter == null) continue;
                 index++;
 
-                //Header: code of the picture in its section
+                //Header: code of the picture in its section, header created if missing (no text) for the pages using it:
+                //all pages, the first page if it has its own header and footer, the even pages if they have their own header and footer
+                bool differentFirst = (bool?)headerFooter.Attribute("differentFirst") == true;
+                bool differentOddEven = (bool?)headerFooter.Attribute("differentOddEven") == true;
+                var headerFooterOrder = new string[] { "oddHeader", "oddFooter", "evenHeader", "evenFooter", "firstHeader", "firstFooter" };
                 foreach (var headerName in new string[] { "oddHeader", "evenHeader", "firstHeader" })
                 {
                     var header = headerFooter.Element(main + headerName);
                     if (header != null) header.Value = AddHeaderPictureCode(header.Value, section);
+                    else if (headerName == "oddHeader" || (headerName == "firstHeader" && differentFirst) || (headerName == "evenHeader" && differentOddEven))
+                    {
+                        header = new XElement(main + headerName, AddHeaderPictureCode("", section));
+                        var nextElement = headerFooter.Elements().FirstOrDefault(i => Array.IndexOf(headerFooterOrder, i.Name.LocalName) > Array.IndexOf(headerFooterOrder, headerName));
+                        if (nextElement != null) nextElement.AddBeforeSelf(header); else headerFooter.Add(header);
+                    }
                 }
-                if (headerFooter.Element(main + "oddHeader") == null) headerFooter.AddFirst(new XElement(main + "oddHeader", AddHeaderPictureCode("", section)));
 
                 //VML drawing of the header (shape LH, CH or RH), with its relation to the image
                 string vmlName = "sealHeaderLogo" + index + ".vml";

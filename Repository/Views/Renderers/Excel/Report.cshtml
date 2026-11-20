@@ -82,7 +82,8 @@
         foreach (IXLWorksheet sheet in result.Workbook.Worksheets)
         {
             var header = sheet.PageSetup.Header;
-            header.Left.AddText(report.ExecutionName).SetFontSize(14).SetBold(true).SetFontName("Arial");
+            //A space before the title: the font size code (&14) is written just before the text, a title starting with a digit would change the size
+            header.Left.AddText(" " + report.ExecutionName).SetFontSize(14).SetBold(true).SetFontName("Arial");
 
             var footer = sheet.PageSetup.Footer;
             footer.Right.AddText(report.Translate("Page") + " ");

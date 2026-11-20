@@ -259,6 +259,34 @@ namespace Test
             var excel = new Seal.Renderer.ExcelResult(report);
             Assert.IsNull(excel.GetHeaderLogoPath("no_such_logo.svg"));
             StringAssert.Contains(report.ExecutionMessages, "no PNG or JPG file found");
+
+            //Different first page without header text (e.g. custom template with a footer on the first page only): logo also on the first page
+            var firstPagePath = Path.Combine(Path.GetTempPath(), "sealHeaderLogoFirst_" + Guid.NewGuid().ToString("N") + ".xlsx");
+            try
+            {
+                using (var workbook = new ClosedXML.Excel.XLWorkbook())
+                {
+                    var worksheet = workbook.AddWorksheet("Test");
+                    worksheet.Cell(1, 1).Value = "A";
+                    worksheet.PageSetup.DifferentFirstPageOnHF = true;
+                    worksheet.PageSetup.Footer.Left.AddText("First page", ClosedXML.Excel.XLHFOccurrence.FirstPage);
+                    workbook.SaveAs(firstPagePath);
+                }
+                Seal.Renderer.ExcelResult.AddHeaderLogo(firstPagePath, Path.Combine(repository.ViewImagesFolder, "logo.png"), 30, "Right");
+                using var zip = System.IO.Compression.ZipFile.OpenRead(firstPagePath);
+                using var reader = new StreamReader(zip.GetEntry("xl/worksheets/sheet1.xml").Open());
+                var sheet = System.Xml.Linq.XDocument.Parse(reader.ReadToEnd());
+                var headerFooter = sheet.Descendants().First(i => i.Name.LocalName == "headerFooter");
+                var names = headerFooter.Elements().Select(i => i.Name.LocalName).ToList();
+                Assert.AreEqual("&R&G", headerFooter.Elements().First(i => i.Name.LocalName == "firstHeader").Value);
+                Assert.AreEqual("&R&G", headerFooter.Elements().First(i => i.Name.LocalName == "oddHeader").Value);
+                Assert.IsTrue(names.IndexOf("firstHeader") < names.IndexOf("firstFooter"), "firstHeader before firstFooter: " + string.Join(",", names));
+                Assert.IsTrue(names.IndexOf("oddHeader") == 0, string.Join(",", names));
+            }
+            finally
+            {
+                if (File.Exists(firstPagePath)) File.Delete(firstPagePath);
+            }
         }
 
         [TestMethod]
