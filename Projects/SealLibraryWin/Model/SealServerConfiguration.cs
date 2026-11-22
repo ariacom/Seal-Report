@@ -288,6 +288,10 @@ namespace Seal.Model
         [DefaultValue("")]
 #endif
         public string NotificationDeviceGUID { get; set; } = "";
+        /// <summary>
+        /// Xml serialization helper: serialize NotificationDeviceGUID only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeNotificationDeviceGUID() { return !string.IsNullOrEmpty(NotificationDeviceGUID); }
 
         /// <summary>
@@ -554,6 +558,10 @@ namespace Seal.Model
         [DefaultValue("")]
 #endif
         public string AuditSourceGUID { get; set; } = "";
+        /// <summary>
+        /// Xml serialization helper: serialize AuditSourceGUID only if not empty
+        /// </summary>
+        [EditorBrowsable(EditorBrowsableState.Never)]
         public bool ShouldSerializeAuditSourceGUID() { return !string.IsNullOrEmpty(AuditSourceGUID); }
 
         /// <summary>
