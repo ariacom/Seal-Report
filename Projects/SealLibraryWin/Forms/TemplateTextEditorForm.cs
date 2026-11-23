@@ -183,7 +183,7 @@ namespace Seal.Forms
         {
             LastSize = Size;
             LastLocation = Location;
-            if (DifferenceViewer != null) DifferenceViewer.Close();
+            if (DifferenceViewer != null && !DifferenceViewer.IsDisposed) DifferenceViewer.Close();
         }
 
         private void TemplateTextEditorForm_FormClosing(object sender, FormClosingEventArgs e)
@@ -373,9 +373,11 @@ namespace Seal.Forms
                 var differenceButton = new ToolStripButton("Differences");
                 differenceButton.ToolTipText = "Show differences with the reference script";
                 differenceButton.Click += new EventHandler(delegate (object sender2, EventArgs e2) {
-                    if (DifferenceViewer != null) DifferenceViewer.Init();
+                    //The form is disposed once closed by the user: create a new one
+                    if (DifferenceViewer != null && !DifferenceViewer.IsDisposed) DifferenceViewer.Init();
                     else DifferenceViewer = new DifferenceForm(textBox, resetText);
                     DifferenceViewer.Show();
+                    DifferenceViewer.Activate();
                 });
                 mainToolStrip.Items.Add(differenceButton);
             }
