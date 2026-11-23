@@ -450,8 +450,8 @@ AND [89c953e8-33e3-42af-aaa8-85ced1e02a91]</Restriction>
 	ReportModel reportModel = element.Model;
 	Report report = reportModel.Report;
 
-    //Report Execution in a new browser tab
-    cell.AddNavigationReportExecution(cell.ContextCurrentLine[1].Value.ToString(), "Execute " + cell.Value.ToString());
+    //Report Execution in a new browser tab (not on the header)
+    if (!cell.IsTitle) cell.AddNavigationReportExecution(cell.ContextCurrentLine[1].Value.ToString(), "Execute " + cell.Value.ToString());
 }
 </CellScript>
         </ReportElement>

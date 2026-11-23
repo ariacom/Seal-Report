@@ -131,6 +131,9 @@
 	ReportModel reportModel = element.Model;
 	Report report = reportModel.Report;
 
+    //No navigation on the header
+    if (cell.IsTitle) return;
+
     //Report Execution in a new browser tab
     cell.AddNavigationReportExecution(cell.ContextCurrentLine[1].Value.ToString(), "Execute " + cell.Value.ToString());
 
