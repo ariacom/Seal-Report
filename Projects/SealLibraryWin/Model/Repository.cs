@@ -828,7 +828,13 @@ namespace Seal.Model
                                 var compilation = CreateDynamicCompilation(Path.GetFileNameWithoutExtension(csFile), code);
 
                                 var symbolsPath = Path.ChangeExtension(dllPath, "pdb");
-                                EmitResult result = compilation.Emit(dllPath, symbolsPath);
+                                //Portable PDB: the default format (Windows PDB) cannot be written on Linux (error CS0041 'Unexpected error writing debug information')
+                                EmitResult result;
+                                using (var dllStream = File.Create(dllPath))
+                                using (var pdbStream = File.Create(symbolsPath))
+                                {
+                                    result = compilation.Emit(dllStream, pdbStream, options: new EmitOptions(debugInformationFormat: DebugInformationFormat.PortablePdb));
+                                }
                                 if (!result.Success)
                                 {
                                     var diag = "";
@@ -837,6 +843,7 @@ namespace Seal.Model
                                         diag += diagnostic.ToString() + "\r\n";
                                     }
                                     if (File.Exists(dllPath)) File.Delete(dllPath);
+                                    if (File.Exists(symbolsPath)) File.Delete(symbolsPath);
 
                                     throw new Exception($"Error compiling '{csFile}':\r\n{diag}");
                                 }
