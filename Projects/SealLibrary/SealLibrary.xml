@@ -19498,6 +19498,11 @@
             order of the file names.
             </summary>
         </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ShouldSerializeNotificationDeviceGUID">
+            <summary>
+            Xml serialization helper: serialize NotificationDeviceGUID only if not empty
+            </summary>
+        </member>
         <member name="P:Seal.Model.SealServerConfiguration.CssFiles">
             <summary>
             Additional CSS files to be included in the HTML report result. One per line or separated by semi-column.
@@ -19627,6 +19632,11 @@
             <summary>
             GUID of the data source where the default audit implementation inserts its records (table sr_audit). If empty, the
             first data source whose name starts with 'Audit' is used, in the alphabetical order of the names.
+            </summary>
+        </member>
+        <member name="M:Seal.Model.SealServerConfiguration.ShouldSerializeAuditSourceGUID">
+            <summary>
+            Xml serialization helper: serialize AuditSourceGUID only if not empty
             </summary>
         </member>
         <member name="P:Seal.Model.SealServerConfiguration.AuditScript">

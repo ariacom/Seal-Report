@@ -3,6 +3,7 @@
 // Licensed under the MIT License; see the LICENSE file at https://github.com/ariacom/Seal-Report.
 //
 using Microsoft.Extensions.Configuration;
+using Seal.Helpers;
 using Seal.Model;
 using System;
 using System.Collections.Generic;
@@ -71,6 +72,10 @@ namespace SealReportRunner
                 }
 
                 var repository = Repository.Instance;
+
+                //Purge the temporary files older than 8 hours (results of the previous executions), as done by the Web Server and the schedules
+                FileHelper.PurgeTempApplicationDirectory();
+
                 var report = Report.LoadFromFile(options.ReportFile, repository);
 
                 //Resolve what to execute: /o (output) takes precedence over /v (view)
