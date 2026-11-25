@@ -126,6 +126,32 @@ namespace Test
         }
 
         /// <summary>
+        /// Upload Check Script of the server configuration: no script accepts every file, the script refuses by its extension or its size, a script in error refuses
+        /// </summary>
+        [TestMethod]
+        public void UploadCheckScript()
+        {
+            var configuration = _repository.Configuration;
+            UploadCheck Check(string name, long size) => new UploadCheck() { User = getOwner(), FolderPath = "\\Personal", FilePath = Path.Combine(_personalFolder, name), FileName = name, Size = size, Header = new byte[] { 0x50, 0x4B } };
+            Assert.IsNull(configuration.CheckUpload(Check("page.html", 10)), "no script: every file is accepted");
+            try
+            {
+                configuration.UploadCheckScript = "@using System.IO\r\n@using Seal.Model\r\n@{ UploadCheck check = Model; if (Path.GetExtension(check.FileName) != \".csv\") { check.Refusal = \"csv only\"; } else if (check.Size > 100) { check.Refusal = \"too large \" + check.FolderPath; } }";
+                Assert.AreEqual("csv only", configuration.CheckUpload(Check("page.html", 10)));
+                Assert.AreEqual("too large \\Personal", configuration.CheckUpload(Check("data.csv", 1000)));
+                Assert.IsNull(configuration.CheckUpload(Check("data.csv", 10)));
+
+                //A script in error refuses the file
+                configuration.UploadCheckScript = "@{ throw new Exception(\"script error\"); }";
+                Assert.IsNotNull(configuration.CheckUpload(Check("data.csv", 10)));
+            }
+            finally
+            {
+                configuration.UploadCheckScript = null;
+            }
+        }
+
+        /// <summary>
         /// Moment New of the Schedule Check Script: the script changes the default values of a new web schedule and the label of the link, its refusal is ignored
         /// </summary>
         [TestMethod]

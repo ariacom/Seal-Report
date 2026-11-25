@@ -33,6 +33,10 @@
     var conn = tool.GetExecConnection(source, connGuid);
     if (conn == null) { tool.ExecResult = "Error: no connection configured."; return; }
 
+    //Same guard as a query on the table (SQL check of the security provider, e.g. a table reserved to other users): its columns are not shown either
+    var sqlError = tool.CheckSql("select * from " + tableName);
+    if (sqlError != null) { tool.ExecResult = sqlError; return; }
+
     var connection = conn.GetOpenConnection();
     try {
         var schema = source.GetColumnsSchemaTable(connection, tableName);

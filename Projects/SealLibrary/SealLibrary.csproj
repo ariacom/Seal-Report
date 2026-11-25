@@ -86,6 +86,7 @@
 		<Compile Include="..\SealLibraryWin\Helpers\SqlGuard.cs" Link="Helpers\SqlGuard.cs" />
 		<Compile Include="..\SealLibraryWin\Helpers\SecretsHelper.cs" Link="Helpers\SecretsHelper.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ScheduleCheck.cs" Link="Model\ScheduleCheck.cs" />
+		<Compile Include="..\SealLibraryWin\Model\UploadCheck.cs" Link="Model\UploadCheck.cs" />
 		<Compile Include="..\SealLibraryWin\Model\ReportFeedback.cs" Link="Model\ReportFeedback.cs" />
 		<Compile Include="..\SealLibraryWin\Model\Audit.cs" Link="Model\Audit.cs" />
 		<Compile Include="..\SealLibraryWin\Model\CategoryFolder.cs" Link="Model\CategoryFolder.cs" />

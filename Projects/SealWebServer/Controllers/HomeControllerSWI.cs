@@ -1238,6 +1238,10 @@ namespace SealWebServer.Controllers
                     file.CopyTo(memory);
                     content = memory.ToArray();
                 }
+                //Upload Check Script of the server configuration: allowed files, size, quota of the user... (nothing is written when refused)
+                var uploadCheck = new UploadCheck() { User = WebUser, FolderPath = path.ToString(), FilePath = finalPath, FileName = fileName, Size = content.LongLength, Header = content.Take(4096).ToArray() };
+                var uploadRefusal = Repository.Configuration.CheckUpload(uploadCheck);
+                if (uploadRefusal != null) throw new Exception(uploadRefusal);
                 //A report is checked against the report code level of the user: no SQL or script above his level (there is no saved version to compare with)
                 //Extension of the final path (normalized: on Windows, trailing dots and spaces of the file name are removed)
                 if (finalPath.EndsWith("." + Repository.SealReportFileExtension, StringComparison.OrdinalIgnoreCase))
@@ -1252,7 +1256,8 @@ namespace SealWebServer.Controllers
                     }
                 }
                 System.IO.File.WriteAllBytes(finalPath, content);
-                return Json(new { Status = true, Message = Translate("The file has been uploaded.") });
+                //FileName: name of the file written (a unique name when a file of the same name exists)
+                return Json(new { Status = true, Message = Translate("The file has been uploaded."), FileName = Path.GetFileName(finalPath) });
             }
             catch (Exception ex)
             {

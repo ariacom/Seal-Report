@@ -117,6 +117,7 @@ namespace Seal.Model
                 GetProperty("InitScript").SetIsBrowsable(!ForPublication);
                 GetProperty("ReportCreationScript").SetIsBrowsable(!ForPublication);
                 GetProperty("ScheduleCheckScript").SetIsBrowsable(!ForPublication);
+                GetProperty("UploadCheckScript").SetIsBrowsable(!ForPublication);
                 GetProperty("FeedbackScript").SetIsBrowsable(!ForPublication);
                 GetProperty("RepositoryTranslationsScript").SetIsBrowsable(!ForPublication);
                 GetProperty("IsLocal").SetIsBrowsable(!ForPublication);
@@ -623,6 +624,35 @@ namespace Seal.Model
 #endif
         [SealCode(ReportCodeLevel.Scripts)]
         public string ScheduleCheckScript { get; set; } = null;
+
+        /// <summary>
+        /// Optional script that checks a file uploaded in a repository folder from the Web Report Server, before it is written: executed with an UploadCheck (user, folder, file name, size, first bytes). The script sets check.Refusal to refuse the file: nothing is written and the message is shown. An error of the script refuses the file.
+        /// </summary>
+#if WINDOWS
+        [Category("Scripts"), DisplayName("Upload Check Script"), Description("Optional script that checks a file uploaded in a repository folder from the Web Report Server, before it is written: executed with an UploadCheck (user, folder, file name, size, first bytes). The script sets check.Refusal to refuse the file: nothing is written and the message is shown. An error of the script refuses the file."), Id(10, 5)]
+        [Editor(typeof(TemplateTextEditor), typeof(UITypeEditor))]
+#endif
+        [SealCode(ReportCodeLevel.Scripts)]
+        public string UploadCheckScript { get; set; } = null;
+
+        /// <summary>
+        /// Execute the 'Upload Check Script' and returns the reason of the refusal, null if the file is accepted. An error of the script refuses the file (logged).
+        /// </summary>
+        public string CheckUpload(UploadCheck check)
+        {
+            if (string.IsNullOrEmpty(UploadCheckScript)) return null;
+            if (check.Security == null) check.Security = Repository?.Security;
+            try
+            {
+                RazorHelper.CompileExecute(UploadCheckScript, check);
+                return string.IsNullOrEmpty(check.Refusal) ? null : check.Refusal;
+            }
+            catch (Exception ex)
+            {
+                Helper.WriteLogException($"Error in the Upload Check Script for the file '{check.FileName}' in '{check.FolderPath}'", ex);
+                return Repository?.TranslateWeb("The file cannot be uploaded.") ?? "The file cannot be uploaded.";
+            }
+        }
 
         /// <summary>
         /// Optional script that receives the feedbacks sent by the users (guests included) on a report result from the Web Report Server: executed with a ReportFeedback holding the values typed (kind, text, expected value...) and the context of the result (report, restrictions, rows, user). The script stores or forwards the feedback, it may set feedback.Refusal to refuse it and feedback.Reply to change the message shown. If the script is empty, the feedback button is not shown.

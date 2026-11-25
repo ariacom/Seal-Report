@@ -376,6 +376,16 @@ namespace Seal.Forms
     //if (check.Moment == ScheduleCheckMoment.New) { check.Schedule.Output.CancelIfNoRecords = true; check.LinkLabel = ""Create an alert...""; return; }
 }
 ";
+        const string razorUploadCheckScriptTemplate = @"@using System.IO
+@{
+    UploadCheck check = Model;
+    //check.User, check.FolderPath (repository path of the folder, e.g. \Reports\Files), check.FilePath (file to write), check.FileName, check.Size (bytes), check.Header (first bytes)
+    //Set check.Refusal to refuse the file: nothing is written and the message is shown
+    //var extension = Path.GetExtension(check.FileName).ToLowerInvariant();
+    //if (extension != "".csv"" && extension != "".xlsx"") { check.Refusal = ""Only CSV and XLSX files are accepted.""; return; }
+    //if (check.Size > 50 * 1024 * 1024) { check.Refusal = ""The file is larger than 50 MB.""; return; }
+}
+";
         const string razorFeedbackScriptTemplate = @"@using System.IO
 @{
     ReportFeedback feedback = Model;
@@ -2123,6 +2133,13 @@ $('<div>', {{
                         template = Audit.AuditScriptTemplate;
                         frm.ObjectForCheckSyntax = new Audit();
                         frm.Text = "Edit the script executed when a an audit event occurs";
+                        ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
+                    }
+                    else if (context.PropertyDescriptor.Name == "UploadCheckScript")
+                    {
+                        template = razorUploadCheckScriptTemplate;
+                        frm.ObjectForCheckSyntax = new UploadCheck();
+                        frm.Text = "Edit the script that checks the files uploaded in the folders";
                         ScintillaHelper.Init(frm.textBox, Lexer.Cpp);
                     }
                     else if (context.PropertyDescriptor.Name == "ScheduleCheckScript")
