@@ -771,6 +771,18 @@ th:hover .header_info_icon, th:focus-within .header_info_icon, tr:has(> td):hove
 .bootstrap-select .dropdown-menu li.active small {
     color: #6c757d !important;
 }
+/* Description of an enumerated value (data-subtext of the option): shown under the value, on several lines if needed. */
+.bootstrap-select .dropdown-menu .dropdown-item small.text-muted {
+    display: block;
+    white-space: normal;
+    font-size: 0.8em;
+    line-height: 1.25;
+    max-width: 40em;
+}
+/* A list having descriptions is wider than its button (narrow restriction) so that the descriptions keep a few words per line. */
+.bootstrap-select > .dropdown-menu:has(small.text-muted) {
+    min-width: 20em !important;
+}
 
 /* Restriction / result-option Yes-No toggle buttons (BS5 btn-check + btn-secondary
    pattern). The default checked state only slightly darkens an already-gray button,

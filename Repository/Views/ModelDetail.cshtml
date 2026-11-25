@@ -27,7 +27,7 @@ else
                         {
                             ResultCell value = page.PageTable[1, i];
                             string navigation = reportModel.GetNavigation(view, value);
-                            <th @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(navigation)>@Raw(value.HTMLValue) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
+                            <th @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(view.ValueInformationAttribute(value)) @Raw(navigation)>@Raw(value.HTMLValue) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
                         }
                     </tr>
                 </table>
@@ -46,7 +46,7 @@ else
                         string navigation = reportModel.GetNavigation(view, value);
                         <tr>
                                 <th @Raw(Helper.AddAttribute("class", title.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", title.CellCssDetailStyle)) @Raw(view.HeaderInformationAttribute(title, "modeldetail_show_header_information", "modeldetail_header_information_style"))>@Raw(title.HTMLValue)@Raw(view.HeaderInformationHTML(title, "modeldetail_show_header_information", "modeldetail_header_information_style")) @Raw(showNavigation && !string.IsNullOrEmpty(navigation) ? navigationIcon : "")</th>
-                                <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(navigation)>@Raw(value.HTMLValue)</td>
+                                <td @Raw(Helper.AddAttribute("class", value.CellCssDetailClass)) @Raw(Helper.AddAttribute("style", value.CellCssDetailStyle)) @Raw(view.ValueInformationAttribute(value)) @Raw(navigation)>@Raw(value.HTMLValue)</td>
                         </tr>
                     }
                 </table>

@@ -1135,8 +1135,7 @@
         <Name>Category</Name>
         <Description>Product categories, loaded from the Categories table.</Description>
         <IsDynamic>true</IsDynamic>
-        <Sql>SELECT DISTINCT 
-CategoryID, CategoryName
+        <Sql>SELECT CategoryID, CategoryName, NULL, NULL, NULL, CAST(Description AS nvarchar(500))
 FROM Categories
 ORDER BY 2</Sql>
         <Translate>true</Translate>
@@ -1144,34 +1143,42 @@ ORDER BY 2</Sql>
           <MetaEV>
             <Id>1</Id>
             <Val>Beverages</Val>
+            <Description>Soft drinks, coffees, teas, beers, and ales</Description>
           </MetaEV>
           <MetaEV>
             <Id>2</Id>
             <Val>Condiments</Val>
+            <Description>Sweet and savory sauces, relishes, spreads, and seasonings</Description>
           </MetaEV>
           <MetaEV>
             <Id>3</Id>
             <Val>Confections</Val>
+            <Description>Desserts, candies, and sweet breads</Description>
           </MetaEV>
           <MetaEV>
             <Id>4</Id>
             <Val>Dairy Products</Val>
+            <Description>Cheeses</Description>
           </MetaEV>
           <MetaEV>
             <Id>5</Id>
             <Val>Grains/Cereals</Val>
+            <Description>Breads, crackers, pasta, and cereal</Description>
           </MetaEV>
           <MetaEV>
             <Id>6</Id>
             <Val>Meat/Poultry</Val>
+            <Description>Prepared meats</Description>
           </MetaEV>
           <MetaEV>
             <Id>7</Id>
             <Val>Produce</Val>
+            <Description>Dried fruit and bean curd</Description>
           </MetaEV>
           <MetaEV>
             <Id>8</Id>
             <Val>Seafood</Val>
+            <Description>Seaweed and fish</Description>
           </MetaEV>
         </Values>
       </MetaEnum>

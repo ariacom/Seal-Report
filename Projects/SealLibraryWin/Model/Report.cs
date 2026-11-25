@@ -3374,6 +3374,15 @@ namespace Seal.Model
             return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "Enum", instance.Name, reference);
         }
 
+        /// <summary>
+        /// Translate the description of an enumerated value using the EnumValueDescription context (the description is not translated if the list is not translated)
+        /// </summary>
+        public string TranslateEnumValueDescription(MetaEnum instance, string description)
+        {
+            if (string.IsNullOrEmpty(description) || !instance.Translate) return description;
+            return Repository.RepositoryTranslate(ExecutionView.CultureInfo.TwoLetterISOLanguageName, "EnumValueDescription", instance.Name, description);
+        }
+
 
         /// <summary>
         /// Translate the enum message using the EnumMessage context

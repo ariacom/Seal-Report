@@ -10,17 +10,16 @@ function redrawDataTables() {
 }
 
 //data tables dtCreatedCell
+//Cell data of the server pagination: row style § row class § navigation § cell style § cell class § tooltip § value (the value is last as it may contain §)
 function dtCreatedCell(td, cellData, rowData, row, col) {
     if (cellData) {
         var cellDatas = cellData.split('§');
-        if (cellDatas.length > 5) {
-            var html = "";
-            for (var i = 5; i < cellDatas.length; i++) {
-                html += (html != "" ? "§" : "") + cellDatas[i];
-            }
-            $(td).html(html);
+        var html = "";
+        for (var i = 6; i < cellDatas.length; i++) {
+            html += (i > 6 ? "§" : "") + cellDatas[i];
         }
-        else $(td).html(cellDatas[5]);
+        $(td).html(html);
+        if (cellDatas[5]) $(td).attr("title", cellDatas[5]);
         if (cellDatas[4]) $(td).attr("class", cellDatas[4]);
         if (cellDatas[3]) $(td).attr("style", cellDatas[3]);
         if (cellDatas[2]) $(td).attr("navigation", cellDatas[2]);
@@ -32,11 +31,11 @@ function dtCreatedCell(td, cellData, rowData, row, col) {
 //data tables dtRenderer
 function dtRenderer(api, rowIdx, columns) {
     var data = $.map(columns, function (col, i) {
-        var cellDatas = col.data.split('§', 6);
+        var cellDatas = col.data.split('§');
         return col.hidden ?
             '<tr data-dt-row="' + col.rowIndex + '" data-dt-column="' + col.columnIndex + '">' +
             '<th>' + col.title + (col.title != '' ? ':' : '') + '</th> ' +
-            (cellDatas.length == 1 ? '<td>' + col.data : '<td style="' + cellDatas[3] + '" class="' + cellDatas[4] + '">' + cellDatas[5]) + '</td>' +
+            (cellDatas.length < 7 ? '<td>' + col.data : '<td style="' + cellDatas[3] + '" class="' + cellDatas[4] + '">' + cellDatas.slice(6).join('§')) + '</td>' +
             '</tr>' :
             '';
     }).join('');
@@ -89,7 +88,7 @@ function fillEnumSelect(data, noMessage) {
         }
 
         if (!found) {
-            data.push({ v: $(this).val(), t: $(this).text(), Selected: true });
+            data.push({ v: $(this).val(), t: $(this).text(), d: $(this).attr("data-subtext"), Selected: true });
         }
     });
 
@@ -97,9 +96,10 @@ function fillEnumSelect(data, noMessage) {
     if (data.length > 0 || $enum[0].length > 0) {
         $enum.empty();
         for (var i = 0; i < data.length; i++) {
-            $enum.append(
-                $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("id", data[i].v).attr("value", data[i].v).text(data[i].t)
-            );
+            var $option = $("<option" + (data[i].Selected ? " selected" : "") + "></option>").attr("id", data[i].v).attr("value", data[i].v).text(data[i].t);
+            //Optional description of the value, shown under the value by bootstrap-select
+            if (data[i].d) $option.attr("data-subtext", data[i].d);
+            $enum.append($option);
         }
         $enum.selectpicker("refresh");
     }

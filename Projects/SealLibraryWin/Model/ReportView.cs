@@ -2048,7 +2048,16 @@ namespace Seal.Model
         public string HeaderInformationAttribute(ResultCell cell, string showParameter, string styleParameter)
         {
             if (cell == null || getHeaderInformationStyle(showParameter, styleParameter) != HeaderInformationTooltip) return "";
-            return Helper.AddAttribute("title", cell.TitleTooltip);
+            return Helper.AddAttribute("title", cell.InformationTooltip);
+        }
+
+        /// <summary>
+        /// Attribute of a body cell showing the description of its enumerated value (description of the MetaEV) as a tooltip. Empty if the value has no description.
+        /// </summary>
+        public string ValueInformationAttribute(ResultCell cell)
+        {
+            if (cell == null) return "";
+            return Helper.AddAttribute("title", cell.ValueTooltip);
         }
 
         /// <summary>
@@ -2061,7 +2070,7 @@ namespace Seal.Model
             if (cell == null) return "";
             var style = getHeaderInformationStyle(showParameter, styleParameter);
             if (style != HeaderInformationIcon && style != HeaderInformationIconNotes) return "";
-            var description = cell.TitleTooltip; //already HTML encoded
+            var description = cell.InformationTooltip; //already HTML encoded (description of the element for a title, of the enumerated value for a header value)
             if (string.IsNullOrEmpty(description)) return "";
 
             var result = new StringBuilder();

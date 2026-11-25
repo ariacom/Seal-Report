@@ -213,7 +213,9 @@ namespace Seal.Model
                     if (view.IsColumnHidden(col, this) || IsColumnHidden(col)) { continue; }
                     ResultCell cell = line[col];
                     var cellValue = cell.HTMLValue;
-                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(view, cell, true), cell.CellCssStyle, cell.CellCssClass, cellValue));
+                    //Fields: row style § row class § navigation § cell style § cell class § tooltip (description of the enumerated value, plain text) § value (last as it may contain §)
+                    var tooltip = HttpUtility.HtmlDecode(cell.ValueTooltip).Replace("§", " ");
+                    var fullValue = HttpUtility.JavaScriptStringEncode(string.Format("{0}§{1}§{2}§{3}§{4}§{5}§{6}", cell.IsSubTotal ? rowSubStyle : rowBodyStyle, cell.IsSubTotal ? rowSubClass : rowBodyClass, model.GetNavigation(view, cell, true), cell.CellCssStyle, cell.CellCssClass, tooltip, cellValue));
                     sb.AppendFormat("\"{0}\",", fullValue);
                 }
                 if (RowKeyColumn >= 0 && RowKeyColumn < line.Length)

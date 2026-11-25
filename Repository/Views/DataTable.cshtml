@@ -124,7 +124,7 @@
                             {
                                 if (view.IsColumnHidden(col, table) || table.IsColumnHidden(col)) { continue; }
                                 ResultCell cell = table[row, col];
-                                <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)</td>
+                                <td @Raw(Helper.AddAttribute("class", cell.CellCssClass)) @Raw(Helper.AddAttribute("style", cell.CellCssStyle)) @Raw(view.ValueInformationAttribute(cell)) @Raw(reportModel.GetNavigation(view, cell))>@Raw(cell.HTMLValue)</td>
                             }
                         </tr>
                     }

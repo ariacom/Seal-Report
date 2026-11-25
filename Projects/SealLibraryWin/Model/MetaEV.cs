@@ -56,6 +56,12 @@ namespace Seal.Model
         public string Class { get; set; }
 
         /// <summary>
+        /// The optional description of the value (e.g. its definition), shown as a tooltip on the value in the result tables and under the value in the restriction lists
+        /// </summary>
+        [Category("Definition"), DisplayName("Description"), Description("The optional description of the value (e.g. its definition), shown as a tooltip on the value in the result tables and under the value in the restriction lists.")]
+        public string Description { get; set; }
+
+        /// <summary>
         /// The final value displayed in the report
         /// </summary>
         [Category("Display"), DisplayName("\tValue"), Description("The final value displayed in the report")]

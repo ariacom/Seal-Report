@@ -1481,6 +1481,15 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// Translated description of an enumerated value of the restriction list, empty if none (shown under the value in the list)
+        /// </summary>
+        public string GetEnumValueDescription(MetaEV value)
+        {
+            if (value == null || EnumRE == null || string.IsNullOrEmpty(value.Description)) return "";
+            return Report.TranslateEnumValueDescription(EnumRE, value.Description) ?? "";
+        }
+
+        /// <summary>
         /// Helper to add an enum value to the restriction using its string value (Value or Id) 
         /// </summary>
         public void AddEnumValue(string val, bool clearFirst = false)

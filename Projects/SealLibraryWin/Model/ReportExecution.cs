@@ -2796,7 +2796,11 @@ namespace Seal.Model
                     //rebuilt <option> would blank the bootstrap-select menu), so keep the label single-line.
                     var display = restriction.GetEnumDisplayValue(enumDef.Id).Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ");
                     result.Append(result.Length == 0 ? "[" : ",");
-                    result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"}}", restriction.OptionHtmlId + enumDef.HtmlId, display.Replace("\"", "\\\""));
+                    result.AppendFormat("{{\"v\":\"{0}\",\"t\":\"{1}\"", restriction.OptionHtmlId + enumDef.HtmlId, display.Replace("\"", "\\\""));
+                    //Optional description of the value, shown under the value in the list
+                    var description = restriction.GetEnumValueDescription(enumDef);
+                    if (!string.IsNullOrEmpty(description)) result.AppendFormat(",\"d\":\"{0}\"", System.Web.HttpUtility.JavaScriptStringEncode(description.Replace("\r\n", " ").Replace("\r", " ").Replace("\n", " ")));
+                    result.Append("}");
                 }
                 result.Append(result.Length == 0 ? "[]" : "]");
             }

@@ -8334,7 +8334,7 @@
         </member>
         <member name="P:Seal.Model.MetaEnum.Sql">
             <summary>
-            If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell.
+            If the list is dynamic, SQL Select statement with 1 to 6 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell, the sixth optional column is the description of the value (shown as a tooltip in the result tables and in the restriction list).
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEnum.Script">
@@ -8583,6 +8583,11 @@
         <member name="P:Seal.Model.MetaEV.Class">
             <summary>
             The optional CSS Class applied to the cell displayed
+            </summary>
+        </member>
+        <member name="P:Seal.Model.MetaEV.Description">
+            <summary>
+            The optional description of the value (e.g. its definition), shown as a tooltip on the value in the result tables and under the value in the restriction lists
             </summary>
         </member>
         <member name="P:Seal.Model.MetaEV.DisplayValue">
@@ -12240,6 +12245,11 @@
             Translate using the Enum context
             </summary>
         </member>
+        <member name="M:Seal.Model.Report.TranslateEnumValueDescription(Seal.Model.MetaEnum,System.String)">
+            <summary>
+            Translate the description of an enumerated value using the EnumValueDescription context (the description is not translated if the list is not translated)
+            </summary>
+        </member>
         <member name="M:Seal.Model.Report.EnumMessage(Seal.Model.MetaEnum)">
             <summary>
             Translate the enum message using the EnumMessage context
@@ -12674,6 +12684,11 @@
         <member name="P:Seal.Model.ReportElement.MetaEnumValuesEL">
             <summary>
             List of values of the element enum
+            </summary>
+        </member>
+        <member name="M:Seal.Model.ReportElement.GetEnumValueDescription(System.String)">
+            <summary>
+            Translated description of the enumerated value having this display value (e.g. the value of a result cell). Empty if the element is not an enumerated list or if the value has no description.
             </summary>
         </member>
         <member name="P:Seal.Model.ReportElement.RawSQLColumn">
@@ -14742,6 +14757,11 @@
             Helper to return the display value of an enum from its id
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportRestriction.GetEnumValueDescription(Seal.Model.MetaEV)">
+            <summary>
+            Translated description of an enumerated value of the restriction list, empty if none (shown under the value in the list)
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportRestriction.AddEnumValue(System.String,System.Boolean)">
             <summary>
             Helper to add an enum value to the restriction using its string value (Value or Id) 
@@ -16235,6 +16255,11 @@
             Empty if the parameter 'showParameter' is false or if the style 'styleParameter' is not 'tooltip'.
             </summary>
         </member>
+        <member name="M:Seal.Model.ReportView.ValueInformationAttribute(Seal.Model.ResultCell)">
+            <summary>
+            Attribute of a body cell showing the description of its enumerated value (description of the MetaEV) as a tooltip. Empty if the value has no description.
+            </summary>
+        </member>
         <member name="M:Seal.Model.ReportView.HeaderInformationHTML(Seal.Model.ResultCell,System.String,System.String)">
             <summary>
             HTML added after the header text to show its description (semantic layer): an information icon for the styles 'icon' and 'icon_notes',
@@ -17527,6 +17552,16 @@
         <member name="P:Seal.Model.ResultCell.TitleTooltip">
             <summary>
             HTML-encoded business description shown as a tooltip on the result table header. Empty unless the cell is a title cell whose element (or its MetaColumn) has a description.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultCell.ValueTooltip">
+            <summary>
+            HTML-encoded description of the enumerated value of the cell (description of the MetaEV), shown as a tooltip on the value. Empty for a title or a total, or if the value has no description.
+            </summary>
+        </member>
+        <member name="P:Seal.Model.ResultCell.InformationTooltip">
+            <summary>
+            HTML-encoded information shown on a header cell: the description of the element for a title (TitleTooltip), the description of the enumerated value otherwise (ValueTooltip, e.g. the column values of a cross tab).
             </summary>
         </member>
         <member name="P:Seal.Model.ResultCell.IsValue">

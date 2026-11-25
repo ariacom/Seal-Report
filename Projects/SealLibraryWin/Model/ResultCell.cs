@@ -42,6 +42,27 @@ namespace Seal.Model
         }
 
         /// <summary>
+        /// HTML-encoded description of the enumerated value of the cell (description of the MetaEV), shown as a tooltip on the value. Empty for a title or a total, or if the value has no description.
+        /// </summary>
+        public string ValueTooltip
+        {
+            get
+            {
+                if (IsTitle || IsTotal || IsSubTotal || IsTotalTotal || Element == null || Value == null || Value == DBNull.Value || !Element.IsEnum) return "";
+                var description = Element.GetEnumValueDescription(Value.ToString());
+                return string.IsNullOrEmpty(description) ? "" : System.Net.WebUtility.HtmlEncode(description);
+            }
+        }
+
+        /// <summary>
+        /// HTML-encoded information shown on a header cell: the description of the element for a title (TitleTooltip), the description of the enumerated value otherwise (ValueTooltip, e.g. the column values of a cross tab).
+        /// </summary>
+        public string InformationTooltip
+        {
+            get { return IsTitle ? TitleTooltip : ValueTooltip; }
+        }
+
+        /// <summary>
         /// True if the cell is not for a total and not for a title
         /// </summary>
         public bool IsValue

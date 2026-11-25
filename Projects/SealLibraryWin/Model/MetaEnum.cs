@@ -198,10 +198,10 @@ namespace Seal.Model
         private string _sql;
 
         /// <summary>
-        /// If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell.
+        /// If the list is dynamic, SQL Select statement with 1 to 6 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell, the sixth optional column is the description of the value (shown as a tooltip in the result tables and in the restriction list).
         /// </summary>
 #if WINDOWS
-        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1, 2, 3, 4 or 5 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell."), Id(6, 1)]
+        [Category("Definition"), DisplayName("SQL Select Statement"), Description("If the list is dynamic, SQL Select statement with 1 to 6 columns used to build the list of values. The first column is used for the identifier, the second optional column is the display value shown in the table result, the third optional column is the display value shown in the restriction list, the fourth optional column defines a custom CSS Style applied to the result cell, the fifth optional column defines a custom CSS Class applied to the result cell, the sixth optional column is the description of the value (shown as a tooltip in the result tables and in the restriction list)."), Id(6, 1)]
         [Editor(typeof(SQLEditor), typeof(UITypeEditor))]
 #endif
         [SealCode(ReportCodeLevel.Sql)]
@@ -546,6 +546,7 @@ namespace Seal.Model
                             value.ValR = table.Columns.Count > 2 ? (row.IsNull(2) ? null : row[2].ToString()) : null;
                             value.Css = table.Columns.Count > 3 ? (row.IsNull(3) ? null : row[3].ToString()) : null;
                             value.Class = table.Columns.Count > 4 ? (row.IsNull(4) ? null : row[4].ToString()) : null;
+                            value.Description = table.Columns.Count > 5 ? (row.IsNull(5) ? null : row[5].ToString()) : null;
                             result.Add(value);
                         }
                     }

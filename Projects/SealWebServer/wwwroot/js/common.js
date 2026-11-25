@@ -846,8 +846,8 @@ if (!window._headerInfoInit) {
     var canHover = !window.matchMedia || window.matchMedia("(hover: hover)").matches;
     document.addEventListener("mouseover", function (e) {
         if (!canHover || !e.target || !e.target.closest) return;
-        //the mouse on the popover keeps it open (it may be shown over the pointer)
-        if (e.target.closest(".popover")) return;
+        //the mouse on the popover keeps it open (it may be shown over the pointer), also on the navigation menu of the header (shown over the bottom of a high header, e.g. a value of a cross tab)
+        if (e.target.closest(".popover") || e.target.closest("#nav_popupmenu")) return;
         var th = e.target.closest("th");
         var icon = th ? th.querySelector(".header_info_icon") : null;
         if (icon === _headerInfoHovered) return;

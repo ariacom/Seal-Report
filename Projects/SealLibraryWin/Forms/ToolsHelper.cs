@@ -612,6 +612,20 @@ namespace Seal.Forms
                     }
                 }
 
+                log.Log("Adding enum value descriptions in context: EnumValueDescription\r\n");
+                foreach (var enumList in Source.MetaData.Enums.Where(i => i.Translate))
+                {
+                    foreach (var description in enumList.Values.Where(i => !string.IsNullOrEmpty(i.Description)).Select(i => i.Description).Distinct())
+                    {
+                        var context = "EnumValueDescription";
+                        var instance = enumList.Name;
+                        if (Repository.Instance.FindRepositoryTranslation(context, instance, description) == null)
+                        {
+                            translations.AppendFormat("{4}{0}{1}{0}{2}{3}\r\n", separator, Helper.QuoteDouble(instance), Helper.QuoteDouble(description), extraSeparators, context);
+                        }
+                    }
+                }
+
                 log.Log("Adding Sub-Report names in context: SubReport\r\n");
                 foreach (var table in Source.MetaData.Tables)
                 {
@@ -810,6 +824,7 @@ namespace Seal.Forms
                     ws.Cell("E1").Value = "CSS";
                     ws.Cell("F1").Value = "Class";
                     ws.Cell("G1").Value = "GUID";
+                    ws.Cell("H1").Value = "Description";
                     int index = 2;
                     foreach (var item in items)
                     {
@@ -823,12 +838,13 @@ namespace Seal.Forms
                             ws.Cell("E" + index).Value = ev.Css ?? "";
                             ws.Cell("F" + index).Value = ev.Class ?? "";
                             ws.Cell("G" + index).Value = en.GUID ?? "";
+                            ws.Cell("H" + index).Value = ev.Description ?? "";
                             index++;
                         }
                     }
-                    ws.Range("A1:G1").SetAutoFilter();
-                    ws.Range("A1:G1").Style.Fill.BackgroundColor = XLColor.LightBlue;
-                    ws.Range("A1:G1").Style.Font.Bold = true;
+                    ws.Range("A1:H1").SetAutoFilter();
+                    ws.Range("A1:H1").Style.Fill.BackgroundColor = XLColor.LightBlue;
+                    ws.Range("A1:H1").Style.Font.Bold = true;
                 }
                 foreach (IXLWorksheet sheet in ep.Worksheets.Where(i => i.LastCellUsed() != null))
                 {
@@ -952,6 +968,7 @@ namespace Seal.Forms
                             item.ValR = ExcelHelper.GetCellValue(ws.Cell("D" + index))?.ToString();
                             item.Css = ExcelHelper.GetCellValue(ws.Cell("E" + index))?.ToString();
                             item.Class = ExcelHelper.GetCellValue(ws.Cell("F" + index))?.ToString();
+                            item.Description = ExcelHelper.GetCellValue(ws.Cell("H" + index))?.ToString(); //column G is the GUID of the list
                             index++;
                             el.Values.Add(item);
                         }

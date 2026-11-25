@@ -1115,6 +1115,38 @@ namespace Seal.Model
             }
         }
 
+        //Translated descriptions of the enumerated values by display value (value of the result cells): built when the values change and empty if the list has no description
+        Dictionary<string, string> _enumValueDescriptions = null;
+        MetaEnum _enumValueDescriptionsEnum = null;
+        int _enumValueDescriptionsCount = -1;
+
+        /// <summary>
+        /// Translated description of the enumerated value having this display value (e.g. the value of a result cell). Empty if the element is not an enumerated list or if the value has no description.
+        /// </summary>
+        public string GetEnumValueDescription(string displayValue)
+        {
+            if (string.IsNullOrEmpty(displayValue) || Model == null) return "";
+            var en = EnumEL;
+            if (en == null) return "";
+            var values = en.GetValues(Model.Connection);
+            if (_enumValueDescriptions == null || _enumValueDescriptionsEnum != en || _enumValueDescriptionsCount != values.Count)
+            {
+                var descriptions = new Dictionary<string, string>();
+                if (values.Exists(i => !string.IsNullOrEmpty(i.Description)))
+                {
+                    foreach (var value in values.Where(i => !string.IsNullOrEmpty(i.Description)))
+                    {
+                        var display = Model.EnumDisplayValue(en, value.Id);
+                        if (display != null && !descriptions.ContainsKey(display)) descriptions.Add(display, Model.Report.TranslateEnumValueDescription(en, value.Description));
+                    }
+                }
+                _enumValueDescriptions = descriptions;
+                _enumValueDescriptionsEnum = en;
+                _enumValueDescriptionsCount = values.Count;
+            }
+            return _enumValueDescriptions.TryGetValue(displayValue, out var result) ? result : "";
+        }
+
         /// <summary>
         /// SQL of the MetaColumn
         /// </summary>
