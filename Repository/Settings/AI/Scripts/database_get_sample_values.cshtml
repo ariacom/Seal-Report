@@ -73,16 +73,26 @@
             return;
         }
 
-        // Enumerated column: a code alone cannot be chosen, give its label
-        var labels = (mcol?.Enum?.Values ?? new List<MetaEV>()).GroupBy(i => i.Id).ToDictionary(i => i.Key, i => i.First().DisplayValue);
+        // Enumerated column: a code alone cannot be chosen, give its label, and the description of the value when it has one
+        // (its definition, e.g. what 'Sauvegarde accélérée' means), so the agent can explain a value or match the words of the user.
+        // A list loaded from the database is loaded as during an execution (ReportElement.EnumEL); a list loaded on demand gets the shown values.
+        var menum = mcol?.Enum;
+        var shownIds = table.Rows.Cast<System.Data.DataRow>().Take(50).Select(r => r[0]?.ToString() ?? "").ToList();
+        if (menum != null && menum.IsDynamic && !menum.IsLoadOnDemand && menum.Values.Count == 0 && string.IsNullOrEmpty(menum.Error)) menum.RefreshEnum();
+        if (menum != null && menum.IsLoadOnDemand) menum.EnsureValues(shownIds);
+        var enumValues = menum == null ? new List<MetaEV>() : menum.GetValues(conn);
+        var labels = enumValues.Where(i => i.Id != null).GroupBy(i => i.Id).ToDictionary(i => i.Key, i => i.First());
         var values = new List<string>();
-        int cnt = 0;
-        foreach (System.Data.DataRow row in table.Rows) {
-            if (++cnt > 50) break;
-            var value = row[0]?.ToString() ?? "";
-            values.Add(labels.TryGetValue(value, out var label) && !string.IsNullOrEmpty(label) && label != value ? $"{value} = {label}" : value);
+        bool hasDescription = false;
+        foreach (var value in shownIds) {
+            if (!labels.TryGetValue(value, out var ev)) { values.Add(value); continue; }
+            var label = ev.DisplayValue;
+            var text = !string.IsNullOrEmpty(label) && label != value ? $"{value} = {label}" : value;
+            if (!string.IsNullOrEmpty(ev.Description)) { text += $" ({ev.Description.Replace("\r", " ").Replace("\n", " ")})"; hasDescription = true; }
+            values.Add(text);
         }
-        var result = string.Join(", ", values);
+        //The descriptions contain commas: the values are then separated by semicolons
+        var result = string.Join(hasDescription ? "; " : ", ", values);
         if (table.Rows.Count > 50)
             result += $" ... ({table.Rows.Count} distinct values total, first 50 shown)";
         tool.ExecResult = result;
