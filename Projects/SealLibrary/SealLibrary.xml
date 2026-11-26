@@ -3170,14 +3170,36 @@
             Returns true if all cells of the worksheet row are empty in the given column range
             </summary>
         </member>
+        <member name="M:Seal.Helpers.ExcelHelper.IsXls(System.String)">
+            <summary>
+            Returns true if the file is an old Excel workbook (XLS: BIFF in an OLE compound document), recognized by its first bytes whatever its extension
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.ConvertXlsToXlsx(System.String,System.String)">
+            <summary>
+            Converts an old Excel workbook (XLS) into an Excel workbook (XLSX): every sheet with its values and number formats (no formula, style, merged cell nor chart).
+            If xlsxPath is empty, the XLSX file is written next to the XLS file with the extension .xlsx. Returns the path of the XLSX file.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.LoadXlsWorkbook(System.String)">
+            <summary>
+            Reads an old Excel workbook (XLS) with ExcelDataReader into a new workbook in memory: the values of the cells (text, number, date, boolean)
+            with their number format. An XLS sheet has at most 65,536 rows and 256 columns.
+            </summary>
+        </member>
+        <member name="M:Seal.Helpers.ExcelHelper.GetUniqueSheetName(ClosedXML.Excel.XLWorkbook,System.String)">
+            <summary>
+            Name of a sheet valid in an Excel workbook (31 characters at most, without : \ / ? * [ ]) and not used yet in the workbook
+            </summary>
+        </member>
         <member name="M:Seal.Helpers.ExcelHelper.GetWorkbook(System.String)">
             <summary>
-            Load an Excel Workbook
+            Load an Excel Workbook (XLSX, XLSM). An old Excel workbook (XLS, recognized by its first bytes) is read into a new workbook in memory: values and number formats only.
             </summary>
         </member>
         <member name="M:Seal.Helpers.ExcelHelper.LoadDataTableFromExcel(System.String,System.String,System.Int32,System.Int32,System.Int32,System.Int32,System.Boolean)">
             <summary>
-            Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic.
+            Load a DataTable from an Excel file (XLSX, XLSM, or an old XLS workbook). A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic.
             </summary>
         </member>
         <member name="M:Seal.Helpers.ExcelHelper.LoadDataTableFromCSV(System.String,System.Nullable{System.Char},System.Text.Encoding,System.Boolean)">
@@ -4644,7 +4666,7 @@
         </member>
         <member name="M:Seal.Helpers.TaskHelper.LoadTablesFromExcel(System.String,System.String,System.String,System.Boolean)">
             <summary>
-            Load all Excel files located in a directory into tables, using the tab name as table name. 
+            Load all Excel files located in a directory into tables, using the tab name as table name. Old XLS workbooks are read too (e.g. searchPattern "*.xls*").
             </summary>
         </member>
         <member name="M:Seal.Helpers.TaskHelper.LoadTableFromCSV(System.String,System.String,System.String,System.Nullable{System.Char},System.Boolean,System.Boolean,System.Text.Encoding,System.Boolean)">

@@ -307,7 +307,7 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Load all Excel files located in a directory into tables, using the tab name as table name. 
+        /// Load all Excel files located in a directory into tables, using the tab name as table name. Old XLS workbooks are read too (e.g. searchPattern "*.xls*").
         /// </summary>
         public bool LoadTablesFromExcel(string loadFolder, string sourceExcelDirectory, string searchPattern = "*.xlsx", bool useAllConnections = false)
         {

@@ -195,11 +195,113 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Load an Excel Workbook
+        /// Returns true if the file is an old Excel workbook (XLS: BIFF in an OLE compound document), recognized by its first bytes whatever its extension
+        /// </summary>
+        static public bool IsXls(string path)
+        {
+            if (!File.Exists(path)) return false;
+            var header = new byte[8];
+            using (var stream = new FileStream(path, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+            {
+                if (stream.Read(header, 0, header.Length) < header.Length) return false;
+            }
+            return header[0] == 0xD0 && header[1] == 0xCF && header[2] == 0x11 && header[3] == 0xE0 && header[4] == 0xA1 && header[5] == 0xB1 && header[6] == 0x1A && header[7] == 0xE1;
+        }
+
+        /// <summary>
+        /// Converts an old Excel workbook (XLS) into an Excel workbook (XLSX): every sheet with its values and number formats (no formula, style, merged cell nor chart).
+        /// If xlsxPath is empty, the XLSX file is written next to the XLS file with the extension .xlsx. Returns the path of the XLSX file.
+        /// </summary>
+        static public string ConvertXlsToXlsx(string xlsPath, string xlsxPath = null)
+        {
+            if (!IsXls(xlsPath)) throw new Exception($"The file is not an old Excel workbook (XLS): '{xlsPath}'");
+            if (string.IsNullOrEmpty(xlsxPath)) xlsxPath = Path.ChangeExtension(xlsPath, ".xlsx");
+            using (var workbook = LoadXlsWorkbook(xlsPath))
+            {
+                workbook.SaveAs(xlsxPath);
+            }
+            return xlsxPath;
+        }
+
+        /// <summary>
+        /// Reads an old Excel workbook (XLS) with ExcelDataReader into a new workbook in memory: the values of the cells (text, number, date, boolean)
+        /// with their number format. An XLS sheet has at most 65,536 rows and 256 columns.
+        /// </summary>
+        static XLWorkbook LoadXlsWorkbook(string xlsPath)
+        {
+            //the code pages of the BIFF files (Windows-1252...) are not available by default in .NET
+            Encoding.RegisterProvider(CodePagesEncodingProvider.Instance);
+            var workbook = new XLWorkbook();
+            try
+            {
+                using (var stream = new FileStream(xlsPath, FileMode.Open, FileAccess.Read, FileShare.ReadWrite))
+                using (var reader = ExcelDataReader.ExcelReaderFactory.CreateBinaryReader(stream))
+                {
+                    do
+                    {
+                        var worksheet = workbook.AddWorksheet(GetUniqueSheetName(workbook, reader.Name));
+                        int row = 0;
+                        while (reader.Read())
+                        {
+                            row++;
+                            for (int i = 0; i < reader.FieldCount; i++)
+                            {
+                                var value = reader.GetValue(i);
+                                if (value == null) continue;
+                                var cell = worksheet.Cell(row, i + 1);
+                                switch (value)
+                                {
+                                    case double d: cell.Value = d; break;
+                                    case DateTime dt: cell.Value = dt; break;
+                                    case bool b: cell.Value = b; break;
+                                    case TimeSpan ts: cell.Value = ts; break;
+                                    case string s: cell.Value = s; break;
+                                    default: cell.Value = Convert.ToString(value, System.Globalization.CultureInfo.InvariantCulture); break;
+                                }
+                                if (!(value is string))
+                                {
+                                    var format = reader.GetNumberFormatString(i);
+                                    if (!string.IsNullOrEmpty(format) && !format.Equals("General", StringComparison.OrdinalIgnoreCase)) cell.Style.NumberFormat.Format = format;
+                                }
+                            }
+                        }
+                    }
+                    while (reader.NextResult());
+                }
+                if (workbook.Worksheets.Count == 0) workbook.AddWorksheet("Sheet1");
+            }
+            catch
+            {
+                workbook.Dispose();
+                throw;
+            }
+            return workbook;
+        }
+
+        /// <summary>
+        /// Name of a sheet valid in an Excel workbook (31 characters at most, without : \ / ? * [ ]) and not used yet in the workbook
+        /// </summary>
+        static string GetUniqueSheetName(XLWorkbook workbook, string name)
+        {
+            var baseName = Regex.Replace(name ?? "", @"[:\\/?*\[\]]", "_").Trim('\'').Trim();
+            if (baseName == "") baseName = "Sheet" + (workbook.Worksheets.Count + 1);
+            if (baseName.Length > 31) baseName = baseName.Substring(0, 31);
+            var result = baseName;
+            for (int i = 2; workbook.Worksheets.Contains(result); i++)
+            {
+                var suffix = " (" + i + ")";
+                result = (baseName.Length + suffix.Length > 31 ? baseName.Substring(0, 31 - suffix.Length) : baseName) + suffix;
+            }
+            return result;
+        }
+
+        /// <summary>
+        /// Load an Excel Workbook (XLSX, XLSM). An old Excel workbook (XLS, recognized by its first bytes) is read into a new workbook in memory: values and number formats only.
         /// </summary>
         static public XLWorkbook GetWorkbook(string excelPath)
         {
             if (!File.Exists(excelPath)) throw new Exception($"Invalid path: '{excelPath}'");
+            if (IsXls(excelPath)) return LoadXlsWorkbook(excelPath);
 
             XLWorkbook workbook;
             try
@@ -218,7 +320,7 @@ namespace Seal.Helpers
         }
 
         /// <summary>
-        /// Load a DataTable from an Excel file. A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic.
+        /// Load a DataTable from an Excel file (XLSX, XLSM, or an old XLS workbook). A start and end row, and/or colum can be specified. If hasHeader is false, column names are automatic.
         /// </summary>
         static public DataTable LoadDataTableFromExcel(string excelPath, string tabName = "", int startRow = 1, int startCol = 1, int endCol = 0, int endRow = 0, bool hasHeader = true)
         {

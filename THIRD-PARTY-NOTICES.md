@@ -73,6 +73,7 @@ Listed in alphabetical order.
 | DiffPlex / DiffPlex.Wpf | 1.9.0 / 1.9.1 | 2025-09-13 / 2025-10-30 | Apache-2.0 |
 | DocumentFormat.OpenXml | 3.5.1 | 2026-03-18 | MIT |
 | ECharts | 6.1.0 | 2026-05-19 | Apache-2.0 |
+| ExcelDataReader (reading of the old Excel files, XLS) | 3.9.0 | 2026-06-16 | MIT |
 | flatpickr | 4.6.13 | 2022-04-14 | MIT |
 | FluentFTP | 55.0.0 | 2026-09-17 | MIT |
 | Font Awesome (Free) | 6.7.2 | 2024-12-16 | CC BY 4.0 (icons), OFL (fonts), MIT (code) |

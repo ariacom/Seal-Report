@@ -63,6 +63,8 @@
 		<PackageReference Include="ClosedXML">
 			<Version>0.105.1</Version>
 		</PackageReference>
+		<!-- ExcelDataReader: read the old Excel files (XLS, BIFF) that ClosedXML cannot open (ExcelHelper.GetWorkbook) -->
+		<PackageReference Include="ExcelDataReader" Version="3.9.0" />
 		<PackageReference Include="jose-jwt">
 			<Version>5.3.0</Version>
 		</PackageReference>

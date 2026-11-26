@@ -30,4 +30,9 @@
     <ProjectReference Include="..\SealLibrary\SealLibrary.csproj" />
   </ItemGroup>
 
+  <ItemGroup>
+    <!-- Files read by the tests (e.g. an old Excel workbook for TestExcelXls), copied next to the test assembly -->
+    <None Include="Data\**" CopyToOutputDirectory="PreserveNewest" />
+  </ItemGroup>
+
 </Project>
