@@ -2088,6 +2088,9 @@ namespace SealWebServer.Controllers
                 //                              as relative to the Reports root)
                 // The model also occasionally drops the ".srex" extension, so it is
                 // restored when missing.
+                // The tag is replaced by a marker (U+E000 index U+E001, on its own line) so the
+                // panel draws the button where the AI wrote it, not below the whole answer
+                // (see swi-ai.ts ReportActionMarker).
                 var reportActions = new List<object>();
                 var cleanedReply = Regex.Replace(reply ?? string.Empty,
                     @"\[EXECUTE_REPORT:([^\]\|]+)\|([^\]\|]+)(?:\|([^\]]*))?\]",
@@ -2123,7 +2126,7 @@ namespace SealWebServer.Controllers
                             name = match.Groups[2].Value.Trim(),
                             outputGUID = match.Groups[3].Value.Trim()
                         });
-                        return string.Empty;
+                        return "\n\uE000" + (reportActions.Count - 1) + "\uE001\n";
                     });
 
                 // Usage of the exchange for the chat panel display, as set on the agent (cost text null when no cost is configured,

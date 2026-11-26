@@ -1603,6 +1603,16 @@ body.ai-resizing #footer-div {
     margin: 2px 0 4px 8px;
 }
 
+/* Execute button placed where the AI wrote the tag, inside the answer bubble */
+.ai-panel-bubble .ai-panel-report-actions.ai-report-action-slot {
+    margin: 6px 0;
+}
+
+span.ai-report-action-slot {
+    display: inline-block;
+    vertical-align: middle;
+}
+
 .ai-panel-execute-btn {
     display: inline-flex;
     align-items: center;

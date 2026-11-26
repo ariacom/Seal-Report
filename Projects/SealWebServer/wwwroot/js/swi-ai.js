@@ -65,6 +65,8 @@
             .replace(/'/g, '&#39;');
         // Inline formatting applied within a single (already escaped) line.
         function inline(s) {
+            // A marker inside a line (in a list item or a table cell): inline slot for the button
+            s = s.replace(ReportActionMarker, '<span class="ai-report-action-slot" data-action="$1"></span>');
             // [[label]] or [[label|message]]: clickable suggestion putting the message in the prompt input
             s = s.replace(SuggestionRegex, function (_m, label, message) {
                 return '<a href="#" class="ai-suggest" data-prompt="' + (message || label).trim() + '"><i class="fa fa-share"></i> ' + label.trim() + '</a>';
@@ -123,6 +125,13 @@
                 html += renderTable(header, aligns, body);
                 continue;
             }
+            // Report action marker on its own line: slot filled with the Execute button (fillReportActions)
+            const ra = /^\s*\uE000(\d+)\uE001\s*$/.exec(line);
+            if (ra) {
+                closeList();
+                html += '<div class="ai-panel-report-actions ai-report-action-slot" data-action="' + ra[1] + '"></div>';
+                continue;
+            }
             // # .. ###### headings
             const h = /^(#{1,6})\s+(.*)$/.exec(line);
             if (h) {
@@ -153,24 +162,68 @@
             .html('<i class="fa fa-play"></i> ' + $('<span>').text(name).html())
             .on('click', function () { _gateway.ExecuteReport(path, '', outputGUID || ''); });
     }
-    // ── Report-action parser ────────────────────────────────────
-    // Strips [EXECUTE_REPORT:path|name] tags from text, returns cleaned text
-    // and a jQuery element (possibly empty) containing Execute buttons.
+    // ── Report actions placed in the answer ─────────────────────
+    // The server (SWIGetAIAgentResponse) replaces each [EXECUTE_REPORT:...] tag by a marker
+    // U+E000 <index in reportActions> U+E001 on its own line; formatResponse turns a marker
+    // into an empty slot and fillReportActions puts the Execute button in it, so the button
+    // stands where the AI wrote the tag (e.g. after "you can open the report:").
+    const ReportActionMarker = /\uE000(\d+)\uE001/g;
+    // Fills the slots of a bubble with the Execute buttons. Actions without a slot (a server
+    // without markers) are returned in a row to append below the bubble, as before.
+    function fillReportActions($bubble, actions) {
+        const placed = [];
+        $bubble.find('.ai-report-action-slot').each(function () {
+            const $slot = $(this);
+            const action = actions[parseInt($slot.attr('data-action') || '-1', 10)];
+            if (!action) {
+                $slot.remove();
+                return;
+            }
+            makeExecuteButton(action.path, action.name, action.outputGUID).appendTo($slot);
+            placed[actions.indexOf(action)] = true;
+        });
+        const rest = actions.filter(function (_a, i) { return !placed[i]; });
+        if (rest.length === 0)
+            return null;
+        const $row = $('<div>').addClass('ai-panel-report-actions');
+        rest.forEach(function (a) { makeExecuteButton(a.path, a.name, a.outputGUID).appendTo($row); });
+        return $row;
+    }
+    // Saved chats keep the raw [EXECUTE_REPORT:path|name] tags: they get the same markers
+    // as a live answer (path converted to the SWI format as the server does).
     function parseReportActions(text) {
-        const $actions = $('<div>').addClass('ai-panel-report-actions');
+        const actions = [];
         const re = /\[EXECUTE_REPORT:([^\]\|]+)\|([^\]\|]+)(?:\|([^\]]*))?\]/g;
         const cleaned = text.replace(re, function (_match, rawPath, name, outputGUID) {
             let swiPath;
+            rawPath = rawPath.trim();
             if (/^Reports[\\\/]/.test(rawPath))
                 swiPath = rawPath.substring('Reports'.length);
             else if (/^Personal[\\\/]/.test(rawPath))
                 swiPath = ':' + rawPath.substring('Personal'.length);
             else
                 swiPath = rawPath;
-            makeExecuteButton(swiPath, name.trim(), outputGUID).appendTo($actions);
-            return '';
+            actions.push({ path: swiPath, name: name.trim(), outputGUID: (outputGUID || '').trim() });
+            return '\n\uE000' + (actions.length - 1) + '\uE001\n';
         });
-        return { cleaned: cleaned.trim(), $actions };
+        return { cleaned: cleaned.trim(), actions };
+    }
+    // Appends an AI answer (text with markers) and its Execute buttons to the messages.
+    function appendAIAnswer(text, actions) {
+        // Blank lines around a marker would add empty lines around the button
+        text = (text || '').replace(/(\r?\n\s*)+(\uE000\d+\uE001)(\s*\r?\n)+/g, '\n$2\n').trim();
+        if (text) {
+            const $bubble = makeAIBubble(formatResponse(text), text.replace(ReportActionMarker, ''));
+            $messages.append($bubble);
+            const $rest = fillReportActions($bubble, actions || []);
+            if ($rest)
+                $messages.append($rest);
+        }
+        else if (actions && actions.length > 0) {
+            const $row = $('<div>').addClass('ai-panel-report-actions');
+            actions.forEach(function (a) { makeExecuteButton(a.path, a.name, a.outputGUID).appendTo($row); });
+            $messages.append($row);
+        }
     }
     // ── Clipboard helper ────────────────────────────────────────
     function fallbackCopy(text) {
@@ -710,18 +763,8 @@
             const $stepsSummary = makeStepsSummary();
             if ($stepsSummary)
                 $messages.append($stepsSummary);
-            if (data.response) {
-                const aiBubble = makeAIBubble(formatResponse(data.response || ''), data.response || '');
-                $messages.append(aiBubble);
-            }
-            // Render Execute buttons when the AI proposes running one or more reports
-            if (data.reportActions && data.reportActions.length > 0) {
-                const $actions = $('<div>').addClass('ai-panel-report-actions');
-                data.reportActions.forEach(function (action) {
-                    makeExecuteButton(action.path, action.name, action.outputGUID).appendTo($actions);
-                });
-                $messages.append($actions);
-            }
+            // Answer with the Execute buttons where the AI proposes running one or more reports
+            appendAIAnswer(data.response || '', (data.reportActions || []));
             // Muted usage line under the answer: tokens and/or cost text as set on the agent (cost formatted by the server)
             const usageParts = [];
             if (data.tokens)
@@ -866,13 +909,8 @@
                         $messages.append(makeUserBubble(msg.Content));
                     }
                     else if (msg.Type === 'AssistantChatMessage' && msg.Content) {
-                        const { cleaned, $actions } = parseReportActions(msg.Content);
-                        if (cleaned) {
-                            $messages.append(makeAIBubble(formatResponse(cleaned), cleaned));
-                        }
-                        if ($actions.children().length > 0) {
-                            $messages.append($actions);
-                        }
+                        const { cleaned, actions } = parseReportActions(msg.Content);
+                        appendAIAnswer(cleaned, actions);
                     }
                 });
                 $messages[0].scrollTop = $messages[0].scrollHeight;
