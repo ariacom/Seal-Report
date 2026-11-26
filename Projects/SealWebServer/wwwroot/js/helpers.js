@@ -14,6 +14,8 @@ function redrawDataTables() {
 function dtCreatedCell(td, cellData, rowData, row, col) {
     if (cellData) {
         var cellDatas = cellData.split('§');
+        //Client pagination: the cell data is the HTML of the cell, it is kept
+        if (cellDatas.length < 7) return;
         var html = "";
         for (var i = 6; i < cellDatas.length; i++) {
             html += (i > 6 ? "§" : "") + cellDatas[i];
